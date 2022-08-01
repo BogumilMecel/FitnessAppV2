@@ -1,18 +1,18 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gmail.bodziowaty6978.fitnessappv2.R
-import com.gmail.bodziowaty6978.fitnessappv2.common.navigation.NavigationActions
-import com.gmail.bodziowaty6978.fitnessappv2.common.navigation.navigator.Navigator
-import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.TextFieldState
-import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
+import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.NavigationActions
+import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigator
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.search.SearchDiaryUseCases
+import com.gmail.bodziowaty6978.fitnessappv2.util.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,42 +22,52 @@ class SearchViewModel @Inject constructor(
     private val searchDiaryUseCases: SearchDiaryUseCases,
     private val resourceProvider: ResourceProvider
 ): ViewModel(){
-    
-    private val _searchBarState = mutableStateOf(
-        TextFieldState(
-            hint = resourceProvider.getString(R.string.product_name)
-        )
-    )
-    val searchBarState : State<TextFieldState> = _searchBarState
 
-    private val _searchState = mutableStateOf<SearchState>(SearchState.Success())
-    val searchState : State<SearchState> = _searchState
+    private val _searchState = MutableStateFlow<SearchState>(SearchState())
+    val searchState : StateFlow<SearchState> = _searchState
 
 
     fun onEvent(event: SearchEvent){
         when(event){
             is SearchEvent.ClickedBackArrow -> {
-                navigator.navigate(NavigationActions.General.navigateUp())
+
+                if(!searchState.value.isScannerVisible){
+                    navigator.navigate(NavigationActions.General.navigateUp())
+                }else{
+                    _searchState.update {
+                        it.copy(
+                            isScannerVisible = false
+                        )
+                    }
+                }
             }
             is SearchEvent.ClickedSearch -> {
-                _searchState.value = SearchState.Loading
+                _searchState.update {
+                    it.copy(
+                        isLoading = true
+                    )
+                }
                 viewModelScope.launch(Dispatchers.IO) {
-                    val result = searchDiaryUseCases.searchForProducts(event.searchText)
-                    if(result is Resource.Error){
-                        _searchState.value = SearchState.Error(result.uiText.toString())
-                    }else{
-                        val data = result.data!!
-                        _searchState.value = SearchState.Success(products = data)
+                    val result = searchDiaryUseCases.searchForProducts(_searchState.value.searchBarText)
+                    _searchState.update {
+                        it.copy(
+                            errorMessage = result.uiText,
+                            items = result.data ?: emptyList(),
+                            isLoading = false
+                        )
                     }
                 }
             }
             is SearchEvent.EnteredSearchText -> {
-                _searchBarState.value = searchBarState.value.copy(
-                    text = event.text
-                )
+                _searchState.update {
+                    it.copy(
+                        searchBarText = event.text
+                    )
+                }
             }
             is SearchEvent.ClickedSearchItem -> {
-                navigator.navigate(NavigationActions.SearchScreen.searchToProduct(
+                navigator.navigate(
+                    NavigationActions.SearchScreen.searchToProduct(
                     productWithId = event.item,
                     mealName = event.mealName
                 ))
@@ -65,12 +75,31 @@ class SearchViewModel @Inject constructor(
             is SearchEvent.ClickedNewProduct -> {
                 navigator.navigate(NavigationActions.SearchScreen.searchToNewProduct(event.mealName))
             }
+            is SearchEvent.ClickedScanButton -> {
+                _searchState.update {
+                    it.copy(
+                        isScannerVisible = true,
+                    )
+                }
+            }
+            is SearchEvent.ScannedBarcode -> {
+                _searchState.update {
+                    it.copy(
+                        isScannerVisible = false
+                    )
+                }
+                Log.e(TAG,event.code)
+            }
         }
     }
     fun initializeHistory(){
         viewModelScope.launch(Dispatchers.IO) {
             val history = searchDiaryUseCases.getDiaryHistory()
-            _searchState.value = SearchState.Success(history.data!!)
+            _searchState.update {
+                it.copy(
+                    items = history.data ?: emptyList()
+                )
+            }
         }
     }
 }
