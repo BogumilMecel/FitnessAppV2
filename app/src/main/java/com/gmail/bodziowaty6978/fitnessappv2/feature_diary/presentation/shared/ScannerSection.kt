@@ -19,24 +19,26 @@ import com.google.mlkit.vision.barcode.common.Barcode
 
 @Composable
 fun ScannerSection(
-    onCodeScanned:(Barcode) -> Unit
+    onCodeScanned: (Barcode) -> Unit,
 ) {
-
     val lifecycleOwner = LocalLifecycleOwner.current
     val context = LocalContext.current
+
     val cameraProviderFuture = remember {
         ProcessCameraProvider.getInstance(context)
     }
 
-
     AndroidView(
         factory = { viewContext ->
+            cameraProviderFuture.get().unbindAll()
             val previewView = PreviewView(viewContext)
             val preview = Preview.Builder().build()
             val selector = CameraSelector.Builder()
                 .requireLensFacing(CameraSelector.LENS_FACING_BACK)
                 .build()
             preview.setSurfaceProvider(previewView.surfaceProvider)
+
+
             val imageAnalysis = ImageAnalysis.Builder()
                 .setTargetResolution(
                     Size(
@@ -46,12 +48,14 @@ fun ScannerSection(
                 )
                 .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                 .build()
+
             imageAnalysis.setAnalyzer(
                 ContextCompat.getMainExecutor(viewContext),
                 BarcodeAnalyzer { result ->
                     onCodeScanned(result[0])
                 }
             )
+
             try {
                 cameraProviderFuture.get().bindToLifecycle(
                     lifecycleOwner,

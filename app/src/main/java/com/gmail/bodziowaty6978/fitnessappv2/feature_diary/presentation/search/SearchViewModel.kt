@@ -1,13 +1,11 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.NavigationActions
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigator
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.search.SearchDiaryUseCases
-import com.gmail.bodziowaty6978.fitnessappv2.util.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,26 +18,24 @@ import javax.inject.Inject
 class SearchViewModel @Inject constructor(
     private val navigator: Navigator,
     private val searchDiaryUseCases: SearchDiaryUseCases,
-    private val resourceProvider: ResourceProvider
-): ViewModel(){
+    private val resourceProvider: ResourceProvider,
+) : ViewModel() {
 
     private val _searchState = MutableStateFlow<SearchState>(SearchState())
-    val searchState : StateFlow<SearchState> = _searchState
+    val searchState: StateFlow<SearchState> = _searchState
 
 
-    fun onEvent(event: SearchEvent){
-        when(event){
-            is SearchEvent.ClickedBackArrow -> {
-
-                if(!searchState.value.isScannerVisible){
-                    navigator.navigate(NavigationActions.General.navigateUp())
-                }else{
-                    _searchState.update {
-                        it.copy(
-                            isScannerVisible = false
-                        )
-                    }
+    fun onEvent(event: SearchEvent) {
+        when (event) {
+            is SearchEvent.ClosedScanner -> {
+                _searchState.update {
+                    it.copy(
+                        isScannerVisible = false
+                    )
                 }
+            }
+            is SearchEvent.ClickedBackArrow -> {
+                navigator.navigate(NavigationActions.General.navigateUp())
             }
             is SearchEvent.ClickedSearch -> {
                 _searchState.update {
@@ -48,7 +44,8 @@ class SearchViewModel @Inject constructor(
                     )
                 }
                 viewModelScope.launch(Dispatchers.IO) {
-                    val result = searchDiaryUseCases.searchForProducts(_searchState.value.searchBarText)
+                    val result =
+                        searchDiaryUseCases.searchForProducts(_searchState.value.searchBarText)
                     _searchState.update {
                         it.copy(
                             errorMessage = result.uiText,
@@ -68,9 +65,10 @@ class SearchViewModel @Inject constructor(
             is SearchEvent.ClickedSearchItem -> {
                 navigator.navigate(
                     NavigationActions.SearchScreen.searchToProduct(
-                    productWithId = event.item,
-                    mealName = event.mealName
-                ))
+                        productWithId = event.item,
+                        mealName = event.mealName
+                    )
+                )
             }
             is SearchEvent.ClickedNewProduct -> {
                 navigator.navigate(NavigationActions.SearchScreen.searchToNewProduct(event.mealName))
@@ -88,11 +86,18 @@ class SearchViewModel @Inject constructor(
                         isScannerVisible = false
                     )
                 }
-                Log.e(TAG,event.code)
+            }
+            is SearchEvent.ShowedPermissionDialog -> {
+                _searchState.update {
+                    it.copy(
+                        hasPermissionDialogBeenShowed = true
+                    )
+                }
             }
         }
     }
-    fun initializeHistory(){
+
+    fun initializeHistory() {
         viewModelScope.launch(Dispatchers.IO) {
             val history = searchDiaryUseCases.getDiaryHistory()
             _searchState.update {

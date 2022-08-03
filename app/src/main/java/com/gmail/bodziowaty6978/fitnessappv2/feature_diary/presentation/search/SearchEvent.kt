@@ -3,6 +3,7 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.ProductWithId
 
 sealed class SearchEvent{
+    object ShowedPermissionDialog:SearchEvent()
     object ClickedBackArrow:SearchEvent()
     object ClickedScanButton:SearchEvent()
     data class ClickedNewProduct(val mealName:String):SearchEvent()
@@ -10,4 +11,5 @@ sealed class SearchEvent{
     data class EnteredSearchText(val text:String):SearchEvent()
     data class ScannedBarcode(val code:String):SearchEvent()
     data class ClickedSearchItem(val item:ProductWithId, val mealName:String):SearchEvent()
+    data class ClosedScanner(val mealName: String):SearchEvent()
 }
