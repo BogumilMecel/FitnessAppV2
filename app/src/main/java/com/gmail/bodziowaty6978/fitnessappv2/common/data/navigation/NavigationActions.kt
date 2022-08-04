@@ -113,7 +113,7 @@ object NavigationActions {
 
     //Search
     object SearchScreen{
-        fun searchToNewProduct(mealName: String = "Breakfast") = object : NavigationAction {
+        fun searchToNewProduct(mealName: String = "Breakfast", barcode: String? = null) = object : NavigationAction {
             override val destination: String = Screen.NewProductScreen.route
         }
         fun searchToProduct(productWithId: Parcelable, mealName: String) = object :

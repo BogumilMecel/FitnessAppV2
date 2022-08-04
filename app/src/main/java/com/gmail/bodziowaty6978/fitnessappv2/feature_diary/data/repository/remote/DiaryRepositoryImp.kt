@@ -75,6 +75,22 @@ class DiaryRepositoryImp(
         }
     }
 
+    override suspend fun searchForProductWithBarcode(barcode: String): Resource<ProductWithId> {
+        return try {
+            val items = productCollection.whereEqualTo("barcode",barcode).get().await().map {
+                ProductWithId(it.id,it.toObject(Product::class.java))
+            }
+            if (items.isEmpty()){
+                Resource.Error(uiText = resourceProvider.getString(R.string.there_is_no_product_with_provided_barcode_do_you_want_to_add_it))
+            }else{
+                Resource.Success(data = items[0])
+            }
+        }catch (e:Exception){
+            e.printStackTrace()
+            Resource.Error(uiText = resourceProvider.getString(R.string.unknown_error))
+        }
+    }
+
     override suspend fun addDiaryEntry(diaryEntry: DiaryEntry): CustomResult {
         return try {
             journalCollection.add(diaryEntry)
