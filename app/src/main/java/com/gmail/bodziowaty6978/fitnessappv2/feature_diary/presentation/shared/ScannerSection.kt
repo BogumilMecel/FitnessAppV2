@@ -52,6 +52,7 @@ fun ScannerSection(
             imageAnalysis.setAnalyzer(
                 ContextCompat.getMainExecutor(viewContext),
                 BarcodeAnalyzer { result ->
+                    cameraProviderFuture.get().unbindAll()
                     onCodeScanned(result[0])
                 }
             )

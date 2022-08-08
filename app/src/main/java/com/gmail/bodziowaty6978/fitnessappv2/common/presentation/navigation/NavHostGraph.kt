@@ -1,12 +1,14 @@
 package com.gmail.bodziowaty6978.fitnessappv2.common.presentation.navigation
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -35,13 +37,14 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search.S
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.presentation.IntroductionScreen
 import com.gmail.bodziowaty6978.fitnessappv2.feature_splash.loading.presentation.SplashScreen
 import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.presentation.SummaryScreen
+import com.gmail.bodziowaty6978.fitnessappv2.util.TAG
 
 @RequiresApi(Build.VERSION_CODES.N)
 @Composable
 fun NavHostGraph(
     navController: NavHostController = rememberNavController(),
     navigator: Navigator,
-    startDestination:String = Screen.LoadingScreen.route
+    startDestination: String = Screen.LoadingScreen.route
 //    startDestination:String = Screen.NewProductScreen.route + "?mealName={mealName}"
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -49,6 +52,8 @@ fun NavHostGraph(
         lifecycleOwner = lifecycleOwner,
         initialState = null
     )
+
+    val scaffoldState = rememberScaffoldState()
 
     var bottomNavigationState by remember {
         mutableStateOf(false)
@@ -64,17 +69,14 @@ fun NavHostGraph(
             }
             if (it.destination == "navigateUp") {
                 navController.navigateUp()
-            } else if(it.destination == "reset"){
-                navController.currentBackStackEntry?.destination?.route?.let {currentDestination ->
-                    navController.backQueue.removeIf{ navBackStackEntry ->
-                        navBackStackEntry.destination.route == currentDestination
-                    }
-                    navController.popBackStack()
-                    navController.navigate(currentDestination)
+            } else {
+                try {
+                    Log.e(TAG,navController.toString())
+                    navController.navigate(it.destination, it.navOptions)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    scaffoldState.snackbarHostState.showSnackbar(e.message.toString())
                 }
-            }
-            else {
-                navController.navigate(it.destination, it.navOptions)
             }
         }
     }
@@ -85,7 +87,8 @@ fun NavHostGraph(
             if (bottomNavigationState) {
                 BottomBar(navController = navController)
             }
-        }
+        },
+        scaffoldState = scaffoldState
     ) { paddingValues ->
         Surface(
             modifier = Modifier
@@ -178,7 +181,8 @@ fun NavHostGraph(
                         }
                     )
                 ) {
-                    val productWithId = navController.previousBackStackEntry?.arguments?.getParcelable<ProductWithId>(
+                    val productWithId =
+                        navController.previousBackStackEntry?.arguments?.getParcelable<ProductWithId>(
                             "productWithId"
                         )
                     val mealName = it.arguments?.getString("mealName")
@@ -206,7 +210,7 @@ fun NavHostGraph(
                             defaultValue = "Breakfast"
                         }
                     )
-                ){
+                ) {
                     val mealName = it.arguments?.getString("mealName")
                     NewProductScreen(mealName = mealName!!)
                 }

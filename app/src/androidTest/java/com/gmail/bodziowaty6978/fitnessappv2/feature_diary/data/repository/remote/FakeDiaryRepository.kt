@@ -57,4 +57,8 @@ class FakeDiaryRepository: DiaryRepository {
     override suspend fun saveNewProduct(product: Product): CustomResult {
         return CustomResult.Success
     }
+
+    override suspend fun searchForProductWithBarcode(barcode: String): Resource<ProductWithId> {
+        return Resource.Success(ProductWithId(product = Product(), productId = ""))
+    }
 }

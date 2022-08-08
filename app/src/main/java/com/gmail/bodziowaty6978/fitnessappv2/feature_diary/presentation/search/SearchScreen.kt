@@ -1,6 +1,7 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search
 
 import android.Manifest
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
@@ -29,6 +30,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search.c
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search.componens.SearchProductItem
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search.componens.SearchTopSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.shared.ScannerSection
+import com.gmail.bodziowaty6978.fitnessappv2.util.TAG
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.isGranted
@@ -70,9 +72,7 @@ fun SearchScreen(
         }
     }
 
-    BackHandler(
-        enabled = searchState.isScannerVisible
-    ) {
+    BackHandler() {
         if(searchState.isScannerVisible){
             viewModel.onEvent(SearchEvent.ClosedScanner(mealName))
         }
@@ -196,29 +196,6 @@ fun SearchScreen(
                                 .align(Alignment.Center)
                         ) {
                             CircularProgressIndicator()
-
-                            Spacer(modifier = Modifier.width(4.dp))
-
-                            Text(text = stringResource(id = R.string.searching_for_products))
-                        }
-                    } else if (searchState.items.isNotEmpty()) {
-
-                        val items = searchState.items
-
-                        LazyColumn(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                        ) {
-                            items(items.size) { itemPosition ->
-                                SearchProductItem(product = items[itemPosition].product) {
-                                    viewModel.onEvent(
-                                        SearchEvent.ClickedSearchItem(
-                                            item = items[itemPosition],
-                                            mealName = mealName
-                                        )
-                                    )
-                                }
-                            }
                         }
                     }else if(searchState.barcode!=null){
                         Column(
@@ -247,6 +224,26 @@ fun SearchScreen(
 
                             }
 
+                        }
+                    }else if (searchState.items.isNotEmpty()) {
+
+                        val items = searchState.items
+
+                        LazyColumn(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        ) {
+                            Log.e(TAG,searchState.items.toString())
+                            items(items.size) { itemPosition ->
+                                SearchProductItem(product = items[itemPosition].product) {
+                                    viewModel.onEvent(
+                                        SearchEvent.ClickedSearchItem(
+                                            item = items[itemPosition],
+                                            mealName = mealName
+                                        )
+                                    )
+                                }
+                            }
                         }
                     }
                 }
