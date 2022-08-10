@@ -1,6 +1,5 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_product
 
-import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
@@ -12,7 +11,6 @@ import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigator
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.new_product.SaveNewProduct
-import com.gmail.bodziowaty6978.fitnessappv2.util.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -105,7 +103,7 @@ class NewProductViewModel @Inject constructor(
                 }
             }
             is NewProductEvent.EnteredCalories -> {
-                val enteredValue = event.value.replace(",", "").replace(".", "")
+                val enteredValue = event.calories.replace(",", "").replace(".", "")
 
                 _state.update {
                     it.copy(
@@ -114,7 +112,7 @@ class NewProductViewModel @Inject constructor(
                 }
             }
             is NewProductEvent.EnteredCarbohydrates -> {
-                val enteredValue = event.value.replace(",", ".")
+                val enteredValue = event.carbohydrates.replace(",", ".")
 
                 _state.update {
                     it.copy(
@@ -124,7 +122,7 @@ class NewProductViewModel @Inject constructor(
             }
 
             is NewProductEvent.EnteredProtein -> {
-                val enteredValue = event.value.replace(",", ".")
+                val enteredValue = event.protein.replace(",", ".")
 
                 _state.update {
                     it.copy(
@@ -134,7 +132,7 @@ class NewProductViewModel @Inject constructor(
             }
 
             is NewProductEvent.EnteredFat -> {
-                val enteredValue = event.value.replace(",", ".")
+                val enteredValue = event.fat.replace(",", ".")
 
                 _state.update {
                     it.copy(
@@ -144,7 +142,7 @@ class NewProductViewModel @Inject constructor(
             }
 
             is NewProductEvent.EnteredContainerWeight -> {
-                val enteredValue = event.value.replace(",",".")
+                val enteredValue = event.containerWeight.replace(",",".")
 
                 _state.update {
                     it.copy(
@@ -172,31 +170,50 @@ class NewProductViewModel @Inject constructor(
                         fat = state.fat,
                     )
 
-                    Log.e(TAG,result.toString())
-
                     if(result is CustomResult.Error){
-                        _state.update {
-                            it.copy(
-                                isLoading = false,
-                                errorMessage = result.message
-                            )
-                        }
-                    }
-
-                    _state.update {
-                        it.copy(
-                            isLoading = false,
-                        )
+                        onError(result.message)
+                    }else{
+                        // TODO: On successful result
                     }
                 }
             }
-            is NewProductEvent.ShowedSnackbar -> {
+            is NewProductEvent.EnteredBarcode -> {
                 _state.update {
                     it.copy(
-                        errorMessage = null,
+                        barcode = event.barcode.replace(".","").replace(",","")
                     )
                 }
             }
+            is NewProductEvent.ClickedScannerButton -> {
+                _state.update {
+                    it.copy(
+                        isScannerVisible = true,
+                        isLoading = false
+                    )
+                }
+            }
+            is NewProductEvent.ClosedScanner -> {
+                _state.update {
+                    it.copy(
+                        isScannerVisible = false
+                    )
+                }
+            }
+        }
+    }
+
+    private fun onError(message:String){
+        _state.update {
+            it.copy(
+                isLoading = false,
+                errorMessage = message
+            )
+        }
+
+        _state.update {
+            it.copy(
+                lastErrorMessage = message
+            )
         }
     }
 
