@@ -103,50 +103,40 @@ class NewProductViewModel @Inject constructor(
                 }
             }
             is NewProductEvent.EnteredCalories -> {
-                val enteredValue = event.calories.replace(",", "").replace(".", "")
-
                 _state.update {
                     it.copy(
-                        calories = enteredValue
+                        calories = event.calories.replace(",", "").replace(".", "")
                     )
                 }
             }
             is NewProductEvent.EnteredCarbohydrates -> {
-                val enteredValue = event.carbohydrates.replace(",", ".")
-
                 _state.update {
                     it.copy(
-                        carbohydrates = enteredValue
+                        carbohydrates = event.carbohydrates.replace(",", ".")
                     )
                 }
             }
 
             is NewProductEvent.EnteredProtein -> {
-                val enteredValue = event.protein.replace(",", ".")
-
                 _state.update {
                     it.copy(
-                        protein = enteredValue
+                        protein = event.protein.replace(",", ".")
                     )
                 }
             }
 
             is NewProductEvent.EnteredFat -> {
-                val enteredValue = event.fat.replace(",", ".")
-
                 _state.update {
                     it.copy(
-                        fat = enteredValue
+                        fat = event.fat.replace(",", ".")
                     )
                 }
             }
 
             is NewProductEvent.EnteredContainerWeight -> {
-                val enteredValue = event.containerWeight.replace(",",".")
-
                 _state.update {
                     it.copy(
-                        containerWeightValue = enteredValue
+                        containerWeightValue = event.containerWeight.replace(",",".")
                     )
                 }
             }
