@@ -10,5 +10,5 @@ data class SearchState(
     val searchBarText:String = "",
     val isScannerVisible:Boolean = false,
     val hasPermissionDialogBeenShowed:Boolean = false,
-    val barcode:String? = null
+    val barcode:String? = null,
 )
