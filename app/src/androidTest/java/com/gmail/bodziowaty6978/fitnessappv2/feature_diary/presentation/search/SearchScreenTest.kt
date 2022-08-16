@@ -3,15 +3,14 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import com.gmail.bodziowaty6978.fitnessappv2.R
-import com.gmail.bodziowaty6978.fitnessappv2.common.di.AppModule
-import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.navigation.NavHostGraph
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigator
+import com.gmail.bodziowaty6978.fitnessappv2.common.extensions.clearAndSetContent
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.MainActivity
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.navigation.NavHostGraph
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.FitnessAppV2Theme
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.util.Screen
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import dagger.hilt.android.testing.UninstallModules
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -20,7 +19,6 @@ import org.mockito.junit.MockitoJUnitRunner
 import javax.inject.Inject
 
 @HiltAndroidTest
-@UninstallModules(AppModule::class)
 @RunWith(MockitoJUnitRunner::class)
 internal class SearchScreenTest {
 
@@ -36,7 +34,7 @@ internal class SearchScreenTest {
     @Before
     fun setUp() {
         hiltRule.inject()
-        composeRule.setContent {
+        composeRule.clearAndSetContent {
             FitnessAppV2Theme {
                 NavHostGraph(
                     navigator = navigator,
@@ -66,5 +64,12 @@ internal class SearchScreenTest {
         searchButton.performClick()
         textField.performTextClearance()
         composeRule.onNodeWithText(banana).assertIsDisplayed()
+    }
+
+    @Test
+    fun onScannerButtonClicked_ScannerVisible(){
+        val scannerButton = composeRule.onNodeWithTag(composeRule.activity.getString(R.string.scan))
+        scannerButton.performClick()
+        composeRule.onNodeWithTag(composeRule.activity.getString(R.string.scanner)).assertIsDisplayed()
     }
 }

@@ -35,7 +35,7 @@ fun DiaryMealSection(
     Card(
         shape = RoundedCornerShape(10),
         modifier = Modifier
-            .padding(horizontal = 20.dp, vertical = 10.dp),
+            .padding(horizontal = 10.dp, vertical = 10.dp),
         elevation = 6.dp
     ) {
         Column(

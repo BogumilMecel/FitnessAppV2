@@ -33,10 +33,10 @@ fun NewProductScreen(
     val state = viewModel.state.collectAsState().value
     val scaffoldState = rememberScaffoldState()
 
-    LaunchedEffect(key1 = true){
+    LaunchedEffect(key1 = true) {
         viewModel.state.collectLatest {
             it.errorMessage?.let { message ->
-                if (message!=state.lastErrorMessage){
+                if (message != state.lastErrorMessage) {
                     scaffoldState.snackbarHostState.showSnackbar(message)
                 }
             }
@@ -46,16 +46,16 @@ fun NewProductScreen(
     BackHandler(
         enabled = state.isScannerVisible
     ) {
-        if(state.isScannerVisible){
+        if (state.isScannerVisible) {
             viewModel.onEvent(NewProductEvent.ClosedScanner)
         }
     }
 
-    if(!state.isScannerVisible){
+    if (!state.isScannerVisible) {
         Scaffold(
             scaffoldState = scaffoldState,
             floatingActionButton = {
-                if(!state.isLoading){
+                if (!state.isLoading) {
                     FloatingActionButton(
                         onClick = {
                             viewModel.onEvent(NewProductEvent.ClickedSaveButton)
@@ -66,19 +66,28 @@ fun NewProductScreen(
                             contentDescription = "Save"
                         )
                     }
-                }else{
+                } else {
                     HorizontalProgressIndicator()
                 }
             }
         ) {
+            val horizontalLayoutPaddingValue = 10.dp
 
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    .padding(horizontal = horizontalLayoutPaddingValue)
             ) {
-                BackArrow {
-                    viewModel.onEvent(NewProductEvent.ClickedBackArrow)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    BackArrow {
+                        viewModel.onEvent(NewProductEvent.ClickedBackArrow)
+                    }
                 }
+
+
 
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -89,7 +98,7 @@ fun NewProductScreen(
                         viewModel.onEvent(NewProductEvent.EnteredProductName(it))
                     },
                     modifier = Modifier
-                        .width((LocalConfiguration.current.screenWidthDp * 0.6).dp)
+                        .width((LocalConfiguration.current.screenWidthDp * 0.5).dp)
                         .testTag(stringResource(id = R.string.product_name) + "TEXT_FIELD")
                 )
 
@@ -101,7 +110,7 @@ fun NewProductScreen(
                     onEvent = {
                         viewModel.onEvent(it)
                     },
-                    containerWeightText = state.containerWeight
+                    containerWeightText = state.containerWeight,
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -134,7 +143,7 @@ fun NewProductScreen(
                 )
             }
         }
-    }else{
+    } else {
         ScannerSection(
             onBarcodeScanned = { scannedBarcode ->
                 scannedBarcode?.let { barcode ->

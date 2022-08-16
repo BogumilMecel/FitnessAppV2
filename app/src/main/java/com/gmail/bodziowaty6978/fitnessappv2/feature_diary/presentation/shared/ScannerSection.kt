@@ -12,8 +12,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
+import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.BackHandler
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.barcode.BarcodeAnalyzer
 import com.google.common.util.concurrent.ListenableFuture
@@ -49,7 +52,8 @@ fun ScannerSection(
             }
         },
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .testTag(stringResource(id = R.string.scanner)),
         update = { previewView ->
             val cameraSelector: CameraSelector = CameraSelector.Builder()
                 .requireLensFacing(CameraSelector.LENS_FACING_BACK)
