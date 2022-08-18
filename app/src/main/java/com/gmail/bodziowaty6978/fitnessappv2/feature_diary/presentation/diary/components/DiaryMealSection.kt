@@ -18,17 +18,13 @@ import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.OrangeYellow1
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Meal
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.diary.DiaryEvent
 
 @Composable
 fun DiaryMealSection(
     meal: Meal,
-    onAddProductClick: (String) -> Unit,
-    wantedNutritionValues: NutritionValues = NutritionValues(
-        calories = 2500 * 25 / 100,
-        carbohydrates = 250.0 * 25.0 / 100.0,
-        protein = 187.5 * 25.0 / 100.0,
-        fat = 83.3 * 25.0 / 100.0
-    )
+    onEvent:(DiaryEvent) -> Unit,
+    wantedNutritionValues: NutritionValues = NutritionValues()
 ) {
     val diaryEntriesValues = meal.diaryEntries
 
@@ -72,7 +68,7 @@ fun DiaryMealSection(
                          contentDescription = "Add",
                          modifier = Modifier
                              .clickable {
-                                 onAddProductClick(meal.mealName)
+                                 onEvent(DiaryEvent.ClickedAddProduct(mealName = meal.mealName))
                              }
                              .padding(10.dp)
                              .size(32.dp),
@@ -84,10 +80,10 @@ fun DiaryMealSection(
                 DiaryEntryItem(
                     diaryEntry = it.diaryEntry,
                     onItemClicked = {
-
+                        onEvent(DiaryEvent.ClickedDiaryEntry(it))
                     },
                     onItemLongClick = {
-
+                        onEvent(DiaryEvent.LongClickedDiaryEntry(it))
                     }
                 )
             }

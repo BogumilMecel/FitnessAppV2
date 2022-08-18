@@ -7,10 +7,13 @@ import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.NavigationActions
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.singleton.CurrentDate
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigator
+import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Meal
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.diary.DeleteDiaryEntry
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.diary.GetDiaryEntries
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.diary.UpdateDiaryEntriesListAfterDelete
 import com.gmail.bodziowaty6978.fitnessappv2.util.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -23,25 +26,39 @@ import javax.inject.Inject
 @HiltViewModel
 class DiaryViewModel @Inject constructor(
     private val getDiaryEntries: GetDiaryEntries,
+    private val deleteDiaryEntry: DeleteDiaryEntry,
+    private val updateDiaryEntriesListAfterDelete: UpdateDiaryEntriesListAfterDelete,
     private val resourceProvider: ResourceProvider,
     private val navigator: Navigator
-): ViewModel(){
+) : ViewModel() {
 
     private val _diaryState = MutableStateFlow(
         DiaryState(
             meals = listOf(
-                Meal(mealName = resourceProvider.getString(R.string.breakfast), diaryEntries = emptyList()),
-                Meal(mealName = resourceProvider.getString(R.string.lunch), diaryEntries = emptyList()),
-                Meal(mealName = resourceProvider.getString(R.string.dinner), diaryEntries = emptyList()),
-                Meal(mealName = resourceProvider.getString(R.string.supper), diaryEntries = emptyList()),
+                Meal(
+                    mealName = resourceProvider.getString(R.string.breakfast),
+                    diaryEntries = emptyList()
+                ),
+                Meal(
+                    mealName = resourceProvider.getString(R.string.lunch),
+                    diaryEntries = emptyList()
+                ),
+                Meal(
+                    mealName = resourceProvider.getString(R.string.dinner),
+                    diaryEntries = emptyList()
+                ),
+                Meal(
+                    mealName = resourceProvider.getString(R.string.supper),
+                    diaryEntries = emptyList()
+                ),
             ),
 
-        )
+            )
     )
-    val diaryState : StateFlow<DiaryState> = _diaryState
+    val diaryState: StateFlow<DiaryState> = _diaryState
 
-    fun onEvent(event: DiaryEvent){
-        when(event){
+    fun onEvent(event: DiaryEvent) {
+        when (event) {
             is DiaryEvent.ChangedDate -> {
                 getDiaryEntries()
             }
@@ -51,6 +68,15 @@ class DiaryViewModel @Inject constructor(
             is DiaryEvent.ClickedDiaryEntry -> {
 
             }
+            is DiaryEvent.LongClickedDiaryEntry -> {
+                _diaryState.update {
+                    it.copy(
+                        longClickedDiaryEntryWithId = event.diaryEntryWithId,
+                        isDialogShowed = true
+                    )
+                }
+
+            }
             is DiaryEvent.CollectedWantedNutritionValues -> {
                 _diaryState.update {
                     it.copy(
@@ -58,10 +84,40 @@ class DiaryViewModel @Inject constructor(
                     )
                 }
             }
+            is DiaryEvent.DismissedDialog -> {
+                _diaryState.update {
+                    it.copy(
+                        isDialogShowed = false
+                    )
+                }
+            }
+            is DiaryEvent.ClickedDeleteInDialog -> {
+                _diaryState.value.longClickedDiaryEntryWithId?.let { diaryEntryWithId ->
+                    viewModelScope.launch(Dispatchers.IO) {
+                        val result = deleteDiaryEntry(diaryEntryWithId.id)
+                        if (result is CustomResult.Error) {
+                            onError(result.message)
+                        } else {
+                            _diaryState.update {
+                                it.copy(
+                                    isDialogShowed = false,
+                                    meals = updateDiaryEntriesListAfterDelete(
+                                        diaryEntryId = diaryEntryWithId.id,
+                                        meals = _diaryState.value.meals
+                                    )
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+            is DiaryEvent.ClickedEditInDialog -> {
+
+            }
         }
     }
 
-    fun getDiaryEntries(){
+    fun getDiaryEntries() {
         val currentDate = CurrentDate.dateModel(resourceProvider = resourceProvider).date
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -69,12 +125,12 @@ class DiaryViewModel @Inject constructor(
                 date = currentDate,
                 mealNames = resourceProvider.getStringArray(R.array.meal_names).toList()
             )
-            Log.e(TAG,resource.toString())
+            Log.e(TAG, resource.toString())
 
-            when(resource){
+            when (resource) {
                 is Resource.Success -> {
                     val data = resource.data
-                    data?.let {meals ->
+                    data?.let { meals ->
                         _diaryState.update {
                             it.copy(
                                 meals = meals
@@ -89,7 +145,7 @@ class DiaryViewModel @Inject constructor(
         }
     }
 
-    private fun onError(errorMessage:String?){
+    private fun onError(errorMessage: String?) {
         _diaryState.update {
             it.copy(
                 errorMessage = errorMessage

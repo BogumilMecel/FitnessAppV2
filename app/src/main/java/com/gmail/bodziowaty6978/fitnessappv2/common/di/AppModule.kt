@@ -20,8 +20,10 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.domain.use_case.Regist
 import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.domain.use_case.ResetPasswordWithEmail
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.data.repository.remote.DiaryRepositoryImp
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.repository.DiaryRepository
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.diary.DeleteDiaryEntry
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.diary.GetDiaryEntries
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.diary.SortDiaryEntries
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.diary.UpdateDiaryEntriesListAfterDelete
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.new_product.CalculateNutritionValuesIn100G
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.new_product.SaveNewProduct
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.product.AddDiaryEntry
@@ -178,6 +180,16 @@ object AppModule {
         diaryRepository = diaryRepository,
         sortDiaryEntries = SortDiaryEntries()
     )
+
+    @Singleton
+    @Provides
+    fun provideDeleteDiaryEntryUseCase(
+        diaryRepository: DiaryRepository
+    ):DeleteDiaryEntry = DeleteDiaryEntry(diaryRepository = diaryRepository)
+
+    @Singleton
+    @Provides
+    fun provideUpdateDiaryEntriesListAfterDelete():UpdateDiaryEntriesListAfterDelete = UpdateDiaryEntriesListAfterDelete()
 
     @Singleton
     @Provides

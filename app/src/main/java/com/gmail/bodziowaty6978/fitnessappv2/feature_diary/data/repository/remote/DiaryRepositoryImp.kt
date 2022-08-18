@@ -112,7 +112,13 @@ class DiaryRepositoryImp(
     }
 
     override suspend fun deleteDiaryEntry(diaryEntryId: String): CustomResult {
-        TODO("Not yet implemented")
+        return try {
+            journalCollection.document(diaryEntryId).delete()
+            CustomResult.Success
+        }catch (e:Exception){
+            e.printStackTrace()
+            CustomResult.Error(message = resourceProvider.getString(R.string.unknown_error))
+        }
     }
 
     override suspend fun editDiaryEntry(diaryEntryWithId: DiaryEntryWithId): CustomResult {
