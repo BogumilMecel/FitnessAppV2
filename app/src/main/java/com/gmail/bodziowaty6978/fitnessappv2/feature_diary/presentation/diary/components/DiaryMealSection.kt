@@ -23,7 +23,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.diary.Di
 @Composable
 fun DiaryMealSection(
     meal: Meal,
-    onEvent:(DiaryEvent) -> Unit,
+    onEvent: (DiaryEvent) -> Unit,
     wantedNutritionValues: NutritionValues = NutritionValues()
 ) {
     val diaryEntriesValues = meal.diaryEntries
@@ -77,15 +77,11 @@ fun DiaryMealSection(
             }
 
             diaryEntriesValues.forEach {
-                DiaryEntryItem(
-                    diaryEntry = it.diaryEntry,
-                    onItemClicked = {
-                        onEvent(DiaryEvent.ClickedDiaryEntry(it))
-                    },
-                    onItemLongClick = {
-                        onEvent(DiaryEvent.LongClickedDiaryEntry(it))
-                    }
-                )
+                DiaryEntryItem(diaryEntry = it.diaryEntry, onItemClicked = {
+                    onEvent(DiaryEvent.ClickedDiaryEntry(it))
+                }, onItemLongClick = {
+                    onEvent(DiaryEvent.LongClickedDiaryEntry(it))
+                })
             }
 
             Divider(
@@ -108,11 +104,14 @@ fun DiaryMealSection(
                 Spacer(modifier = Modifier.width(32.dp))
 
 
-                MealSectionNutritionItem(currentValue = diaryEntriesValues.sumOf { it.diaryEntry.nutritionValues.carbohydrates }
-                    .toInt(),
-                                         wantedValue = wantedNutritionValues.carbohydrates.toInt(),
-                                         name = stringResource(id = R.string.carbs),
-                                         modifier = Modifier)
+                MealSectionNutritionItem(
+                    currentValue = diaryEntriesValues.sumOf { it.diaryEntry.nutritionValues.carbohydrates }
+                        .toInt(),
+
+                    wantedValue = wantedNutritionValues.carbohydrates.toInt(),
+                    name = stringResource(id = R.string.carbs),
+                    modifier = Modifier
+                )
 
                 Spacer(modifier = Modifier.width(32.dp))
 

@@ -27,7 +27,6 @@ import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun NewProductScreen(
-    mealName: String,
     viewModel: NewProductViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.collectAsState().value

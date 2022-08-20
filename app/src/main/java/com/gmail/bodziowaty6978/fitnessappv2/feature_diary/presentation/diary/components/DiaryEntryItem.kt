@@ -48,7 +48,8 @@ fun DiaryEntryItem(
             Column {
                 Row(
                     modifier = Modifier
-                        .padding(horizontal = 15.dp)
+                        .padding(horizontal = 15.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
                         text = diaryEntry.name,

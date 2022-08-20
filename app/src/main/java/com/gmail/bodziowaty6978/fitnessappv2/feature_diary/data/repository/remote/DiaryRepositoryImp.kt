@@ -101,13 +101,13 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun saveNewProduct(product: Product): CustomResult {
+    override suspend fun saveNewProduct(product: Product): Resource<String> {
         return try {
-            productCollection.add(product)
-            CustomResult.Success
+            val query = productCollection.add(product).await()
+            Resource.Success(data = query.id)
         }catch (e:Exception){
             e.printStackTrace()
-            CustomResult.Error(message = resourceProvider.getString(R.string.unknown_error))
+            Resource.Error(uiText = resourceProvider.getString(R.string.unknown_error))
         }
     }
 

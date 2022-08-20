@@ -18,7 +18,6 @@ import com.gmail.bodziowaty6978.fitnessappv2.util.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -32,7 +31,8 @@ class DiaryViewModel @Inject constructor(
     private val navigator: Navigator
 ) : ViewModel() {
 
-    private val _diaryState = MutableStateFlow(
+
+    var state = MutableStateFlow(
         DiaryState(
             meals = listOf(
                 Meal(
@@ -52,10 +52,13 @@ class DiaryViewModel @Inject constructor(
                     diaryEntries = emptyList()
                 ),
             ),
-
-            )
+        )
     )
-    val diaryState: StateFlow<DiaryState> = _diaryState
+        private set
+
+    init{
+        getDiaryEntries()
+    }
 
     fun onEvent(event: DiaryEvent) {
         when (event) {
@@ -69,7 +72,7 @@ class DiaryViewModel @Inject constructor(
 
             }
             is DiaryEvent.LongClickedDiaryEntry -> {
-                _diaryState.update {
+                state.update {
                     it.copy(
                         longClickedDiaryEntryWithId = event.diaryEntryWithId,
                         isDialogShowed = true
@@ -78,32 +81,32 @@ class DiaryViewModel @Inject constructor(
 
             }
             is DiaryEvent.CollectedWantedNutritionValues -> {
-                _diaryState.update {
+                state.update {
                     it.copy(
                         wantedNutritionValues = event.nutritionValues
                     )
                 }
             }
             is DiaryEvent.DismissedDialog -> {
-                _diaryState.update {
+                state.update {
                     it.copy(
                         isDialogShowed = false
                     )
                 }
             }
             is DiaryEvent.ClickedDeleteInDialog -> {
-                _diaryState.value.longClickedDiaryEntryWithId?.let { diaryEntryWithId ->
+                state.value.longClickedDiaryEntryWithId?.let { diaryEntryWithId ->
                     viewModelScope.launch(Dispatchers.IO) {
                         val result = deleteDiaryEntry(diaryEntryWithId.id)
                         if (result is CustomResult.Error) {
                             onError(result.message)
                         } else {
-                            _diaryState.update {
+                            state.update {
                                 it.copy(
                                     isDialogShowed = false,
                                     meals = updateDiaryEntriesListAfterDelete(
                                         diaryEntryId = diaryEntryWithId.id,
-                                        meals = _diaryState.value.meals
+                                        meals = state.value.meals
                                     )
                                 )
                             }
@@ -117,7 +120,7 @@ class DiaryViewModel @Inject constructor(
         }
     }
 
-    fun getDiaryEntries() {
+    private fun getDiaryEntries() {
         val currentDate = CurrentDate.dateModel(resourceProvider = resourceProvider).date
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -131,7 +134,7 @@ class DiaryViewModel @Inject constructor(
                 is Resource.Success -> {
                     val data = resource.data
                     data?.let { meals ->
-                        _diaryState.update {
+                        state.update {
                             it.copy(
                                 meals = meals
                             )
@@ -146,13 +149,13 @@ class DiaryViewModel @Inject constructor(
     }
 
     private fun onError(errorMessage: String?) {
-        _diaryState.update {
+        state.update {
             it.copy(
                 errorMessage = errorMessage
             )
         }
 
-        _diaryState.update {
+        state.update {
             it.copy(
                 lastErrorMessage = errorMessage
             )

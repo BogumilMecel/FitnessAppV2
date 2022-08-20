@@ -11,4 +11,5 @@ data class SearchState(
     val isScannerVisible:Boolean = false,
     val hasPermissionDialogBeenShowed:Boolean = false,
     val barcode:String? = null,
+    val mealName:String = ""
 )

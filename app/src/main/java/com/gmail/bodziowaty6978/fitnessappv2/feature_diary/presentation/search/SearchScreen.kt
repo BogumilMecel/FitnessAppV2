@@ -8,7 +8,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -20,6 +19,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.singleton.CurrentDate
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.BackHandler
@@ -35,13 +36,12 @@ import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 
-@OptIn(ExperimentalPermissionsApi::class)
+@OptIn(ExperimentalPermissionsApi::class, ExperimentalLifecycleComposeApi::class)
 @Composable
 fun SearchScreen(
-    mealName: String,
     viewModel: SearchViewModel = hiltViewModel()
 ) {
-    val state = viewModel.searchState.collectAsState().value
+    val state = viewModel.searchState.collectAsStateWithLifecycle().value
 
     val cameraPermissionState = rememberPermissionState(
         permission = Manifest.permission.CAMERA
@@ -135,7 +135,7 @@ fun SearchScreen(
                 SearchTopSection(
                     modifier = Modifier,
                     searchBarText = state.searchBarText,
-                    mealName = mealName,
+                    mealName = state.mealName,
                     date = CurrentDate.dateModel(LocalContext.current).valueToDisplay
                         ?: CurrentDate.dateModel(LocalContext.current).date,
                     onEvent = { searchEvent ->
@@ -250,8 +250,7 @@ fun SearchScreen(
                                 SearchProductItem(product = items[itemPosition].product) {
                                     viewModel.onEvent(
                                         SearchEvent.ClickedSearchItem(
-                                            item = items[itemPosition],
-                                            mealName = mealName
+                                            item = items[itemPosition]
                                         )
                                     )
                                 }

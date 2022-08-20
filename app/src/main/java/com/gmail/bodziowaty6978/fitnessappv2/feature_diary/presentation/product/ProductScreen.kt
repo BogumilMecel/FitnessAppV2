@@ -12,28 +12,27 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.singleton.CurrentDate
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.LightRed
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.ProductWithId
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.ProductNameSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.ProductNutritionSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.ProductTopSection
 
 
+@OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 fun ProductScreen(
     viewModel: ProductViewModel = hiltViewModel(),
     productWithId: ProductWithId,
-    mealName: String
 ) {
     val product = productWithId.product
 
-    val weightState = viewModel.weightState
-    val nutritionData = viewModel.nutritionDataState.value
+    val state = viewModel.state.collectAsStateWithLifecycle().value
 
     val scaffoldState = rememberScaffoldState()
 
@@ -41,9 +40,11 @@ fun ProductScreen(
         viewModel.initializeNutritionData(product)
     }
 
-    LaunchedEffect(key1 = true){
-        viewModel.errorState.collect{
-            scaffoldState.snackbarHostState.showSnackbar(it)
+    LaunchedEffect(key1 = state){
+        state.errorMessage?.let {
+            if(it!=state.lastErrorMessage){
+                scaffoldState.snackbarHostState.showSnackbar(it)
+            }
         }
     }
 
@@ -53,7 +54,7 @@ fun ProductScreen(
             ExtendedFloatingActionButton(
                 text = {
                     Text(
-                        text = stringResource(id = R.string.add_product).uppercase(),
+                        text = stringResource(id = R.string.save).uppercase(),
                         color = Color.Black,
                         style = MaterialTheme.typography.button
                     )
@@ -62,7 +63,6 @@ fun ProductScreen(
                     viewModel.onEvent(
                         ProductEvent.ClickedAddProduct(
                             productWithId = productWithId,
-                            mealName = mealName
                         )
                     )
                 },
@@ -84,7 +84,7 @@ fun ProductScreen(
                 .fillMaxSize()
         ) {
             ProductTopSection(
-                mealName = mealName,
+                mealName = state.mealName,
                 currentDate = CurrentDate.dateModel(LocalContext.current).valueToDisplay
                     ?: CurrentDate.dateModel(LocalContext.current).date,
                 onEvent = {
@@ -93,21 +93,14 @@ fun ProductScreen(
             )
 
             ProductNameSection(
-                currentWeight = weightState.value,
+                currentWeight = state.weight,
                 product = product,
                 onEvent = {
                     viewModel.onEvent(it)
                 }
             )
 
-            ProductNutritionSection(nutritionData = nutritionData)
-
+            ProductNutritionSection(nutritionData = state.nutritionData)
         }
     }
-}
-
-@Preview
-@Composable
-fun ProductScreenPreview() {
-    ProductScreen(productWithId = ProductWithId("", Product()), mealName = "")
 }

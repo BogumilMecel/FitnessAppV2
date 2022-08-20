@@ -3,12 +3,13 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_pro
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.NavigationActions
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigator
-import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
+import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.new_product.SaveNewProduct
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,7 +24,8 @@ import javax.inject.Inject
 class NewProductViewModel @Inject constructor(
     private val navigator: Navigator,
     private val resourceProvider: ResourceProvider,
-    private val saveNewProduct: SaveNewProduct
+    private val saveNewProduct: SaveNewProduct,
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(
@@ -148,7 +150,8 @@ class NewProductViewModel @Inject constructor(
                     }
 
                     val state = _state.value
-                    val result = saveNewProduct(
+
+                    val resource = saveNewProduct(
                         name = state.productName,
                         containerWeight = state.containerWeightValue,
                         position = state.nutritionSelectedTabIndex,
@@ -160,10 +163,14 @@ class NewProductViewModel @Inject constructor(
                         fat = state.fat,
                     )
 
-                    if(result is CustomResult.Error){
-                        onError(result.message)
+                    if(resource is Resource.Error){
+                        onError(resource.uiText)
                     }else{
-                        // TODO: On successful result
+                        savedStateHandle.get<String>("mealName")?.let {
+//                            navigator.navigate(
+//                                NavigationActions.NewProductScreen.newProductToProduct(it, Pr)
+//                            )
+                        }
                     }
                 }
             }
@@ -192,7 +199,7 @@ class NewProductViewModel @Inject constructor(
         }
     }
 
-    private fun onError(message:String){
+    private fun onError(message:String?){
         _state.update {
             it.copy(
                 isLoading = false,

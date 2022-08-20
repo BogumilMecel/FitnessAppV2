@@ -10,6 +10,6 @@ sealed class SearchEvent{
     object ClickedSearch:SearchEvent()
     data class EnteredSearchText(val text:String):SearchEvent()
     data class ScannedBarcode(val code:String):SearchEvent()
-    data class ClickedSearchItem(val item:ProductWithId, val mealName:String):SearchEvent()
+    data class ClickedSearchItem(val item:ProductWithId):SearchEvent()
     object ClosedScanner:SearchEvent()
 }

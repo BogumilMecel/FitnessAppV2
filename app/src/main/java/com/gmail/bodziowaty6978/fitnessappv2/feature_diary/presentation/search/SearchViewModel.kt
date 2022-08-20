@@ -1,6 +1,5 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,7 +9,6 @@ import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigator
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.search.SearchDiaryUseCases
-import com.gmail.bodziowaty6978.fitnessappv2.util.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,11 +22,21 @@ class SearchViewModel @Inject constructor(
     private val navigator: Navigator,
     private val searchDiaryUseCases: SearchDiaryUseCases,
     private val resourceProvider: ResourceProvider,
-    private val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     private val _searchState = MutableStateFlow<SearchState>(SearchState())
     val searchState: StateFlow<SearchState> = _searchState
+
+    init{
+        savedStateHandle.get<String>("mealName")?.let { mealName ->
+            _searchState.update {
+                it.copy(
+                    mealName = mealName
+                )
+            }
+        }
+    }
 
     fun onEvent(event: SearchEvent) {
         when (event) {
@@ -72,13 +80,14 @@ class SearchViewModel @Inject constructor(
                 }
             }
             is SearchEvent.ClickedSearchItem -> {
-                Log.e(TAG,event.item.toString())
-                navigator.navigate(
-                    NavigationActions.SearchScreen.searchToProduct(
-                        productWithId = event.item,
-                        mealName = event.mealName
+                savedStateHandle.get<String>("mealName")?.let { mealName ->
+                    navigator.navigate(
+                        NavigationActions.SearchScreen.searchToProduct(
+                            productWithId = event.item,
+                            mealName = mealName
+                        )
                     )
-                )
+                } ?: onError(resourceProvider.getString(R.string.unknown_error))
             }
             is SearchEvent.ClickedNewProduct -> {
                 savedStateHandle.get<String>("mealName")?.let {

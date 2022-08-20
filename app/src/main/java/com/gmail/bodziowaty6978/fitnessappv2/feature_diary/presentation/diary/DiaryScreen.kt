@@ -31,12 +31,8 @@ fun DiaryScreen(
 ) {
     val context = LocalContext.current
 
-    val state = viewModel.diaryState.collectAsStateWithLifecycle().value
+    val state = viewModel.state.collectAsStateWithLifecycle().value
     val scaffoldState = rememberScaffoldState()
-
-    LaunchedEffect(key1 = true) {
-        viewModel.getDiaryEntries()
-    }
 
     LaunchedEffect(key1 = state) {
         state.errorMessage?.let {
@@ -79,7 +75,7 @@ fun DiaryScreen(
                                 border = BorderStroke(1.dp, MaterialTheme.colors.primary)
                             ) {
                                 Text(
-                                    text = stringResource(id = R.string.delete),
+                                    text = stringResource(id = R.string.delete).uppercase(),
                                     style = MaterialTheme.typography.button.copy(
                                         color = MaterialTheme.colors.primary
                                     )
@@ -95,7 +91,8 @@ fun DiaryScreen(
                                     .padding(horizontal = 10.dp, vertical = 10.dp)
                             ) {
                                 Text(
-                                    text = stringResource(id = R.string.edit)
+                                    text = stringResource(id = R.string.edit).uppercase(),
+                                    style = MaterialTheme.typography.button
                                 )
                             }
 
