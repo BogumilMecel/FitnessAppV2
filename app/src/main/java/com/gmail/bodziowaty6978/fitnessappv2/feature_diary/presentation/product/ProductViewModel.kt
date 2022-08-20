@@ -14,6 +14,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -26,12 +27,13 @@ class ProductViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    var state = MutableStateFlow(ProductState())
-        private set
+    private val _state = MutableStateFlow(ProductState())
+    val state:StateFlow<ProductState> = _state
+
 
     init {
         savedStateHandle.get<String>("mealName")?.let { mealName ->
-            state.update {
+            _state.update {
                 it.copy(
                     mealName = mealName
                 )
@@ -46,7 +48,7 @@ class ProductViewModel @Inject constructor(
                     val enteredValue = event.value.replace(",", "").replace(".", "").toIntOrNull()
 
                     enteredValue?.let { newWeight ->
-                        state.update {
+                        _state.update {
                             it.copy(
                                 weight = newWeight.toString(),
                                 nutritionData = it.nutritionData.copy(
@@ -58,7 +60,7 @@ class ProductViewModel @Inject constructor(
                             )
                         }
                     } ?: run {
-                        state.update {
+                        _state.update {
                             it.copy(
                                 weight = ""
                             )
@@ -71,21 +73,21 @@ class ProductViewModel @Inject constructor(
                 viewModelScope.launch(Dispatchers.IO) {
                     val addingResult = productUseCases.addDiaryEntry(
                         productWithId = event.productWithId,
-                        mealName = state.value.mealName,
-                        weight = state.value.weight.toIntOrNull(),
+                        mealName = _state.value.mealName,
+                        weight = _state.value.weight.toIntOrNull(),
                         dateModel = CurrentDate.dateModel(resourceProvider = resourceProvider),
-                        nutritionValues = state.value.nutritionData.nutritionValues
+                        nutritionValues = _state.value.nutritionData.nutritionValues
                     )
                     if (addingResult is CustomResult.Success) {
                         productUseCases.saveProductToHistory(productWithId = event.productWithId)
                         navigator.navigate(NavigationActions.ProductScreen.productToDiary())
                     } else if (addingResult is CustomResult.Error) {
-                        state.update {
+                        _state.update {
                             it.copy(
                                 errorMessage = addingResult.message
                             )
                         }
-                        state.update {
+                        _state.update {
                             it.copy(
                                 lastErrorMessage = addingResult.message
                             )
@@ -100,7 +102,7 @@ class ProductViewModel @Inject constructor(
     }
 
     fun initializeNutritionData(product: Product) {
-        state.update {
+        _state.update {
             it.copy(
                 nutritionData = NutritionData(
                     nutritionValues = product.nutritionValues,

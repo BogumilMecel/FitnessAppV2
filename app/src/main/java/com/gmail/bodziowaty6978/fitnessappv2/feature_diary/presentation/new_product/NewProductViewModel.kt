@@ -36,6 +36,16 @@ class NewProductViewModel @Inject constructor(
     )
     val state: StateFlow<NewProductState> = _state
 
+    init{
+        savedStateHandle.get<String>("barcode")?.let { barcode ->
+            _state.update {
+                it.copy(
+                    barcode = barcode
+                )
+            }
+        }
+    }
+
     fun onEvent(event: NewProductEvent) {
         when (event) {
             is NewProductEvent.ClickedDropDownMenu -> {

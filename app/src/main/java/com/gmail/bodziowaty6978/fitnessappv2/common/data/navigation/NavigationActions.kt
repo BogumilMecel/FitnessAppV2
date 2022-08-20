@@ -115,7 +115,7 @@ object NavigationActions {
     //Search
     object SearchScreen{
         fun searchToNewProduct(mealName: String = "Breakfast", barcode: String? = null) = object : NavigationAction {
-            override val destination: String = Screen.NewProductScreen.route
+            override val destination: String = Screen.NewProductScreen.route + "?mealName=$mealName" + "&barcode=$barcode"
         }
         fun searchToProduct(productWithId: Parcelable, mealName: String) = object :
             NavigationAction {

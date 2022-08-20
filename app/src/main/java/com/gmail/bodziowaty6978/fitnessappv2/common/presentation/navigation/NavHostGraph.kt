@@ -190,13 +190,20 @@ fun NavHostGraph(
                 }
 
                 composable(
-                    Screen.NewProductScreen.route + "?mealName={mealName}",
+                    Screen.NewProductScreen.route + "?mealName={mealName}&barcode={barcode}",
                     arguments = listOf(
                         navArgument(
                             name = "mealName"
                         ) {
                             type = NavType.StringType
                             defaultValue = "Breakfast"
+                        },
+                        navArgument(
+                            name = "barcode"
+                        ) {
+                            type = NavType.StringType
+                            nullable = true
+                            defaultValue = null
                         }
                     )
                 ) {
