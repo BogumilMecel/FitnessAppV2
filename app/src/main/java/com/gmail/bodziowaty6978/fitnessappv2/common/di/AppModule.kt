@@ -12,6 +12,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigator
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.datastoreInformation
 import com.gmail.bodziowaty6978.fitnessappv2.datastoreNutrition
+import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.data.api.AuthApi
 import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.data.repository.AuthRepositoryImp
 import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.domain.repository.AuthRepository
 import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.domain.use_case.AuthUseCases
@@ -85,8 +86,14 @@ object AppModule {
     @Singleton
     @Provides
     fun provideProductApi(retrofit: Retrofit):ProductApi{
-        return retrofit.create<ProductApi>(ProductApi::class.java)
+        return retrofit.create(ProductApi::class.java)
     }
+
+    @Singleton
+    @Provides
+    fun provideAuthApi(
+        retrofit: Retrofit
+    ):AuthApi = retrofit.create(AuthApi::class.java)
 
 
     @Singleton
@@ -104,8 +111,10 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideAuthRepository(firebaseAuth: FirebaseAuth): AuthRepository =
-        AuthRepositoryImp(firebaseAuth)
+    fun provideAuthRepository(authApi: AuthApi): AuthRepository =
+        AuthRepositoryImp(
+            authApi = authApi
+        )
 
     @Provides
     @Singleton

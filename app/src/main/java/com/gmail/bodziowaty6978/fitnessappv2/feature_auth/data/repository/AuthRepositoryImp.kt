@@ -1,23 +1,31 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_auth.data.repository
 
+import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
+import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
+import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
+import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.data.api.AuthApi
+import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.domain.model.AuthRequest
+import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.domain.model.TokenResponse
 import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.domain.repository.AuthRepository
-import com.google.firebase.auth.FirebaseAuth
-import kotlinx.coroutines.tasks.await
 
 class AuthRepositoryImp(
-    private val firebaseAuth: FirebaseAuth
+    private val authApi: AuthApi,
+    private val resourceProvider: ResourceProvider
 ) : AuthRepository {
 
-    override suspend fun logInUser(email: String, password: String): CustomResult {
+    override suspend fun logInUser(email: String, password: String): Resource<TokenResponse> {
         return try {
-            firebaseAuth.signInWithEmailAndPassword(
-                email,
-                password
-            ).await()
-            CustomResult.Success
+            val token = authApi.signIn(
+                AuthRequest(
+                    username = email,
+                    password = password
+                )
+            )
+            Resource.Success(data = token)
         } catch (e: Exception) {
-            CustomResult.Error(e.message.toString())
+            e.printStackTrace()
+            Resource.Error(uiText = resourceProvider.getString(R.string.unknown_error))
         }
     }
 
@@ -26,22 +34,20 @@ class AuthRepositoryImp(
         password: String,
     ): CustomResult {
         return try {
-            firebaseAuth.createUserWithEmailAndPassword(
-                email,
-                password
-            ).await()
+            authApi.registerUser(
+                AuthRequest(
+                    username = email,
+                    password = password
+                )
+            )
             CustomResult.Success
         } catch (e: Exception) {
-            CustomResult.Error(e.message.toString())
+            e.printStackTrace()
+            CustomResult.Error(resourceProvider.getString(R.string.unknown_error))
         }
     }
 
     override suspend fun sendPasswordResetEmail(email: String): CustomResult {
-        return try {
-            firebaseAuth.sendPasswordResetEmail(email).await()
-            CustomResult.Success
-        } catch (e: Exception) {
-            CustomResult.Error(e.message.toString())
-        }
+        return CustomResult.Error(resourceProvider.getString(R.string.unknown_error))
     }
 }
