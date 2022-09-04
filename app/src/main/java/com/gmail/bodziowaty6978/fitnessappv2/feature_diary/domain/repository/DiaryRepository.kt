@@ -3,27 +3,25 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.repository
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.DiaryEntry
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.DiaryEntryWithId
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.ProductWithId
 
 interface DiaryRepository {
 
-    suspend fun getDiaryEntries(date:String): Resource<List<DiaryEntryWithId>>
+    suspend fun getDiaryEntries(timestamp:Long, token:String): Resource<List<DiaryEntry>>
 
-    suspend fun searchForProducts(productName:String) : Resource<List<ProductWithId>>
+    suspend fun searchForProducts(searchText:String) : Resource<List<Product>>
 
-    suspend fun searchForProductWithBarcode(barcode:String):Resource<ProductWithId>
+    suspend fun searchForProductWithBarcode(barcode:String):Resource<Product>
 
-    suspend fun getLocalProductHistory():Resource<List<ProductWithId>>
+    suspend fun getLocalProductHistory():Resource<List<Product>>
 
-    suspend fun saveProductToHistory(productWithId: ProductWithId):CustomResult
+    suspend fun saveProductToHistory(product: Product):CustomResult
 
-    suspend fun addDiaryEntry(diaryEntry: DiaryEntry):CustomResult
+    suspend fun addDiaryEntry(diaryEntry: DiaryEntry, token: String):Resource<DiaryEntry>
 
-    suspend fun deleteDiaryEntry(diaryEntryId:String):CustomResult
+    suspend fun deleteDiaryEntry(diaryEntryId: Int):CustomResult
 
-    suspend fun editDiaryEntry(diaryEntryWithId: DiaryEntryWithId):CustomResult
+    suspend fun editDiaryEntry(diaryEntry: DiaryEntry):CustomResult
 
-    suspend fun saveNewProduct(product: Product):Resource<String>
+    suspend fun saveNewProduct(product: Product):Resource<Product>
 }

@@ -4,14 +4,14 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.ProductWithId
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
 
 @Dao
 interface ProductDao {
 
-    @Query("SELECT * FROM productwithid")
-    suspend fun getHistory():List<ProductWithId>
+    @Query("SELECT * FROM product")
+    suspend fun getHistory():List<Product>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun saveProductToHistory(productWithId: ProductWithId)
+    suspend fun saveProductToHistory(productWithId: Product)
 }

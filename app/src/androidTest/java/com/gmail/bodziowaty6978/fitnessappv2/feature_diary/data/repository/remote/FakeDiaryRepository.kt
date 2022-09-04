@@ -3,9 +3,7 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.data.repository.remo
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.DiaryEntry
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.DiaryEntryWithId
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.ProductWithId
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 
 

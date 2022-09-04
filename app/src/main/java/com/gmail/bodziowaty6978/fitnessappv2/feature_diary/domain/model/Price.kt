@@ -1,12 +1,13 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model
 
 import android.os.Parcelable
-import androidx.room.Entity
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
-@Entity
 @Parcelize
+@Serializable
 data class Price(
-    val price:Double = 0.0,
-    val forWhat:String = ""
-) : Parcelable
+    val id:Int = 0,
+    val value:Double = 0.0,
+    val forHowMuch:Int = 0
+):Parcelable

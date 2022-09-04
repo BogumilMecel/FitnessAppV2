@@ -1,20 +1,22 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model
 
 import android.os.Parcelable
-import androidx.room.ColumnInfo
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValues
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
 @Parcelize
+@Serializable
 data class Product(
-    @ColumnInfo(name = "name") val name: String = "White rice",
-    @ColumnInfo(name = "containerWeight") val containerWeight: Int = 0,
-    @ColumnInfo(name = "position") val position: Int = 0,
-    @ColumnInfo(name = "unit") val unit: String = "g",
-    @ColumnInfo(name = "nutritionValues") val nutritionValues: NutritionValues = NutritionValues(),
-    @ColumnInfo(name = "barcode") val barcode: String? = "",
-    @ColumnInfo(name = "prices") var prices: List<Price> = emptyList()
-) : Parcelable
+    val id:Int,
+    val name: String = "White rice",
+    val containerWeight: Int = 0,
+    val position: Int = 0,
+    val unit: String = "g",
+    val nutritionValues: NutritionValues = NutritionValues(),
+    val barcode: String? = "",
+    val price: Price
+):Parcelable
 
 
 

@@ -18,6 +18,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.domain.use_case.AuthUs
 import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.domain.use_case.LogInUser
 import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.domain.use_case.RegisterUser
 import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.domain.use_case.ResetPasswordWithEmail
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.data.api.ProductApi
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.data.repository.remote.DiaryRepositoryImp
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.diary.DeleteDiaryEntry
@@ -45,6 +46,9 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.create
 import javax.inject.Singleton
 
 @Module
@@ -71,14 +75,17 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideFirebaseFirestore(): FirebaseFirestore {
-        return FirebaseFirestore.getInstance()
+    fun provideRetrofitInstance():Retrofit{
+        return Retrofit.Builder()
+            .baseUrl("http://10.0.2.2:8080/products/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
     }
 
     @Singleton
     @Provides
-    fun provideUserId(firebaseAuth: FirebaseAuth): String? {
-        return firebaseAuth.currentUser?.uid
+    fun provideProductApi(retrofit: Retrofit):ProductApi{
+        return retrofit.create<ProductApi>(ProductApi::class.java)
     }
 
 
@@ -94,9 +101,6 @@ object AppModule {
         @ApplicationContext context: Context
     ): DataStore<UserInformation> = context.datastoreInformation
 
-    @Provides
-    @Singleton
-    fun provideFirebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
 
     @Provides
     @Singleton

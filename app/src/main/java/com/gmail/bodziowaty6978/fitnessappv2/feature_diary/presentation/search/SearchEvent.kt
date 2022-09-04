@@ -1,7 +1,5 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search
 
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.ProductWithId
-
 sealed class SearchEvent{
     object ShowedPermissionDialog:SearchEvent()
     object ClickedBackArrow:SearchEvent()
