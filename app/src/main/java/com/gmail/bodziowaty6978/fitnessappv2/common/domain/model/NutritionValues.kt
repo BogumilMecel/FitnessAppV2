@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 @Parcelize
 @Serializable
 data class NutritionValues(
-    val id:Int = 0,
+    val id:Int = -1,
     val calories:Int = 285,
     val carbohydrates:Double = 100.0,
     val protein:Double = 50.0,

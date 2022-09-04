@@ -2,64 +2,122 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_splash.loading.presentatio
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.NavigationActions
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigator
+import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
+import com.gmail.bodziowaty6978.fitnessappv2.feature_splash.domain.repository.LoadingRepository
 import com.gmail.bodziowaty6978.fitnessappv2.util.TAG
-import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class LoadingViewModel @Inject constructor(
-    private val firebaseAuth: FirebaseAuth,
+    private val loadingRepository: LoadingRepository,
     private val navigator: Navigator
-): ViewModel(){
+) : ViewModel() {
 
     private val _loadingState = MutableStateFlow<LoadingState>(LoadingState())
 
-    fun onEvent(event: LoadingEvent){
-        Log.e(TAG,event.toString())
-        when(event){
+    fun onEvent(event: LoadingEvent) {
+        Log.e(TAG, event.toString())
+        when (event) {
             is LoadingEvent.ReceivedNutrition -> {
                 _loadingState.value = _loadingState.value.copy(
-                    hasNutritionValues = event.nutritionValues.calories!=0
+                    hasNutritionValues = event.nutritionValues.calories != -1
                 )
                 checkUser()
             }
             is LoadingEvent.ReceivedInformation -> {
                 _loadingState.value = _loadingState.value.copy(
-                    hasInformation = event.userInformation.age!=0
+                    hasInformation = event.userInformation.age != -1
                 )
                 checkUser()
             }
         }
     }
 
-    private fun checkUser(){
-        val isLogged = _loadingState.value.isLoggedIn
-        isLogged?.let {
-            if (isLogged) {
-                val hasInformation = _loadingState.value.hasInformation
-                val hasNutrition = _loadingState.value.hasNutritionValues
-                if (hasInformation != null && hasNutrition != null) {
-                    if (!hasInformation || !hasNutrition) {
-                        navigator.navigate(NavigationActions.LoadingScreen.loadingToIntroduction())
+    private fun checkUser() {
+        val hasToken = _loadingState.value.hasToken
+        hasToken?.let {
+            if (it){
+                val isLogged = _loadingState.value.isLoggedIn
+                isLogged?.let {
+                    if (isLogged) {
+                        val hasInformation = _loadingState.value.hasInformation
+                        val hasNutrition = _loadingState.value.hasNutritionValues
+                        if (hasInformation != null && hasNutrition != null) {
+                            if (!hasInformation || !hasNutrition) {
+                                navigator.navigate(NavigationActions.LoadingScreen.loadingToIntroduction())
+                            } else {
+                                navigator.navigate(NavigationActions.LoadingScreen.loadingToSummary())
+                            }
+                        }
+
                     } else {
-                        navigator.navigate(NavigationActions.LoadingScreen.loadingToSummary())
+                        navigator.navigate(NavigationActions.LoadingScreen.loadingToLogin())
                     }
                 }
-
-            } else {
+            }else{
                 navigator.navigate(NavigationActions.LoadingScreen.loadingToLogin())
             }
         }
     }
 
-    fun checkIfUserLoggedIn(){
-        _loadingState.value = _loadingState.value.copy(
-            isLoggedIn = firebaseAuth.currentUser!=null
-        )
-        checkUser()
+    fun checkIfTokenIsPresent() {
+        viewModelScope.launch {
+            val resource = loadingRepository.getToken()
+            if (resource is Resource.Error) {
+                _loadingState.update {
+                    it.copy(
+                        hasToken = false
+                    )
+                }
+            } else {
+                if (resource.data != null) {
+                    authenticateUser(resource.data)
+                } else {
+                    _loadingState.update {
+                        it.copy(
+                            hasToken = false
+                        )
+                    }
+                }
+            }
+            checkUser()
+        }
+    }
+
+    private fun authenticateUser(
+        token: String
+    ) {
+        viewModelScope.launch {
+            val resource = loadingRepository.authenticateUser(token)
+            if (resource is Resource.Error) {
+                _loadingState.update {
+                    it.copy(
+                        isLoggedIn = false
+                    )
+                }
+            } else {
+                if (resource.data != null) {
+                    _loadingState.update {
+                        it.copy(
+                            isLoggedIn = true
+                        )
+                    }
+                } else {
+                    _loadingState.update {
+                        it.copy(
+                            isLoggedIn = false
+                        )
+                    }
+                }
+            }
+            checkUser()
+        }
     }
 }
