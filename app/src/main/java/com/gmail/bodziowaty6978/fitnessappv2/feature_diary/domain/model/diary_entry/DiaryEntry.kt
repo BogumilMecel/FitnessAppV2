@@ -9,10 +9,10 @@ import kotlinx.serialization.Serializable
 @Parcelize
 @Serializable
 data class DiaryEntry(
-    val id:Int,
+    val id:Int = -1,
     val product: Product,
     val timeStamp:Long,
-    var weight:Double,
+    var weight:Int,
     val mealName:String
 ):Parcelable
 

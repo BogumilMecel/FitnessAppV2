@@ -9,7 +9,5 @@ interface LoadingRepository {
         token:String
     ):Resource<Boolean>
 
-    suspend fun getToken():Resource<String>
-
     suspend fun getNutritionValues(token: String):Resource<NutritionValues>
 }

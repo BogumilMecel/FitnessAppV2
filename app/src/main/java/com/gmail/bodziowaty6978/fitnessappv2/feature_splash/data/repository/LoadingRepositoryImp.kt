@@ -1,7 +1,7 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_splash.data.repository
 
-import android.content.SharedPreferences
 import com.gmail.bodziowaty6978.fitnessappv2.R
+import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.feature_splash.data.api.LoadingApi
@@ -9,7 +9,6 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_splash.domain.repository.Lo
 
 class LoadingRepositoryImp(
     private val loadingApi:LoadingApi,
-    private val sharedPreferences: SharedPreferences,
     private val resourceProvider: ResourceProvider
 ):LoadingRepository {
 
@@ -18,25 +17,22 @@ class LoadingRepositoryImp(
     ): Resource<Boolean> {
         return try {
             val call = loadingApi.authenticate(token = token)
-            if (call){
+            if (call) {
                 Resource.Success(true)
             }
             Resource.Error(resourceProvider.getString(R.string.unknown_error))
-        }catch (e:Exception){
+        } catch (e: Exception) {
             Resource.Error(resourceProvider.getString(R.string.unknown_error))
         }
     }
 
-    override suspend fun getToken(): Resource<String> {
+    override suspend fun getNutritionValues(token: String): Resource<NutritionValues> {
         return try {
-            val token = sharedPreferences.getString("token",null)
-            if (token!=null){
-             Resource.Success(data = token)
-            }
-            Resource.Error(resourceProvider.getString(R.string.unknown_error))
+            return Resource.Success(
+                data = loadingApi.getNutritionValues(token)
+            )
         }catch (e:Exception){
             Resource.Error(resourceProvider.getString(R.string.unknown_error))
         }
-
     }
 }
