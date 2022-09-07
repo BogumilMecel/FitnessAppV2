@@ -1,11 +1,12 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model
 
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.diary_entry.CalculatedDiaryEntry
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.util.NutritionType
 
 
 data class Meal(
     val mealName:String,
-    val diaryEntries:List<DiaryEntry>
+    val diaryEntries:List<CalculatedDiaryEntry>
 )
 
 fun Meal.sumNutritionValues(
@@ -19,17 +20,17 @@ fun Meal.sumNutritionValues(
         }
         is NutritionType.Carbs -> {
             this.diaryEntries.sumOf {
-                it.diaryEntry.nutritionValues.carbohydrates
+                it.nutritionValues.carbohydrates
             }
         }
         is NutritionType.Protein -> {
             this.diaryEntries.sumOf {
-                it.diaryEntry.nutritionValues.protein
+                it.nutritionValues.protein
             }
         }
         is NutritionType.Fat -> {
             this.diaryEntries.sumOf {
-                it.diaryEntry.nutritionValues.fat
+                it.nutritionValues.fat
             }
         }
     }

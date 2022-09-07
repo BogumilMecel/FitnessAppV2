@@ -14,7 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.TextGrey
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.DiaryEntry
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.diary_entry.DiaryEntry
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -52,12 +52,12 @@ fun DiaryEntryItem(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = diaryEntry.name,
+                        text = diaryEntry.product.name,
                         style = MaterialTheme.typography.body1
                     )
 
                     Text(
-                        text = "(${diaryEntry.weight}${diaryEntry.unit})",
+                        text = "(${diaryEntry.weight}${diaryEntry.product.unit})",
                         style = MaterialTheme.typography.body2,
                         color = TextGrey,
                         modifier = Modifier
@@ -78,25 +78,25 @@ fun DiaryEntryItem(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = "Kcal:" + diaryEntry.nutritionValues.calories.toString(),
+                        text = "Kcal:" + diaryEntry.product.nutritionValues.calories.toString(),
                         style = MaterialTheme.typography.body2,
                         color = TextGrey,
                     )
 
                     Text(
-                        text = "Carb:" + diaryEntry.nutritionValues.carbohydrates.toString(),
+                        text = "Carb:" + diaryEntry.product.nutritionValues.carbohydrates.toString(),
                         style = MaterialTheme.typography.body2,
                         color = TextGrey
                     )
 
                     Text(
-                        text = "Prot:" + diaryEntry.nutritionValues.protein.toString(),
+                        text = "Prot:" + diaryEntry.product.nutritionValues.protein.toString(),
                         style = MaterialTheme.typography.body2,
                         color = TextGrey
                     )
 
                     Text(
-                        text = "Fat:" + diaryEntry.nutritionValues.fat.toString(),
+                        text = "Fat:" + diaryEntry.product.nutritionValues.fat.toString(),
                         style = MaterialTheme.typography.body2,
                         color = TextGrey
                     )

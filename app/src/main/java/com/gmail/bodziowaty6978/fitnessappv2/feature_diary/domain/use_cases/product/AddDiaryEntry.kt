@@ -1,12 +1,9 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.product
 
-import androidx.compose.ui.tooling.data.EmptyGroup.name
 import com.gmail.bodziowaty6978.fitnessappv2.R
-import com.gmail.bodziowaty6978.fitnessappv2.common.data.singleton.CurrentDate
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.DateModel
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.use_case.GetToken
-import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
@@ -27,25 +24,26 @@ class AddDiaryEntry(
         nutritionValues: NutritionValues,
     ): Resource<DiaryEntry> {
         return weight?.let {
-            if (weight==0){
+            if (weight == 0) {
                 Resource.Error(
                     uiText = resourceProvider.getString(R.string.incorrect_weight_was_entered)
                 )
-            }else{
+            } else {
                 val diaryEntry = DiaryEntry(
-                 product = product,
-                 timeStamp = dateModel.timestamp,
-                 weight = it,
-                 mealName = mealName
+                    product = product,
+                    timeStamp = dateModel.timestamp,
+                    weight = it,
+                    mealName = mealName
                 )
 
                 val token = getToken()
-                if (token is Resource.)
 
-                diaryRepository.addDiaryEntry(
-                    diaryEntry = diaryEntry,
-                    token = getToken()
-                )
+                token?.let { tokenString ->
+                    diaryRepository.addDiaryEntry(
+                        diaryEntry = diaryEntry,
+                        token = tokenString
+                    )
+                } ?: Resource.Error(resourceProvider.getString(R.string.unknown_error))
             }
         } ?: Resource.Error(
             uiText = resourceProvider.getString(R.string.incorrect_weight_was_entered)

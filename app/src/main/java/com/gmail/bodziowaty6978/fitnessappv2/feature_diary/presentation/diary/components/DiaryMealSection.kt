@@ -78,9 +78,9 @@ fun DiaryMealSection(
 
             diaryEntriesValues.forEach {
                 DiaryEntryItem(diaryEntry = it.diaryEntry, onItemClicked = {
-                    onEvent(DiaryEvent.ClickedDiaryEntry(it))
+                    onEvent(DiaryEvent.ClickedDiaryEntry(it.diaryEntry))
                 }, onItemLongClick = {
-                    onEvent(DiaryEvent.LongClickedDiaryEntry(it))
+                    onEvent(DiaryEvent.LongClickedDiaryEntry(it.diaryEntry))
                 })
             }
 
@@ -95,7 +95,7 @@ fun DiaryMealSection(
                     .padding(end = 15.dp, start = 15.dp)
             ) {
                 MealSectionNutritionItem(
-                    currentValue = diaryEntriesValues.sumOf { it.diaryEntry.nutritionValues.calories },
+                    currentValue = diaryEntriesValues.sumOf { it.nutritionValues.calories },
                     wantedValue = wantedNutritionValues.calories,
                     name = stringResource(id = R.string.calories),
                     modifier = Modifier
@@ -105,7 +105,7 @@ fun DiaryMealSection(
 
 
                 MealSectionNutritionItem(
-                    currentValue = diaryEntriesValues.sumOf { it.diaryEntry.nutritionValues.carbohydrates }
+                    currentValue = diaryEntriesValues.sumOf { it.nutritionValues.carbohydrates }
                         .toInt(),
 
                     wantedValue = wantedNutritionValues.carbohydrates.toInt(),
@@ -115,7 +115,7 @@ fun DiaryMealSection(
 
                 Spacer(modifier = Modifier.width(32.dp))
 
-                MealSectionNutritionItem(currentValue = diaryEntriesValues.sumOf { it.diaryEntry.nutritionValues.protein }
+                MealSectionNutritionItem(currentValue = diaryEntriesValues.sumOf { it.nutritionValues.protein }
                     .toInt(),
                                          wantedValue = wantedNutritionValues.protein.toInt(),
                                          name = stringResource(id = R.string.protein),
@@ -126,7 +126,7 @@ fun DiaryMealSection(
                 Spacer(modifier = Modifier.width(32.dp))
 
 
-                MealSectionNutritionItem(currentValue = diaryEntriesValues.sumOf { it.diaryEntry.nutritionValues.fat }
+                MealSectionNutritionItem(currentValue = diaryEntriesValues.sumOf { it.nutritionValues.fat }
                     .toInt(),
                                          wantedValue = wantedNutritionValues.fat.toInt(),
                                          name = stringResource(id = R.string.fat),

@@ -75,7 +75,7 @@ class DiaryViewModel @Inject constructor(
             is DiaryEvent.LongClickedDiaryEntry -> {
                 _state.update {
                     it.copy(
-                        longClickedDiaryEntryWithId = event.diaryEntryWithId,
+                        longClickedDiaryEntryWithId = event.diaryEntry,
                         isDialogShowed = true
                     )
                 }
@@ -96,9 +96,9 @@ class DiaryViewModel @Inject constructor(
                 }
             }
             is DiaryEvent.ClickedDeleteInDialog -> {
-                _state.value.longClickedDiaryEntryWithId?.let { diaryEntryWithId ->
+                _state.value.longClickedDiaryEntryWithId?.let { diaryEntry ->
                     viewModelScope.launch(Dispatchers.IO) {
-                        val result = deleteDiaryEntry(diaryEntryWithId.id)
+                        val result = deleteDiaryEntry(diaryEntry.id)
                         if (result is CustomResult.Error) {
                             onError(result.message)
                         } else {
@@ -106,7 +106,7 @@ class DiaryViewModel @Inject constructor(
                                 it.copy(
                                     isDialogShowed = false,
                                     meals = updateDiaryEntriesListAfterDelete(
-                                        diaryEntryId = diaryEntryWithId.id,
+                                        diaryEntryId = diaryEntry.id,
                                         meals = _state.value.meals
                                     )
                                 )
