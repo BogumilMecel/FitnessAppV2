@@ -1,14 +1,28 @@
 package com.gmail.bodziowaty6978.fitnessappv2.common.data.room
 
 import androidx.room.TypeConverter
+import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Price
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 
 object Converters {
 
     private val gson = Gson()
+
+    @TypeConverter
+    @JvmStatic
+    fun nutritionValuesToString(nutritionValues: NutritionValues):String{
+        return gson.toJson(nutritionValues) ?: ""
+    }
+
+    @TypeConverter
+    @JvmStatic
+    fun stringToNutritionValues(data: String?): NutritionValues {
+        return data?.let {
+            gson.fromJson(data, NutritionValues::class.java)
+        } ?: NutritionValues()
+    }
 
     @TypeConverter
     @JvmStatic
@@ -26,16 +40,15 @@ object Converters {
 
     @TypeConverter
     @JvmStatic
-    fun priceToString(listOfPrices: List<Price>):String{
-        return gson.toJson(listOfPrices) ?: ""
+    fun priceToString(price: Price):String{
+        return gson.toJson(price) ?: ""
     }
 
     @TypeConverter
     @JvmStatic
-    fun stringToPrice(data: String?):List<Price>{
+    fun stringToPrice(data: String?):Price{
         return data?.let {
-            val listType = object : TypeToken<List<Price>>() {}.type
-            gson.fromJson<List<Price>>(data, listType)
-        } ?: emptyList<Price>()
+            gson.fromJson(data, Price::class.java)
+        } ?: Price()
     }
 }

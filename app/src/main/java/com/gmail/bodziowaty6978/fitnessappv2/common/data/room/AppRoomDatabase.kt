@@ -4,8 +4,9 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.room.dao.ProductDao
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
 
-@Database(entities = [ProductWithId::class], version = 1)
+@Database(entities = [Product::class], version = 1)
 @TypeConverters(Converters::class)
 abstract class AppRoomDatabase: RoomDatabase() {
 
