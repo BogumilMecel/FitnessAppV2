@@ -138,7 +138,7 @@ object NavigationActions {
     object NewProductScreen{
         fun newProductToProduct(
             mealName:String,
-            productWithId:ProductWithId
+            productWithIdRProductWithId
         ) = object :NavigationAction{
             override val destination: String = Screen.ProductScreen.route + "?mealName=$mealName"
 //            override val parcelableArguments: Map<String, Parcelable>
