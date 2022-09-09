@@ -6,12 +6,12 @@ import retrofit2.http.Header
 
 interface LoadingApi {
 
-    @GET("authenticate")
+    @GET("/authentication/authenticate")
     suspend fun authenticate(
         @Header("Authorization") token:String
     ):Boolean
 
-    @GET("nutritionValues")
+    @GET("/nutritionValues")
     suspend fun getNutritionValues(
         @Header("Authorization") token: String
     ):NutritionValues

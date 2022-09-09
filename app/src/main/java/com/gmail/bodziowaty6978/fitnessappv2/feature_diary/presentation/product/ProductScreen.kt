@@ -60,7 +60,7 @@ fun ProductScreen(
                 onClick = {
                     viewModel.onEvent(
                         ProductEvent.ClickedAddProduct(
-                            productWithId = productWithId,
+                            product = product,
                         )
                     )
                 },

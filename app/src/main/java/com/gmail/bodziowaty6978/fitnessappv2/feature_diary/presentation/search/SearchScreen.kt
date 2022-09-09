@@ -247,7 +247,7 @@ fun SearchScreen(
                                 .fillMaxWidth()
                         ) {
                             items(items.size) { itemPosition ->
-                                SearchProductItem(product = items[itemPosition].product) {
+                                SearchProductItem(product = items[itemPosition]) {
                                     viewModel.onEvent(
                                         SearchEvent.ClickedSearchItem(
                                             item = items[itemPosition]

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.NavigationActions
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigator
+import com.gmail.bodziowaty6978.fitnessappv2.common.domain.use_case.GetToken
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.feature_splash.domain.repository.LoadingRepository
 import com.gmail.bodziowaty6978.fitnessappv2.util.TAG
@@ -17,6 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LoadingViewModel @Inject constructor(
     private val loadingRepository: LoadingRepository,
+    private val getToken: GetToken,
     private val navigator: Navigator
 ) : ViewModel() {
 
@@ -43,9 +45,11 @@ class LoadingViewModel @Inject constructor(
     private fun checkUser() {
         val hasToken = _loadingState.value.hasToken
         hasToken?.let {
+            Log.e(TAG,hasToken.toString())
             if (it){
                 val isLogged = _loadingState.value.isLoggedIn
                 isLogged?.let {
+                    Log.e(TAG, "is logged = $isLogged")
                     if (isLogged) {
                         val hasInformation = _loadingState.value.hasInformation
                         val hasNutrition = _loadingState.value.hasNutritionValues
@@ -69,22 +73,18 @@ class LoadingViewModel @Inject constructor(
 
     fun checkIfTokenIsPresent() {
         viewModelScope.launch {
-            val resource = loadingRepository.getToken()
-            if (resource is Resource.Error) {
+            getToken()?.let {token ->
+                _loadingState.update {
+                    it.copy(
+                        hasToken = true
+                    )
+                }
+                authenticateUser(token)
+            } ?: kotlin.run {
                 _loadingState.update {
                     it.copy(
                         hasToken = false
                     )
-                }
-            } else {
-                if (resource.data != null) {
-                    authenticateUser(resource.data)
-                } else {
-                    _loadingState.update {
-                        it.copy(
-                            hasToken = false
-                        )
-                    }
                 }
             }
             checkUser()
@@ -96,6 +96,7 @@ class LoadingViewModel @Inject constructor(
     ) {
         viewModelScope.launch {
             val resource = loadingRepository.authenticateUser(token)
+            Log.e(TAG,resource.toString())
             if (resource is Resource.Error) {
                 _loadingState.update {
                     it.copy(

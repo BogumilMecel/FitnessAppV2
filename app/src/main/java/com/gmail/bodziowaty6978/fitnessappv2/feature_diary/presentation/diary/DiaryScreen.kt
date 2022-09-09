@@ -103,10 +103,12 @@ fun DiaryScreen(
 //                            id = R.string.product
 //                        )
                         Text(
-                            text = state.longClickedDiaryEntryWithId?.let {
-                                state.longClickedDiaryEntryWithId.diaryEntry.name +
-                                        " (${state.longClickedDiaryEntryWithId.diaryEntry.weight}" +
-                                        "${state.longClickedDiaryEntryWithId.diaryEntry.unit})"
+                            text = state.longClickedDiaryEntry?.let {
+                                state.longClickedDiaryEntry.product.name +
+                                        " (${state.longClickedDiaryEntry.weight}" +
+                                        "${
+                                            state.longClickedDiaryEntry.product.unit
+                                        })"
                             } ?: stringResource(id = R.string.product)
                         )
                     }

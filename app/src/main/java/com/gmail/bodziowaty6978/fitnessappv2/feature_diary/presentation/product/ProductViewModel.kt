@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.NavigationActions
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.singleton.CurrentDate
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigator
-import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
+import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.product.ProductUseCases
@@ -72,24 +72,24 @@ class ProductViewModel @Inject constructor(
             is ProductEvent.ClickedAddProduct -> {
                 viewModelScope.launch(Dispatchers.IO) {
                     val addingResult = productUseCases.addDiaryEntry(
-                        productWithId = event.productWithId,
+                        product = event.product,
                         mealName = _state.value.mealName,
                         weight = _state.value.weight.toIntOrNull(),
                         dateModel = CurrentDate.dateModel(resourceProvider = resourceProvider),
                         nutritionValues = _state.value.nutritionData.nutritionValues
                     )
-                    if (addingResult is CustomResult.Success) {
-                        productUseCases.saveProductToHistory(productWithId = event.productWithId)
+                    if (addingResult is Resource.Success) {
+                        productUseCases.saveProductToHistory(product = event.product)
                         navigator.navigate(NavigationActions.ProductScreen.productToDiary())
-                    } else if (addingResult is CustomResult.Error) {
+                    } else if (addingResult is Resource.Error) {
                         _state.update {
                             it.copy(
-                                errorMessage = addingResult.message
+                                errorMessage = addingResult.uiText
                             )
                         }
                         _state.update {
                             it.copy(
-                                lastErrorMessage = addingResult.message
+                                lastErrorMessage = addingResult.uiText
                             )
                         }
                     }
