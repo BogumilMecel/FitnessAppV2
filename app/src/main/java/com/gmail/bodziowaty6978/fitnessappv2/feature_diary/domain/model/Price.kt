@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 @Entity
 data class Price(
-    val id:Int = 0,
+    val id:Int = -1,
     val value:Double = 0.0,
     val forHowMuch:Int = 0
 ):Parcelable

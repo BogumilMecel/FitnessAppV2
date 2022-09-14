@@ -1,14 +1,18 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.data.repository.remote
 
+import android.util.Log
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.room.dao.ProductDao
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
+import com.gmail.bodziowaty6978.fitnessappv2.common.util.extensions.formatToString
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.data.api.ProductApi
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.diary_entry.DiaryEntry
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.repository.DiaryRepository
+import com.gmail.bodziowaty6978.fitnessappv2.util.TAG
+import java.util.*
 
 class DiaryRepositoryImp(
     private val productApi:ProductApi,
@@ -19,9 +23,10 @@ class DiaryRepositoryImp(
     override suspend fun getDiaryEntries(timestamp: Long, token:String): Resource<List<DiaryEntry>> {
         return try {
             val entries = productApi.getDiaryEntries(
-                timestamp = timestamp,
-                token = token
+                date = Date(timestamp).formatToString(),
+                token = "Bearer $token"
             )
+            Log.e(TAG, entries.toString())
             Resource.Success(entries)
         }catch (e:Exception){
             e.printStackTrace()
@@ -77,7 +82,7 @@ class DiaryRepositoryImp(
         return try {
             val newDiaryEntry = productApi.insertDiaryEntry(
                 diaryEntry = diaryEntry,
-                token = token
+                token = "Bearer $token"
             )
             Resource.Success(data = newDiaryEntry)
         }catch (e:Exception){

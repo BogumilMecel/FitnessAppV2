@@ -8,14 +8,14 @@ interface ProductApi {
 
     @GET("/diaryEntries")
     suspend fun getDiaryEntries(
-        @Query("timestamp") timestamp:Long,
-        @Query("Authentication") token:String
+        @Query("date") date:String,
+        @Header("Authorization") token:String
     ):List<DiaryEntry>
 
     @POST("/diaryEntries")
     suspend fun insertDiaryEntry(
         @Body diaryEntry: DiaryEntry,
-        @Query("Authentication") token:String
+        @Header("Authorization") token:String
     ):DiaryEntry
 
     @DELETE("/diaryEntries/{id}")
@@ -23,9 +23,9 @@ interface ProductApi {
         @Path("id") entryId:Int
     ):Boolean
 
-    @GET("/products")
+    @GET("/products/{searchText}")
     suspend fun searchForProducts(
-        @Query("searchText") searchText:String
+        @Path("searchText") searchText:String
     ) : List<Product>
 
     @GET

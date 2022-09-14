@@ -1,6 +1,5 @@
 package com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation
 
-import android.os.Parcelable
 import androidx.navigation.NavOptions
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.NavigationAction
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.util.BottomBarScreen
@@ -118,12 +117,9 @@ object NavigationActions {
         fun searchToNewProduct(mealName: String = "Breakfast", barcode: String? = null) = object : NavigationAction {
             override val destination: String = Screen.NewProductScreen.route + "?mealName=$mealName" + "&barcode=$barcode"
         }
-        fun searchToProduct(productWithId: Parcelable, mealName: String) = object :
+        fun searchToProduct(product: Product, mealName: String) = object :
             NavigationAction {
-            override val destination: String = Screen.ProductScreen.route + "?mealName=$mealName"
-            // really weird I don`t know why it works but it works
-            override val parcelableArguments: Map<String, Parcelable>
-                get() = mapOf(Pair("productWithId",productWithId),Pair("ProductWithId",productWithId))
+            override val destination: String = Screen.ProductScreen.route + "?mealName=$mealName" + "&product=${Gson().toJson(product)}"
         }
     }
 

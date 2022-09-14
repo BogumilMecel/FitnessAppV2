@@ -103,7 +103,7 @@ object AppModule {
     @Provides
     fun provideRetrofitInstance():Retrofit{
         return Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:8080/products/")
+            .baseUrl("http://192.168.0.171:8080/products/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }

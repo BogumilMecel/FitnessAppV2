@@ -12,6 +12,7 @@ data class DiaryEntry(
     val id:Int = -1,
     val product: Product,
     val timeStamp:Long,
+    val date:String,
     var weight:Int,
     val mealName:String
 ):Parcelable
