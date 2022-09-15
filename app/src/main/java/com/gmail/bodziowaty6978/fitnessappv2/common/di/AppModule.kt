@@ -242,8 +242,14 @@ object AppModule {
     @Singleton
     @Provides
     fun provideDeleteDiaryEntryUseCase(
-        diaryRepository: DiaryRepository
-    ):DeleteDiaryEntry = DeleteDiaryEntry(diaryRepository = diaryRepository)
+        diaryRepository: DiaryRepository,
+        getToken: GetToken,
+        resourceProvider: ResourceProvider
+    ):DeleteDiaryEntry = DeleteDiaryEntry(
+        diaryRepository = diaryRepository,
+        getToken = getToken,
+        resourceProvider = resourceProvider
+    )
 
     @Singleton
     @Provides
