@@ -4,12 +4,10 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.datastore.core.DataStore
-import androidx.room.Room
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.ComposeCustomNavigator
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.repository.TokenRepositoryImp
-import com.gmail.bodziowaty6978.fitnessappv2.common.data.room.AppRoomDatabase
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.UserInformation
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigator
@@ -35,7 +33,6 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.new_
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.product.AddDiaryEntry
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.product.CreatePieChartData
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.product.ProductUseCases
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.product.SaveProductToHistory
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.search.GetDiaryHistory
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.search.SearchDiaryUseCases
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.search.SearchForProductWithBarcode
@@ -59,17 +56,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
-
-    @Singleton
-    @Provides
-    fun provideRoomDatabase(
-        @ApplicationContext context: Context
-    ): AppRoomDatabase = Room.databaseBuilder(
-        context,
-        AppRoomDatabase::class.java,
-        AppRoomDatabase.DATABASE_NAME
-    ).build()
-
     @Singleton
     @Provides
     fun provideNavigator(): Navigator = ComposeCustomNavigator()
@@ -230,11 +216,9 @@ object AppModule {
     @Provides
     fun provideDiaryRepository(
         productApi: ProductApi,
-        roomDatabase: AppRoomDatabase,
         resourceProvider: ResourceProvider
     ): DiaryRepository =
         DiaryRepositoryImp(
-            productDao = roomDatabase.productDao(),
             resourceProvider = resourceProvider,
             productApi = productApi
         )
@@ -269,7 +253,6 @@ object AppModule {
     @Provides
     fun provideSearchForProductsUseCase(
         diaryRepository: DiaryRepository,
-        resourceProvider: ResourceProvider,
         getDiaryHistory: GetDiaryHistory
     ): SearchForProducts = SearchForProducts(
         diaryRepository = diaryRepository,
@@ -292,18 +275,24 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideGetDiaryHistoryUseCase(diaryRepository: DiaryRepository): GetDiaryHistory =
-        GetDiaryHistory(diaryRepository)
+    fun provideGetDiaryHistoryUseCase(
+        diaryRepository: DiaryRepository,
+        getToken: GetToken
+    ): GetDiaryHistory = GetDiaryHistory(
+        repository = diaryRepository,
+        getToken = getToken
+    )
 
     @Singleton
     @Provides
     fun provideDiarySearchUseCases(
         diaryRepository: DiaryRepository,
-        searchForProducts: SearchForProducts
+        searchForProducts: SearchForProducts,
+        getDiaryHistory: GetDiaryHistory
     ): SearchDiaryUseCases =
         SearchDiaryUseCases(
             searchForProducts = searchForProducts,
-            getDiaryHistory = GetDiaryHistory(diaryRepository),
+            getDiaryHistory = getDiaryHistory,
             searchForProductWithBarcode = SearchForProductWithBarcode(diaryRepository)
         )
 
@@ -322,8 +311,6 @@ object AppModule {
                 resourceProvider = resourceProvider,
                 getToken = getToken
             ),
-            saveProductToHistory = SaveProductToHistory(diaryRepository)
-
         )
 
     @Singleton

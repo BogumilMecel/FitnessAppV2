@@ -2,7 +2,6 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.data.repository.remo
 
 import android.util.Log
 import com.gmail.bodziowaty6978.fitnessappv2.R
-import com.gmail.bodziowaty6978.fitnessappv2.common.data.room.dao.ProductDao
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
@@ -16,7 +15,6 @@ import java.util.*
 
 class DiaryRepositoryImp(
     private val productApi:ProductApi,
-    private val productDao: ProductDao,
     private val resourceProvider: ResourceProvider
 ): DiaryRepository {
 
@@ -33,20 +31,11 @@ class DiaryRepositoryImp(
             Resource.Error(uiText = e.message.toString(), data = emptyList())
         }
     }
-
-    override suspend fun saveProductToHistory(product: Product): CustomResult {
+    override suspend fun getProductHistory(token: String): Resource<List<Product>> {
         return try {
-            productDao.saveProductToHistory(productWithId = product)
-            CustomResult.Success
-        }catch (e:Exception){
-            e.printStackTrace()
-            CustomResult.Error(message = resourceProvider.getString(R.string.unknown_error))
-        }
-    }
-
-    override suspend fun getLocalProductHistory(): Resource<List<Product>> {
-        return try {
-            val result = productDao.getHistory()
+            val result = productApi.getProductHistory(
+                token = "Bearer $token"
+            )
             Resource.Success(data = result)
         }catch (e:Exception){
             e.printStackTrace()

@@ -4,5 +4,4 @@ data class ProductUseCases(
     val createPieChartData: CreatePieChartData,
     val calculateNutritionValues: CalculateNutritionValues,
     val addDiaryEntry: AddDiaryEntry,
-    val saveProductToHistory: SaveProductToHistory
 )
