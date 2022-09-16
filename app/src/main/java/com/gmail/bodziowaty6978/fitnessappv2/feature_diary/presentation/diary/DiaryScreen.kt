@@ -3,8 +3,7 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.diary
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -97,9 +96,6 @@ fun DiaryScreen(
                         }
                     },
                     title = {
-//                        (state.longClickedDiaryEntryWithId?.diaryEntry?.name + state.longClickedDiaryEntryWithId?.diaryEntry?.weight) ?: stringResource(
-//                            id = R.string.product
-//                        )
                         Text(
                             text = state.longClickedDiaryEntry?.let {
                                 state.longClickedDiaryEntry.product.name +
@@ -131,16 +127,12 @@ fun DiaryScreen(
                         .padding(horizontal = 10.dp, vertical = 2.dp)
                 )
 
-                Column(
-                    modifier = Modifier
-                        .verticalScroll(rememberScrollState())
-                        .weight(1f, fill = false)
-                ) {
-                    state.meals.forEach { meal ->
+                LazyColumn{
+                    items(state.meals.size){
                         DiaryMealSection(
-                            meal = meal,
-                            onEvent = {
-                                viewModel.onEvent(it)
+                            meal = state.meals[it],
+                            onEvent = {event ->
+                                viewModel.onEvent(event)
                             }
                         )
                     }
