@@ -29,9 +29,9 @@ interface ProductApi {
         @Path("searchText") searchText:String
     ) : List<Product>
 
-    @GET
+    @GET("/diaryEntries/{barcode}")
     suspend fun searchForProductWithBarcode(
-        @Query("barcode") barcode:String
+        @Path("barcode") barcode:String
     ): Product?
 
     @POST("/products")

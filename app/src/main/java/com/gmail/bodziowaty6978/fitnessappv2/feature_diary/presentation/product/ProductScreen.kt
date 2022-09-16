@@ -39,10 +39,8 @@ fun ProductScreen(
     }
 
     LaunchedEffect(key1 = state){
-        state.errorMessage?.let {
-            if(it!=state.lastErrorMessage){
-                scaffoldState.snackbarHostState.showSnackbar(it)
-            }
+        viewModel.errorState.collect {
+            scaffoldState.snackbarHostState.showSnackbar(it)
         }
     }
 

@@ -5,7 +5,5 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.
 data class ProductState(
     val weight:String = "",
     val nutritionData:NutritionData = NutritionData(),
-    val errorMessage:String? = null,
-    val lastErrorMessage:String? = null,
     val mealName:String = ""
 )

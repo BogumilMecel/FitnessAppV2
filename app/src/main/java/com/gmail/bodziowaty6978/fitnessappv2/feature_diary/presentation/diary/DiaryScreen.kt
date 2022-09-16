@@ -34,11 +34,9 @@ fun DiaryScreen(
     val state = viewModel.state.collectAsStateWithLifecycle().value
     val scaffoldState = rememberScaffoldState()
 
-    LaunchedEffect(key1 = state) {
-        state.errorMessage?.let {
-            if (it != state.lastErrorMessage) {
-                scaffoldState.snackbarHostState.showSnackbar(it)
-            }
+    LaunchedEffect(key1 = true) {
+        viewModel.errorState.collect {
+            scaffoldState.snackbarHostState.showSnackbar(it)
         }
     }
 

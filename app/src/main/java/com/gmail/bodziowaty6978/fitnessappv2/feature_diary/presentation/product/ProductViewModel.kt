@@ -1,5 +1,6 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,10 +12,13 @@ import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.product.ProductUseCases
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.NutritionData
+import com.gmail.bodziowaty6978.fitnessappv2.util.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -27,9 +31,11 @@ class ProductViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
+    private val _errorState = Channel<String>()
+    val errorState = _errorState.receiveAsFlow()
+
     private val _state = MutableStateFlow(ProductState())
     val state:StateFlow<ProductState> = _state
-
 
     init {
         savedStateHandle.get<String>("mealName")?.let { mealName ->
@@ -78,18 +84,12 @@ class ProductViewModel @Inject constructor(
                         dateModel = CurrentDate.dateModel(resourceProvider = resourceProvider),
                         nutritionValues = _state.value.nutritionData.nutritionValues
                     )
+                    Log.e(TAG, addingResult.toString())
                     if (addingResult is Resource.Success) {
                         navigator.navigate(NavigationActions.ProductScreen.productToDiary())
                     } else if (addingResult is Resource.Error) {
-                        _state.update {
-                            it.copy(
-                                errorMessage = addingResult.uiText
-                            )
-                        }
-                        _state.update {
-                            it.copy(
-                                lastErrorMessage = addingResult.uiText
-                            )
+                        addingResult.uiText?.let {error ->
+                            _errorState.send(error)
                         }
                     }
                 }
