@@ -44,6 +44,13 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.use_cas
 import com.gmail.bodziowaty6978.fitnessappv2.feature_splash.data.api.LoadingApi
 import com.gmail.bodziowaty6978.fitnessappv2.feature_splash.data.repository.LoadingRepositoryImp
 import com.gmail.bodziowaty6978.fitnessappv2.feature_splash.domain.repository.LoadingRepository
+import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.feature_log.data.api.LogApi
+import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.feature_log.data.repository.LogRepositoryImp
+import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.feature_log.domain.repository.LogRepository
+import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.feature_log.domain.use_case.CheckLatestLogEntry
+import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.feature_log.domain.use_case.GetLatestLogEntry
+import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.feature_log.domain.use_case.InsertLogEntry
+import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.feature_log.domain.use_case.LogUseCases
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -249,6 +256,52 @@ object AppModule {
         diaryRepository = diaryRepository,
         getToken = getToken,
         resourceProvider = resourceProvider
+    )
+
+    @Singleton
+    @Provides
+    fun provideLogApi(
+        retrofit: Retrofit
+    ) : LogApi = retrofit.create(LogApi::class.java)
+
+    @Singleton
+    @Provides
+    fun provideLogRepository(
+        logApi: LogApi,
+        resourceProvider: ResourceProvider
+    ):LogRepository = LogRepositoryImp(
+        logApi = logApi,
+        resourceProvider = resourceProvider
+    )
+
+    @Singleton
+    @Provides
+    fun provideInsertLogUseCase(
+        logRepository: LogRepository,
+        getToken: GetToken,
+        resourceProvider: ResourceProvider
+    ):InsertLogEntry = InsertLogEntry(
+        logRepository = logRepository,
+        getToken = getToken,
+        resourceProvider = resourceProvider
+    )
+
+    @Singleton
+    @Provides
+    fun provideLogUseCases(
+        logRepository: LogRepository,
+        insertLogEntry: InsertLogEntry,
+        getToken: GetToken,
+        resourceProvider: ResourceProvider
+    ):LogUseCases = LogUseCases(
+        getLatestLogEntry = GetLatestLogEntry(
+            logRepository = logRepository,
+            getToken = getToken,
+            resourceProvider = resourceProvider
+        ),
+        checkLatestLogEntry = CheckLatestLogEntry(
+            insertLogEntry = insertLogEntry
+        )
     )
 
     @Singleton
