@@ -47,10 +47,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_splash.domain.repository.Lo
 import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.feature_log.data.api.LogApi
 import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.feature_log.data.repository.LogRepositoryImp
 import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.feature_log.domain.repository.LogRepository
-import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.feature_log.domain.use_case.CheckLatestLogEntry
-import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.feature_log.domain.use_case.GetLatestLogEntry
-import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.feature_log.domain.use_case.InsertLogEntry
-import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.feature_log.domain.use_case.LogUseCases
+import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.feature_log.domain.use_case.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -288,12 +285,13 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideLogUseCases(
+    fun provideSummaryUseCases(
         logRepository: LogRepository,
         insertLogEntry: InsertLogEntry,
         getToken: GetToken,
-        resourceProvider: ResourceProvider
-    ):LogUseCases = LogUseCases(
+        resourceProvider: ResourceProvider,
+        diaryRepository: DiaryRepository
+    ):SummaryUseCases = SummaryUseCases(
         getLatestLogEntry = GetLatestLogEntry(
             logRepository = logRepository,
             getToken = getToken,
@@ -301,6 +299,11 @@ object AppModule {
         ),
         checkLatestLogEntry = CheckLatestLogEntry(
             insertLogEntry = insertLogEntry
+        ),
+        getCaloriesSum = GetCaloriesSum(
+            diaryRepository = diaryRepository,
+            getToken = getToken,
+            resourceProvider = resourceProvider
         )
     )
 

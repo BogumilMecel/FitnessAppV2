@@ -5,8 +5,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class NutritionValues(
     val id:Int = -1,
-    val calories:Int = 2850,
-    val carbohydrates:Double = 1000.0,
-    val protein:Double = 500.0,
-    val fat:Double = 100.0
+    val calories:Int = 0,
+    val carbohydrates:Double = 0.0,
+    val protein:Double = 0.0,
+    val fat:Double = 0.0
 )

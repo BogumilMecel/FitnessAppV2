@@ -14,4 +14,5 @@ interface DiaryRepository {
     suspend fun deleteDiaryEntry(diaryEntryId: Int, token:String):CustomResult
     suspend fun editDiaryEntry(diaryEntry: DiaryEntry):CustomResult
     suspend fun saveNewProduct(product: Product):Resource<Product>
+    suspend fun getCaloriesSum(date:String, token: String):Resource<Int>
 }

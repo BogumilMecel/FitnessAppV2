@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -16,6 +17,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bodziowaty6978.fitnessappv2.R
+import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.Grey
 import com.gmail.bodziowaty6978.fitnessappv2.datastoreNutrition
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.diary.components.CalendarSection
@@ -32,6 +34,8 @@ fun DiaryScreen(
 
     val state = viewModel.state.collectAsStateWithLifecycle().value
     val scaffoldState = rememberScaffoldState()
+
+    val wantedNutritionValues = LocalContext.current.datastoreNutrition.data.collectAsState(initial = NutritionValues()).value
 
     LaunchedEffect(key1 = true) {
         viewModel.errorState.collect {
@@ -140,7 +144,7 @@ fun DiaryScreen(
             }
             NutritionBottomSection(
                 meals = state.meals,
-                wantedNutritionValues = state.wantedNutritionValues,
+                wantedNutritionValues = wantedNutritionValues,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .background(Grey)
