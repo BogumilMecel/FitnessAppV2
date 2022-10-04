@@ -1,7 +1,7 @@
-package com.gmail.bodziowaty6978.fitnessappv2.feature_summary.feature_log.domain.repository
+package com.gmail.bodziowaty6978.fitnessappv2.feature_log.domain.repository
 
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
-import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.feature_log.domain.model.LogEntry
+import com.gmail.bodziowaty6978.fitnessappv2.feature_log.domain.model.LogEntry
 
 interface LogRepository {
 

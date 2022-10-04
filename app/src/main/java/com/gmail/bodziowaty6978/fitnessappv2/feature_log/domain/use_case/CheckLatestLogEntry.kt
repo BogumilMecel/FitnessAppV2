@@ -1,8 +1,8 @@
-package com.gmail.bodziowaty6978.fitnessappv2.feature_summary.feature_log.domain.use_case
+package com.gmail.bodziowaty6978.fitnessappv2.feature_log.domain.use_case
 
 import android.text.format.DateUtils
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
-import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.feature_log.domain.model.LogEntry
+import com.gmail.bodziowaty6978.fitnessappv2.feature_log.domain.model.LogEntry
 
 class CheckLatestLogEntry(
     private val insertLogEntry: InsertLogEntry

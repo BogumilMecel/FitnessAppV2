@@ -1,28 +1,26 @@
-package com.gmail.bodziowaty6978.fitnessappv2.feature_summary.feature_log.domain.use_case
+package com.gmail.bodziowaty6978.fitnessappv2.feature_log.domain.use_case
 
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.use_case.GetToken
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
-import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.feature_log.domain.model.LogEntry
-import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.feature_log.domain.repository.LogRepository
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 
-class InsertLogEntry(
-    private val logRepository: LogRepository,
+class GetCaloriesSum(
+    private val diaryRepository: DiaryRepository,
     private val getToken: GetToken,
     private val resourceProvider: ResourceProvider
 ) {
-
-    suspend operator fun invoke(timeStamp: Long): Resource<LogEntry> {
+    suspend operator fun invoke(
+        date:String
+    ):Resource<Int>{
         val token = getToken()
 
         return token?.let {
-            logRepository.saveLogEntry(
+            diaryRepository.getCaloriesSum(
                 token = it,
-                timestamp = timeStamp
+                date = date
             )
         } ?: Resource.Error(resourceProvider.getString(R.string.unknown_error))
-
-
     }
 }

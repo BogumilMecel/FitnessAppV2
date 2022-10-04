@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.singleton.CurrentDate
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
-import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.feature_log.domain.use_case.SummaryUseCases
+import com.gmail.bodziowaty6978.fitnessappv2.feature_log.domain.use_case.SummaryUseCases
 import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.presentation.SummaryState
 import com.gmail.bodziowaty6978.fitnessappv2.util.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel

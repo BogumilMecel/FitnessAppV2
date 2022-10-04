@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.TextGrey
+import com.gmail.bodziowaty6978.fitnessappv2.common.util.extensions.round
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.diary_entry.DiaryEntry
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -84,19 +85,19 @@ fun DiaryEntryItem(
                     )
 
                     Text(
-                        text = "Carb:" + diaryEntry.product.nutritionValues.carbohydrates.toString(),
+                        text = "Carb:" + diaryEntry.product.nutritionValues.carbohydrates.round(2).toString(),
                         style = MaterialTheme.typography.body2,
                         color = TextGrey
                     )
 
                     Text(
-                        text = "Prot:" + diaryEntry.product.nutritionValues.protein.toString(),
+                        text = "Prot:" + diaryEntry.product.nutritionValues.protein.round(2).toString(),
                         style = MaterialTheme.typography.body2,
                         color = TextGrey
                     )
 
                     Text(
-                        text = "Fat:" + diaryEntry.product.nutritionValues.fat.toString(),
+                        text = "Fat:" + diaryEntry.product.nutritionValues.fat.round(2).toString(),
                         style = MaterialTheme.typography.body2,
                         color = TextGrey
                     )

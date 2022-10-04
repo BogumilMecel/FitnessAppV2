@@ -8,14 +8,15 @@ class GetToken(
     private val tokenRepository: TokenRepository
 ) {
     suspend operator fun invoke(): String? {
-        val resource = tokenRepository.getToken()
-        return if (resource is Resource.Error) {
-            TokenStatus.changeTokenStatus(false)
-            null
-        } else {
-            resource.data ?: kotlin.run {
+        return when(val resource = tokenRepository.getToken()){
+            is Resource.Error -> {
                 TokenStatus.changeTokenStatus(false)
                 null
+            }
+            is Resource.Success -> {
+                resource.data?.let { token ->
+                    "Bearer $token"
+                }
             }
         }
     }
