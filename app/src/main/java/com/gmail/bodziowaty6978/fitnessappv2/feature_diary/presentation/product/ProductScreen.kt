@@ -1,7 +1,6 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -12,33 +11,29 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.singleton.CurrentDate
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.LightRed
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.ProductNameSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.ProductNutritionSection
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.ProductPriceSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.ProductTopSection
 
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 fun ProductScreen(
-    viewModel: ProductViewModel = hiltViewModel(),
-    product: Product,
+    viewModel: ProductViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle().value
 
     val scaffoldState = rememberScaffoldState()
 
-    LaunchedEffect(key1 = true) {
-        viewModel.initializeNutritionData(product)
-    }
-
-    LaunchedEffect(key1 = state){
+    LaunchedEffect(key1 = state) {
         viewModel.errorState.collect {
             scaffoldState.snackbarHostState.showSnackbar(it)
         }
@@ -57,9 +52,7 @@ fun ProductScreen(
                 },
                 onClick = {
                     viewModel.onEvent(
-                        ProductEvent.ClickedAddProduct(
-                            product = product,
-                        )
+                        ProductEvent.ClickedAddProduct
                     )
                 },
                 icon = {
@@ -88,15 +81,46 @@ fun ProductScreen(
                 }
             )
 
+            Spacer(modifier = Modifier.height(10.dp))
+
             ProductNameSection(
                 currentWeight = state.weight,
-                product = product,
+                product = state.product,
                 onEvent = {
                     viewModel.onEvent(it)
-                }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 10.dp)
             )
 
-            ProductNutritionSection(nutritionData = state.nutritionData)
+            Spacer(modifier = Modifier.height(20.dp))
+
+            ProductNutritionSection(
+                nutritionData = state.nutritionData,
+                modifier = Modifier
+                    .padding(horizontal = 10.dp)
+                    .fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            ProductPriceSection(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 10.dp),
+                price = state.product.price,
+                nutritionValues = state.product.nutritionValues,
+                currency = "zł",
+                unit = state.product.unit,
+                onEvent = {
+                    viewModel.onEvent(it)
+                },
+                priceValue = state.priceValue,
+                priceFor = state.priceForValue
+            )
+
+            Spacer(modifier = Modifier.height(20.dp))
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.data.api
 
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Price
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.diary_entry.DiaryEntry
 import retrofit2.http.*
@@ -49,4 +50,10 @@ interface ProductApi {
         @Query("date") date:String,
         @Header("Authorization") token:String
     ):List<Int>
+
+    @POST("/products/{productId}/prices")
+    suspend fun addNewPriceForProduct(
+        @Body price: Price,
+        @Path("productId") productId:Int
+    ): Price
 }

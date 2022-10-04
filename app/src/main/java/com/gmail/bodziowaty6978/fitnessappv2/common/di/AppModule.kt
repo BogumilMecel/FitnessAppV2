@@ -30,9 +30,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.repository.Dia
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.diary.*
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.new_product.CalculateNutritionValuesIn100G
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.new_product.SaveNewProduct
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.product.AddDiaryEntry
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.product.CreatePieChartData
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.product.ProductUseCases
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.product.*
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.search.GetDiaryHistory
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.search.SearchDiaryUseCases
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.search.SearchForProductWithBarcode
@@ -373,6 +371,8 @@ object AppModule {
                 resourceProvider = resourceProvider,
                 getToken = getToken
             ),
+            calculatePriceFor100g = CalculatePriceFor100g(),
+            addNewPrice = AddNewPrice(diaryRepository = diaryRepository)
         )
 
     @Singleton

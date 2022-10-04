@@ -24,7 +24,7 @@ fun ProductTopSection(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 20.dp)
+            .padding(horizontal = 10.dp)
     ){
 
         IconButton(

@@ -104,7 +104,22 @@
     <string name="add">Add</string>
     <string name="add_button">Add button</string>
 
+<!--    summary-->
     <string name="days">%s days in a row</string>
+    
+<!--    product-->
+    <string name="prices">Prices for:</string>
+    <string name="price_for_100g_of_protein">100 Grams of protein</string>
+    <string name="price_for_100g_of_fat">100 Grams of fat</string>
+    <string name="price_for_100g_of_carbohydrates">100 Grams of carbs</string>
+    <string name="price_for_100_kcal">100 Calories</string>
+    <string name="submit_new_price">Submit new price</string>
+    <string name="i_paid">I paid</string>
+    <string name="for_x">%s for</string>
+    <string name="grams">grams</string>
+    <string name="no_one_has_entered_price_for_this_product_be_the_first_one_to_do_so">No one has entered a price for this product. Be the first one to do so!</string>
+    <string name="please_make_sure_you_have_entered_correct_values_for_new_price">Please make sure you have entered correct values for the new price</string>
+    <string name="successfully_submitted_new_price">Successfully submitted new price</string>
 
     <string name="carbohydrates_g">Carbohydrates(g)</string>
     <string name="protein_g">Protein(g)</string>

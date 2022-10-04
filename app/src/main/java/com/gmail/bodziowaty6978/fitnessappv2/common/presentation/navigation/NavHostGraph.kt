@@ -27,7 +27,6 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.presentation.login.Log
 import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.presentation.register.RegisterScreen
 import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.presentation.reset_password.ResetPasswordScreen
 import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.presentation.util.AuthScreen
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.diary.DiaryScreen
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_product.NewProductScreen
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.ProductScreen
@@ -35,7 +34,6 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search.S
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.presentation.IntroductionScreen
 import com.gmail.bodziowaty6978.fitnessappv2.feature_splash.loading.presentation.SplashScreen
 import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.presentation.SummaryScreen
-import com.google.gson.Gson
 
 @RequiresApi(Build.VERSION_CODES.N)
 @Composable
@@ -43,7 +41,6 @@ fun NavHostGraph(
     navController: NavHostController = rememberNavController(),
     navigator: Navigator,
     startDestination: String = Screen.LoadingScreen.route
-//    startDestination:String = Screen.NewProductScreen.route + "?mealName={mealName}"
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
     val navigatorState by navigator.navActions.asLifecycleAwareState(
@@ -179,15 +176,7 @@ fun NavHostGraph(
                         }
                     )
                 ) {
-                    val productString = it.arguments?.getString("product")
-                    val mealName = it.arguments?.getString("mealName") ?: "Breakfast"
-                    val product = productString?.let { productJson ->
-                        Gson().fromJson(productJson, Product::class.java)
-                    } ?: Product()
-
-                    ProductScreen(
-                        product = product
-                    )
+                    ProductScreen()
                 }
 
                 composable(
