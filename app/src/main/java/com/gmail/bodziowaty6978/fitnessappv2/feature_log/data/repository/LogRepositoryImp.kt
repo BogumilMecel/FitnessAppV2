@@ -1,5 +1,6 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_log.data.repository
 
+import android.util.Log
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
@@ -7,6 +8,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_log.data.api.LogApi
 import com.gmail.bodziowaty6978.fitnessappv2.feature_log.domain.model.LogEntry
 import com.gmail.bodziowaty6978.fitnessappv2.feature_log.domain.model.LogRequest
 import com.gmail.bodziowaty6978.fitnessappv2.feature_log.domain.repository.LogRepository
+import com.gmail.bodziowaty6978.fitnessappv2.util.TAG
 import retrofit2.HttpException
 
 class LogRepositoryImp(
@@ -33,6 +35,7 @@ class LogRepositoryImp(
                 token = token
             )
             logEntry?.let {
+                Log.e(TAG, it.toString())
                 Resource.Success(data = it)
             } ?: saveLogEntry(
                 timestamp = System.currentTimeMillis(),
