@@ -1,9 +1,6 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_summary.presentation
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Scaffold
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
@@ -18,6 +15,8 @@ import com.gmail.bodziowaty6978.fitnessappv2.datastoreNutrition
 import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.SummaryViewModel
 import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.presentation.components.CaloriesSumSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.presentation.components.LogStreakSection
+import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.presentation.components.WeightPickerDialog
+import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.presentation.components.WeightSection
 
 @Composable
 fun SummaryScreen(
@@ -37,25 +36,52 @@ fun SummaryScreen(
     Scaffold(
         scaffoldState = scaffoldState
     ) {
+        if (state.isWeightPickerVisible){
+            WeightPickerDialog(
+                onEvent = {
+                    viewModel.onEvent(it)
+                },
+                startingValue = 100.0
+            )
+        }
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
         ) {
+            Spacer(modifier = Modifier.height(8.dp))
 
             LogStreakSection(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 15.dp, vertical = 8.dp) ,
-                streak = state.logStreak ?: 0
+                    .padding(horizontal = 15.dp),
+                streak = state.logStreak ?: 1
             )
+
+            Spacer(modifier = Modifier.height(16.dp))
 
             CaloriesSumSection(
                 currentCalories = state.caloriesSum ?: 0,
                 wantedCalories = wantedCalories,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 15.dp, vertical = 8.dp)
+                    .padding(horizontal = 15.dp)
             )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            WeightSection(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 15.dp),
+                lastWeightEntry = state.weightEntries.sortedByDescending { it.timestamp }.getOrNull(0)?.value,
+                weightProgress = state.weightProgress,
+                onEvent = {
+                    viewModel.onEvent(it)
+                }
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
 
         }
     }

@@ -8,14 +8,14 @@ import retrofit2.http.POST
 
 interface WeightApi {
 
-    @GET("weightEntries")
+    @GET("/weightEntries/latest")
     suspend fun getLatestWeightEntries(
-        @Header("Authorization") token:String
-    ):List<WeightEntry>
+        @Header("Authorization") token: String
+    ): List<WeightEntry>
 
-    @POST("weightEntries")
+    @POST("/weightEntries")
     suspend fun addWeightEntry(
-        @Header("Authorization") token:String,
+        @Header("Authorization") token: String,
         @Body weightEntry: WeightEntry
-    )
+    ): WeightEntry
 }

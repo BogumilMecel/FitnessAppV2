@@ -46,6 +46,12 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_log.domain.use_case.*
 import com.gmail.bodziowaty6978.fitnessappv2.feature_splash.data.api.LoadingApi
 import com.gmail.bodziowaty6978.fitnessappv2.feature_splash.data.repository.LoadingRepositoryImp
 import com.gmail.bodziowaty6978.fitnessappv2.feature_splash.domain.repository.LoadingRepository
+import com.gmail.bodziowaty6978.fitnessappv2.feature_weight.data.api.WeightApi
+import com.gmail.bodziowaty6978.fitnessappv2.feature_weight.data.repository.WeighRepositoryImp
+import com.gmail.bodziowaty6978.fitnessappv2.feature_weight.domain.repository.WeightRepository
+import com.gmail.bodziowaty6978.fitnessappv2.feature_weight.domain.use_case.AddWeightEntry
+import com.gmail.bodziowaty6978.fitnessappv2.feature_weight.domain.use_case.CalculateWeightProgress
+import com.gmail.bodziowaty6978.fitnessappv2.feature_weight.domain.use_case.GetLatestWeightEntries
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -70,7 +76,7 @@ object AppModule {
     @Singleton
     fun provideMasterKeyAlias(
         @ApplicationContext context: Context
-    ):MasterKey = MasterKey.Builder(context, MasterKey.DEFAULT_MASTER_KEY_ALIAS)
+    ): MasterKey = MasterKey.Builder(context, MasterKey.DEFAULT_MASTER_KEY_ALIAS)
         .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
         .build()
 
@@ -79,7 +85,7 @@ object AppModule {
     fun provideEncryptedSharedPreferences(
         @ApplicationContext context: Context,
         masterKey: MasterKey
-    ):SharedPreferences = EncryptedSharedPreferences.create(
+    ): SharedPreferences = EncryptedSharedPreferences.create(
         context,
         "PreferencesFilename",
         masterKey,
@@ -89,7 +95,7 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideRetrofitInstance():Retrofit{
+    fun provideRetrofitInstance(): Retrofit {
         return Retrofit.Builder()
             .baseUrl("http://192.168.0.171:8080/products/")
             .addConverterFactory(GsonConverterFactory.create())
@@ -98,7 +104,7 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideProductApi(retrofit: Retrofit):ProductApi{
+    fun provideProductApi(retrofit: Retrofit): ProductApi {
         return retrofit.create(ProductApi::class.java)
     }
 
@@ -106,11 +112,11 @@ object AppModule {
     @Provides
     fun provideAuthApi(
         retrofit: Retrofit
-    ):AuthApi = retrofit.create(AuthApi::class.java)
+    ): AuthApi = retrofit.create(AuthApi::class.java)
 
     @Singleton
     @Provides
-    fun provideLoadingApi(retrofit: Retrofit):LoadingApi = retrofit.create(LoadingApi::class.java)
+    fun provideLoadingApi(retrofit: Retrofit): LoadingApi = retrofit.create(LoadingApi::class.java)
 
 
     @Singleton
@@ -123,15 +129,15 @@ object AppModule {
     @Provides
     fun provideTokenRepository(
         sharedPreferences: SharedPreferences
-    ):TokenRepository = TokenRepositoryImp(
+    ): TokenRepository = TokenRepositoryImp(
         sharedPreferences = sharedPreferences
     )
 
     @Singleton
     @Provides
     fun provideGetTokenUseCase(
-        tokenRepository:TokenRepository
-    ):GetToken = GetToken(
+        tokenRepository: TokenRepository
+    ): GetToken = GetToken(
         tokenRepository = tokenRepository
     )
 
@@ -158,7 +164,7 @@ object AppModule {
     @Singleton
     fun provideSaveTokenUseCase(
         tokenRepository: TokenRepository
-    ):SaveToken = SaveToken(
+    ): SaveToken = SaveToken(
         tokenRepository = tokenRepository
     )
 
@@ -247,7 +253,7 @@ object AppModule {
         diaryRepository: DiaryRepository,
         getToken: GetToken,
         resourceProvider: ResourceProvider
-    ):DeleteDiaryEntry = DeleteDiaryEntry(
+    ): DeleteDiaryEntry = DeleteDiaryEntry(
         diaryRepository = diaryRepository,
         getToken = getToken,
         resourceProvider = resourceProvider
@@ -257,7 +263,7 @@ object AppModule {
     @Provides
     fun provideLogApi(
         retrofit: Retrofit
-    ) : LogApi = retrofit.create(LogApi::class.java)
+    ): LogApi = retrofit.create(LogApi::class.java)
 
     @Singleton
     @Provides
@@ -283,12 +289,30 @@ object AppModule {
 
     @Singleton
     @Provides
+    fun provideWeightApi(
+        retrofit: Retrofit
+    ): WeightApi = retrofit.create(WeightApi::class.java)
+
+    @Singleton
+    @Provides
+    fun provideWeightRepository(
+        weightApi: WeightApi,
+        resourceProvider: ResourceProvider
+    ): WeightRepository = WeighRepositoryImp(
+        weightApi = weightApi,
+        resourceProvider = resourceProvider
+    )
+
+
+    @Singleton
+    @Provides
     fun provideSummaryUseCases(
         logRepository: LogRepository,
         insertLogEntry: InsertLogEntry,
         getToken: GetToken,
-        resourceProvider: ResourceProvider,
-        diaryRepository: DiaryRepository
+        diaryRepository: DiaryRepository,
+        weightRepository: WeightRepository,
+        resourceProvider: ResourceProvider
     ): SummaryUseCases = SummaryUseCases(
         getLatestLogEntry = GetLatestLogEntry(
             logRepository = logRepository,
@@ -303,12 +327,24 @@ object AppModule {
             getToken = getToken,
             resourceProvider = resourceProvider
         ),
-        insertLogEntry = insertLogEntry
+        insertLogEntry = insertLogEntry,
+        addWeightEntry = AddWeightEntry(
+            weightRepository = weightRepository,
+            resourceProvider = resourceProvider,
+            getToken = getToken
+        ),
+        getLatestWeightEntries = GetLatestWeightEntries(
+            weightRepository = weightRepository,
+            getToken = getToken,
+            resourceProvider = resourceProvider
+        ),
+        calculateWeightProgress = CalculateWeightProgress()
     )
 
     @Singleton
     @Provides
-    fun provideUpdateDiaryEntriesListAfterDelete():UpdateDiaryEntriesListAfterDelete = UpdateDiaryEntriesListAfterDelete()
+    fun provideUpdateDiaryEntriesListAfterDelete(): UpdateDiaryEntriesListAfterDelete =
+        UpdateDiaryEntriesListAfterDelete()
 
     @Singleton
     @Provides
@@ -322,14 +358,15 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideCalculateDiaryEntriesNutritionValuesUseCase():CalculateDiaryEntriesNutritionValues = CalculateDiaryEntriesNutritionValues()
+    fun provideCalculateDiaryEntriesNutritionValuesUseCase(): CalculateDiaryEntriesNutritionValues =
+        CalculateDiaryEntriesNutritionValues()
 
     @Singleton
     @Provides
     fun provideLoadingRepository(
         loadingApi: LoadingApi,
         resourceProvider: ResourceProvider
-    ):LoadingRepository = LoadingRepositoryImp(
+    ): LoadingRepository = LoadingRepositoryImp(
         loadingApi = loadingApi,
         resourceProvider = resourceProvider
     )
@@ -362,7 +399,7 @@ object AppModule {
     fun provideProductUseCases(
         diaryRepository: DiaryRepository,
         resourceProvider: ResourceProvider,
-        getToken:GetToken
+        getToken: GetToken
     ): ProductUseCases =
         ProductUseCases(
             calculateNutritionValues = com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.product.CalculateNutritionValues(),

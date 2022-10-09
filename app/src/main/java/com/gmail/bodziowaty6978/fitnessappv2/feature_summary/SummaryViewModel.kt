@@ -7,6 +7,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.common.data.singleton.CurrentDate
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.feature_log.domain.use_case.SummaryUseCases
+import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.presentation.SummaryEvent
 import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.presentation.SummaryState
 import com.gmail.bodziowaty6978.fitnessappv2.util.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,33 +29,116 @@ class SummaryViewModel @Inject constructor(
     private val _errorState = Channel<String>()
     val errorState = _errorState.receiveAsFlow()
 
-    private val _summaryState = MutableStateFlow(SummaryState())
-    val summaryState: StateFlow<SummaryState> = _summaryState
+    private val _state = MutableStateFlow(SummaryState())
+    val summaryState: StateFlow<SummaryState> = _state
 
     init {
         getLatestLogEntry()
         getCaloriesSum()
+        getLatestWeightEntries()
+    }
+
+    fun onEvent(event: SummaryEvent) {
+        when (event) {
+            is SummaryEvent.DismissedWeightPickerDialog -> {
+                _state.update {
+                    it.copy(
+                        isWeightPickerVisible = false
+                    )
+                }
+            }
+            is SummaryEvent.SavedWeightPickerValue -> {
+                saveNewWeightEntry(value = event.value)
+            }
+            is SummaryEvent.ClickedAddWeightEntryButton -> {
+                _state.update {
+                    it.copy(
+                        isWeightPickerVisible = true
+                    )
+                }
+            }
+        }
+    }
+
+    private fun saveNewWeightEntry(value: Double){
+        viewModelScope.launch {
+            val resource = summaryUseCases.addWeightEntry(
+                value = value
+            )
+            when(resource){
+                is Resource.Success -> {
+                    resource.data?.let { newEntry ->
+                        _state.update { state ->
+                            val newEntriesList = state.weightEntries.toMutableList().apply {
+                                add(newEntry)
+                                toList()
+                            }
+                            Log.e(TAG,newEntriesList.toString())
+                            state.copy(
+                                isWeightPickerVisible = false,
+                                weightEntries = newEntriesList,
+                                weightProgress = summaryUseCases.calculateWeightProgress(
+                                    weightEntries = newEntriesList
+                                )
+                            )
+                        }
+                        Log.e(TAG, newEntry.toString())
+                        Log.e(TAG, _state.value.weightProgress.toString())
+                    }
+                }
+                is Resource.Error -> {
+
+                }
+            }
+            _state.update {
+                it.copy(
+                    isWeightPickerVisible = false
+                )
+            }
+        }
+    }
+
+    private fun getLatestWeightEntries() {
+        viewModelScope.launch(Dispatchers.IO) {
+            when (val resource = summaryUseCases.getLatestWeightEntries()) {
+                is Resource.Success -> {
+                    resource.data?.let { entries ->
+                        if (entries.isNotEmpty()){
+                            _state.update { state ->
+                                state.copy(
+                                    weightEntries = entries,
+                                    weightProgress = summaryUseCases.calculateWeightProgress(entries.toMutableList())
+                                )
+                            }
+                        }
+
+                    }
+                }
+                is Resource.Error -> {
+                    resource.uiText?.let {
+                        _errorState.send(it)
+                    }
+                }
+            }
+        }
     }
 
     private fun getLatestLogEntry() {
         viewModelScope.launch(Dispatchers.IO) {
             var logStreak = 1
-            when (val resource = summaryUseCases.getLatestLogEntry()) {
-                is Resource.Error -> {
-                    logStreak = 1
-                }
-                is Resource.Success -> {
-                    resource.data?.let { logEntry ->
-                        val checkResource = summaryUseCases.checkLatestLogEntry(
-                            logEntry = logEntry
-                        )
-                        logStreak = if (checkResource.data != null && checkResource is Resource.Success) {
-                                checkResource.data.streak
-                            } else 1
-                    }
+            val resource = summaryUseCases.getLatestLogEntry()
+            if (resource is Resource.Success){
+                resource.data?.let { logEntry ->
+                    val checkResource = summaryUseCases.checkLatestLogEntry(
+                        logEntry = logEntry
+                    )
+                    logStreak =
+                        if (checkResource.data != null && checkResource is Resource.Success) {
+                            checkResource.data.streak
+                        } else 1
                 }
             }
-            _summaryState.update {
+            _state.update {
                 it.copy(
                     logStreak = logStreak
                 )
@@ -62,21 +146,21 @@ class SummaryViewModel @Inject constructor(
         }
     }
 
-    private fun getCaloriesSum(){
+    private fun getCaloriesSum() {
         viewModelScope.launch {
             val resource = summaryUseCases.getCaloriesSum(
                 date = CurrentDate.dateModel(
                     resourceProvider = resourceProvider
                 ).date
             )
-            Log.e(TAG,resource.toString())
+            Log.e(TAG, resource.toString())
             var caloriesSum = 0
-            if (resource is Resource.Success){
+            if (resource is Resource.Success) {
                 resource.data?.let { sum ->
                     caloriesSum = sum
                 }
             }
-            _summaryState.update {
+            _state.update {
                 it.copy(
                     caloriesSum = caloriesSum
                 )
