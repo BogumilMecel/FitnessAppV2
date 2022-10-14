@@ -30,7 +30,7 @@ class SearchViewModel @Inject constructor(
     private val _errorState = Channel<String>()
     val errorState = _errorState.receiveAsFlow()
 
-    private val _searchState = MutableStateFlow<SearchState>(SearchState())
+    private val _searchState = MutableStateFlow(SearchState())
     val searchState: StateFlow<SearchState> = _searchState
 
     init{
@@ -154,6 +154,9 @@ class SearchViewModel @Inject constructor(
                         hasPermissionDialogBeenShowed = true
                     )
                 }
+            }
+            is SearchEvent.ClickedCreateNewRecipe -> {
+                navigator.navigate(NavigationActions.SearchScreen.searchToNewRecipe())
             }
         }
     }

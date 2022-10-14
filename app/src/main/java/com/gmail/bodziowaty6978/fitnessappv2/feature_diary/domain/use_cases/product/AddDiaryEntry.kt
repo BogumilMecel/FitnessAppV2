@@ -31,7 +31,7 @@ class AddDiaryEntry(
             } else {
                 val diaryEntry = DiaryEntry(
                     product = product,
-                    timeStamp = dateModel.timestamp,
+                    timestamp = dateModel.timestamp,
                     weight = it,
                     mealName = mealName,
                     date = dateModel.date

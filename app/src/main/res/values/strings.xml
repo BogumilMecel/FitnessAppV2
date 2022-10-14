@@ -58,8 +58,8 @@
     <string name="tomorrow">Tomorrow</string>
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
-    <string name="scan">Scan</string>
-    <string name="filter">Filter</string>
+    <string name="scan">Scan barcode</string>
+    <string name="filter">Filter recipes</string>
     <string name="searching_for_products">Searching for products…</string>
     <string name="please_make_sure_you_have_entered_some_text_before_searching">Please make sure you have entered some text before searching for a product</string>
     <string name="product_name">Product name</string>
@@ -133,6 +133,15 @@
     <string name="kg">kg</string>
     <string name="what_is_your_todays_weight">What is your today\'s weight?</string>
 
+<!--    recipe-->
+    <string name="add_recipe">Create recipe</string>
+    <string name="filter_recipes">Filter recipes</string>
+
+    <string name="products">Products</string>
+    <string name="recipes">Recipes</string>
+    <string name="recipe_name">Recipe name</string>
+    <string name="add_image">Add image</string>
+
 
     <string name="sedentary">Sedentary</string>
     <string name="none">None</string>
@@ -163,7 +172,7 @@
     <string name="edit">edit</string>
     <string name="body_measurements">Body measurements</string>
     <string name="log_out">Log out</string>
-    <string name="add_product">Add Product</string>
+    <string name="add_product">Create Product</string>
     <string name="diary">Diary</string>
     <string name="summary">Summary</string>
     <string name="you_have_logged_for">You have logged for</string>

@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
 data class DiaryEntry(
     val id:Int = -1,
     val product: Product,
-    val timeStamp:Long,
+    val timestamp:Long,
     val date:String,
     var weight:Int,
     val mealName:String
