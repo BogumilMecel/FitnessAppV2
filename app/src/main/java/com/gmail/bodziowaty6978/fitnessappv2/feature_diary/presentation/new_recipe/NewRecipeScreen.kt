@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
@@ -118,21 +119,23 @@ fun NewRecipeScreen(
             modifier = Modifier.padding(horizontal = 15.dp)
         ) {
             Text(
-                text = "Name", modifier = Modifier.padding(start = 4.dp)
+                text = stringResource(id = R.string.name), modifier = Modifier.padding(start = 4.dp)
             )
 
             Spacer(modifier = Modifier.height(6.dp))
 
-            CustomBasicTestField(modifier = Modifier.fillMaxWidth(),
-                                 value = state.name,
-                                 onValueChange = {
-                                     viewModel.onEvent(NewRecipeEvent.EnteredName(it))
-                                 })
+            CustomBasicTestField(
+                modifier = Modifier.fillMaxWidth(),
+                value = state.name,
+                onValueChange = {
+                    viewModel.onEvent(NewRecipeEvent.EnteredName(it))
+                })
 
             Spacer(modifier = Modifier.height(18.dp))
 
             Row(
-                horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()
             ) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -145,7 +148,8 @@ fun NewRecipeScreen(
                         Spacer(modifier = Modifier.width(6.dp))
 
                         Text(
-                            text = "Difficulty", style = MaterialTheme.typography.body2.copy(
+                            text = stringResource(id = R.string.difficulty),
+                            style = MaterialTheme.typography.body2.copy(
                                 fontWeight = FontWeight.Bold
                             )
                         )
@@ -209,7 +213,8 @@ fun NewRecipeScreen(
                         Spacer(modifier = Modifier.width(6.dp))
 
                         Text(
-                            text = "Time", style = MaterialTheme.typography.body2.copy(
+                            text = stringResource(id = R.string.time),
+                            style = MaterialTheme.typography.body2.copy(
                                 fontWeight = FontWeight.Bold
                             )
                         )
@@ -271,9 +276,8 @@ fun NewRecipeScreen(
                         Spacer(modifier = Modifier.width(6.dp))
 
                         Text(
-                            text = "Servings", style = MaterialTheme.typography.body2.copy(
-                                fontWeight = FontWeight.Bold
-                            )
+                            text = stringResource(id = R.string.servings),
+                            style = MaterialTheme.typography.h3
                         )
                     }
 
@@ -285,7 +289,59 @@ fun NewRecipeScreen(
                         }, modifier = Modifier.width(90.dp), singleLine = true
                     )
                 }
+            }
 
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                elevation = 3.dp,
+                shape = RoundedCornerShape(15)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    Text(
+                        text = "Ingredients List",
+                        style = MaterialTheme.typography.h3.copy(
+                            textAlign = TextAlign.Center
+                        ),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(15.dp)
+                    )
+
+                    Divider(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(1.dp)
+                    )
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(15.dp),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = null,
+                            tint = MaterialTheme.colors.primary
+                        )
+
+                        Spacer(modifier = Modifier.width(6.dp))
+
+                        Text(
+                            text = "Add ingredient",
+                            style = MaterialTheme.typography.button.copy(
+                                color = MaterialTheme.colors.primary
+                            )
+                        )
+                    }
+                }
             }
         }
     }
