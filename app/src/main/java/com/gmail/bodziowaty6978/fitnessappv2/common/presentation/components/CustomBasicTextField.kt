@@ -7,11 +7,13 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.unit.dp
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.TextGrey
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -20,7 +22,8 @@ fun CustomBasicTestField(
     elevation: Int = 3,
     value: String,
     onValueChange:(String) -> Unit,
-    singleLine: Boolean = false
+    singleLine: Boolean = false,
+    placeholder: String? = null
 ) {
     Card(
         shape = RoundedCornerShape(30),
@@ -39,5 +42,15 @@ fun CustomBasicTestField(
             cursorBrush = SolidColor(Color.White),
             singleLine = singleLine
         )
+
+        if (value.isBlank() && placeholder != null){
+            Text(
+                text = placeholder,
+                style = MaterialTheme.typography.body1.copy(
+                    color = TextGrey
+                ),
+                modifier = Modifier.padding(15.dp)
+            )
+        }
     }
 }
