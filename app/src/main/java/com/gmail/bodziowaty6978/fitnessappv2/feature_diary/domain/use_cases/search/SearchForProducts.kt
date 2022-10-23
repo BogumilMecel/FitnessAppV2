@@ -9,10 +9,10 @@ class SearchForProducts(
     private val getDiaryHistory: GetDiaryHistory
 ) {
 
-    suspend operator fun invoke(productName:String):Resource<List<Product>>{
-        if (productName.isBlank()){
+    suspend operator fun invoke(searchText:String):Resource<List<Product>>{
+        if (searchText.isBlank()){
             return getDiaryHistory()
         }
-        return diaryRepository.searchForProducts(productName)
+        return diaryRepository.searchForProducts(searchText)
     }
 }

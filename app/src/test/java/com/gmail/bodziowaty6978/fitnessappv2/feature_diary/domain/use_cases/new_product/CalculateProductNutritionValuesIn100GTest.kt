@@ -3,7 +3,7 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.new
 import org.junit.Before
 import org.junit.Test
 
-internal class CalculateNutritionValuesIn100GTest {
+internal class CalculateProductNutritionValuesIn100GTest {
 
     lateinit var calculateNutritionValuesIn100G: CalculateNutritionValuesIn100G
 

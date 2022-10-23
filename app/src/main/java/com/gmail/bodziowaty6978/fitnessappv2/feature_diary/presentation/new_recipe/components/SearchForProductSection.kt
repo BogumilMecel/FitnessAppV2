@@ -1,7 +1,12 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_recipe.components
 
-import android.widget.Space
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -15,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.BackArrow
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.CustomBasicTestField
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_recipe.NewRecipeEvent
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_recipe.NewRecipeState
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search.componens.SearchProductItem
@@ -44,7 +48,9 @@ fun SearchForProductSection(
             )
 
             IconButton(
-                onClick = { /*TODO*/ },
+                onClick = {
+                    onEvent(NewRecipeEvent.ClickedSearchButton)
+                },
                 modifier = Modifier.align(Alignment.CenterEnd)
             ) {
                 Icon(
@@ -59,9 +65,9 @@ fun SearchForProductSection(
         Spacer(modifier = Modifier.height(6.dp))
 
         CustomBasicTestField(
-            value = "",
+            value = state.searchText,
             onValueChange = {
-
+                onEvent(NewRecipeEvent.EnteredSearchText(it))
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -71,10 +77,14 @@ fun SearchForProductSection(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        LazyColumn(modifier = Modifier.fillMaxWidth()){
-            items(state.searchItems.size){
+        LazyColumn(modifier = Modifier.fillMaxWidth()) {
+            items(state.searchItems.size) {
+                val product = state.searchItems[it]
                 SearchProductItem(
-                    product = state.searchItems[it]
+                    name = product.name,
+                    unit = product.unit,
+                    weight = product.containerWeight,
+                    calories = product.nutritionValues.calories
                 ) {
                     onEvent(NewRecipeEvent.ClickedProduct(state.searchItems[it]))
                 }

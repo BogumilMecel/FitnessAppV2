@@ -4,7 +4,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.extensions.round
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
 
-class CalculateNutritionValues{
+class CalculateProductNutritionValues{
 
     operator fun invoke(weight: Int, product: Product): NutritionValues {
         val nutritionValues = product.nutritionValues

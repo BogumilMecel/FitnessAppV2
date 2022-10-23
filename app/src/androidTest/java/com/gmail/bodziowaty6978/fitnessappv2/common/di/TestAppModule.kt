@@ -171,7 +171,7 @@ object TestAppModule {
         resourceProvider: ResourceProvider
     ): ProductUseCases =
         ProductUseCases(
-            calculateNutritionValues = com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.product.CalculateNutritionValues(),
+            calculateProductNutritionValues = com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.product.CalculateProductNutritionValues(),
             createPieChartData = CreatePieChartData(),
             addDiaryEntry = AddDiaryEntry(diaryRepository, resourceProvider = resourceProvider),
             saveProductToHistory = SaveProductToHistory(diaryRepository)

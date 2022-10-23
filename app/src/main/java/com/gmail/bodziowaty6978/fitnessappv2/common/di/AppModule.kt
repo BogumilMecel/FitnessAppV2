@@ -24,12 +24,16 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.domain.use_case.AuthUs
 import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.domain.use_case.LogInUser
 import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.domain.use_case.RegisterUser
 import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.domain.use_case.ResetPasswordWithEmail
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.data.api.ProductApi
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.data.api.DiaryApi
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.data.repository.remote.DiaryRepositoryImp
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.diary.*
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.new_product.CalculateNutritionValuesIn100G
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.new_product.SaveNewProduct
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.new_recipe.AddNewRecipe
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.new_recipe.CalculateRecipeNutritionValues
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.new_recipe.CalculateRecipePrice
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.new_recipe.NewRecipeUseCases
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.product.*
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.search.GetDiaryHistory
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.search.SearchDiaryUseCases
@@ -104,8 +108,8 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideProductApi(retrofit: Retrofit): ProductApi {
-        return retrofit.create(ProductApi::class.java)
+    fun provideProductApi(retrofit: Retrofit): DiaryApi {
+        return retrofit.create(DiaryApi::class.java)
     }
 
     @Singleton
@@ -223,12 +227,12 @@ object AppModule {
     @Singleton
     @Provides
     fun provideDiaryRepository(
-        productApi: ProductApi,
+        diaryApi: DiaryApi,
         resourceProvider: ResourceProvider
     ): DiaryRepository =
         DiaryRepositoryImp(
             resourceProvider = resourceProvider,
-            productApi = productApi
+            diaryApi = diaryApi
         )
 
     @Singleton
@@ -286,6 +290,50 @@ object AppModule {
         getToken = getToken,
         resourceProvider = resourceProvider
     )
+
+    @Singleton
+    @Provides
+    fun provideCalculateRecipePriceUseCase(): CalculateRecipePrice = CalculateRecipePrice()
+
+    @Singleton
+    @Provides
+    fun provideAddNewRecipe(
+        diaryRepository: DiaryRepository,
+        getToken: GetToken,
+        resourceProvider: ResourceProvider
+    ): AddNewRecipe = AddNewRecipe(
+        diaryRepository = diaryRepository,
+        getToken = getToken,
+        resourceProvider = resourceProvider
+    )
+
+    @Singleton
+    @Provides
+    fun provideNewRecipeUseCases(
+        addNewRecipe: AddNewRecipe,
+        calculateRecipePrice: CalculateRecipePrice,
+        calculateRecipeNutritionValues: CalculateRecipeNutritionValues,
+        createPieChartData: CreatePieChartData,
+        searchForProducts: SearchForProducts,
+        calculateProductNutritionValues: CalculateProductNutritionValues
+    ): NewRecipeUseCases = NewRecipeUseCases(
+        addNewRecipe = addNewRecipe,
+        calculateRecipePrice = calculateRecipePrice,
+        calculateRecipeNutritionValues = calculateRecipeNutritionValues,
+        createPieChartData = createPieChartData,
+        searchForProducts = searchForProducts,
+        calculateProductNutritionValues = calculateProductNutritionValues
+    )
+
+    @Singleton
+    @Provides
+    fun provideCalculateProductNutritionValues():CalculateProductNutritionValues = CalculateProductNutritionValues()
+
+    @Singleton
+    @Provides
+    fun provideCalculateRecipeNutritionValues(
+        calculateProductNutritionValues: CalculateProductNutritionValues
+    ): CalculateRecipeNutritionValues = CalculateRecipeNutritionValues(calculateProductNutritionValues = calculateProductNutritionValues)
 
     @Singleton
     @Provides
@@ -396,14 +444,19 @@ object AppModule {
 
     @Singleton
     @Provides
+    fun provideCreatePieChartData():CreatePieChartData = CreatePieChartData()
+
+    @Singleton
+    @Provides
     fun provideProductUseCases(
         diaryRepository: DiaryRepository,
         resourceProvider: ResourceProvider,
-        getToken: GetToken
+        getToken: GetToken,
+        createPieChartData: CreatePieChartData
     ): ProductUseCases =
         ProductUseCases(
-            calculateNutritionValues = com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.product.CalculateNutritionValues(),
-            createPieChartData = CreatePieChartData(),
+            calculateProductNutritionValues = com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.product.CalculateProductNutritionValues(),
+            createPieChartData = createPieChartData,
             addDiaryEntry = AddDiaryEntry(
                 diaryRepository,
                 resourceProvider = resourceProvider,

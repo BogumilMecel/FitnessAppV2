@@ -6,6 +6,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.util.BottomBarS
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.util.Screen
 import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.presentation.util.AuthScreen
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 import com.google.gson.Gson
 
 object NavigationActions {
@@ -159,6 +160,22 @@ object NavigationActions {
             override val destination: String =
                 Screen.ProductScreen.route + "?mealName=$mealName" + "&product=${
                     Gson().toJson(product)
+                }" 
+        }
+    }
+
+    //New recipe
+    object NewRecipeScreen {
+        fun newRecipeToProduct(
+            recipe: Recipe,
+            product: Product,
+            mealName: String
+        ) = object : NavigationAction {
+            override val destination: String =
+                Screen.ProductScreen.route + "?mealName=$mealName" + "&product=${
+                    Gson().toJson(product)
+                }" + "recipe=${
+                    Gson().toJson(recipe)
                 }"
         }
     }

@@ -155,7 +155,13 @@ fun SearchProductSection(
                         .fillMaxWidth()
                 ) {
                     items(items.size) { itemPosition ->
-                        SearchProductItem(product = items[itemPosition]) {
+                        val product = items[itemPosition]
+                        SearchProductItem(
+                            name = product.name,
+                            unit = product.unit,
+                            weight = product.containerWeight,
+                            calories = product.nutritionValues.calories
+                        ) {
                             onEvent(
                                 SearchEvent.ClickedSearchItem(
                                     item = items[itemPosition]

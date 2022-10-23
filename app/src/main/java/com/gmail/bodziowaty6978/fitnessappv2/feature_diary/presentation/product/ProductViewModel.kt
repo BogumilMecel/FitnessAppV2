@@ -72,9 +72,9 @@ class ProductViewModel @Inject constructor(
                             it.copy(
                                 weight = newWeight.toString(),
                                 nutritionData = it.nutritionData.copy(
-                                    nutritionValues = productUseCases.calculateNutritionValues(
+                                    nutritionValues = productUseCases.calculateProductNutritionValues(
                                         weight = newWeight,
-                                        product = event.product
+                                        product = _state.value.product
                                     )
                                 )
                             )
@@ -88,6 +88,7 @@ class ProductViewModel @Inject constructor(
                     }
 
                 }
+                Log.e("huj",_state.value.recipe.toString())
             }
             is ProductEvent.ClickedAddProduct -> {
                 viewModelScope.launch(Dispatchers.IO) {
