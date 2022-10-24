@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.BackArrow
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.DefaultTextField
-import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.Grey
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.DarkGreyElevation1
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.TextGrey
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.TextWhite
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search.SearchEvent
@@ -92,7 +92,7 @@ fun SearchTopSection(
         TabRow(
             selectedTabIndex = pagerState.currentPage,
             contentColor = Color.White,
-            backgroundColor = Grey
+            backgroundColor = DarkGreyElevation1
         ) {
             Tab(
                 text = {
@@ -106,7 +106,7 @@ fun SearchTopSection(
                 selected = pagerState.currentPage==0,
                 onClick = {
                     scope.launch {
-                        pagerState.animateScrollToPage(0)
+                        pagerState.scrollToPage(0)
                     }
                 }
             )
@@ -123,7 +123,7 @@ fun SearchTopSection(
                 selected = pagerState.currentPage==1,
                 onClick = {
                     scope.launch {
-                        pagerState.animateScrollToPage(1)
+                        pagerState.scrollToPage(1)
                     }
                 }
             )

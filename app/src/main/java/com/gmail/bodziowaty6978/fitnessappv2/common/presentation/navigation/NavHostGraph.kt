@@ -20,7 +20,7 @@ import androidx.navigation.navArgument
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigator
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.BottomBar
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.DarkGrey
-import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.Grey
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.DarkGreyElevation1
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.util.BottomBarScreen
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.util.Screen
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.extensions.asLifecycleAwareState
@@ -44,9 +44,9 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 fun NavHostGraph(
     navController: NavHostController = rememberNavController(),
     navigator: Navigator,
-//    startDestination: String = Screen.LoadingScreen.route,
+    startDestination: String = Screen.LoadingScreen.route,
 //    startDestination: String = Screen.NewProductScreen.route + "?mealName={mealName}&barcode={barcode}"
-    startDestination: String = Screen.NewRecipeScreen.route
+//    startDestination: String = Screen.NewRecipeScreen.route
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
     val navigatorState by navigator.navActions.asLifecycleAwareState(
@@ -76,11 +76,11 @@ fun NavHostGraph(
                 )
             }
             if (it.destination == "navigateUp") {
-                navController.navigateUp()
+                navController.navigateUp() 
             } else {
                 navController.navigate(it.destination, it.navOptions)
             }
-            statusBarColor = if (navController.currentDestination?.route == Screen.SearchScreen.route + "?mealName={mealName}") Grey else DarkGrey
+            statusBarColor = if (navController.currentDestination?.route == Screen.SearchScreen.route + "?mealName={mealName}") DarkGreyElevation1 else DarkGrey
         }
     }
 

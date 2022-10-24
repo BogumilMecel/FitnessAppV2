@@ -1,5 +1,6 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.diary.components
 
+import android.util.Log
 import androidx.compose.foundation.layout.Row
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -19,8 +20,7 @@ fun NutritionBottomSection(
     wantedNutritionValues: NutritionValues,
     modifier: Modifier
 ) {
-
-
+    Log.e("huj", wantedNutritionValues.toString())
     Row(
         modifier = modifier
     ) {

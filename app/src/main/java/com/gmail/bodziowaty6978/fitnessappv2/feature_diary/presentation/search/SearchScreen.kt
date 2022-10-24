@@ -4,9 +4,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.*
+import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
@@ -20,7 +24,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.singleton.CurrentDate
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.BackHandler
-import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.Grey
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.DarkGreyElevation1
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search.componens.SearchProductSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search.componens.SearchRecipeSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search.componens.SearchTopSection
@@ -87,7 +91,7 @@ fun SearchScreen(
             ) {
                 SearchTopSection(
                     modifier = Modifier
-                        .background(Grey),
+                        .background(DarkGreyElevation1),
                     searchBarText = state.searchBarText,
                     mealName = state.mealName,
                     date = CurrentDate.dateModel(LocalContext.current).valueToDisplay

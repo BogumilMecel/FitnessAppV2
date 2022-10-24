@@ -2,7 +2,6 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.pro
 
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.DateModel
-import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.use_case.GetToken
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
@@ -21,7 +20,6 @@ class AddDiaryEntry(
         mealName: String,
         dateModel: DateModel,
         weight: Int?,
-        nutritionValues: NutritionValues,
     ): Resource<DiaryEntry> {
         return weight?.let {
             if (weight == 0) {

@@ -8,42 +8,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.gmail.bodziowaty6978.fitnessappv2.datastoreInformation
-import com.gmail.bodziowaty6978.fitnessappv2.datastoreNutrition
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 @Composable
 fun SplashScreen(
     viewModel: LoadingViewModel = hiltViewModel()
 ) {
-    val context = LocalContext.current
-
-    LaunchedEffect(key1 = true) {
-        context.datastoreInformation.data.collect {
-            launch(Dispatchers.Main) {
-                viewModel.onEvent(
-                    LoadingEvent.ReceivedInformation(it)
-                )
-            }
-
-        }
-    }
-
-    LaunchedEffect(key1 = true) {
-        context.datastoreNutrition.data.collect {
-            launch(Dispatchers.Main) {
-                viewModel.onEvent(
-                    LoadingEvent.ReceivedNutrition(it)
-                )
-            }
-
-        }
-    }
-
     LaunchedEffect(key1 = true) {
         viewModel.checkIfTokenIsPresent()
     }

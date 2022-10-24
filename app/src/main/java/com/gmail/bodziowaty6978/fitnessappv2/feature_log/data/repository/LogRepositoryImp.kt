@@ -8,7 +8,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_log.data.api.LogApi
 import com.gmail.bodziowaty6978.fitnessappv2.feature_log.domain.model.LogEntry
 import com.gmail.bodziowaty6978.fitnessappv2.feature_log.domain.model.LogRequest
 import com.gmail.bodziowaty6978.fitnessappv2.feature_log.domain.repository.LogRepository
-import com.gmail.bodziowaty6978.fitnessappv2.util.TAG
+import com.gmail.bodziowaty6978.fitnessappv2.common.util.extensions.TAG
 import retrofit2.HttpException
 
 class LogRepositoryImp(
