@@ -1,7 +1,5 @@
 package com.gmail.bodziowaty6978.fitnessappv2.common.presentation.navigation
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
@@ -39,7 +37,6 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_splash.loading.presentation
 import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.presentation.SummaryScreen
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
-@RequiresApi(Build.VERSION_CODES.N)
 @Composable
 fun NavHostGraph(
     navController: NavHostController = rememberNavController(),
@@ -76,7 +73,7 @@ fun NavHostGraph(
                 )
             }
             if (it.destination == "navigateUp") {
-                navController.navigateUp() 
+                navController.navigateUp()
             } else {
                 navController.navigate(it.destination, it.navOptions)
             }

@@ -1,6 +1,5 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_auth.data.repository
 
-import android.util.Log
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
@@ -9,7 +8,6 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.data.api.AuthApi
 import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.domain.model.AuthRequest
 import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.domain.model.TokenResponse
 import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.domain.repository.AuthRepository
-import com.gmail.bodziowaty6978.fitnessappv2.common.util.extensions.TAG
 
 class AuthRepositoryImp(
     private val authApi: AuthApi,
@@ -24,7 +22,6 @@ class AuthRepositoryImp(
                     password = password
                 )
             )
-            Log.e(TAG,token.token)
             Resource.Success(data = token)
         } catch (e: Exception) {
             e.printStackTrace()

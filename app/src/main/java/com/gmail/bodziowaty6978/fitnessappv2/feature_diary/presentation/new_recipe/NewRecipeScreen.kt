@@ -124,7 +124,8 @@ fun NewRecipeScreen(
                         onWeightEntered = {
                             viewModel.onEvent(NewRecipeEvent.EnteredProductWeight(it))
                         },
-                        nutritionData = state.nutritionData
+                        nutritionData = state.nutritionData,
+                        modifier = Modifier.padding(horizontal = 15.dp)
                     )
                 }
             }
