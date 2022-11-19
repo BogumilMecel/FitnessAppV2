@@ -13,9 +13,8 @@ import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.UserInformation
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigator
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.repository.TokenRepository
-import com.gmail.bodziowaty6978.fitnessappv2.common.domain.use_case.GetToken
-import com.gmail.bodziowaty6978.fitnessappv2.common.domain.use_case.GetWantedNutritionValues
-import com.gmail.bodziowaty6978.fitnessappv2.common.domain.use_case.SaveToken
+import com.gmail.bodziowaty6978.fitnessappv2.common.domain.use_case.*
+import com.gmail.bodziowaty6978.fitnessappv2.common.util.DefaultInterceptor
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.datastoreInformation
 import com.gmail.bodziowaty6978.fitnessappv2.datastoreNutrition
@@ -42,9 +41,9 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.sear
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.search.SearchDiaryUseCases
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.search.SearchForProductWithBarcode
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.search.SearchForProducts
-import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.data.api.IntroductionApi
-import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.data.repository.IntroductionRepositoryImp
-import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.repository.IntroductionRepository
+import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.data.api.UserDataApi
+import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.data.repository.UserDataRepositoryImp
+import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.repository.UserDataRepository
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.use_cases.CalculateNutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.use_cases.SaveIntroductionInformation
 import com.gmail.bodziowaty6978.fitnessappv2.feature_log.data.api.LogApi
@@ -66,6 +65,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
@@ -104,11 +104,26 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideRetrofitInstance(): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl("http://192.168.0.171:8080/products/")
+    fun provideDefaultInterceptor(getToken: GetToken): DefaultInterceptor =
+        DefaultInterceptor(getToken = getToken)
+
+    @Singleton
+    @Provides
+    fun provideHttpClient(defaultInterceptor: DefaultInterceptor): OkHttpClient {
+        val client = OkHttpClient.Builder().addInterceptor(defaultInterceptor)
+        return client.build()
+    }
+
+    @Singleton
+    @Provides
+    fun provideRetrofitInstance(
+        httpClient: OkHttpClient
+    ): Retrofit {
+        val retrofitBuilder = Retrofit.Builder()
+            .client(httpClient)
+            .baseUrl("http://192.168.0.216:8080/products/")
             .addConverterFactory(GsonConverterFactory.create())
-            .build()
+        return retrofitBuilder.build()
     }
 
     @Singleton
@@ -215,18 +230,23 @@ object AppModule {
     fun provideCalculateNutritionValuesUseCase(): CalculateNutritionValues =
         CalculateNutritionValues()
 
+    @Singleton
+    @Provides
+    fun provideSaveNutritionValues(userDataRepository: UserDataRepository): SaveNutritionValues =
+        SaveNutritionValues(userDataRepository)
+
     @Provides
     @Singleton
     fun provideSaveInformationUseCase(
-        introductionRepository: IntroductionRepository,
+        userDataRepository: UserDataRepository,
         resourceProvider: ResourceProvider,
         calculateNutritionValues: CalculateNutritionValues,
-        getToken: GetToken
+        saveNutritionValues: SaveNutritionValues
     ): SaveIntroductionInformation = SaveIntroductionInformation(
-        introductionRepository = introductionRepository,
+        userDataRepository = userDataRepository,
         resourceProvider = resourceProvider,
         calculateNutritionValues = calculateNutritionValues,
-        getToken = getToken
+        saveNutritionValues = saveNutritionValues
     )
 
     @Singleton
@@ -244,28 +264,19 @@ object AppModule {
     @Provides
     fun provideGetDiaryEntriesUseCase(
         diaryRepository: DiaryRepository,
-        calculateDiaryEntriesNutritionValues: CalculateDiaryEntriesNutritionValues,
-        getToken: GetToken,
         resourceProvider: ResourceProvider
     ): GetDiaryEntries = GetDiaryEntries(
         diaryRepository = diaryRepository,
-        sortDiaryEntries = SortDiaryEntries(
-            calculateDiaryEntriesNutritionValues = calculateDiaryEntriesNutritionValues
-        ),
-        getToken = getToken,
+        sortDiaryEntries = SortDiaryEntries(),
         resourceProvider = resourceProvider
     )
 
     @Singleton
     @Provides
     fun provideDeleteDiaryEntryUseCase(
-        diaryRepository: DiaryRepository,
-        getToken: GetToken,
-        resourceProvider: ResourceProvider
+        diaryRepository: DiaryRepository
     ): DeleteDiaryEntry = DeleteDiaryEntry(
         diaryRepository = diaryRepository,
-        getToken = getToken,
-        resourceProvider = resourceProvider
     )
 
     @Singleton
@@ -287,13 +298,9 @@ object AppModule {
     @Singleton
     @Provides
     fun provideInsertLogUseCase(
-        logRepository: LogRepository,
-        getToken: GetToken,
-        resourceProvider: ResourceProvider
+        logRepository: LogRepository
     ): InsertLogEntry = InsertLogEntry(
         logRepository = logRepository,
-        getToken = getToken,
-        resourceProvider = resourceProvider
     )
 
     @Singleton
@@ -304,11 +311,9 @@ object AppModule {
     @Provides
     fun provideAddNewRecipe(
         diaryRepository: DiaryRepository,
-        getToken: GetToken,
         resourceProvider: ResourceProvider
     ): AddNewRecipe = AddNewRecipe(
         diaryRepository = diaryRepository,
-        getToken = getToken,
         resourceProvider = resourceProvider
     )
 
@@ -332,13 +337,15 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideCalculateProductNutritionValues():CalculateProductNutritionValues = CalculateProductNutritionValues()
+    fun provideCalculateProductNutritionValues(): CalculateProductNutritionValues =
+        CalculateProductNutritionValues()
 
     @Singleton
     @Provides
     fun provideCalculateRecipeNutritionValues(
         calculateProductNutritionValues: CalculateProductNutritionValues
-    ): CalculateRecipeNutritionValues = CalculateRecipeNutritionValues(calculateProductNutritionValues = calculateProductNutritionValues)
+    ): CalculateRecipeNutritionValues =
+        CalculateRecipeNutritionValues(calculateProductNutritionValues = calculateProductNutritionValues)
 
     @Singleton
     @Provides
@@ -362,35 +369,15 @@ object AppModule {
     fun provideSummaryUseCases(
         logRepository: LogRepository,
         insertLogEntry: InsertLogEntry,
-        getToken: GetToken,
         diaryRepository: DiaryRepository,
         weightRepository: WeightRepository,
-        resourceProvider: ResourceProvider
     ): SummaryUseCases = SummaryUseCases(
-        getLatestLogEntry = GetLatestLogEntry(
-            logRepository = logRepository,
-            getToken = getToken,
-            resourceProvider = resourceProvider
-        ),
-        checkLatestLogEntry = CheckLatestLogEntry(
-            insertLogEntry = insertLogEntry
-        ),
-        getCaloriesSum = GetCaloriesSum(
-            diaryRepository = diaryRepository,
-            getToken = getToken,
-            resourceProvider = resourceProvider
-        ),
+        getLatestLogEntry = GetLatestLogEntry(logRepository = logRepository),
+        checkLatestLogEntry = CheckLatestLogEntry(insertLogEntry = insertLogEntry),
+        getCaloriesSum = GetCaloriesSum(diaryRepository = diaryRepository),
         insertLogEntry = insertLogEntry,
-        addWeightEntry = AddWeightEntry(
-            weightRepository = weightRepository,
-            resourceProvider = resourceProvider,
-            getToken = getToken
-        ),
-        getLatestWeightEntries = GetLatestWeightEntries(
-            weightRepository = weightRepository,
-            getToken = getToken,
-            resourceProvider = resourceProvider
-        ),
+        addWeightEntry = AddWeightEntry(weightRepository = weightRepository),
+        getLatestWeightEntries = GetLatestWeightEntries(weightRepository = weightRepository),
         calculateWeightProgress = CalculateWeightProgress()
     )
 
@@ -409,28 +396,24 @@ object AppModule {
         getDiaryHistory = getDiaryHistory
     )
 
-    @Provides
-    @Singleton
-    fun provideCalculateDiaryEntriesNutritionValuesUseCase(): CalculateDiaryEntriesNutritionValues =
-        CalculateDiaryEntriesNutritionValues()
-
     @Singleton
     @Provides
-    fun provideGson():Gson = Gson()
+    fun provideGson(): Gson = Gson()
 
     @Provides
     @Singleton
     fun provideSharedPreferencesUtils(
         @ApplicationContext context: Context,
         gson: Gson
-    ):CustomSharedPreferencesUtils = CustomSharedPreferencesUtils(
+    ): CustomSharedPreferencesUtils = CustomSharedPreferencesUtils(
         sharedPreferences = context.getSharedPreferences("fitness_app", Context.MODE_PRIVATE),
         gson = gson
     )
 
     @Singleton
     @Provides
-    fun provideIntroductionApi(retrofit: Retrofit):IntroductionApi = retrofit.create(IntroductionApi::class.java)
+    fun provideIntroductionApi(retrofit: Retrofit): UserDataApi =
+        retrofit.create(UserDataApi::class.java)
 
     @Singleton
     @Provides
@@ -441,11 +424,11 @@ object AppModule {
     @Singleton
     @Provides
     fun provideIntroductionRepository(
-        introductionApi: IntroductionApi,
+        userDataApi: UserDataApi,
         customSharedPreferencesUtils: CustomSharedPreferencesUtils,
         resourceProvider: ResourceProvider
-    ): IntroductionRepository = IntroductionRepositoryImp(
-        introductionApi = introductionApi,
+    ): UserDataRepository = UserDataRepositoryImp(
+        userDataApi = userDataApi,
         customSharedPreferencesUtils = customSharedPreferencesUtils,
         resourceProvider = resourceProvider
     )
@@ -466,11 +449,7 @@ object AppModule {
     @Provides
     fun provideGetDiaryHistoryUseCase(
         diaryRepository: DiaryRepository,
-        getToken: GetToken
-    ): GetDiaryHistory = GetDiaryHistory(
-        repository = diaryRepository,
-        getToken = getToken
-    )
+    ): GetDiaryHistory = GetDiaryHistory(repository = diaryRepository)
 
     @Singleton
     @Provides
@@ -487,23 +466,28 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideCreatePieChartData():CreatePieChartData = CreatePieChartData()
+    fun provideCalculateNutritionValuesPercentagesUseCase(): CalculateNutritionValuesPercentages =
+        CalculateNutritionValuesPercentages()
+
+    @Singleton
+    @Provides
+    fun provideCreatePieChartData(
+        calculateNutritionValuesPercentages: CalculateNutritionValuesPercentages
+    ): CreatePieChartData = CreatePieChartData(calculateNutritionValuesPercentages)
 
     @Singleton
     @Provides
     fun provideProductUseCases(
         diaryRepository: DiaryRepository,
         resourceProvider: ResourceProvider,
-        getToken: GetToken,
         createPieChartData: CreatePieChartData
     ): ProductUseCases =
         ProductUseCases(
-            calculateProductNutritionValues = com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.product.CalculateProductNutritionValues(),
+            calculateProductNutritionValues = CalculateProductNutritionValues(),
             createPieChartData = createPieChartData,
             addDiaryEntry = AddDiaryEntry(
                 diaryRepository,
-                resourceProvider = resourceProvider,
-                getToken = getToken
+                resourceProvider = resourceProvider
             ),
             calculatePriceFor100g = CalculatePriceFor100g(),
             addNewPrice = AddNewPrice(diaryRepository = diaryRepository)

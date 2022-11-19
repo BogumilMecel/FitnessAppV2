@@ -1,13 +1,9 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components
 
 import android.graphics.Color
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
@@ -22,6 +18,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.Orange
 fun ChartSection(
     modifier: Modifier,
     nutritionData: NutritionData,
+    isCircleTextVisible:Boolean = true
 ) {
 
     val backgroundColor = DarkGreyElevation.toArgb()
@@ -35,12 +32,9 @@ fun ChartSection(
         backgroundColor,
     )
 
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.Center
-    ) {
+
         AndroidView(
-            modifier = Modifier.size(100.dp),
+            modifier = modifier,
             factory = { context ->
 
                 PieChart(context).apply {
@@ -70,7 +64,7 @@ fun ChartSection(
                     transparentCircleRadius = 0F
                     centerTextRadiusPercent = 90F
 
-                    setDrawCenterText(true)
+                    setDrawCenterText(isCircleTextVisible)
 
                     setEntryLabelColor(Color.WHITE)
                     setEntryLabelTextSize(0f)
@@ -105,5 +99,4 @@ fun ChartSection(
                 it.invalidate()
             }
         )
-    }
 }

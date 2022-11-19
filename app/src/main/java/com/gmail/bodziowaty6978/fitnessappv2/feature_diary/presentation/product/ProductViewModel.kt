@@ -112,34 +112,36 @@ class ProductViewModel @Inject constructor(
                     priceStringValue = _state.value.priceValue
                 )
                 viewModelScope.launch {
-                    if (calculatedPrice != null){
-                        val resource = productUseCases.addNewPrice(
-                            price = calculatedPrice,
-                            productId = _state.value.product.id
-                        )
-                        when(resource){
-                            is Resource.Success -> {
-                                resource.data?.let { newPrice ->
-                                    _state.update {
-                                        it.copy(
-                                            product = it.product.copy(
-                                                price = newPrice
-                                            ),
-                                            priceForValue = "",
-                                            priceValue = ""
-                                        )
+                    _state.value.product.id?.let { id ->
+                        if (calculatedPrice != null && _state.value.product.id != null){
+                            val resource = productUseCases.addNewPrice(
+                                price = calculatedPrice,
+                                productId = id
+                            )
+                            when(resource){
+                                is Resource.Success -> {
+                                    resource.data?.let { newPrice ->
+                                        _state.update {
+                                            it.copy(
+                                                product = it.product.copy(
+                                                    price = newPrice
+                                                ),
+                                                priceForValue = "",
+                                                priceValue = ""
+                                            )
+                                        }
+                                        _errorState.send(resourceProvider.getString(R.string.successfully_submitted_new_price))
                                     }
-                                    _errorState.send(resourceProvider.getString(R.string.successfully_submitted_new_price))
+                                }
+                                is Resource.Error -> {
+                                    resource.uiText?.let {
+                                        _errorState.send(it)
+                                    }
                                 }
                             }
-                            is Resource.Error -> {
-                                resource.uiText?.let {
-                                    _errorState.send(it)
-                                }
-                            }
+                        }else{
+                            _errorState.send(resourceProvider.getString(R.string.please_make_sure_you_have_entered_correct_values_for_new_price))
                         }
-                    }else{
-                        _errorState.send(resourceProvider.getString(R.string.please_make_sure_you_have_entered_correct_values_for_new_price))
                     }
                 }
             }
@@ -167,7 +169,7 @@ class ProductViewModel @Inject constructor(
             it.copy(
                 nutritionData = NutritionData(
                     nutritionValues = _state.value.product.nutritionValues,
-                    pieEntries = productUseCases.createPieChartData(product = _state.value.product)
+                    pieEntries = productUseCases.createPieChartData(nutritionValues = _state.value.product.nutritionValues)
                 ),
             )
         }

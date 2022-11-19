@@ -10,20 +10,17 @@ interface DiaryApi {
 
     @GET("/diaryEntries")
     suspend fun getDiaryEntries(
-        @Query("date") date:String,
-        @Header("Authorization") token:String
+        @Query("date") date:String
     ):List<DiaryEntry>
 
     @POST("/diaryEntries")
     suspend fun insertDiaryEntry(
-        @Body diaryEntry: DiaryEntry,
-        @Header("Authorization") token:String
+        @Body diaryEntry: DiaryEntry
     ):DiaryEntry
 
     @DELETE("/diaryEntries/{diaryEntryId}")
     suspend fun deleteDiaryEntry(
-        @Header("Authorization") token:String,
-        @Path("diaryEntryId") entryId:Int
+        @Path("diaryEntryId") entryId:String
     ):Boolean
 
     @GET("/products/{searchText}")
@@ -42,26 +39,22 @@ interface DiaryApi {
     ):Product
 
     @GET("/products/history")
-    suspend fun getProductHistory(
-        @Header("Authorization") token:String
-    ): List<Product>
+    suspend fun getProductHistory(): List<Product>
 
     @GET("/diaryEntries/calories")
     suspend fun getCaloriesSum(
-        @Query("date") date:String,
-        @Header("Authorization") token:String
+        @Query("date") date:String
     ):List<Int>
 
     @POST("/products/{productId}/prices")
     suspend fun addNewPriceForProduct(
         @Body price: Price,
-        @Path("productId") productId:Int
+        @Path("productId") productId:String
     ): Price
 
     @POST("/recipes")
     suspend fun addNewRecipe(
         @Body recipe: Recipe,
-        @Header("Authorization") token:String,
         @Query("timestamp") timestamp:Long,
     ) : Recipe
 }

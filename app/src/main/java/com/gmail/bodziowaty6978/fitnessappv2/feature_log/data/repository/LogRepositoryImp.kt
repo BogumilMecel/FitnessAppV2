@@ -4,11 +4,11 @@ import android.util.Log
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
+import com.gmail.bodziowaty6978.fitnessappv2.common.util.extensions.TAG
 import com.gmail.bodziowaty6978.fitnessappv2.feature_log.data.api.LogApi
 import com.gmail.bodziowaty6978.fitnessappv2.feature_log.domain.model.LogEntry
 import com.gmail.bodziowaty6978.fitnessappv2.feature_log.domain.model.LogRequest
 import com.gmail.bodziowaty6978.fitnessappv2.feature_log.domain.repository.LogRepository
-import com.gmail.bodziowaty6978.fitnessappv2.common.util.extensions.TAG
 import retrofit2.HttpException
 
 class LogRepositoryImp(
@@ -16,11 +16,10 @@ class LogRepositoryImp(
     private val logApi: LogApi
 ) : LogRepository {
 
-    override suspend fun saveLogEntry(timestamp: Long, token: String): Resource<LogEntry> {
+    override suspend fun saveLogEntry(timestamp: Long): Resource<LogEntry> {
         return try {
             val logEntry = logApi.postLogEntry(
                 logRequest = LogRequest(timestamp = timestamp),
-                token = token
             )
             Resource.Success(logEntry)
         } catch (e: Exception) {
@@ -29,23 +28,20 @@ class LogRepositoryImp(
         }
     }
 
-    override suspend fun getLatestLogEntry(token: String): Resource<LogEntry> {
+    override suspend fun getLatestLogEntry(): Resource<LogEntry> {
         return try {
             val logEntry = logApi.getLatestLogEntry(
-                token = token
             )
             logEntry?.let {
                 Log.e(TAG, it.toString())
                 Resource.Success(data = it)
             } ?: saveLogEntry(
                 timestamp = System.currentTimeMillis(),
-                token = token
             )
         } catch (e: Exception) {
             if (e is HttpException && e.code() == 404) {
                 saveLogEntry(
                     timestamp = System.currentTimeMillis(),
-                    token = token
                 )
             } else {
                 e.printStackTrace()

@@ -1,32 +1,23 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.product
 
 import com.github.mikephil.charting.data.PieEntry
-import com.gmail.bodziowaty6978.fitnessappv2.common.util.extensions.round
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
+import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValues
+import com.gmail.bodziowaty6978.fitnessappv2.common.domain.use_case.CalculateNutritionValuesPercentages
 
-class CreatePieChartData {
+class CreatePieChartData(
+    private val calculateNutritionValuesPercentages: CalculateNutritionValuesPercentages
+) {
 
+    operator fun invoke(nutritionValues: NutritionValues): List<PieEntry> {
+        val calculatedPercentages = calculateNutritionValuesPercentages(nutritionValues)
+        val entries = mutableListOf<PieEntry>()
 
-    operator fun invoke(product: Product): List<PieEntry>{
-        val nutritionValues = product.nutritionValues
-
-        val caloriesFromCarbohydrates = nutritionValues.carbohydrates * 4.0
-        val caloriesFromProtein = nutritionValues.protein * 4.0
-        val caloriesFromFat = nutritionValues.fat * 9.0
-
-        val sum = caloriesFromCarbohydrates + caloriesFromProtein + caloriesFromFat
-
-        val carbohydratesValue = (((caloriesFromCarbohydrates / sum * 100.0)).round(1)).toFloat()
-        val proteinValue = (((caloriesFromProtein / sum * 100.0)).round(1)).toFloat()
-        val fatValue = (((caloriesFromFat / sum * 100.0)).round(1)).toFloat()
-
-        return listOf(
-            PieEntry(carbohydratesValue, "Carbohydrates"),
-            PieEntry(1F, ""),
-            PieEntry(proteinValue, "Protein"),
-            PieEntry(1F, ""),
-            PieEntry(fatValue, "Fat"),
-            PieEntry(1F, "")
-        )
+        calculatedPercentages.keys.forEach { key ->
+            calculatedPercentages[key]?.let {
+                entries.add(PieEntry(it, key))
+                entries.add(PieEntry(1F, ""))
+            }
+        }
+        return entries
     }
 }

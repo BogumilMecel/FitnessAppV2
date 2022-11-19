@@ -7,4 +7,5 @@ sealed class Screen(val route:String) {
     object ProductScreen: Screen(route = "product_screen")
     object NewProductScreen : Screen(route = "new_product_screen")
     object NewRecipeScreen : Screen(route = "new_recipe_screen")
+    object EditNutritionGoalsScreen: Screen(route = "edit_nutrition_goals_screen")
 }

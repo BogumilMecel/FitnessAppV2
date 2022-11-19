@@ -7,7 +7,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 class GetToken(
     private val tokenRepository: TokenRepository
 ) {
-    suspend operator fun invoke(): String? {
+    operator fun invoke(): String? {
         return when(val resource = tokenRepository.getToken()){
             is Resource.Error -> {
                 TokenStatus.changeTokenStatus(false)

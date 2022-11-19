@@ -28,6 +28,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.presentation.register.
 import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.presentation.reset_password.ResetPasswordScreen
 import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.presentation.util.AuthScreen
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.diary.DiaryScreen
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.edit_nutrition_goals.EditNutritionGoalsScreen
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_product.NewProductScreen
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_recipe.NewRecipeScreen
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.ProductScreen
@@ -51,7 +52,7 @@ fun NavHostGraph(
         initialState = null
     )
 
-    var statusBarColor by remember{
+    var statusBarColor by remember {
         mutableStateOf(DarkGrey)
     }
 
@@ -77,7 +78,8 @@ fun NavHostGraph(
             } else {
                 navController.navigate(it.destination, it.navOptions)
             }
-            statusBarColor = if (navController.currentDestination?.route == Screen.SearchScreen.route + "?mealName={mealName}") DarkGreyElevation1 else DarkGrey
+            statusBarColor =
+                if (navController.currentDestination?.route == Screen.SearchScreen.route + "?mealName={mealName}") DarkGreyElevation1 else DarkGrey
         }
     }
 
@@ -186,7 +188,7 @@ fun NavHostGraph(
                         },
                         navArgument(
                             name = "recipe"
-                        ){
+                        ) {
                             type = NavType.StringType
                             defaultValue = null
                             nullable = true
@@ -219,8 +221,15 @@ fun NavHostGraph(
 
                 composable(
                     route = Screen.NewRecipeScreen.route
-                ){
+                ) {
                     NewRecipeScreen()
+                }
+
+                composable(
+                    route = Screen.EditNutritionGoalsScreen.route
+                ) {
+                    bottomNavigationState = false
+                    EditNutritionGoalsScreen()
                 }
             }
         }

@@ -10,25 +10,18 @@ class WeighRepositoryImp(
     private val weightApi: WeightApi,
     private val resourceProvider: ResourceProvider
 ):WeightRepository {
-    override suspend fun getLatestWeightEntries(token: String): Resource<List<WeightEntry>> {
+    override suspend fun getLatestWeightEntries(): Resource<List<WeightEntry>> {
         return try {
-            Resource.Success(
-                data = weightApi.getLatestWeightEntries(token = token)
-            )
+            Resource.Success(data = weightApi.getLatestWeightEntries())
         }catch (e:Exception){
             e.printStackTrace()
             Resource.Error(resourceProvider.getUnknownErrorString())
         }
     }
 
-    override suspend fun addWeightEntry(weightEntry: WeightEntry, token: String): Resource<WeightEntry> {
+    override suspend fun addWeightEntry(weightEntry: WeightEntry): Resource<WeightEntry> {
         return try {
-            Resource.Success(
-                data = weightApi.addWeightEntry(
-                    token = token,
-                    weightEntry = weightEntry
-                )
-            )
+            Resource.Success(data = weightApi.addWeightEntry(weightEntry = weightEntry))
         }catch (e:Exception){
             e.printStackTrace()
             Resource.Error(resourceProvider.getUnknownErrorString())

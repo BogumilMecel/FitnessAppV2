@@ -34,13 +34,13 @@ class AuthRepositoryImp(
         password: String,
     ): CustomResult {
         return try {
-            authApi.registerUser(
+            val wasAcknowledged = authApi.registerUser(
                 AuthRequest(
                     username = email,
                     password = password
                 )
             )
-            CustomResult.Success
+            return if (wasAcknowledged) CustomResult.Success else CustomResult.Error(resourceProvider.getUnknownErrorString())
         } catch (e: Exception) {
             e.printStackTrace()
             CustomResult.Error(resourceProvider.getString(R.string.unknown_error))

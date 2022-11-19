@@ -12,28 +12,25 @@ import kotlinx.coroutines.withContext
 class GetDiaryEntries(
     private val diaryRepository: DiaryRepository,
     private val sortDiaryEntries: SortDiaryEntries,
-    private val getToken: GetToken,
     private val resourceProvider: ResourceProvider
 ) {
     suspend operator fun invoke(
         timestamp: Long,
         mealNames: List<String>
     ): Resource<List<Meal>> {
-        return getToken()?.let {
-            val resource = diaryRepository.getDiaryEntries(
-                timestamp = timestamp,
-                token = it
-            )
-            if (resource is Resource.Error) {
-                resource.uiText?.let { it1 -> Resource.Error(uiText = it1) }
-            } else {
-                withContext(Dispatchers.Default) {
-                    val data = resource.data!!
-                    val sortedEntries = sortDiaryEntries(data, mealNames)
 
-                    Resource.Success(sortedEntries)
-                }
+        val resource = diaryRepository.getDiaryEntries(
+            timestamp = timestamp
+        )
+        return if (resource is Resource.Error) {
+            Resource.Error(uiText = resource.uiText ?: resourceProvider.getUnknownErrorString())
+        } else {
+            withContext(Dispatchers.Default) {
+                val data = resource.data!!
+                val sortedEntries = sortDiaryEntries(data, mealNames)
+
+                Resource.Success(sortedEntries)
             }
-        } ?: Resource.Error(resourceProvider.getString(R.string.unknown_error))
+        }
     }
 }
