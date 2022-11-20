@@ -1,4 +1,4 @@
-package com.gmail.bodziowaty6978.fitnessappv2.feature_summary
+package com.gmail.bodziowaty6978.fitnessappv2.feature_summary.presentation
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -8,9 +8,8 @@ import com.gmail.bodziowaty6978.fitnessappv2.common.domain.use_case.GetWantedNut
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.extensions.TAG
-import com.gmail.bodziowaty6978.fitnessappv2.feature_log.domain.use_case.SummaryUseCases
-import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.presentation.SummaryEvent
-import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.presentation.SummaryState
+import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.domain.model.LogRequest
+import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.domain.use_case.SummaryUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -143,22 +142,11 @@ class SummaryViewModel @Inject constructor(
 
     private fun getLatestLogEntry() {
         viewModelScope.launch(Dispatchers.IO) {
-            var logStreak = 1
-            val resource = summaryUseCases.getLatestLogEntry()
-            if (resource is Resource.Success) {
-                resource.data?.let { logEntry ->
-                    val checkResource = summaryUseCases.checkLatestLogEntry(
-                        logEntry = logEntry
-                    )
-                    logStreak =
-                        if (checkResource.data != null && checkResource is Resource.Success) {
-                            checkResource.data.streak
-                        } else 1
-                }
-            }
+            val resource = summaryUseCases.getLatestLogEntry(logRequest = LogRequest(timestamp = System.currentTimeMillis()))
+            Log.e(TAG, resource.toString())
             _state.update {
                 it.copy(
-                    logStreak = logStreak
+                    logStreak = resource.data?.streak ?: 1
                 )
             }
         }
@@ -166,18 +154,11 @@ class SummaryViewModel @Inject constructor(
 
     private fun getCaloriesSum() {
         viewModelScope.launch {
-            val resource = summaryUseCases.getCaloriesSum(
+            val caloriesSum = summaryUseCases.getCaloriesSum(
                 date = CurrentDate.dateModel(
                     resourceProvider = resourceProvider
                 ).date
             )
-            Log.e(TAG, resource.toString())
-            var caloriesSum = 0
-            if (resource is Resource.Success) {
-                resource.data?.let { sum ->
-                    caloriesSum = sum
-                }
-            }
             _state.update {
                 it.copy(
                     caloriesSum = caloriesSum
