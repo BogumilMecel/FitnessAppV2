@@ -1,13 +1,11 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_summary.presentation
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.singleton.CurrentDate
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.use_case.GetWantedNutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
-import com.gmail.bodziowaty6978.fitnessappv2.common.util.extensions.TAG
 import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.domain.model.LogRequest
 import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.domain.use_case.SummaryUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -66,33 +64,20 @@ class SummaryViewModel @Inject constructor(
 
     private fun saveNewWeightEntry(value: Double) {
         viewModelScope.launch {
-            val resource = summaryUseCases.addWeightEntry(
-                value = value
-            )
-            when (resource) {
-                is Resource.Success -> {
-                    resource.data?.let { newEntry ->
-                        _state.update { state ->
-                            val newEntriesList = state.weightEntries.toMutableList().apply {
-                                add(newEntry)
-                                toList()
-                            }
-                            Log.e(TAG, newEntriesList.toString())
-                            state.copy(
-                                isWeightPickerVisible = false,
-                                weightEntries = newEntriesList,
-                                weightProgress = summaryUseCases.calculateWeightProgress(
-                                    weightEntries = newEntriesList
-                                )
-                            )
-                        }
-                        Log.e(TAG, newEntry.toString())
-                        Log.e(TAG, _state.value.weightProgress.toString())
+            val resource = summaryUseCases.addWeightEntry(value = value)
+            if (resource.second == true) {
+                _state.update { state ->
+                    val newEntriesList = state.weightEntries.toMutableList().apply {
+                        add(resource.first)
+                        toList()
                     }
-                }
-
-                is Resource.Error -> {
-
+                    state.copy(
+                        isWeightPickerVisible = false,
+                        weightEntries = newEntriesList,
+                        weightProgress = summaryUseCases.calculateWeightProgress(
+                            weightEntries = newEntriesList
+                        )
+                    )
                 }
             }
             _state.update {
@@ -108,15 +93,12 @@ class SummaryViewModel @Inject constructor(
             when (val resource = summaryUseCases.getLatestWeightEntries()) {
                 is Resource.Success -> {
                     resource.data?.let { entries ->
-                        if (entries.isNotEmpty()) {
-                            _state.update { state ->
-                                state.copy(
-                                    weightEntries = entries,
-                                    weightProgress = summaryUseCases.calculateWeightProgress(entries.toMutableList())
-                                )
-                            }
+                        _state.update { state ->
+                            state.copy(
+                                weightEntries = entries,
+                                weightProgress = summaryUseCases.calculateWeightProgress(entries.toMutableList())
+                            )
                         }
-
                     }
                 }
 
@@ -142,8 +124,8 @@ class SummaryViewModel @Inject constructor(
 
     private fun getLatestLogEntry() {
         viewModelScope.launch(Dispatchers.IO) {
-            val resource = summaryUseCases.getLatestLogEntry(logRequest = LogRequest(timestamp = System.currentTimeMillis()))
-            Log.e(TAG, resource.toString())
+            val resource =
+                summaryUseCases.getLatestLogEntry(logRequest = LogRequest(timestamp = System.currentTimeMillis()))
             _state.update {
                 it.copy(
                     logStreak = resource.data?.streak ?: 1

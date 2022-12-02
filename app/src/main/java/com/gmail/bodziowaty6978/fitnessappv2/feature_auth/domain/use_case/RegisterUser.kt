@@ -2,13 +2,13 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_auth.domain.use_case
 
 import android.util.Patterns
 import com.gmail.bodziowaty6978.fitnessappv2.R
-import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
+import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.domain.repository.AuthRepository
 
 class RegisterUser(
     private val repository: AuthRepository,
-    private val resourceProvider: ResourceProvider
+    private val resourceProvider: ResourceProvider,
 ){
 
     suspend operator fun invoke(email:String,password:String,confirmPassword:String,username:String): CustomResult {
@@ -24,9 +24,15 @@ class RegisterUser(
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
             return CustomResult.Error(resourceProvider.getString(R.string.please_make_sure_you_have_entered_correct_email))
         }
-        return repository.registerUser(
-            email = email,
-            password = password
-        )
+        val ifUsernameExists = repository.checkIfUsernameExists(username = username).data ?: false
+        return if (ifUsernameExists){
+            repository.registerUser(
+                username = username,
+                email = email,
+                password = password
+            )
+        } else {
+            CustomResult.Error(resourceProvider.getString(R.string.username_exists_message))
+        }
     }
 }

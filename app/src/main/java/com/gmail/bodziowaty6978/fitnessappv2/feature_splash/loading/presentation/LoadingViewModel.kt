@@ -3,13 +3,12 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_splash.loading.presentatio
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.NavigationActions
-import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.NavigationAction
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigator
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.use_case.GetToken
 import com.gmail.bodziowaty6978.fitnessappv2.feature_splash.domain.repository.LoadingRepository
+import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.domain.model.LogRequest
+import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.domain.use_case.GetLatestLogEntry
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,69 +16,44 @@ import javax.inject.Inject
 class LoadingViewModel @Inject constructor(
     private val loadingRepository: LoadingRepository,
     private val getToken: GetToken,
-    private val navigator: Navigator
+    private val navigator: Navigator,
+    private val getLatestLogEntry: GetLatestLogEntry
 ) : ViewModel() {
 
-    private val _loadingState = MutableStateFlow(LoadingState())
-
-    private suspend fun checkNutritionValues() {
-        val resource = loadingRepository.getNutritionValues()
-        _loadingState.update {
-            it.copy(
-                hasNutritionValues = resource.data != null
-            )
+    private suspend fun checkUser() {
+        loadingRepository.getUser().data?.let {
+            if (it.nutritionValues != null && it.userInformation != null){
+                requestLatestLogEntry()
+            } else {
+                navigator.navigate(NavigationActions.LoadingScreen.loadingToIntroduction())
+            }
+        } ?: kotlin.run {
+            navigator.navigate(NavigationActions.LoadingScreen.loadingToLogin())
         }
-        checkUser()
     }
 
-    private fun checkUser() {
-        var navigationAction: NavigationAction? = null
-        _loadingState.value.hasToken?.let { hasToken ->
-            if (hasToken) {
-                val isLogged = _loadingState.value.isLoggedIn
-                isLogged?.let {
-                    if (isLogged) {
-                        val hasNutrition = _loadingState.value.hasNutritionValues
-                        if (hasNutrition != null) {
-                            navigationAction = if (!hasNutrition) {
-                                NavigationActions.LoadingScreen.loadingToIntroduction()
-                            } else {
-                                NavigationActions.LoadingScreen.loadingToSummary()
-                            }
-                        }
-                    } else {
-                        navigationAction = NavigationActions.LoadingScreen.loadingToLogin()
-                    }
-                }
-            } else {
-                navigationAction = NavigationActions.LoadingScreen.loadingToLogin()
-            }
-        }
-        navigationAction?.let {
-            navigator.navigate(it)
+    private suspend fun requestLatestLogEntry() {
+        getLatestLogEntry(logRequest = LogRequest(timestamp = System.currentTimeMillis())).data?.let {
+            loadingRepository.updateLatestLogEntry(it)
+            navigator.navigate(NavigationActions.LoadingScreen.loadingToSummary())
         }
     }
 
     fun checkIfTokenIsPresent() {
         viewModelScope.launch {
-            var hasToken = false
-            val token = getToken()
-            token?.let { hasToken = true }
-            _loadingState.update { it.copy(hasToken = hasToken) }
-            if (hasToken) {
+            getToken()?.let {
                 authenticateUser()
-                checkNutritionValues()
+            } ?: kotlin.run {
+                navigator.navigate(NavigationActions.LoadingScreen.loadingToLogin())
             }
-            checkUser()
         }
     }
 
     private suspend fun authenticateUser() {
-        _loadingState.update {
-            it.copy(
-                isLoggedIn = loadingRepository.authenticateUser().data != null
-            )
+        if (loadingRepository.authenticateUser().data == true){
+            checkUser()
+        } else {
+            navigator.navigate(NavigationActions.LoadingScreen.loadingToLogin())
         }
-        checkUser()
     }
 }

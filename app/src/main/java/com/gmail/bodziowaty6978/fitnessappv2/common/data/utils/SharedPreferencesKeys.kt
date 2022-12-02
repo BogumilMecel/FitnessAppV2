@@ -4,5 +4,6 @@ class SharedPreferencesKeys {
     companion object{
         const val WANTED_NUTRITION_VALUES_KEY = "wantedNutritionValues"
         const val USER_INFORMATION_KEY = "userInformation"
+        const val USER_KEY = "user"
     }
 }

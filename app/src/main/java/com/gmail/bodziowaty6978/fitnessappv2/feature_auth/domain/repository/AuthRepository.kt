@@ -12,6 +12,7 @@ interface AuthRepository {
     ): Resource<TokenResponse>
 
     suspend fun registerUser(
+        username: String,
         email: String,
         password: String
     ): CustomResult
@@ -19,4 +20,8 @@ interface AuthRepository {
     suspend fun sendPasswordResetEmail(
         email: String
     ): CustomResult
+
+    suspend fun checkIfUsernameExists(
+        username: String
+    ): Resource<Boolean>
 }
