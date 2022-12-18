@@ -1,8 +1,8 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.new_recipe
 
-import android.util.Log
+import com.gmail.bodziowaty6978.fitnessappv2.FitnessApp
 import com.gmail.bodziowaty6978.fitnessappv2.R
-import com.gmail.bodziowaty6978.fitnessappv2.common.domain.use_case.GetToken
+import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.Ingredient
@@ -18,12 +18,12 @@ class AddNewRecipe(
         difficulty: String,
         time: String,
         servings: String,
-        recipeName: String
+        recipeName: String,
+        nutritionValues: NutritionValues
     ): Resource<Recipe> {
         return if (ingredients.size < 2) {
             Resource.Error(resourceProvider.getString(R.string.empty_recipe_ingredients))
         } else if (recipeName.length < 4) {
-            Log.e("huj", recipeName)
             Resource.Error(resourceProvider.getString(R.string.bad_recipe_name))
         } else {
             val difficultyValue = difficulty.toIntOrNull()
@@ -36,7 +36,10 @@ class AddNewRecipe(
                     difficulty = difficultyValue,
                     servings = servingsValue,
                     timestamp = System.currentTimeMillis(),
-                    name = recipeName
+                    name = recipeName,
+                    username = FitnessApp.getUsername(),
+                    nutritionValues = nutritionValues,
+                    userId = FitnessApp.getUserId()
                 )
                 diaryRepository.addNewRecipe(
                     recipe = recipe,

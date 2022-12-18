@@ -3,5 +3,6 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.sea
 data class SearchDiaryUseCases(
     val getDiaryHistory: GetDiaryHistory,
     val searchForProducts: SearchForProducts,
-    val searchForProductWithBarcode: SearchForProductWithBarcode
+    val searchForProductWithBarcode: SearchForProductWithBarcode,
+    val searchForRecipes: SearchForRecipes
 )

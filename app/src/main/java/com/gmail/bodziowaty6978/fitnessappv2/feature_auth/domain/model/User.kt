@@ -7,6 +7,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_weight.domain.model.WeightE
 
 @kotlinx.serialization.Serializable
 data class User(
+    val id: String = "",
     val email: String = "",
     val username:String = "",
     val nutritionValues: NutritionValues? = null,

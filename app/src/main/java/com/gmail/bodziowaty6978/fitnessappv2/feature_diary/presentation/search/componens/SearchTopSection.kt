@@ -29,7 +29,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun SearchTopSection(
     modifier: Modifier,
-    searchBarText:String,
+    searchBarText: String,
+    searchBarPlaceholderText: String,
     mealName: String,
     date: String,
     onEvent: (SearchEvent) -> Unit,
@@ -75,7 +76,7 @@ fun SearchTopSection(
         DefaultTextField(
             value = searchBarText,
             placeholder = {
-                Text(text = stringResource(id = R.string.product_name))
+                Text(text = searchBarPlaceholderText)
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -103,11 +104,10 @@ fun SearchTopSection(
                         )
                     )
                 },
-                selected = pagerState.currentPage==0,
+                selected = pagerState.currentPage == 0,
                 onClick = {
-                    scope.launch {
-                        pagerState.scrollToPage(0)
-                    }
+                    onEvent(SearchEvent.ClickedProductsTab)
+                    scope.launch { pagerState.scrollToPage(0) }
                 }
             )
 
@@ -120,11 +120,10 @@ fun SearchTopSection(
                         )
                     )
                 },
-                selected = pagerState.currentPage==1,
+                selected = pagerState.currentPage == 1,
                 onClick = {
-                    scope.launch {
-                        pagerState.scrollToPage(1)
-                    }
+                    onEvent(SearchEvent.ClickedRecipesTab)
+                    scope.launch { pagerState.scrollToPage(1) }
                 }
             )
         }

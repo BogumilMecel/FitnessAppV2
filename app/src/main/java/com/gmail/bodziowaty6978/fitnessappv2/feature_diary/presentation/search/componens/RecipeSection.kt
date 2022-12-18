@@ -14,16 +14,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.TextGrey
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.CalculatedRecipe
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun RecipeSection(
     onClick: () -> Unit,
-    calculatedRecipe: CalculatedRecipe,
+    recipe: Recipe,
 ) {
-    val recipe = calculatedRecipe.recipe
-
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -73,7 +71,7 @@ fun RecipeSection(
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 Text(
-                    text = "${calculatedRecipe.nutritionValues.calories} kcal",
+                    text = "${recipe.nutritionValues.calories} kcal",
                     style = MaterialTheme.typography.body2.copy(
                         color = TextGrey
                     )

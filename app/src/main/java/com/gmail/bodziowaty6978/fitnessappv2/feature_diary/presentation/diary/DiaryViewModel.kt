@@ -2,11 +2,11 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.diary
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gmail.bodziowaty6978.fitnessappv2.FitnessApp
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.NavigationActions
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.singleton.CurrentDate
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigator
-import com.gmail.bodziowaty6978.fitnessappv2.common.domain.use_case.GetWantedNutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
@@ -31,7 +31,6 @@ class DiaryViewModel @Inject constructor(
     private val updateDiaryEntriesListAfterDelete: UpdateDiaryEntriesListAfterDelete,
     private val resourceProvider: ResourceProvider,
     private val navigator: Navigator,
-    private val getWantedNutritionValues: GetWantedNutritionValues
 ) : ViewModel() {
 
     private val _errorState = Channel<String>()
@@ -126,7 +125,7 @@ class DiaryViewModel @Inject constructor(
         viewModelScope.launch {
             _state.update {
                 it.copy(
-                    wantedNutritionValues = getWantedNutritionValues()
+                    wantedNutritionValues = FitnessApp.getWantedNutritionValues()
                 )
             }
         }

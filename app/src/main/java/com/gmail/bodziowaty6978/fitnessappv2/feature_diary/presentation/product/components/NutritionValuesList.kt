@@ -1,11 +1,17 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValues
@@ -45,7 +51,8 @@ fun NutritionValuesList(
             Text(
                 text = "${nutritionValues.carbohydrates.round(2)}g",
                 style = MaterialTheme.typography.body2.copy(
-                    color = LightGreen3
+                    color = LightGreen3,
+                    fontWeight = FontWeight.Medium
                 )
             )
 
@@ -68,7 +75,8 @@ fun NutritionValuesList(
             Text(
                 text = "${nutritionValues.protein.round(2)}g",
                 style = MaterialTheme.typography.body2.copy(
-                    color = BlueViolet2
+                    color = BlueViolet2,
+                    fontWeight = FontWeight.Medium
                 )
             )
 
@@ -91,7 +99,8 @@ fun NutritionValuesList(
             Text(
                 text = "${nutritionValues.fat.round(2) }g",
                 style = MaterialTheme.typography.body2.copy(
-                    color = OrangeYellow2
+                    color = OrangeYellow2,
+                    fontWeight = FontWeight.Medium
                 )
             )
 

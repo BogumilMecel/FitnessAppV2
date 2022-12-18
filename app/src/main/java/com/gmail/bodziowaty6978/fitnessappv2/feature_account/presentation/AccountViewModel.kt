@@ -2,10 +2,10 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_account.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gmail.bodziowaty6978.fitnessappv2.FitnessApp
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.NavigationActions
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigator
-import com.gmail.bodziowaty6978.fitnessappv2.common.domain.use_case.GetWantedNutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
 import com.gmail.bodziowaty6978.fitnessappv2.feature_account.domain.use_case.DeleteToken
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.product.CreatePieChartData
@@ -23,7 +23,6 @@ import javax.inject.Inject
 class AccountViewModel @Inject constructor(
     private val navigator: Navigator,
     private val deleteToken: DeleteToken,
-    private val getWantedNutritionValuesUseCase: GetWantedNutritionValues,
     private val createPieChartData: CreatePieChartData
 ): ViewModel(){
 
@@ -53,7 +52,7 @@ class AccountViewModel @Inject constructor(
 
     private fun getWantedNutritionValues(){
         viewModelScope.launch {
-            initializeProductData(getWantedNutritionValuesUseCase())
+            initializeProductData(FitnessApp.getWantedNutritionValues())
         }
     }
 

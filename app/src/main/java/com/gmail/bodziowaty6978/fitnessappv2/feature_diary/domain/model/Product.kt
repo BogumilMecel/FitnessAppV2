@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Product(
-    val id:String? = null,
+    val id:String = "",
     val name: String = "",
     val containerWeight: Int = 0,
     val timestamp:Long = System.currentTimeMillis(),

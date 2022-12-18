@@ -2,6 +2,7 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_splash.loading.presentatio
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gmail.bodziowaty6978.fitnessappv2.FitnessApp
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.NavigationActions
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigator
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.use_case.GetToken
@@ -34,7 +35,7 @@ class LoadingViewModel @Inject constructor(
 
     private suspend fun requestLatestLogEntry() {
         getLatestLogEntry(logRequest = LogRequest(timestamp = System.currentTimeMillis())).data?.let {
-            loadingRepository.updateLatestLogEntry(it)
+            FitnessApp.updateLatestLogEntry(it)
             navigator.navigate(NavigationActions.LoadingScreen.loadingToSummary())
         }
     }

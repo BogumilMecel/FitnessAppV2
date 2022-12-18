@@ -5,7 +5,6 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_weight.domain.use_case.Calc
 import com.gmail.bodziowaty6978.fitnessappv2.feature_weight.domain.use_case.GetLatestWeightEntries
 
 data class SummaryUseCases(
-    val getLatestLogEntry: GetLatestLogEntry,
     val getCaloriesSum: GetCaloriesSum,
     val getLatestWeightEntries: GetLatestWeightEntries,
     val addWeightEntry: AddWeightEntry,

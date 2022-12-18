@@ -1,6 +1,5 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_recipe
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.NavigationActions
@@ -106,7 +105,6 @@ class NewRecipeViewModel @Inject constructor(
                         name = event.value,
                     )
                 }
-                Log.e("huj", _state.value.name)
             }
 
             is NewRecipeEvent.ClickedAddNewIngredient -> {
@@ -172,7 +170,8 @@ class NewRecipeViewModel @Inject constructor(
                 time = state.selectedTime,
                 servings = state.servings,
                 difficulty = state.selectedDifficulty,
-                recipeName = state.name
+                recipeName = state.name,
+                nutritionValues = state.nutritionData.nutritionValues
             )
             when(resource){
                 is Resource.Success -> {

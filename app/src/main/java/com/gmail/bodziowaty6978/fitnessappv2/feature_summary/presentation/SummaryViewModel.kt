@@ -2,11 +2,10 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_summary.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gmail.bodziowaty6978.fitnessappv2.FitnessApp
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.singleton.CurrentDate
-import com.gmail.bodziowaty6978.fitnessappv2.common.domain.use_case.GetWantedNutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
-import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.domain.model.LogRequest
 import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.domain.use_case.SummaryUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -21,8 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SummaryViewModel @Inject constructor(
     private val summaryUseCases: SummaryUseCases,
-    private val resourceProvider: ResourceProvider,
-    private val getWantedNutritionValues: GetWantedNutritionValues
+    private val resourceProvider: ResourceProvider
 ) : ViewModel() {
 
     private val _errorState = Channel<String>()
@@ -115,7 +113,7 @@ class SummaryViewModel @Inject constructor(
         viewModelScope.launch {
             _state.update {
                 it.copy(
-                    wantedCalories = getWantedNutritionValues().calories
+                    wantedCalories = FitnessApp.getWantedNutritionValues().calories
                 )
             }
         }
@@ -124,11 +122,9 @@ class SummaryViewModel @Inject constructor(
 
     private fun getLatestLogEntry() {
         viewModelScope.launch(Dispatchers.IO) {
-            val resource =
-                summaryUseCases.getLatestLogEntry(logRequest = LogRequest(timestamp = System.currentTimeMillis()))
             _state.update {
                 it.copy(
-                    logStreak = resource.data?.streak ?: 1
+                    logStreak = FitnessApp.getLatestLogEntry().streak
                 )
             }
         }
