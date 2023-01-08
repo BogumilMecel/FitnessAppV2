@@ -1,19 +1,17 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_recipe
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.NavigationActions
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigator
+import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.Ingredient
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.new_recipe.NewRecipeUseCases
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_recipe.util.SelectedNutritionType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,10 +20,7 @@ import javax.inject.Inject
 class NewRecipeViewModel @Inject constructor(
     private val navigator: Navigator,
     private val newRecipeUseCases: NewRecipeUseCases
-) : ViewModel() {
-
-    private val _errorState = Channel<String>()
-    val errorState = _errorState.receiveAsFlow()
+) : BaseViewModel() {
 
     private val _state = MutableStateFlow(NewRecipeState())
     val state: StateFlow<NewRecipeState> = _state
@@ -180,7 +175,7 @@ class NewRecipeViewModel @Inject constructor(
                 }
 
                 is Resource.Error -> {
-                    _errorState.send(resource.uiText)
+                    showSnackbarError(resource.uiText)
                 }
             }
         }
@@ -257,7 +252,7 @@ class NewRecipeViewModel @Inject constructor(
             )
             when (resource) {
                 is Resource.Error -> {
-                    _errorState.send(resource.uiText)
+                    showSnackbarError(resource.uiText)
                 }
 
                 is Resource.Success -> {

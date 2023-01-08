@@ -4,8 +4,17 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -16,10 +25,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.gmail.bodziowaty6978.fitnessappv2.R
+import com.gmail.bodziowaty6978.fitnessappv2.common.util.extensions.TAG
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.presentation.components.QuestionSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.presentation.components.TextQuestion
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.presentation.components.TilesQuestion
-import com.gmail.bodziowaty6978.fitnessappv2.common.util.extensions.TAG
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
@@ -35,7 +44,6 @@ fun IntroductionScreen(
 
     val pagerState = rememberPagerState(initialPage = 0)
     val keyboardController = LocalSoftwareKeyboardController.current
-    val scaffoldState = rememberScaffoldState()
 
     var arrowState by remember {
         mutableStateOf(0)
@@ -59,133 +67,125 @@ fun IntroductionScreen(
                         keyboardController?.hide()
                     }
                 }
+
                 is IntroductionUiEvent.MoveForward -> {
                     if (pagerState.currentPage != questions.size - 1) {
                         pagerState.animateScrollToPage(pagerState.currentPage + 1)
                         keyboardController?.hide()
                     }
                 }
-                is IntroductionUiEvent.ShowSnackbar -> {
-                    scaffoldState.snackbarHostState.showSnackbar(
-                        it.message
-                    )
-                }
             }
         }
     }
 
-    Scaffold(
-        scaffoldState = scaffoldState
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
     ) {
-        Box(
+
+        Text(
+            text = stringResource(id = R.string.let_us_know_something_about_you),
+            style = MaterialTheme.typography.h1,
             modifier = Modifier
-                .fillMaxSize()
-        ) {
+                .align(Alignment.TopCenter)
+                .padding(top = 100.dp)
+        )
 
-            Text(
-                text = stringResource(id = R.string.let_us_know_something_about_you),
-                style = MaterialTheme.typography.h1,
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .padding(top = 100.dp)
-            )
+        HorizontalPager(
+            count = questions.size,
+            state = pagerState
+        ) { pager ->
+            val currentQuestionKey = questions.keys.toList()[pager]
+            val currentQuestion = questions[currentQuestionKey]!!
 
-            HorizontalPager(
-                count = questions.size,
-                state = pagerState
-            ) { pager ->
-                val currentQuestionKey = questions.keys.toList()[pager]
-                val currentQuestion = questions[currentQuestionKey]!!
-
-                QuestionSection(title = currentQuestion.title) {
-                    if (currentQuestion.tiles.isNotEmpty()) {
-                        TilesQuestion(
-                            question = currentQuestion,
-                            onItemClick = {
-                                viewModel.onEvent(
-                                    IntroductionEvent.EnteredAnswer(
-                                        currentQuestionKey,
-                                        it.toString()
-                                    )
+            QuestionSection(title = currentQuestion.title) {
+                if (currentQuestion.tiles.isNotEmpty()) {
+                    TilesQuestion(
+                        question = currentQuestion,
+                        onItemClick = {
+                            viewModel.onEvent(
+                                IntroductionEvent.EnteredAnswer(
+                                    currentQuestionKey,
+                                    it.toString()
                                 )
-                            },
-                            currentItem = answerState[currentQuestionKey]!!
-                        )
-                    } else {
-                        TextQuestion(
-                            text = answerState[currentQuestionKey]!!,
-                            onTextEntered = {
-                                viewModel.onEvent(
-                                    IntroductionEvent.EnteredAnswer(
-                                        currentQuestionKey,
-                                        it
-                                    )
-                                )
-                            },
-                            unit = currentQuestion.unit,
-                            tag = currentQuestionKey.TAG
-                        )
-                    }
-                }
-
-            }
-
-            if (arrowState != 0) {
-                Button(
-                    modifier = Modifier
-                        .align(Alignment.BottomStart)
-                        .padding(16.dp)
-                        .clip(RoundedCornerShape(50))
-                        .testTag(stringResource(id = R.string.BACK)),
-                    onClick = {
-                        viewModel.onEvent(
-                            IntroductionEvent.ClickedArrow(false)
-                        )
-                    },
-                    colors = ButtonDefaults.buttonColors(
-                        backgroundColor = MaterialTheme.colors.secondary
+                            )
+                        },
+                        currentItem = answerState[currentQuestionKey]!!
                     )
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.back),
-                        color = MaterialTheme.colors.onPrimary,
-                        modifier = Modifier.padding(vertical = 6.dp, horizontal = 10.dp)
+                } else {
+                    TextQuestion(
+                        text = answerState[currentQuestionKey]!!,
+                        onTextEntered = {
+                            viewModel.onEvent(
+                                IntroductionEvent.EnteredAnswer(
+                                    currentQuestionKey,
+                                    it
+                                )
+                            )
+                        },
+                        unit = currentQuestion.unit,
+                        tag = currentQuestionKey.TAG
                     )
                 }
             }
 
+        }
+
+        if (arrowState != 0) {
             Button(
                 modifier = Modifier
-                    .align(Alignment.BottomEnd)
+                    .align(Alignment.BottomStart)
                     .padding(16.dp)
                     .clip(RoundedCornerShape(50))
-                    .testTag(stringResource(id = R.string.NEXT)),
+                    .testTag(stringResource(id = R.string.BACK)),
                 onClick = {
                     viewModel.onEvent(
-                        if (pagerState.currentPage == questions.size - 1) {
-                            IntroductionEvent.FinishIntroduction
-                        } else {
-                            IntroductionEvent.ClickedArrow(true)
-                        }
+                        IntroductionEvent.ClickedArrow(false)
                     )
                 },
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = MaterialTheme.colors.secondary
+                )
             ) {
                 Text(
-                    text = if (pagerState.currentPage == questions.size - 1) {
-                        stringResource(id = R.string.finish)
-                    } else {
-                        stringResource(
-                            id = R.string.next
-                        )
-                    },
+                    text = stringResource(id = R.string.back),
                     color = MaterialTheme.colors.onPrimary,
-                    modifier = Modifier
-                        .padding(vertical = 6.dp, horizontal = 10.dp)
-                        .testTag(
-                            stringResource(id = R.string.NEXT_TEXT)
-                        )
+                    modifier = Modifier.padding(vertical = 6.dp, horizontal = 10.dp)
                 )
             }
+        }
+
+        Button(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(16.dp)
+                .clip(RoundedCornerShape(50))
+                .testTag(stringResource(id = R.string.NEXT)),
+            onClick = {
+                viewModel.onEvent(
+                    if (pagerState.currentPage == questions.size - 1) {
+                        IntroductionEvent.FinishIntroduction
+                    } else {
+                        IntroductionEvent.ClickedArrow(true)
+                    }
+                )
+            },
+        ) {
+            Text(
+                text = if (pagerState.currentPage == questions.size - 1) {
+                    stringResource(id = R.string.finish)
+                } else {
+                    stringResource(
+                        id = R.string.next
+                    )
+                },
+                color = MaterialTheme.colors.onPrimary,
+                modifier = Modifier
+                    .padding(vertical = 6.dp, horizontal = 10.dp)
+                    .testTag(
+                        stringResource(id = R.string.NEXT_TEXT)
+                    )
+            )
         }
     }
 }

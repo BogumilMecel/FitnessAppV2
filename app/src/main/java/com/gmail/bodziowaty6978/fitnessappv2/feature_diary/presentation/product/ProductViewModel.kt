@@ -1,13 +1,13 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product
 
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.NavigationActions
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.singleton.CurrentDate
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigator
+import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
@@ -17,10 +17,8 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -30,11 +28,8 @@ class ProductViewModel @Inject constructor(
     private val navigator: Navigator,
     private val productUseCases: ProductUseCases,
     private val resourceProvider: ResourceProvider,
-    private val savedStateHandle: SavedStateHandle
-) : ViewModel() {
-
-    private val _errorState = Channel<String>()
-    val errorState = _errorState.receiveAsFlow()
+    savedStateHandle: SavedStateHandle
+) : BaseViewModel() {
 
     private val _state = MutableStateFlow(ProductState(
         product = savedStateHandle.get<String>("product")?.let { productString ->
@@ -106,7 +101,7 @@ class ProductViewModel @Inject constructor(
                     if (addingResult is Resource.Success) {
                         navigator.navigate(NavigationActions.ProductScreen.productToDiary())
                     } else if (addingResult is Resource.Error) {
-                        _errorState.send(addingResult.uiText)
+                        showSnackbarError(addingResult.uiText)
                     }
                 }
             }
@@ -137,15 +132,15 @@ class ProductViewModel @Inject constructor(
                                         priceValue = ""
                                     )
                                 }
-                                _errorState.send(resourceProvider.getString(R.string.successfully_submitted_new_price))
+                                showSnackbarError(resourceProvider.getString(R.string.successfully_submitted_new_price))
                             }
 
                             is Resource.Error -> {
-                                _errorState.send(resource.uiText)
+                                showSnackbarError(resource.uiText)
                             }
                         }
                     } else {
-                        _errorState.send(resourceProvider.getString(R.string.please_make_sure_you_have_entered_correct_values_for_new_price))
+                        showSnackbarError(resourceProvider.getString(R.string.please_make_sure_you_have_entered_correct_values_for_new_price))
                     }
                 }
             }

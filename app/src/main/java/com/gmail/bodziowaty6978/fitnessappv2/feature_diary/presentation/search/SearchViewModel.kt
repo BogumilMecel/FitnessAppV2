@@ -1,20 +1,18 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search
 
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.NavigationActions
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigator
+import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.search.SearchDiaryUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -25,10 +23,7 @@ class SearchViewModel @Inject constructor(
     private val searchDiaryUseCases: SearchDiaryUseCases,
     private val resourceProvider: ResourceProvider,
     private val savedStateHandle: SavedStateHandle,
-) : ViewModel() {
-
-    private val _errorState = Channel<String>()
-    val errorState = _errorState.receiveAsFlow()
+) : BaseViewModel() {
 
     private val _searchState = MutableStateFlow(
         SearchState(
@@ -103,8 +98,6 @@ class SearchViewModel @Inject constructor(
                         )
                     )
                 } ?: onError(resourceProvider.getString(R.string.unknown_error))
-
-
             }
 
             is SearchEvent.ClickedScanButton -> {
@@ -175,7 +168,7 @@ class SearchViewModel @Inject constructor(
             val result =
                 searchDiaryUseCases.searchForRecipes(_searchState.value.recipesSearchBarText)
             if (result is Resource.Error) {
-                onError(result.uiText)
+                showSnackbarError(result.uiText)
             } else {
                 _searchState.update {
                     it.copy(
@@ -197,7 +190,7 @@ class SearchViewModel @Inject constructor(
             val result =
                 searchDiaryUseCases.searchForProducts(_searchState.value.productSearchBarText)
             if (result is Resource.Error) {
-                onError(result.uiText)
+                showSnackbarError(result.uiText)
             } else {
                 _searchState.update {
                     it.copy(
@@ -227,7 +220,7 @@ class SearchViewModel @Inject constructor(
                         )
                     }
                 } else {
-                    onError(resource.uiText)
+                    showSnackbarError(resource.uiText)
                 }
             } else {
                 savedStateHandle.get<String>("mealName")?.let { mealName ->
@@ -238,8 +231,8 @@ class SearchViewModel @Inject constructor(
                                 mealName = mealName,
                             )
                         )
-                    } ?: onError(resourceProvider.getString(R.string.unknown_error))
-                } ?: onError(resourceProvider.getString(R.string.unknown_error))
+                    }
+                } ?: showSnackbarError(resourceProvider.getString(R.string.unknown_error))
             }
         }
     }
@@ -247,7 +240,7 @@ class SearchViewModel @Inject constructor(
     private fun onError(errorMessage: String?) {
         if (errorMessage != null) {
             viewModelScope.launch {
-                _errorState.send(errorMessage)
+                showSnackbarError(errorMessage)
             }
         }
     }

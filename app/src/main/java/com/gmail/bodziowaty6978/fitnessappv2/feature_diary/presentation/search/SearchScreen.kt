@@ -10,7 +10,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
@@ -32,7 +31,6 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.shared.S
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
-import kotlinx.coroutines.launch
 
 @OptIn(
     ExperimentalLifecycleComposeApi::class,
@@ -45,18 +43,10 @@ fun SearchScreen(
     val state = viewModel.searchState.collectAsStateWithLifecycle().value
 
     val scope = rememberCoroutineScope()
-
-    val scaffoldState = rememberScaffoldState()
     val pagerState = rememberPagerState(initialPage = state.currentTabIndex)
 
     LaunchedEffect(key1 = true) {
         viewModel.initializeHistory()
-    }
-
-    LaunchedEffect(key1 = true) {
-        viewModel.errorState.collect { error ->
-            scaffoldState.snackbarHostState.showSnackbar(error)
-        }
     }
 
     BackHandler(
@@ -70,7 +60,6 @@ fun SearchScreen(
 
     if (!state.isScannerVisible) {
         Scaffold(
-            scaffoldState = scaffoldState,
             floatingActionButton = {
                 FloatingActionButton(
                     onClick = {
@@ -121,11 +110,6 @@ fun SearchScreen(
                                     .padding(paddingValues),
                                 onEvent = { event ->
                                     viewModel.onEvent(event)
-                                },
-                                showSnackbar = {
-                                    scope.launch {
-                                        scaffoldState.snackbarHostState.showSnackbar(it)
-                                    }
                                 },
                                 state = state
                             )
