@@ -81,7 +81,7 @@ fun SearchProductSection(
             )
 
             SearchButton(
-                text = stringResource(id = R.string.add_product),
+                text = stringResource(id = R.string.create_product),
                 modifier = Modifier.weight(1F),
                 color = OrangeYellow1,
                 onClick = {

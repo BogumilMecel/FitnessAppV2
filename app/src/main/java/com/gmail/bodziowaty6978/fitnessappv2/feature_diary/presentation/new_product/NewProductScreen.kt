@@ -1,9 +1,21 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_product
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Save
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -61,13 +73,11 @@ fun NewProductScreen(
                     )
                 }
             }
-        ) {
-            val horizontalLayoutPaddingValue = 10.dp
-
+        ) { paddingValues ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = horizontalLayoutPaddingValue)
+                    .padding(vertical = paddingValues.calculateBottomPadding())
             ) {
                 Row(
                     modifier = Modifier
@@ -118,8 +128,8 @@ fun NewProductScreen(
                 Text(
                     text = "Nutrition values",
                     modifier = Modifier
-                        .padding(horizontal = 20.dp),
-                    style = MaterialTheme.typography.body2.copy(
+                        .padding(horizontal = 15.dp),
+                    style = MaterialTheme.typography.body1.copy(
                         fontWeight = FontWeight.Normal
                     )
                 )

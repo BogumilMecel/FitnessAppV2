@@ -180,9 +180,7 @@ class NewProductViewModel @Inject constructor(
                     )
 
                     if(resource is Resource.Error){
-                        if (resource.uiText != null) {
-                            _errorState.send(resource.uiText)
-                        }
+                        _errorState.send(resource.uiText)
                     }else{
                         savedStateHandle.get<String>("mealName")?.let {
                             resource.data?.let { product ->

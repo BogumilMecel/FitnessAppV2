@@ -2,10 +2,19 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_pro
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
+import androidx.compose.material.DropdownMenu
+import androidx.compose.material.DropdownMenuItem
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,7 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.gmail.bodziowaty6978.fitnessappv2.R
-import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.DefaultTextField
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.CustomBasicTestField
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.LightGrey
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_product.NewProductEvent
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_product.NewProductState
@@ -31,7 +40,7 @@ fun ContainerWeightSection(
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 20.dp),
+            .padding(horizontal = 15.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
@@ -42,7 +51,7 @@ fun ContainerWeightSection(
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            DefaultTextField(
+            CustomBasicTestField(
                 value = state.containerWeightValue,
                 onValueChange = {
                     onEvent(NewProductEvent.EnteredContainerWeight(it))
@@ -53,7 +62,8 @@ fun ContainerWeightSection(
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Number
                 ),
-                singleLine = true
+                singleLine = true,
+                elevation = 9
             )
 
             Spacer(

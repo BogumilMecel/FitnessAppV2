@@ -7,6 +7,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.common.data.singleton.CurrentDate
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.domain.use_case.SummaryUseCases
+import com.gmail.bodziowaty6978.fitnessappv2.feature_weight.domain.model.WeightEntry
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -65,16 +66,12 @@ class SummaryViewModel @Inject constructor(
             val resource = summaryUseCases.addWeightEntry(value = value)
             if (resource.second == true) {
                 _state.update { state ->
-                    val newEntriesList = state.weightEntries.toMutableList().apply {
+                    state.weightEntries.toMutableList().apply {
                         add(resource.first)
-                        toList()
+                        setWeightEntries(weightEntries = this)
                     }
                     state.copy(
                         isWeightPickerVisible = false,
-                        weightEntries = newEntriesList,
-                        weightProgress = summaryUseCases.calculateWeightProgress(
-                            weightEntries = newEntriesList
-                        )
                     )
                 }
             }
@@ -90,22 +87,23 @@ class SummaryViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             when (val resource = summaryUseCases.getLatestWeightEntries()) {
                 is Resource.Success -> {
-                    resource.data?.let { entries ->
-                        _state.update { state ->
-                            state.copy(
-                                weightEntries = entries,
-                                weightProgress = summaryUseCases.calculateWeightProgress(entries.toMutableList())
-                            )
-                        }
-                    }
+                    setWeightEntries(resource.data)
                 }
 
                 is Resource.Error -> {
-                    resource.uiText?.let {
-                        _errorState.send(it)
-                    }
+                    _errorState.send(resource.uiText)
                 }
             }
+        }
+    }
+
+    private fun setWeightEntries(weightEntries: List<WeightEntry>) {
+        _state.update { state ->
+            state.copy(
+                weightEntries = weightEntries,
+                weightProgress = summaryUseCases.calculateWeightProgress(weightEntries.toMutableList()),
+                latestWeightEntry = weightEntries.sortedByDescending { it.timestamp }.getOrNull(0)
+            )
         }
     }
 
@@ -117,7 +115,6 @@ class SummaryViewModel @Inject constructor(
                 )
             }
         }
-
     }
 
     private fun getLatestLogEntry() {

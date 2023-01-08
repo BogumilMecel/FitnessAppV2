@@ -1,6 +1,7 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_auth.data.repository
 
 import com.gmail.bodziowaty6978.fitnessappv2.R
+import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseRepository
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
@@ -12,7 +13,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.domain.repository.Auth
 class AuthRepositoryImp(
     private val authApi: AuthApi,
     private val resourceProvider: ResourceProvider
-) : AuthRepository {
+) : AuthRepository, BaseRepository(resourceProvider) {
 
     override suspend fun logInUser(
         email: String,
@@ -27,8 +28,7 @@ class AuthRepositoryImp(
             )
             Resource.Success(data = token)
         } catch (e: Exception) {
-            e.printStackTrace()
-            Resource.Error(uiText = resourceProvider.getString(R.string.unknown_error))
+            handleExceptionWithResource(exception = e)
         }
     }
 
@@ -45,12 +45,11 @@ class AuthRepositoryImp(
                     password = password
                 )
             )
-            return if (wasAcknowledged) CustomResult.Success else CustomResult.Error(
-                resourceProvider.getUnknownErrorString()
+            return if (wasAcknowledged) CustomResult.Success else handleExceptionWithCustomResult(
+                exception = Exception()
             )
         } catch (e: Exception) {
-            e.printStackTrace()
-            CustomResult.Error(resourceProvider.getString(R.string.unknown_error))
+            handleExceptionWithCustomResult(exception = e)
         }
     }
 
@@ -61,9 +60,8 @@ class AuthRepositoryImp(
     override suspend fun checkIfUsernameExists(username: String): Resource<Boolean> {
         return try {
             Resource.Success(data = authApi.checkUsername(username = username))
-        }catch (e:Exception){
-            e.printStackTrace()
-            Resource.Error(resourceProvider.getUnknownErrorString())
+        } catch (e: Exception) {
+            handleExceptionWithResource(exception = e)
         }
     }
 }

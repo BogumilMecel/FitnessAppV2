@@ -66,7 +66,7 @@ class NewRecipeViewModel @Inject constructor(
             }
 
             is NewRecipeEvent.ClickedBackArrow -> {
-                if(_state.value.isSearchSectionVisible) changeState(isRecipeSectionVisible = true)
+                if (_state.value.isSearchSectionVisible) changeState(isRecipeSectionVisible = true)
                 else if (_state.value.isProductSectionVisible) changeState(isSearchSectionVisible = true)
                 else if (_state.value.isRecipeSectionVisible) navigator.navigate(NavigationActions.General.navigateUp())
             }
@@ -156,13 +156,14 @@ class NewRecipeViewModel @Inject constructor(
                 }
                 calculateRecipeInformation()
             }
+
             is NewRecipeEvent.ClickedSaveRecipe -> {
                 saveNewRecipe()
             }
         }
     }
 
-    private fun saveNewRecipe(){
+    private fun saveNewRecipe() {
         viewModelScope.launch {
             val state = _state.value
             val resource = newRecipeUseCases.addNewRecipe(
@@ -173,16 +174,13 @@ class NewRecipeViewModel @Inject constructor(
                 recipeName = state.name,
                 nutritionValues = state.nutritionData.nutritionValues
             )
-            when(resource){
+            when (resource) {
                 is Resource.Success -> {
-                    resource.data?.let {
 
-                    }
                 }
+
                 is Resource.Error -> {
-                    resource.uiText?.let {
-                        _errorState.send(resource.uiText)
-                    }
+                    _errorState.send(resource.uiText)
                 }
             }
         }
@@ -211,11 +209,12 @@ class NewRecipeViewModel @Inject constructor(
         calculateRecipeInformation()
     }
 
-    private fun calculateRecipeInformation(){
+    private fun calculateRecipeInformation() {
         viewModelScope.launch(Dispatchers.Default) {
-            val servings: Int? = if (_state.value.selectedNutritionType is SelectedNutritionType.Recipe) 1 else _state.value.servings.toIntOrNull()
+            val servings: Int? =
+                if (_state.value.selectedNutritionType is SelectedNutritionType.Recipe) 1 else _state.value.servings.toIntOrNull()
             servings?.let {
-                if (servings > 0){
+                if (servings > 0) {
                     val newPrice = newRecipeUseCases.calculateRecipePrice(
                         ingredients = _state.value.ingredients,
                         servings = servings
@@ -236,6 +235,7 @@ class NewRecipeViewModel @Inject constructor(
             }
         }
     }
+
     private fun changeState(
         isRecipeSectionVisible: Boolean = false,
         isProductSectionVisible: Boolean = false,
@@ -257,25 +257,21 @@ class NewRecipeViewModel @Inject constructor(
             )
             when (resource) {
                 is Resource.Error -> {
-                    resource.uiText?.let {
-                        _errorState.send(resource.uiText)
-                    }
+                    _errorState.send(resource.uiText)
                 }
 
                 is Resource.Success -> {
-                    resource.data?.let { products ->
-                        _state.update {
-                            it.copy(
-                                searchItems = products
-                            )
-                        }
+                    _state.update {
+                        it.copy(
+                            searchItems = resource.data
+                        )
                     }
                 }
             }
         }
     }
 
-    private fun initPieChartData(){
+    private fun initPieChartData() {
         _state.value.selectedProduct?.let { product ->
             _state.update {
                 it.copy(

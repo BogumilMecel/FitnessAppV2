@@ -1,7 +1,8 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_splash.data.repository
 
 import com.gmail.bodziowaty6978.fitnessappv2.FitnessApp
-import com.gmail.bodziowaty6978.fitnessappv2.R
+import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseRepository
+import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.domain.model.User
@@ -11,17 +12,16 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.domain.model.LogEnt
 import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.domain.model.LogRequest
 
 class LoadingRepositoryImp(
-    private val loadingApi:LoadingApi,
+    private val loadingApi: LoadingApi,
     private val resourceProvider: ResourceProvider
-):LoadingRepository {
+) : LoadingRepository, BaseRepository(resourceProvider) {
 
-    override suspend fun authenticateUser(): Resource<Boolean> {
+    override suspend fun authenticateUser(): CustomResult {
         return try {
             loadingApi.authenticate()
-            Resource.Success(true)
+            CustomResult.Success
         } catch (e: Exception) {
-            e.printStackTrace()
-            Resource.Error(resourceProvider.getString(R.string.unknown_error))
+            handleExceptionWithCustomResult(exception = e)
         }
     }
 
@@ -33,18 +33,16 @@ class LoadingRepositoryImp(
                     it
                 }
             )
-        }catch (e:Exception){
-            e.printStackTrace()
-            Resource.Error(resourceProvider.getString(R.string.unknown_error))
+        } catch (e: Exception) {
+            handleExceptionWithResource(exception = e)
         }
     }
 
     override suspend fun addLogEntry(logRequest: LogRequest): Resource<LogEntry> {
         return try {
             Resource.Success(data = loadingApi.addLogEntry(logRequest = logRequest))
-        }catch (e:Exception){
-            e.printStackTrace()
-            Resource.Error(resourceProvider.getUnknownErrorString())
+        } catch (e: Exception) {
+            handleExceptionWithResource(exception = e)
         }
     }
 }

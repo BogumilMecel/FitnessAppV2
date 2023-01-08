@@ -11,7 +11,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
 
 @Composable
 fun ProductMainSection(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     product: Product,
     currentWeight: String,
     onWeightEntered: (String) -> Unit,

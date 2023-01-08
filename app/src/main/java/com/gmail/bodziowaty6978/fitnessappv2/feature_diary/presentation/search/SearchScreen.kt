@@ -32,11 +32,9 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.shared.S
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import kotlinx.coroutines.launch
 
 @OptIn(
-    ExperimentalPermissionsApi::class,
     ExperimentalLifecycleComposeApi::class,
     ExperimentalPagerApi::class
 )

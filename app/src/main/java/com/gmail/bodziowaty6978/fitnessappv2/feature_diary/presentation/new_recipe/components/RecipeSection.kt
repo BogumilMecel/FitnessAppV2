@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -34,7 +33,7 @@ fun RecipeSection(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 15.dp)
+                .padding(horizontal = 10.dp)
         ) {
             BackArrow(
                 modifier = Modifier.align(Alignment.CenterStart)
@@ -48,19 +47,6 @@ fun RecipeSection(
                 modifier = Modifier.align(Alignment.Center)
             )
         }
-        Divider(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(1.dp)
-        )
-
-//        Spacer(modifier = Modifier.height(24.dp))
-//
-//        RecipeImageSection(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(horizontal = 15.dp)
-//        )
 
         Spacer(modifier = Modifier.height(24.dp))
 

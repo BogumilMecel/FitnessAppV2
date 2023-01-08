@@ -19,7 +19,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.TextGr
 @Composable
 fun CustomBasicTestField(
     modifier: Modifier = Modifier,
-    elevation: Int = 3,
+    elevation: Int = 5,
     value: String,
     onValueChange:(String) -> Unit,
     singleLine: Boolean = false,
@@ -28,7 +28,7 @@ fun CustomBasicTestField(
     textStyle: TextStyle = MaterialTheme.typography.body1
 ) {
     Card(
-        shape = RoundedCornerShape(30),
+        shape = RoundedCornerShape(15.dp),
         elevation = elevation.dp,
         modifier = modifier
     ) {

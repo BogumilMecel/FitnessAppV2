@@ -1,6 +1,11 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_product.components
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Card
@@ -22,10 +27,10 @@ fun NutritionSection(
 ) {
 
     Card(
-        shape = RoundedCornerShape(10),
+        shape = RoundedCornerShape(5),
         elevation = 3.dp,
         modifier = Modifier
-            .padding(horizontal = 20.dp)
+            .padding(horizontal = 15.dp)
     ) {
 
         Column(

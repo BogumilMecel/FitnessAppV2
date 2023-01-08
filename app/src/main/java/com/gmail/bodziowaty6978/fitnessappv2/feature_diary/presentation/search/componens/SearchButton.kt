@@ -1,6 +1,10 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search.componens
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
@@ -27,7 +31,7 @@ fun SearchButton(
         onClick = {
             onClick()
         },
-        shape = RoundedCornerShape(25),
+        shape = RoundedCornerShape(15.dp),
         colors = ButtonDefaults.buttonColors(
             backgroundColor = color
         )

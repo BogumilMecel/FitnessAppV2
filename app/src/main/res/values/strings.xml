@@ -177,7 +177,8 @@
     <string name="edit">edit</string>
     <string name="body_measurements">Body measurements</string>
     <string name="log_out">Log out</string>
-    <string name="add_product">Create Product</string>
+    <string name="create_product">Create Product</string>
+    <string name="add_product">Add product</string>
     <string name="diary">Diary</string>
     <string name="summary">Summary</string>
     <string name="you_have_logged_for">You have logged for</string>

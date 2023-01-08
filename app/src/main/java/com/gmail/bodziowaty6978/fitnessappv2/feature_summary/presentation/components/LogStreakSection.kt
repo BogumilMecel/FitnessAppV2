@@ -22,7 +22,7 @@ fun LogStreakSection(
 
     Card(
         modifier = modifier,
-        shape = RoundedCornerShape(15),
+        shape = RoundedCornerShape(15.dp),
         elevation = 3.dp
     ) {
         Column(
