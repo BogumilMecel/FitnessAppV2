@@ -22,7 +22,12 @@ fun BottomBar(navController: NavHostController) {
         backgroundColor = Grey
     ) {
         screens.forEach { screen ->
-            AddItem(bottomBarScreen = screen, currentDestination = currentDestination, navController = navController)
+            AddItem(
+                bottomBarScreen = screen,
+                currentDestination = currentDestination,
+                navController = navController,
+                screensNumber = screens.size
+            )
         }
     }
 }
