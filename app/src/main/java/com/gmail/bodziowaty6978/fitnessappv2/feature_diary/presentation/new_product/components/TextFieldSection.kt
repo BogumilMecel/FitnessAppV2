@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.CustomBasicTestField
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.CustomBasicTextField
 
 @Composable
 fun TextFieldSection(
@@ -31,10 +31,11 @@ fun TextFieldSection(
     ) {
         Text(
             text = name,
-            style = MaterialTheme.typography.body1
+            style = MaterialTheme.typography.body1,
+            modifier = Modifier.weight(0.3F)
         )
 
-        CustomBasicTestField(
+        CustomBasicTextField(
             value = textFieldValue,
             onValueChange = {
                 onTextEntered(it)

@@ -19,13 +19,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.gmail.bodziowaty6978.fitnessappv2.R
-import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.CustomBasicTestField
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.CustomBasicTextField
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.LightGrey
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_product.NewProductEvent
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_product.NewProductState
@@ -45,19 +44,21 @@ fun ContainerWeightSection(
     ) {
         Text(
             text = containerWeightText,
-            style = MaterialTheme.typography.body1
+            style = MaterialTheme.typography.body1,
+            modifier = Modifier.weight(0.3F)
         )
 
         Row(
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.weight(0.4F)
         ) {
-            CustomBasicTestField(
+            CustomBasicTextField(
                 value = state.containerWeightValue,
                 onValueChange = {
                     onEvent(NewProductEvent.EnteredContainerWeight(it))
                 },
                 modifier = Modifier
-                    .width((LocalConfiguration.current.screenWidthDp * 0.25).dp)
+                    .weight(1F)
                     .testTag(stringResource(id = R.string.container_weight) + "TEXT_FIELD"),
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Number

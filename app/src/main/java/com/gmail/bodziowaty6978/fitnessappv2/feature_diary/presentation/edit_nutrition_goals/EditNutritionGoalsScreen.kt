@@ -19,7 +19,7 @@ import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.BackArrow
-import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.CustomBasicTestField
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.CustomBasicTextField
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.*
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.edit_nutrition_goals.components.MacroElementsSection
 
@@ -77,7 +77,7 @@ fun EditNutritionGoalsScreen(
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    CustomBasicTestField(
+                    CustomBasicTextField(
                         value = state.calories,
                         onValueChange = {
                             viewModel.onEvent(EditNutritionGoalsEvent.EnteredCalories(it))

@@ -20,7 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.gmail.bodziowaty6978.fitnessappv2.R
-import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.CustomBasicTestField
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.CustomBasicTextField
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_product.NewProductEvent
 
 @Composable
@@ -45,7 +45,7 @@ fun BarcodeSection(
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            CustomBasicTestField(
+            CustomBasicTextField(
                 value = barcode,
                 onValueChange = {
                     onEvent(NewProductEvent.EnteredBarcode(it))

@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -18,7 +17,6 @@ import androidx.compose.material.icons.filled.Save
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -78,9 +76,7 @@ fun NewProductScreen(
                     }
                 }
 
-
-
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(5.dp))
 
                 TextFieldSection(
                     name = stringResource(id = R.string.product_name),
@@ -89,11 +85,11 @@ fun NewProductScreen(
                         viewModel.onEvent(NewProductEvent.EnteredProductName(it))
                     },
                     modifier = Modifier
-                        .width((LocalConfiguration.current.screenWidthDp * 0.5).dp)
+                        .weight(0.4F)
                         .testTag(stringResource(id = R.string.product_name) + "TEXT_FIELD")
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(12.dp))
 
 
                 ContainerWeightSection(
@@ -104,7 +100,7 @@ fun NewProductScreen(
                     containerWeightText = state.containerWeight,
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(12.dp))
 
                 BarcodeSection(
                     barcode = state.barcode,
@@ -113,7 +109,7 @@ fun NewProductScreen(
                     }
                 )
 
-                Spacer(modifier = Modifier.height(40.dp))
+                Spacer(modifier = Modifier.height(36.dp))
 
                 Text(
                     text = "Nutrition values",
