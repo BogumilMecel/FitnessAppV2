@@ -1,6 +1,7 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search
 
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 
 sealed interface SearchEvent {
     object ShowedPermissionDialog : SearchEvent
@@ -10,7 +11,8 @@ sealed interface SearchEvent {
     object ClickedSearch : SearchEvent
     data class EnteredSearchText(val text: String) : SearchEvent
     data class ScannedBarcode(val code: String) : SearchEvent
-    data class ClickedSearchItem(val item: Product) : SearchEvent
+    data class ClickedProduct(val product: Product) : SearchEvent
+    data class ClickedRecipe(val recipe: Recipe) : SearchEvent
     object ClosedScanner : SearchEvent
     object ClickedCreateNewRecipe : SearchEvent
     object ClickedRecipesTab : SearchEvent

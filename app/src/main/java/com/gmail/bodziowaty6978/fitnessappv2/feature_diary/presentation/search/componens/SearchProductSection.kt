@@ -163,8 +163,8 @@ fun SearchProductSection(
                             calories = product.nutritionValues.calories
                         ) {
                             onEvent(
-                                SearchEvent.ClickedSearchItem(
-                                    item = items[itemPosition]
+                                SearchEvent.ClickedProduct(
+                                    product = items[itemPosition]
                                 )
                             )
                         }

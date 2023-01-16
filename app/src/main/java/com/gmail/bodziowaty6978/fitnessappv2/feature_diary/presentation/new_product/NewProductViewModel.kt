@@ -7,7 +7,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.NavigationActions
-import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigator
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
@@ -22,7 +21,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NewProductViewModel @Inject constructor(
-    private val navigator: Navigator,
     private val resourceProvider: ResourceProvider,
     private val saveNewProduct: SaveNewProduct,
     private val savedStateHandle: SavedStateHandle
@@ -66,7 +64,7 @@ class NewProductViewModel @Inject constructor(
                 }
             }
             is NewProductEvent.ClickedBackArrow -> {
-                navigator.navigate(NavigationActions.General.navigateUp())
+                navigate(NavigationActions.General.navigateUp())
             }
             is NewProductEvent.EnteredProductName -> {
                 _state.update {
@@ -179,7 +177,7 @@ class NewProductViewModel @Inject constructor(
                     }else{
                         savedStateHandle.get<String>("mealName")?.let {
                             resource.data?.let { product ->
-                                navigator.navigate(
+                                navigate(
                                     NavigationActions.NewProductScreen.newProductToProduct(it, product)
                                 )
                             }

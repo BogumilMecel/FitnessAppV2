@@ -26,7 +26,7 @@ interface DiaryApi {
 
     @GET("/products/{searchText}")
     suspend fun searchForProducts(
-        @Path("searchText") searchText: String?
+        @Path("searchText") searchText: String
     ): List<Product>
 
     @GET("/diaryEntries/{barcode}")
@@ -36,7 +36,7 @@ interface DiaryApi {
 
     @GET("/recipes/{searchText}")
     suspend fun searchForRecipes(
-        @Path("searchText") searchText: String?
+        @Path("searchText") searchText: String
     ): List<Recipe>
 
     @POST("/products")

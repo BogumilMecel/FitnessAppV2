@@ -27,7 +27,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search.S
 
 @Composable
 fun SearchRecipeSection(
-    recipe: List<Recipe>,
+    recipes: List<Recipe>,
     onEvent: (SearchEvent) -> Unit
 ) {
     Column(
@@ -79,12 +79,12 @@ fun SearchRecipeSection(
         Spacer(modifier = Modifier.height(24.dp))
 
         LazyVerticalGrid(columns = GridCells.Fixed(2)) {
-            items(recipe.size) { position ->
+            items(recipes.size) { position ->
                 RecipeSection(
                     onClick = {
-                        /*TODO*/
+                        onEvent(SearchEvent.ClickedRecipe(recipes[position]))
                     },
-                    recipe = recipe[position]
+                    recipe = recipes[position]
                 )
             }
         }

@@ -5,7 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.NavigationActions
-import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigator
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
@@ -23,7 +22,6 @@ import javax.inject.Inject
 class IntroductionViewModel @Inject constructor(
     resourceProvider: ResourceProvider,
     private val saveIntroductionInformation: SaveIntroductionInformation,
-    private val navigator: Navigator
 ) : BaseViewModel() {
 
     private val _questionState = mutableStateOf<Map<IntroductionExpectedQuestionAnswer, Question>>(
@@ -112,7 +110,7 @@ class IntroductionViewModel @Inject constructor(
                     if (result is CustomResult.Error) {
                         showSnackbarError(message = result.message)
                     } else {
-                        navigator.navigate(NavigationActions.IntroductionScreen.introductionToSummary())
+                        navigate(NavigationActions.IntroductionScreen.introductionToSummary())
                     }
                 }
             }

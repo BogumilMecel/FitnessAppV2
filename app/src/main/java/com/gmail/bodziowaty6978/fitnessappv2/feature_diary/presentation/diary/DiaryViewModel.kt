@@ -5,7 +5,6 @@ import com.gmail.bodziowaty6978.fitnessappv2.FitnessApp
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.NavigationActions
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.singleton.CurrentDate
-import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigator
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
@@ -28,7 +27,6 @@ class DiaryViewModel @Inject constructor(
     private val deleteDiaryEntry: DeleteDiaryEntry,
     private val updateDiaryEntriesListAfterDelete: UpdateDiaryEntriesListAfterDelete,
     private val resourceProvider: ResourceProvider,
-    private val navigator: Navigator,
 ) : BaseViewModel() {
 
     private val _state = MutableStateFlow(DiaryState())
@@ -61,7 +59,7 @@ class DiaryViewModel @Inject constructor(
             }
 
             is DiaryEvent.ClickedAddProduct -> {
-                navigator.navigate(NavigationActions.DiaryScreen.diaryToSearch(event.mealName))
+                navigate(NavigationActions.DiaryScreen.diaryToSearch(event.mealName))
             }
 
             is DiaryEvent.ClickedDiaryEntry -> {
@@ -112,7 +110,7 @@ class DiaryViewModel @Inject constructor(
             }
 
             is DiaryEvent.BackPressed -> {
-                navigator.navigate(NavigationActions.DiaryScreen.diaryToSummary())
+                navigate(NavigationActions.DiaryScreen.diaryToSummary())
             }
         }
     }
