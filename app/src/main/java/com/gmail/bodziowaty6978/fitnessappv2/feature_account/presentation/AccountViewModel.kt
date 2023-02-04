@@ -1,7 +1,6 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_account.presentation
 
 import androidx.lifecycle.viewModelScope
-import com.gmail.bodziowaty6978.fitnessappv2.FitnessApp
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.NavigationActions
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
@@ -21,12 +20,9 @@ class AccountViewModel @Inject constructor(
     private val deleteToken: DeleteToken,
     private val createPieChartData: CreatePieChartData
 ) : BaseViewModel() {
+
     private val _state = MutableStateFlow(AccountState())
     val state: StateFlow<AccountState> = _state
-
-    init {
-        getWantedNutritionValues()
-    }
 
     fun onEvent(accountEvent: AccountEvent) {
         when (accountEvent) {
@@ -44,9 +40,13 @@ class AccountViewModel @Inject constructor(
         }
     }
 
+    fun initData() {
+        getWantedNutritionValues()
+    }
+
     private fun getWantedNutritionValues() {
         viewModelScope.launch {
-            initializeProductData(FitnessApp.getWantedNutritionValues())
+            initializeProductData(sharedPreferencesUtils.getWantedNutritionValues())
         }
     }
 

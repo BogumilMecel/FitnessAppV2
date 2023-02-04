@@ -9,8 +9,10 @@ import com.gmail.bodziowaty6978.fitnessappv2.common.util.extensions.formatToStri
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.data.api.DiaryApi
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Price
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.diary_entry.DiaryEntry
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntryPostRequest
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.Recipe
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntryRequest
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 import java.util.Date
 
@@ -18,7 +20,7 @@ class DiaryRepositoryImp(
     private val diaryApi: DiaryApi, private val resourceProvider: ResourceProvider
 ) : DiaryRepository, BaseRepository(resourceProvider) {
 
-    override suspend fun getDiaryEntries(timestamp: Long): Resource<List<DiaryEntry>> {
+    override suspend fun getDiaryEntries(timestamp: Long): Resource<List<ProductDiaryEntry>> {
         return try {
             val entries = diaryApi.getDiaryEntries(date = Date(timestamp).formatToString())
             Resource.Success(entries)
@@ -63,10 +65,19 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun addDiaryEntry(diaryEntry: DiaryEntry): Resource<DiaryEntry> {
+    override suspend fun addProductDiaryEntry(productDiaryEntryPostRequest: ProductDiaryEntryPostRequest): Resource<ProductDiaryEntry> {
         return try {
-            val newDiaryEntry = diaryApi.insertDiaryEntry(diaryEntry = diaryEntry)
+            val newDiaryEntry =
+                diaryApi.insertProductDiaryEntry(productDiaryEntryPostRequest = productDiaryEntryPostRequest)
             Resource.Success(data = newDiaryEntry)
+        } catch (e: Exception) {
+            handleExceptionWithResource(exception = e)
+        }
+    }
+
+    override suspend fun addRecipeDiaryEntry(recipeDiaryEntryRequest: RecipeDiaryEntryRequest): Resource<Boolean> {
+        return try {
+            Resource.Success(data = diaryApi.insertRecipeDiaryEntry(recipeDiaryEntryRequest = recipeDiaryEntryRequest))
         } catch (e: Exception) {
             handleExceptionWithResource(exception = e)
         }
@@ -96,7 +107,7 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun editDiaryEntry(diaryEntry: DiaryEntry): CustomResult {
+    override suspend fun editDiaryEntry(productDiaryEntry: ProductDiaryEntry): CustomResult {
         TODO("Not yet implemented")
     }
 

@@ -2,8 +2,10 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.data.api
 
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Price
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.diary_entry.DiaryEntry
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntryPostRequest
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.Recipe
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntryRequest
 import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.domain.model.CaloriesSumResponse
 import retrofit2.http.*
 
@@ -12,12 +14,17 @@ interface DiaryApi {
     @GET("/diaryEntries")
     suspend fun getDiaryEntries(
         @Query("date") date: String
-    ): List<DiaryEntry>
+    ): List<ProductDiaryEntry>
 
-    @POST("/diaryEntries")
-    suspend fun insertDiaryEntry(
-        @Body diaryEntry: DiaryEntry
-    ): DiaryEntry
+    @POST("/diaryEntries/product")
+    suspend fun insertProductDiaryEntry(
+        @Body productDiaryEntryPostRequest: ProductDiaryEntryPostRequest
+    ): ProductDiaryEntry
+
+    @POST("/diaryEntries/recipe")
+    suspend fun insertRecipeDiaryEntry(
+        @Body recipeDiaryEntryRequest: RecipeDiaryEntryRequest
+    ): Boolean
 
     @DELETE("/diaryEntries/{diaryEntryId}")
     suspend fun deleteDiaryEntry(

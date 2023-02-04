@@ -8,6 +8,7 @@ import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -15,7 +16,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.BackArrow
@@ -23,12 +23,15 @@ import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.Cust
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.*
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.edit_nutrition_goals.components.MacroElementsSection
 
-@OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 fun EditNutritionGoalsScreen(
     viewModel: EditNutritionGoalsViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle().value
+
+    LaunchedEffect(key1 = true) {
+        viewModel.initData()
+    }
 
     Column(
         modifier = Modifier

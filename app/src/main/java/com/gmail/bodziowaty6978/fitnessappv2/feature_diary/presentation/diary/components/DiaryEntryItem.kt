@@ -11,16 +11,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.unit.dp
+import com.gmail.bodziowaty6978.fitnessappv2.R
+import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.DiaryItem
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.DarkGreyElevation9
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.TextGrey
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.extensions.round
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.diary_entry.DiaryEntry
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntry
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DiaryEntryItem(
-    diaryEntry: DiaryEntry,
+    diaryItem: DiaryItem,
     onItemClicked: () -> Unit,
     onItemLongClick: () -> Unit
 ) {
@@ -52,12 +56,22 @@ fun DiaryEntryItem(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = diaryEntry.product.name,
+                        text = when (diaryItem) {
+                            is ProductDiaryEntry -> diaryItem.product.name
+                            is RecipeDiaryEntry -> diaryItem.recipe.name
+                            else -> ""
+                        },
                         style = MaterialTheme.typography.body1
                     )
 
                     Text(
-                        text = "(${diaryEntry.weight}${diaryEntry.product.unit})",
+                        text = when (diaryItem) {
+                            is ProductDiaryEntry -> "(${diaryItem.weight}${diaryItem.product.unit})"
+                            is RecipeDiaryEntry -> "(${diaryItem.portions} " + stringArrayResource(
+                                id = R.string.portions
+                            ) + ")"
+                            else -> ""
+                        },
                         style = MaterialTheme.typography.body2,
                         color = TextGrey,
                         modifier = Modifier
@@ -78,27 +92,27 @@ fun DiaryEntryItem(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = "Kcal:" + diaryEntry.product.nutritionValues.calories.toString(),
+                        text = "Kcal:" + diaryItem.nutritionValues.calories.toString(),
                         style = MaterialTheme.typography.body2,
                         color = TextGrey,
                     )
 
                     Text(
-                        text = "Carb:" + diaryEntry.product.nutritionValues.carbohydrates.round(2)
+                        text = "Carb:" + diaryItem.nutritionValues.carbohydrates.round(2)
                             .toString(),
                         style = MaterialTheme.typography.body2,
                         color = TextGrey
                     )
 
                     Text(
-                        text = "Prot:" + diaryEntry.product.nutritionValues.protein.round(2)
+                        text = "Prot:" + diaryItem.nutritionValues.protein.round(2)
                             .toString(),
                         style = MaterialTheme.typography.body2,
                         color = TextGrey
                     )
 
                     Text(
-                        text = "Fat:" + diaryEntry.product.nutritionValues.fat.round(2).toString(),
+                        text = "Fat:" + diaryItem.nutritionValues.fat.round(2).toString(),
                         style = MaterialTheme.typography.body2,
                         color = TextGrey
                     )

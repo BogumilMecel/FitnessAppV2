@@ -6,6 +6,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.common.domain.use_case.SaveToken
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
+import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.domain.model.LoginRequest
 import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.domain.repository.AuthRepository
 
 class LogInUser(
@@ -22,8 +23,10 @@ class LogInUser(
             return CustomResult.Error(resourceProvider.getString(R.string.please_make_sure_you_have_entered_correct_email))
         }
         val loginResource = repository.logInUser(
-            email = email,
-            password = password
+            loginRequest = LoginRequest(
+                email = email,
+                password = password
+            )
         )
         return when (loginResource) {
             is Resource.Success -> {

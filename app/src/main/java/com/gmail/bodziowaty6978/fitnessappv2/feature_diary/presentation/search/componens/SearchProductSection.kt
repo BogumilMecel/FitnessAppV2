@@ -160,14 +160,15 @@ fun SearchProductSection(
                             name = product.name,
                             unit = product.unit,
                             weight = product.containerWeight,
-                            calories = product.nutritionValues.calories
-                        ) {
-                            onEvent(
-                                SearchEvent.ClickedProduct(
-                                    product = items[itemPosition]
+                            calories = product.nutritionValues.calories,
+                            onItemClick = {
+                                onEvent(
+                                    SearchEvent.ClickedProduct(
+                                        product = items[itemPosition]
+                                    )
                                 )
-                            )
-                        }
+                            }
+                        )
                     }
                 }
             }

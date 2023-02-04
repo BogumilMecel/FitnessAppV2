@@ -2,34 +2,51 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.diary
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.AlertDialog
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedButton
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.BackHandler
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.DarkGreyElevation3
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.Grey
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntry
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.diary.components.CalendarSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.diary.components.DiaryMealSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.diary.components.NutritionBottomSection
 
-@OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 fun DiaryScreen(
     viewModel: DiaryViewModel = hiltViewModel(),
     paddingValues: PaddingValues
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle().value
+
+    LaunchedEffect(key1 = true) {
+        viewModel.initData()
+    }
 
     BackHandler {
         viewModel.onEvent(DiaryEvent.BackPressed)
@@ -91,13 +108,28 @@ fun DiaryScreen(
                 },
                 title = {
                     Text(
-                        text = state.longClickedDiaryEntry?.let {
-                            state.longClickedDiaryEntry.product.name +
-                                    " (${state.longClickedDiaryEntry.weight}" +
-                                    "${
-                                        state.longClickedDiaryEntry.product.unit
-                                    })"
-                        } ?: stringResource(id = R.string.product)
+                        text = state.longClickedDiaryItem?.let { diaryItem ->
+                            when (diaryItem) {
+                                is ProductDiaryEntry -> {
+                                    diaryItem.product.name +
+                                            " (${diaryItem.weight}" +
+                                            "${
+                                                diaryItem.product.unit
+                                            })"
+                                }
+
+                                is RecipeDiaryEntry -> {
+                                    diaryItem.recipe.name +
+                                            " (${diaryItem.portions}" +
+                                            "${
+                                                stringResource(id = R.string.portions)
+                                            })"
+                                }
+
+                                else -> null
+                            }
+
+                        } ?: ""
                     )
                 }
             )

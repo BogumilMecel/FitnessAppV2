@@ -64,10 +64,11 @@ fun RecipeListSection(
                     name = product.name,
                     unit = product.unit,
                     calories = product.calculateNutritionValues(ingredient.weight).calories,
-                    weight = ingredient.weight
-                ) {
+                    weight = ingredient.weight,
+                    onItemClick = {
 
-                }
+                    }
+                )
             }
 
             Divider(

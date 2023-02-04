@@ -7,6 +7,7 @@ import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.ComposeCustomNavigator
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.repository.TokenRepositoryImp
+import com.gmail.bodziowaty6978.fitnessappv2.common.data.utils.CustomSharedPreferencesUtils
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigator
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.repository.TokenRepository
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.use_case.*
@@ -28,6 +29,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.new_
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.new_recipe.CalculateRecipePrice
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.new_recipe.NewRecipeUseCases
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.product.*
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.recipe.PostRecipeDiaryEntryUseCase
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.search.GetDiaryHistory
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.search.SearchDiaryUseCases
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.search.SearchForProductWithBarcode
@@ -105,6 +107,16 @@ object AppModule {
 
     @Singleton
     @Provides
+    fun provideCustomSharedPreferencesUtils(
+        @ApplicationContext context: Context,
+        gson: Gson
+    ): CustomSharedPreferencesUtils = CustomSharedPreferencesUtils(
+        context = context,
+        gson = gson
+    )
+
+    @Singleton
+    @Provides
     fun provideRetrofitInstance(
         httpClient: OkHttpClient
     ): Retrofit {
@@ -139,6 +151,14 @@ object AppModule {
     ): TokenRepository = TokenRepositoryImp(
         sharedPreferences = sharedPreferences,
         resourceProvider = resourceProvider
+    )
+
+    @Singleton
+    @Provides
+    fun providePostRecipeDiaryEntryUseCase(
+        diaryRepository: DiaryRepository
+    ): PostRecipeDiaryEntryUseCase = PostRecipeDiaryEntryUseCase(
+        diaryRepository = diaryRepository
     )
 
     @Singleton
@@ -308,17 +328,11 @@ object AppModule {
     fun provideWeightRepository(
         weightApi: WeightApi,
         resourceProvider: ResourceProvider,
+        customSharedPreferencesUtils: CustomSharedPreferencesUtils
     ): WeightRepository = WeighRepositoryImp(
         weightApi = weightApi,
         resourceProvider = resourceProvider,
-    )
-
-    @Singleton
-    @Provides
-    fun provideGetLatestLogEntry(
-        loadingRepository: LoadingRepository
-    ): GetLatestLogEntry = GetLatestLogEntry(
-        loadingRepository = loadingRepository
+        customSharedPreferencesUtils = customSharedPreferencesUtils
     )
 
     @Singleton
@@ -361,10 +375,12 @@ object AppModule {
     @Provides
     fun provideIntroductionRepository(
         userDataApi: UserDataApi,
-        resourceProvider: ResourceProvider
+        resourceProvider: ResourceProvider,
+        customSharedPreferencesUtils: CustomSharedPreferencesUtils
     ): UserDataRepository = UserDataRepositoryImp(
         userDataApi = userDataApi,
-        resourceProvider = resourceProvider
+        resourceProvider = resourceProvider,
+        customSharedPreferencesUtils = customSharedPreferencesUtils
     )
 
     @Singleton
@@ -372,9 +388,11 @@ object AppModule {
     fun provideLoadingRepository(
         loadingApi: LoadingApi,
         resourceProvider: ResourceProvider,
+        customSharedPreferencesUtils: CustomSharedPreferencesUtils
     ): LoadingRepository = LoadingRepositoryImp(
         loadingApi = loadingApi,
         resourceProvider = resourceProvider,
+        customSharedPreferencesUtils = customSharedPreferencesUtils
     )
 
     @Singleton

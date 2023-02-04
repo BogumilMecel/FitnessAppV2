@@ -130,6 +130,11 @@ object NavigationActions {
         fun searchToNewRecipe() = object : NavigationAction {
             override val destination: String = Screen.NewRecipeScreen.route
         }
+
+        fun searchToRecipe(recipe: com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.Recipe) = object : NavigationAction {
+            override val destination: String =
+                Screen.RecipeScreen.route + "&recipe=${Gson().toJson(recipe)}"
+        }
     }
 
 
@@ -167,6 +172,13 @@ object NavigationActions {
                 }" + "recipe=${
                     Gson().toJson(recipe)
                 }"
+        }
+    }
+
+    object Recipe {
+        fun recipeToDiary() = object :NavigationAction {
+            override val destination: String = Screen.SearchScreen.route
+            override val navOptions: NavOptions = NavOptions.Builder().setPopUpTo(0, true).build()
         }
     }
 

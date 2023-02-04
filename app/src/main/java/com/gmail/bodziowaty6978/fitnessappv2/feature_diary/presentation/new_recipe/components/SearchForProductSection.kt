@@ -84,10 +84,11 @@ fun SearchForProductSection(
                     name = product.name,
                     unit = product.unit,
                     weight = product.containerWeight,
-                    calories = product.nutritionValues.calories
-                ) {
-                    onEvent(NewRecipeEvent.ClickedProduct(state.searchItems[it]))
-                }
+                    calories = product.nutritionValues.calories,
+                    onItemClick = {
+                        onEvent(NewRecipeEvent.ClickedProduct(state.searchItems[it]))
+                    }
+                )
             }
         }
     }

@@ -13,6 +13,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.DarkGreyElevation6
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.TextGrey
@@ -22,22 +23,27 @@ fun SearchProductItem(
     weight: Int,
     unit: String,
     name:String,
+    clickable: Boolean = true,
     calories:Int,
-    onItemClick:() -> Unit
+    onItemClick:() -> Unit,
+    background: Color = DarkGreyElevation6
 ) {
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(DarkGreyElevation6)
-            .clickable {
-                onItemClick()
+            .background(background).let {
+                if (clickable) {
+                    it.clickable {
+                        onItemClick()
+                    }
+                } else it
             },
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 10.dp, horizontal = 20.dp),
+                .padding(vertical = 10.dp, horizontal = 15.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {

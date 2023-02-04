@@ -88,7 +88,7 @@ fun DiaryMealSection(
             }
 
             diaryEntriesValues.forEach {
-                DiaryEntryItem(diaryEntry = it, onItemClicked = {
+                DiaryEntryItem(diaryItem = it, onItemClicked = {
                     onEvent(DiaryEvent.ClickedDiaryEntry(it))
                 }, onItemLongClick = {
                     onEvent(DiaryEvent.LongClickedDiaryEntry(it))

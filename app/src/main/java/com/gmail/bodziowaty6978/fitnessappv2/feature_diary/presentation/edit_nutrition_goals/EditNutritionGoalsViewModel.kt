@@ -1,7 +1,6 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.edit_nutrition_goals
 
 import androidx.lifecycle.viewModelScope
-import com.gmail.bodziowaty6978.fitnessappv2.FitnessApp
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.NavigationActions
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.use_case.CalculateNutritionValuesPercentages
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.use_case.SaveNutritionValues
@@ -23,10 +22,6 @@ class EditNutritionGoalsViewModel @Inject constructor(
 
     private val _state = MutableStateFlow(EditNutritionGoalsState())
     val state: StateFlow<EditNutritionGoalsState> = _state
-
-    init {
-        initWantedNutritionValues()
-    }
 
     fun onEvent(event: EditNutritionGoalsEvent) {
         when (event) {
@@ -86,6 +81,10 @@ class EditNutritionGoalsViewModel @Inject constructor(
         }
     }
 
+    fun initData() {
+        initWantedNutritionValues()
+    }
+
     private fun saveNutritionValues() {
         viewModelScope.launch {
             when (val resource = saveNutritionValues(_state.value.nutritionValues)) {
@@ -143,7 +142,7 @@ class EditNutritionGoalsViewModel @Inject constructor(
     }
 
     private fun initWantedNutritionValues() {
-        val wantedNutritionValues = FitnessApp.getWantedNutritionValues()
+        val wantedNutritionValues = sharedPreferencesUtils.getWantedNutritionValues()
         _state.update {
             it.copy(
                 nutritionValues = wantedNutritionValues,

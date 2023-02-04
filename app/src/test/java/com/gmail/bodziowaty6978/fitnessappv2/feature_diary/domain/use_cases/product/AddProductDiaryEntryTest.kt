@@ -21,7 +21,7 @@ import org.robolectric.RuntimeEnvironment
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(RobolectricTestRunner::class)
-internal class AddDiaryEntryTest{
+internal class AddProductDiaryEntryTest{
 
     @Mock
     private lateinit var mockDiaryRepository: DiaryRepository
@@ -33,7 +33,7 @@ internal class AddDiaryEntryTest{
     fun setUp() = runTest{
         closable = MockitoAnnotations.openMocks(this)
         mockDiaryRepository = Mockito.mock(DiaryRepository::class.java)
-        Mockito.`when`(mockDiaryRepository.addDiaryEntry(any())).thenReturn(CustomResult.Success)
+        Mockito.`when`(mockDiaryRepository.addProductDiaryEntry(any())).thenReturn(CustomResult.Success)
         addDiaryEntry = AddDiaryEntry(
             diaryRepository = mockDiaryRepository,
             resourceProvider = ResourceProvider(RuntimeEnvironment.getApplication())

@@ -165,7 +165,9 @@ class NewRecipeViewModel @Inject constructor(
                 servings = state.servings,
                 difficulty = state.selectedDifficulty,
                 recipeName = state.name,
-                nutritionValues = state.nutritionData.nutritionValues
+                nutritionValues = state.nutritionData.nutritionValues,
+                userId = sharedPreferencesUtils.getUserId(),
+                username = sharedPreferencesUtils.getUsername()
             )
             when (resource) {
                 is Resource.Success -> {
