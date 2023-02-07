@@ -1,12 +1,18 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.gmail.bodziowaty6978.fitnessappv2.R
-import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.NavigationActions
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
+import com.gmail.bodziowaty6978.fitnessappv2.common.util.extensions.TAG
+import com.gmail.bodziowaty6978.fitnessappv2.destinations.NewProductScreenDestination
+import com.gmail.bodziowaty6978.fitnessappv2.destinations.NewRecipeScreenDestination
+import com.gmail.bodziowaty6978.fitnessappv2.destinations.ProductScreenDestination
+import com.gmail.bodziowaty6978.fitnessappv2.destinations.RecipeScreenDestination
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.search.SearchDiaryUseCases
+import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator.navigate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -45,7 +51,7 @@ class SearchViewModel @Inject constructor(
             }
 
             is SearchEvent.ClickedBackArrow -> {
-                navigateBack()
+                navigateUp()
             }
 
             is SearchEvent.ClickedSearch -> {
@@ -71,9 +77,11 @@ class SearchViewModel @Inject constructor(
             }
 
             is SearchEvent.ClickedProduct -> {
+                Log.e(TAG, "clicked product")
                 savedStateHandle.get<String>("mealName")?.let { mealName ->
-                    navigator.navigate(
-                        NavigationActions.SearchScreen.searchToProduct(
+                    Log.e(TAG, "navigate product")
+                    navigateTo(
+                        ProductScreenDestination(
                             product = event.product,
                             mealName = mealName
                         )
@@ -83,10 +91,10 @@ class SearchViewModel @Inject constructor(
 
             is SearchEvent.ClickedNewProduct -> {
                 savedStateHandle.get<String>("mealName")?.let {
-                    navigator.navigate(
-                        NavigationActions.SearchScreen.searchToNewProduct(
+                    navigateTo(
+                        NewProductScreenDestination(
                             mealName = it,
-                            barcode = _searchState.value.barcode
+                            barcode = _searchState.value.barcode ?: ""
                         )
                     )
                 } ?: onError(resourceProvider.getString(R.string.unknown_error))
@@ -114,7 +122,7 @@ class SearchViewModel @Inject constructor(
             }
 
             is SearchEvent.ClickedCreateNewRecipe -> {
-                navigator.navigate(NavigationActions.SearchScreen.searchToNewRecipe())
+                navigateTo(NewRecipeScreenDestination)
             }
 
             is SearchEvent.ClickedProductsTab -> {
@@ -136,7 +144,7 @@ class SearchViewModel @Inject constructor(
             }
 
             is SearchEvent.ClickedRecipe -> {
-                navigator.navigate(NavigationActions.SearchScreen.searchToRecipe(event.recipe))
+                navigateTo(RecipeScreenDestination(recipe = event.recipe, mealName = ""))
             }
         }
     }
@@ -221,10 +229,10 @@ class SearchViewModel @Inject constructor(
             } else {
                 savedStateHandle.get<String>("mealName")?.let { mealName ->
                     resource.data?.let { product ->
-                        navigator.navigate(
-                            NavigationActions.SearchScreen.searchToProduct(
+                        navigate(
+                            ProductScreenDestination(
                                 product = product,
-                                mealName = mealName,
+                                mealName = mealName
                             )
                         )
                     }

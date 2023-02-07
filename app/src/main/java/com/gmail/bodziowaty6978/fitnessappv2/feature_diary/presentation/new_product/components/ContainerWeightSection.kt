@@ -64,7 +64,6 @@ fun ContainerWeightSection(
                     keyboardType = KeyboardType.Number
                 ),
                 singleLine = true,
-                elevation = 9
             )
 
             Spacer(
@@ -85,7 +84,7 @@ fun ContainerWeightSection(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = state.dropDownItems[state.dropDownSelectedIndex],
+                    text = state.dropDownItems.getOrNull(state.dropDownSelectedIndex) ?: "",
                     style = MaterialTheme.typography.body1,
                     modifier = Modifier
                         .padding(horizontal = 15.dp, vertical = 15.dp)

@@ -4,11 +4,11 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.gmail.bodziowaty6978.fitnessappv2.R
-import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.NavigationActions
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.TextFieldState
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
+import com.gmail.bodziowaty6978.fitnessappv2.destinations.LoginScreenDestination
 import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.domain.use_case.AuthUseCases
 import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.presentation.util.AuthEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -41,7 +41,7 @@ class ResetPasswordViewModel @Inject constructor(
             }
 
             is AuthEvent.RegisterLoginButtonClicked -> {
-                navigate(NavigationActions.ResetScreen.resetToLogin())
+                navigateTo(LoginScreenDestination)
             }
 
             else -> {

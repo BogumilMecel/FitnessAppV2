@@ -6,10 +6,11 @@ import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.gmail.bodziowaty6978.fitnessappv2.R
-import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.NavigationActions
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
+import com.gmail.bodziowaty6978.fitnessappv2.destinations.ProductScreenDestination
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.new_product.SaveNewProduct
+import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator.navigate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,17 +25,12 @@ class NewProductViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle
 ) : BaseViewModel() {
 
-    private val _state = MutableStateFlow(
-        NewProductState(
-            containerWeight = resourceProvider.getString(R.string.container_weight),
-            dropDownItems = resourceProvider.getStringArray(R.array.units)
-        )
-    )
+    private val _state = MutableStateFlow(NewProductState())
     val state: StateFlow<NewProductState> = _state
 
     init{
         val barcode = savedStateHandle.get<String>("barcode")
-        if (barcode!=null&&barcode!="null"){
+        if (!barcode.isNullOrBlank()){
             _state.update {
                 it.copy(
                     barcode = barcode
@@ -62,7 +58,7 @@ class NewProductViewModel @Inject constructor(
                 }
             }
             is NewProductEvent.ClickedBackArrow -> {
-                navigate(NavigationActions.General.navigateUp())
+                navigateUp()
             }
             is NewProductEvent.EnteredProductName -> {
                 _state.update {
@@ -173,11 +169,9 @@ class NewProductViewModel @Inject constructor(
                     if(resource is Resource.Error){
                         showSnackbarError(resource.uiText)
                     }else{
-                        savedStateHandle.get<String>("mealName")?.let {
+                        savedStateHandle.get<String>("mealName")?.let { mealName ->
                             resource.data?.let { product ->
-                                navigate(
-                                    NavigationActions.NewProductScreen.newProductToProduct(it, product)
-                                )
+                                navigate(ProductScreenDestination(mealName = mealName, product = product))
                             }
                         }
                     }
@@ -210,6 +204,15 @@ class NewProductViewModel @Inject constructor(
                     )
                 }
             }
+        }
+    }
+
+    fun initData() {
+        _state.update {
+            it.copy(
+                containerWeight = resourceProvider.getString(R.string.container_weight),
+                dropDownItems = resourceProvider.getStringArray(R.array.units)
+            )
         }
     }
 }

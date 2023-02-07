@@ -32,9 +32,11 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.presentation.c
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
+import com.ramcosta.composedestinations.annotation.Destination
 import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalPagerApi::class, ExperimentalComposeUiApi::class)
+@Destination
 @Composable
 fun IntroductionScreen(
     viewModel: IntroductionViewModel = hiltViewModel()

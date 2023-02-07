@@ -3,12 +3,15 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_auth.presentation.login
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavOptions
 import com.gmail.bodziowaty6978.fitnessappv2.R
-import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.NavigationActions
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.TextFieldState
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
+import com.gmail.bodziowaty6978.fitnessappv2.destinations.RegisterScreenDestination
+import com.gmail.bodziowaty6978.fitnessappv2.destinations.ResetPasswordScreenDestination
+import com.gmail.bodziowaty6978.fitnessappv2.destinations.SplashScreenDestination
 import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.domain.use_case.AuthUseCases
 import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.presentation.util.AuthEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -54,11 +57,11 @@ class LoginViewModel @Inject constructor(
             }
 
             is AuthEvent.RegisterLoginButtonClicked -> {
-                navigate(NavigationActions.LoginScreen.loginToRegister())
+                navigateTo(RegisterScreenDestination)
             }
 
             is AuthEvent.ForgotButtonClicked -> {
-                navigate(NavigationActions.LoginScreen.loginToReset())
+                navigateTo(ResetPasswordScreenDestination)
             }
 
             else -> {
@@ -71,7 +74,10 @@ class LoginViewModel @Inject constructor(
                     if (resource is CustomResult.Error) {
                         showSnackbarError(resource.message)
                     } else {
-                        navigate(NavigationActions.LoginScreen.loginToLoading())
+                        navigateTo(
+                            destination = SplashScreenDestination,
+                            navOptions = NavOptions.Builder().setPopUpTo(0, true).build()
+                        )
                     }
                     _isLoading.value = false
                 }

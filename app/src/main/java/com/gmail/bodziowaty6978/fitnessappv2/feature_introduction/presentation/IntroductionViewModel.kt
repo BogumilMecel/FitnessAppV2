@@ -3,11 +3,12 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.presentation
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavOptions
 import com.gmail.bodziowaty6978.fitnessappv2.R
-import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.NavigationActions
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
+import com.gmail.bodziowaty6978.fitnessappv2.destinations.SummaryScreenDestination
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.model.Question
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.use_cases.SaveIntroductionInformation
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.presentation.util.IntroductionExpectedQuestionAnswer
@@ -110,7 +111,10 @@ class IntroductionViewModel @Inject constructor(
                     if (result is CustomResult.Error) {
                         showSnackbarError(message = result.message)
                     } else {
-                        navigate(NavigationActions.IntroductionScreen.introductionToSummary())
+                        navigateTo(
+                            destination = SummaryScreenDestination,
+                            navOptions = NavOptions.Builder().setPopUpTo(0, true).build()
+                        )
                     }
                 }
             }

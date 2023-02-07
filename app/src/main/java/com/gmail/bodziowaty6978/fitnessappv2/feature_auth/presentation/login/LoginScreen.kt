@@ -34,8 +34,10 @@ import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.DefaultTextField
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.Toolbar
 import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.presentation.util.AuthEvent
+import com.ramcosta.composedestinations.annotation.Destination
 
 @Composable
+@Destination
 fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel()
 ) {

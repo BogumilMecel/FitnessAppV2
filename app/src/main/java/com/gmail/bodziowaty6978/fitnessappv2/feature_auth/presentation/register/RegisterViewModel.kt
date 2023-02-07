@@ -3,12 +3,14 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_auth.presentation.register
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavOptions
 import com.gmail.bodziowaty6978.fitnessappv2.R
-import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.NavigationActions
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.TextFieldState
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
+import com.gmail.bodziowaty6978.fitnessappv2.destinations.LoginScreenDestination
+import com.gmail.bodziowaty6978.fitnessappv2.destinations.SplashScreenDestination
 import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.domain.use_case.AuthUseCases
 import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.presentation.util.AuthEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -79,14 +81,16 @@ class RegisterViewModel @Inject constructor(
                     if (result is CustomResult.Error){
                         showSnackbarError(result.message)
                     }else{
-                        navigate(NavigationActions.RegisterScreen.registerToLoading())
+                        navigateTo(
+                            destination = SplashScreenDestination,
+                            navOptions = NavOptions.Builder().setPopUpTo(0, true).build()
+                        )
                     }
-
                     _isLoading.value = false
                 }
             }
             else -> {
-                navigate(NavigationActions.RegisterScreen.registerToLogin())
+                navigateTo(LoginScreenDestination)
             }
         }
     }

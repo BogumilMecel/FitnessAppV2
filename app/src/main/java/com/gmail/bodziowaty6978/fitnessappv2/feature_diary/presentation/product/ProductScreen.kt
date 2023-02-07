@@ -1,11 +1,19 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.ExtendedFloatingActionButton
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -17,21 +25,19 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.singleton.CurrentDate
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.LightRed
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.PriceSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.ProductMainSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.ProductTopSection
+import com.ramcosta.composedestinations.annotation.Destination
 
+@Destination(
+    navArgsDelegate = ProductNavArguments::class
+)
 @Composable
 fun ProductScreen(
-    product: Product,
     viewModel: ProductViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle().value
-
-    LaunchedEffect(key1 = true) {
-        viewModel.initializeProduct(product = product)
-    }
 
     Scaffold(
         floatingActionButton = {
@@ -85,7 +91,7 @@ fun ProductScreen(
                 nutritionData = state.nutritionData
             )
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
             PriceSection(
                 modifier = Modifier
@@ -108,7 +114,7 @@ fun ProductScreen(
                 }
             )
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(10.dp))
         }
     }
 }

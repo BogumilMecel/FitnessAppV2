@@ -1,11 +1,12 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_splash.loading.presentation
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
-import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.NavigationActions
+import androidx.navigation.NavOptions
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.use_case.GetToken
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
-import com.gmail.bodziowaty6978.fitnessappv2.common.util.extensions.TAG
+import com.gmail.bodziowaty6978.fitnessappv2.destinations.IntroductionScreenDestination
+import com.gmail.bodziowaty6978.fitnessappv2.destinations.LoginScreenDestination
+import com.gmail.bodziowaty6978.fitnessappv2.destinations.SummaryScreenDestination
 import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.domain.model.AuthenticationRequest
 import com.gmail.bodziowaty6978.fitnessappv2.feature_splash.domain.repository.LoadingRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,7 +24,10 @@ class LoadingViewModel @Inject constructor(
             getToken()?.let {
                 authenticateUser()
             } ?: kotlin.run {
-                navigate(NavigationActions.LoadingScreen.loadingToLogin())
+                navigateTo(
+                    destination = LoginScreenDestination,
+                    navOptions = NavOptions.Builder().setPopUpTo(0, true).build()
+                )
             }
         }
     }
@@ -32,15 +36,23 @@ class LoadingViewModel @Inject constructor(
         val authenticationResource = loadingRepository.authenticateUser(
             authenticationRequest = AuthenticationRequest(timestamp = System.currentTimeMillis())
         )
-        Log.e(TAG, authenticationResource.toString())
         authenticationResource.data?.let { user ->
             if (user.nutritionValues != null && user.userInformation != null) {
-                navigate(NavigationActions.LoadingScreen.loadingToSummary())
+                navigateTo(
+                    destination = SummaryScreenDestination,
+                    navOptions = NavOptions.Builder().setPopUpTo(0, true).build()
+                )
             } else {
-                navigate(NavigationActions.LoadingScreen.loadingToIntroduction())
+                navigateTo(
+                    destination = IntroductionScreenDestination,
+                    navOptions = NavOptions.Builder().setPopUpTo(0, true).build()
+                )
             }
         } ?: kotlin.run {
-            navigate(NavigationActions.LoadingScreen.loadingToLogin())
+            navigateTo(
+                destination = LoginScreenDestination,
+                navOptions = NavOptions.Builder().setPopUpTo(0, true).build()
+            )
         }
     }
 }

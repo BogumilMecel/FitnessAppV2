@@ -2,17 +2,16 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavOptions
 import com.gmail.bodziowaty6978.fitnessappv2.R
-import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.NavigationActions
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.singleton.CurrentDate
-import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
+import com.gmail.bodziowaty6978.fitnessappv2.destinations.DiaryScreenDestination
+import com.gmail.bodziowaty6978.fitnessappv2.destinations.ProductScreenDestination
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.product.ProductUseCases
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.NutritionData
-import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,22 +27,7 @@ class ProductViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     private val _state = MutableStateFlow(ProductState(
-        product = savedStateHandle.get<String>("product")?.let { productString ->
-            Gson().fromJson(productString, Product::class.java)
-        } ?: kotlin.run {
-            navigator.navigate(NavigationActions.General.navigateUp())
-            Product(
-                nutritionValues = NutritionValues(
-                    calories = 200,
-                    carbohydrates = 20.0,
-                    protein = 15.0,
-                    fat = 2.0
-                )
-            )
-        },
-        recipe = savedStateHandle.get<String>("recipe")?.let { recipeString ->
-            Gson().fromJson(recipeString, Recipe::class.java)
-        }
+        product = ProductScreenDestination.argsFrom(savedStateHandle).product
     ))
     val state: StateFlow<ProductState> = _state
 
@@ -95,7 +79,10 @@ class ProductViewModel @Inject constructor(
                         dateModel = CurrentDate.dateModel(resourceProvider = resourceProvider)
                     )
                     if (addingResult is Resource.Success) {
-                        navigator.navigate(NavigationActions.ProductScreen.productToDiary())
+                        navigateTo(
+                            destination = DiaryScreenDestination,
+                            navOptions = NavOptions.Builder().setPopUpTo(0, true).build()
+                        )
                     } else if (addingResult is Resource.Error) {
                         showSnackbarError(addingResult.uiText)
                     }
@@ -103,7 +90,7 @@ class ProductViewModel @Inject constructor(
             }
 
             is ProductEvent.ClickedBackArrow -> {
-                navigator.navigate(NavigationActions.General.navigateUp())
+                navigateUp()
             }
 
             is ProductEvent.ClickedSubmitNewPrice -> {

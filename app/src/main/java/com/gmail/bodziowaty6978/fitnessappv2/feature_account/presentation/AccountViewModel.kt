@@ -1,10 +1,12 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_account.presentation
 
 import androidx.lifecycle.viewModelScope
-import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.NavigationActions
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
+import com.gmail.bodziowaty6978.fitnessappv2.destinations.EditNutritionGoalsScreenDestination
+import com.gmail.bodziowaty6978.fitnessappv2.destinations.LoginScreenDestination
+import com.gmail.bodziowaty6978.fitnessappv2.destinations.SummaryScreenDestination
 import com.gmail.bodziowaty6978.fitnessappv2.feature_account.domain.use_case.DeleteToken
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.product.CreatePieChartData
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.NutritionData
@@ -31,11 +33,11 @@ class AccountViewModel @Inject constructor(
             }
 
             is AccountEvent.ClickedEditNutritionGoals -> {
-                navigate(NavigationActions.AccountScreen.accountToEditNutritionGoals())
+                navigateTo(EditNutritionGoalsScreenDestination)
             }
 
             is AccountEvent.BackPressed -> {
-                navigate(NavigationActions.AccountScreen.accountToSummary())
+                navigateTo(SummaryScreenDestination)
             }
         }
     }
@@ -65,7 +67,7 @@ class AccountViewModel @Inject constructor(
         viewModelScope.launch {
             val result = deleteToken()
             if (result is CustomResult.Success) {
-                navigate(NavigationActions.AccountScreen.accountToLogin())
+                navigateTo(LoginScreenDestination)
             } else if (result is CustomResult.Error) {
                 showSnackbarError(result.message)
             }

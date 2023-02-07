@@ -30,8 +30,12 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.shared.S
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
+import com.ramcosta.composedestinations.annotation.Destination
 
 @OptIn(ExperimentalPagerApi::class)
+@Destination(
+    navArgsDelegate = SearchNavArguments::class
+)
 @Composable
 fun SearchScreen(
     viewModel: SearchViewModel = hiltViewModel()
@@ -90,8 +94,7 @@ fun SearchScreen(
                         viewModel.onEvent(searchEvent)
                     },
                     pagerState = pagerState,
-                    scope = scope,
-                    searchBarPlaceholderText = state.searchBarPlaceholderText
+                    scope = scope
                 )
 
                 HorizontalPager(

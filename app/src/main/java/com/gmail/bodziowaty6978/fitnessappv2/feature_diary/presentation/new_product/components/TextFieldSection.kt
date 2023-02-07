@@ -43,7 +43,6 @@ fun TextFieldSection(
             modifier = modifier,
             keyboardOptions = textFieldOptions,
             singleLine = true,
-            elevation = 9
         )
 
     }

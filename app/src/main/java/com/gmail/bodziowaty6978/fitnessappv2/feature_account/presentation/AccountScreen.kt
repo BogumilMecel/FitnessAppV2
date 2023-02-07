@@ -1,8 +1,21 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_account.presentation
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.Card
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.Composable
@@ -21,7 +34,9 @@ import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.Orange
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.TextGrey
 import com.gmail.bodziowaty6978.fitnessappv2.feature_account.presentation.components.LogOutButton
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.ChartSection
+import com.ramcosta.composedestinations.annotation.Destination
 
+@Destination
 @Composable
 fun AccountScreen(
     viewModel: AccountViewModel = hiltViewModel()

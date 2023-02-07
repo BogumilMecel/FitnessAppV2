@@ -19,7 +19,10 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.presentation.compon
 import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.presentation.components.LogStreakSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.presentation.components.WeightPickerDialog
 import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.presentation.components.WeightSection
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.RootNavGraph
 
+@Destination
 @Composable
 fun SummaryScreen(
     viewModel: SummaryViewModel = hiltViewModel()

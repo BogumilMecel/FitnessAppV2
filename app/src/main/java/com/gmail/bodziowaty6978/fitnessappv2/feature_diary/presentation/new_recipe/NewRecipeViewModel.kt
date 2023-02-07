@@ -1,7 +1,6 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_recipe
 
 import androidx.lifecycle.viewModelScope
-import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.NavigationActions
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.Ingredient
@@ -61,7 +60,7 @@ class NewRecipeViewModel @Inject constructor(
             is NewRecipeEvent.ClickedBackArrow -> {
                 if (_state.value.isSearchSectionVisible) changeState(isRecipeSectionVisible = true)
                 else if (_state.value.isProductSectionVisible) changeState(isSearchSectionVisible = true)
-                else if (_state.value.isRecipeSectionVisible) navigate(NavigationActions.General.navigateUp())
+                else if (_state.value.isRecipeSectionVisible) navigateUp()
             }
 
             is NewRecipeEvent.SelectedDifficulty -> {

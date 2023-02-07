@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -36,11 +35,12 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.R
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.diary.components.CalendarSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.diary.components.DiaryMealSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.diary.components.NutritionBottomSection
+import com.ramcosta.composedestinations.annotation.Destination
 
+@Destination
 @Composable
 fun DiaryScreen(
     viewModel: DiaryViewModel = hiltViewModel(),
-    paddingValues: PaddingValues
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle().value
 
@@ -138,7 +138,7 @@ fun DiaryScreen(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(paddingValues),
+                .padding(bottom = 64.dp),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             CalendarSection(
@@ -170,6 +170,7 @@ fun DiaryScreen(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .background(Grey)
+                .padding(bottom = 5.dp)
         )
     }
 }
