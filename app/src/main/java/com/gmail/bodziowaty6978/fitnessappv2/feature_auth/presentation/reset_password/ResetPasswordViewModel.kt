@@ -22,14 +22,14 @@ class ResetPasswordViewModel @Inject constructor(
     resourceProvider: ResourceProvider
 ) : BaseViewModel() {
 
-    private val _emailState = mutableStateOf<TextFieldState>(
+    private val _emailState = mutableStateOf(
         TextFieldState(
             hint = resourceProvider.getString(R.string.email_address)
         )
     )
     val emailState: State<TextFieldState> = _emailState
 
-    private val _isLoading = mutableStateOf<Boolean>(false)
+    private val _isLoading = mutableStateOf(false)
     val isLoading: State<Boolean> = _isLoading
 
     fun onEvent(event: AuthEvent) {

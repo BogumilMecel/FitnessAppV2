@@ -20,18 +20,7 @@ fun ChartSection(
     nutritionData: NutritionData,
     isCircleTextVisible:Boolean = true
 ) {
-
     val backgroundColor = DarkGreyElevation.toArgb()
-
-    val colors = listOf<Int>(
-        LightGreen3.toArgb(),
-        backgroundColor,
-        BlueViolet3.toArgb(),
-        backgroundColor,
-        OrangeYellow3.toArgb(),
-        backgroundColor,
-    )
-
 
         AndroidView(
             modifier = modifier,
@@ -85,7 +74,14 @@ fun ChartSection(
                 val calories = nutritionData.nutritionValues.calories
 
                 val dataSet = PieDataSet(data, "")
-                dataSet.colors = colors
+                dataSet.colors = listOf(
+                    LightGreen3.toArgb(),
+                    backgroundColor,
+                    BlueViolet3.toArgb(),
+                    backgroundColor,
+                    OrangeYellow3.toArgb(),
+                    backgroundColor,
+                )
 
                 val pieData = PieData(dataSet).apply {
                     setDrawValues(false)

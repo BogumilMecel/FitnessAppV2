@@ -4,7 +4,6 @@ import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.UserInformation
 import retrofit2.http.Body
 import retrofit2.http.POST
-import retrofit2.http.PUT
 
 interface UserDataApi {
 
@@ -17,9 +16,4 @@ interface UserDataApi {
     suspend fun saveNutritionValues(
         @Body nutritionValues: NutritionValues
     ): Boolean
-
-    @PUT("/userData/nutritionValues/")
-    suspend fun editNutritionValues(
-        @Body nutritionValues: NutritionValues
-    ): NutritionValues
 }

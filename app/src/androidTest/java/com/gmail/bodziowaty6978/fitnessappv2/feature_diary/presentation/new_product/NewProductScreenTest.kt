@@ -1,5 +1,6 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_product
 
+import androidx.compose.ui.graphics.BlendMode.Companion.Screen
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import com.gmail.bodziowaty6978.fitnessappv2.R
@@ -7,7 +8,6 @@ import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.ComposeCusto
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.navigation.NavHostGraph
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.MainActivity
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.FitnessAppV2Theme
-import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.util.Screen
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before

@@ -1,5 +1,6 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.recipe
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavOptions
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.singleton.CurrentDate
@@ -7,7 +8,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.multiplyBy
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.destinations.DiaryScreenDestination
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.Recipe
+import com.gmail.bodziowaty6978.fitnessappv2.destinations.RecipeScreenDestination
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.product.CreatePieChartData
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.recipe.PostRecipeDiaryEntryUseCase
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.NutritionData
@@ -22,10 +23,15 @@ import javax.inject.Inject
 @HiltViewModel
 class RecipeViewModel @Inject constructor(
     private val createPieChartData: CreatePieChartData,
-    private val postRecipeDiaryEntryUseCase: PostRecipeDiaryEntryUseCase
+    private val postRecipeDiaryEntryUseCase: PostRecipeDiaryEntryUseCase,
+    savedStateHandle: SavedStateHandle
 ) : BaseViewModel() {
 
-    private val _state = MutableStateFlow(RecipeState())
+    private val _state = MutableStateFlow(RecipeState(
+        recipe = RecipeScreenDestination.argsFrom(savedStateHandle = savedStateHandle).recipe.also {
+            initializeRecipeData()
+        }
+    ))
     val state: StateFlow<RecipeState> = _state
 
     fun onEvent(event: RecipeEvent) {
@@ -82,22 +88,12 @@ class RecipeViewModel @Inject constructor(
         }
     }
 
-    fun initializeRecipe(recipe: Recipe) = _state.update {
-        it.copy(
-            recipe = recipe,
-            isFavorite = sharedPreferencesUtils.getFavoriteRecipesIds().contains(recipe.id)
-        )
-    }.also {
-        initializeRecipeData()
-    }
-
     private fun onFavoriteClicked() {
         _state.update {
             it.copy(
                 isFavorite = !_state.value.isFavorite
             )
         }
-
     }
 
     private fun recalculateNutritionData() {

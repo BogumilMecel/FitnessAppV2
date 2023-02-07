@@ -65,10 +65,11 @@ fun ProductScreen(
                     .testTag(stringResource(id = R.string.create_product))
             )
         }
-    ) {
+    ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(paddingValues.calculateBottomPadding())
         ) {
             ProductTopSection(
                 mealName = state.mealName,

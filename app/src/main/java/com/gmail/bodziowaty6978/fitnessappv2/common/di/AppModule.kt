@@ -258,11 +258,9 @@ object AppModule {
     @Provides
     fun provideGetDiaryEntriesUseCase(
         diaryRepository: DiaryRepository,
-        resourceProvider: ResourceProvider
     ): GetDiaryEntries = GetDiaryEntries(
         diaryRepository = diaryRepository,
-        sortDiaryEntries = SortDiaryEntries(),
-        resourceProvider = resourceProvider
+        sortDiaryEntries = SortDiaryEntries()
     )
 
     @Singleton

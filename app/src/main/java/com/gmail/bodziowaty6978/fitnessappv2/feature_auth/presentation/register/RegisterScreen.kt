@@ -53,11 +53,11 @@ fun RegisterScreen(
                 viewModel.onEvent(AuthEvent.RegisterLoginButtonClicked)
             }
         }
-    ) {
-
+    ) { paddingValues ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(paddingValues.calculateTopPadding())
         ) {
             if (!isLoadingState) {
 

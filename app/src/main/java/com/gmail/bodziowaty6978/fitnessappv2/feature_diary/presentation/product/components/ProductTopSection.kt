@@ -15,7 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.TextGrey
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.ProductEvent
 
 @Composable
 fun ProductTopSection(

@@ -8,5 +8,4 @@ sealed class AuthEvent {
     object AuthButtonClicked: AuthEvent()
     object RegisterLoginButtonClicked: AuthEvent()
     object ForgotButtonClicked: AuthEvent()
-    object BackArrowPressed: AuthEvent()
 }
