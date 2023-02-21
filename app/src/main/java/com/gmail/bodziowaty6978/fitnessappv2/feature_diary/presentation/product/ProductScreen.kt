@@ -101,7 +101,7 @@ fun ProductScreen(
                 price = state.product.price,
                 nutritionValues = state.product.nutritionValues,
                 currency = "zł",
-                unit = state.product.unit,
+                unit = stringResource(id = state.product.measurementUnit.getDisplayValue()),
                 priceValue = state.priceValue,
                 priceFor = state.priceForValue,
                 onForEntered = {

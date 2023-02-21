@@ -114,7 +114,7 @@ fun DiaryScreen(
                                     diaryItem.product.name +
                                             " (${diaryItem.weight}" +
                                             "${
-                                                diaryItem.product.unit
+                                                diaryItem.product.measurementUnit
                                             })"
                                 }
 

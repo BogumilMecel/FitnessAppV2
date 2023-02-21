@@ -4,6 +4,9 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Price
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntryPostRequest
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.product.NewPriceRequest
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.product.NewProductRequest
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.NewRecipeRequest
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntryRequest
 import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.domain.model.CaloriesSumResponse
@@ -48,7 +51,7 @@ interface DiaryApi {
 
     @POST("/products")
     suspend fun insertProduct(
-        @Body product: Product
+        @Body newProductRequest: NewProductRequest
     ): Product
 
     @GET("/products/history")
@@ -61,13 +64,11 @@ interface DiaryApi {
 
     @POST("/products/{productId}/prices")
     suspend fun addNewPriceForProduct(
-        @Body price: Price,
-        @Path("productId") productId: String
+        @Body newPriceRequest: NewPriceRequest
     ): Price
 
     @POST("/recipes")
     suspend fun addNewRecipe(
-        @Body recipe: Recipe,
-        @Query("timestamp") timestamp: Long,
+        @Body newRecipeRequest: NewRecipeRequest
     ): Recipe
 }

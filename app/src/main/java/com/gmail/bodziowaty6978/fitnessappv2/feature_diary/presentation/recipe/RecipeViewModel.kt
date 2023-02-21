@@ -2,7 +2,6 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.recipe
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavOptions
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.singleton.CurrentDate
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.multiplyBy
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
@@ -70,9 +69,8 @@ class RecipeViewModel @Inject constructor(
                     when (resource) {
                         is Resource.Success -> {
                             if (resource.data) {
-                                navigateTo(
-                                    destination = DiaryScreenDestination,
-                                    navOptions = NavOptions.Builder().setPopUpTo(0, true).build()
+                                navigateWithPopUp(
+                                    destination = DiaryScreenDestination
                                 )
                             } else {
                                 showSnackbarError(message = resourceProvider.getUnknownErrorString())

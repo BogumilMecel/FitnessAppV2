@@ -2,7 +2,6 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.recipe
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearOutSlowInEasing
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -31,18 +30,13 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Equalizer
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.SupervisorAccount
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -52,8 +46,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.BackArrow
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.CustomBasicTextField
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.DefaultCardBackground
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.DropdownArrow
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.TextGrey
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.calculateNutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.ProductNutritionSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search.componens.SearchProductItem
 import com.ramcosta.composedestinations.annotation.Destination
@@ -67,9 +61,6 @@ fun RecipeScreen(
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle().value
     val scrollState = rememberScrollState()
-    val dropdownArrowIngredientsListState by animateFloatAsState(
-        targetValue = if (state.isIngredientsListExpanded) 180f else 0f
-    )
 
     Column(
         modifier = Modifier
@@ -296,7 +287,10 @@ fun RecipeScreen(
                         Row(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Icon(imageVector = Icons.Default.Save, contentDescription = null)
+                            Icon(
+                                imageVector = Icons.Default.Save,
+                                contentDescription = null
+                            )
 
                             Spacer(modifier = Modifier.width(12.dp))
 
@@ -351,22 +345,13 @@ fun RecipeScreen(
                                 .align(Alignment.Center)
                         )
 
-                        IconButton(
-                            onClick = {
+                        DropdownArrow(
+                            isArrowPointedDownwards = state.isIngredientsListExpanded,
+                            modifier = Modifier.align(Alignment.CenterEnd),
+                            onArrowClicked = {
                                 viewModel.onEvent(RecipeEvent.ClickedExpandIngredientsList)
-                            },
-                            modifier = Modifier
-                                .align(Alignment.CenterEnd)
-                                .rotate(
-                                    degrees = dropdownArrowIngredientsListState
-                                )
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.KeyboardArrowDown,
-                                contentDescription = null
-                            )
-                        }
-
+                            }
+                        )
                     }
 
                     if (state.isIngredientsListExpanded) {
@@ -380,15 +365,9 @@ fun RecipeScreen(
                         ingredients.forEach { ingredient ->
                             SearchProductItem(
                                 weight = ingredient.weight,
-                                unit = ingredient.product.unit,
-                                name = ingredient.product.name,
-                                clickable = false,
-                                calories = ingredient.product.calculateNutritionValues(
-                                    ingredient.weight
-                                ).calories,
-                                onItemClick = {
-
-                                },
+                                unit = stringResource(id = ingredient.measurementUnit.getDisplayValue()),
+                                name = ingredient.productName,
+                                calories = ingredient.nutritionValues.calories,
                                 background = Color.Transparent
                             )
                         }
@@ -414,7 +393,10 @@ fun RecipeScreen(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(imageVector = Icons.Default.Edit, contentDescription = null)
+                    Icon(
+                        imageVector = Icons.Default.Edit,
+                        contentDescription = null
+                    )
 
                     Spacer(modifier = Modifier.width(12.dp))
 

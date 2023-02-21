@@ -1,6 +1,8 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model
 
+import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.MeasurementUnit
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValues
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.product.NutritionValuesIn
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -9,8 +11,8 @@ data class Product(
     val name: String = "",
     val containerWeight: Int = 0,
     val timestamp:Long = System.currentTimeMillis(),
-    val position: Int = 0,
-    val unit: String = "g",
+    val nutritionValuesIn: NutritionValuesIn = NutritionValuesIn.HUNDRED_GRAMS,
+    val measurementUnit: MeasurementUnit = MeasurementUnit.GRAMS,
     val nutritionValues: NutritionValues = NutritionValues(),
     val barcode: String? = "",
     val price: Price? = null,

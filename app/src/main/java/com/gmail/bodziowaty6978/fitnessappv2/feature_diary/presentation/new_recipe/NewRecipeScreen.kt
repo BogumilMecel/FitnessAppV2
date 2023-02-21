@@ -28,7 +28,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_reci
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.ProductMainSection
 import com.ramcosta.composedestinations.annotation.Destination
 
-@Destination
+@Destination(navArgsDelegate = NewRecipeNavArguments::class)
 @Composable
 fun NewRecipeScreen(
     viewModel: NewRecipeViewModel = hiltViewModel()
@@ -37,20 +37,7 @@ fun NewRecipeScreen(
 
     Scaffold(
         floatingActionButton = {
-            if (state.isRecipeSectionVisible) {
-                ExtendedFloatingActionButton(
-                    onClick = { viewModel.onEvent(NewRecipeEvent.ClickedSaveRecipe) },
-                    text = {
-                        Text(
-                            text = "SAVE RECIPE",
-                            style = MaterialTheme.typography.button
-                        )
-                    },
-                    icon = {
-                        Icon(imageVector = Icons.Default.Save, contentDescription = null)
-                    }
-                )
-            } else if (state.isProductSectionVisible) {
+            if (state.isProductSectionVisible) {
                 ExtendedFloatingActionButton(
                     onClick = { viewModel.onEvent(NewRecipeEvent.ClickedSaveProduct) },
                     text = {

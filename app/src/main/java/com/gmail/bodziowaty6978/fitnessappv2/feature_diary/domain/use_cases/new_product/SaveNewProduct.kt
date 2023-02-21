@@ -1,67 +1,76 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.new_product
 
 import com.gmail.bodziowaty6978.fitnessappv2.R
+import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.MeasurementUnit
+import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
-import com.gmail.bodziowaty6978.fitnessappv2.common.util.extensions.round
+import com.gmail.bodziowaty6978.fitnessappv2.common.util.extensions.toValidDouble
+import com.gmail.bodziowaty6978.fitnessappv2.common.util.extensions.toValidInt
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.product.NewProductRequest
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.product.NutritionValuesIn
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 
 class SaveNewProduct(
     private val diaryRepository: DiaryRepository,
     private val resourceProvider: ResourceProvider,
-    private val calculateNutritionValuesIn100G: CalculateNutritionValuesIn100G
 ) {
 
     suspend operator fun invoke(
         name: String,
         containerWeight: String,
-        position: Int,
-        unit: String,
+        nutritionValuesIn: NutritionValuesIn,
+        measurementUnit: MeasurementUnit,
         calories: String,
         carbohydrates: String,
         protein: String,
         fat: String,
         barcode: String,
     ): Resource<Product> {
-        val caloriesValue = calories.toIntOrNull()
-        val carbohydratesValue = carbohydrates.toDoubleOrNull()
-        val proteinValue = protein.toDoubleOrNull()
-        val fatValue = fat.toDoubleOrNull()
-        val containerWeightValue = containerWeight.toIntOrNull()
+        val caloriesValue = calories.toValidInt()
+        val carbohydratesValue = carbohydrates.toValidDouble()
+        val proteinValue = protein.toValidDouble()
+        val fatValue = fat.toValidDouble()
+        val containerWeightValue = containerWeight.toValidInt()
 
-        if (name.isBlank()) {
-            return Resource.Error(resourceProvider.getString(R.string.please_make_product_name_is_not_empty))
-        }
-        if(name.length>24||name.length<4){
-            return Resource.Error(resourceProvider.getString(R.string.please_make_sure_the_product_name_is_not_longer_than_24_characters_and_not_shorter_than_3))
-        }
-        if (caloriesValue==null||carbohydratesValue==null||proteinValue==null||fatValue==null||containerWeightValue==null){
-            return Resource.Error(resourceProvider.getString(R.string.please_make_sure_all_fields_are_filled_in_correctly))
-        }
-        if (position != 0) {
-            if (containerWeight.isBlank()) {
-                return Resource.Error(resourceProvider.getString(R.string.please_make_sure_all_fields_are_filled_in_correctly))
-            }
-        }
-
-        val product = Product(
-            name = name,
-            containerWeight = containerWeightValue,
-            position = position,
-            unit = unit,
-            barcode = barcode.ifBlank { null },
-            nutritionValues = calculateNutritionValuesIn100G(
-                calories = caloriesValue,
-                carbohydrates = carbohydratesValue.round(2),
-                protein = proteinValue.round(2),
-                fat = fatValue.round(2),
-                weight = containerWeightValue
+        return if (name.isBlank()) {
+            Resource.Error(resourceProvider.getString(R.string.new_product_empty_name))
+        } else if (name.length > 48) {
+            Resource.Error(resourceProvider.getString(R.string.new_product_wrong_name_length_long))
+        } else if (name.length < 4) {
+            Resource.Error(resourceProvider.getString(R.string.new_product_wrong_name_length_short))
+        } else if (caloriesValue == null || carbohydratesValue == null || proteinValue == null || fatValue == null) {
+            Resource.Error(resourceProvider.getString(R.string.new_product_bad_nutrition_values))
+        } else if (!validateContainerWeight(nutritionValuesIn = nutritionValuesIn, containerWeight = containerWeightValue)) {
+            Resource.Error(resourceProvider.getString(R.string.new_product_bad_container_weight))
+        } else {
+            val newProductRequest = NewProductRequest(
+                name = name,
+                measurementUnit = measurementUnit,
+                containerWeight = containerWeightValue ?: 100,
+                barcode = barcode.ifEmpty { null },
+                nutritionValues = NutritionValues(
+                    calories = caloriesValue,
+                    carbohydrates = carbohydratesValue,
+                    protein = proteinValue,
+                    fat = fatValue
+                ),
+                nutritionValuesIn = nutritionValuesIn,
+                timestamp = System.currentTimeMillis()
             )
-        )
 
-        return diaryRepository.saveNewProduct(
-            product = product
-        )
+            diaryRepository.saveNewProduct(
+                newProductRequest = newProductRequest
+            )
+        }
+    }
+
+    private fun validateContainerWeight(
+        nutritionValuesIn: NutritionValuesIn,
+        containerWeight: Int?
+    ) = when (nutritionValuesIn) {
+        NutritionValuesIn.HUNDRED_GRAMS -> true
+        else -> !(containerWeight == null || containerWeight <= 0)
     }
 }

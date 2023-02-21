@@ -11,6 +11,9 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Price
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntryPostRequest
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.product.NewPriceRequest
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.product.NewProductRequest
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.NewRecipeRequest
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntryRequest
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.repository.DiaryRepository
@@ -83,10 +86,9 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun saveNewProduct(product: Product): Resource<Product> {
+    override suspend fun saveNewProduct(newProductRequest: NewProductRequest): Resource<Product> {
         return try {
-            val newProduct = diaryApi.insertProduct(product = product)
-            Resource.Success(data = newProduct)
+            Resource.Success(data = diaryApi.insertProduct(newProductRequest = newProductRequest))
         } catch (e: Exception) {
             handleExceptionWithResource(exception = e)
         }
@@ -121,11 +123,11 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun addNewPrice(price: Price, productId: String): Resource<Price> {
+    override suspend fun addNewPrice(newPriceRequest: NewPriceRequest): Resource<Price> {
         return try {
             Resource.Success(
                 data = diaryApi.addNewPriceForProduct(
-                    price = price, productId = productId
+                    newPriceRequest = newPriceRequest
                 )
             )
         } catch (e: Exception) {
@@ -133,13 +135,9 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun addNewRecipe(recipe: Recipe, timestamp: Long): Resource<Recipe> {
+    override suspend fun addNewRecipe(newRecipeRequest: NewRecipeRequest): Resource<Recipe> {
         return try {
-            Resource.Success(
-                data = diaryApi.addNewRecipe(
-                    recipe = recipe, timestamp = timestamp
-                )
-            )
+            Resource.Success(data = diaryApi.addNewRecipe(newRecipeRequest = newRecipeRequest))
         } catch (e: Exception) {
             handleExceptionWithResource(exception = e)
         }

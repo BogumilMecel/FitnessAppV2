@@ -24,7 +24,7 @@ val BlueViolet3 = Color(0xff8f98fd)
 
 val DarkGrey = Color(0xFF121212)
 val DarkGreyElevation9 = Color(0xFF323232)
-val DarkGreyElevation6 = Color(0xFF2e2e2e)
+val DarkGreyElevation6 = Color(0xFF2b2b2b)
 val DarkGreyElevation3 = Color(0xFF292929)
 val DarkGreyElevation1 = Color(0xFF181818)
 val Grey = Color(0xFF1e1e1e)

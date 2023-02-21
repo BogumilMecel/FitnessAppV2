@@ -1,16 +1,15 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
-import com.gmail.bodziowaty6978.fitnessappv2.common.util.extensions.TAG
 import com.gmail.bodziowaty6978.fitnessappv2.destinations.NewProductScreenDestination
 import com.gmail.bodziowaty6978.fitnessappv2.destinations.NewRecipeScreenDestination
 import com.gmail.bodziowaty6978.fitnessappv2.destinations.ProductScreenDestination
 import com.gmail.bodziowaty6978.fitnessappv2.destinations.RecipeScreenDestination
+import com.gmail.bodziowaty6978.fitnessappv2.destinations.SearchScreenDestination
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.search.SearchDiaryUseCases
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator.navigate
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,18 +26,12 @@ class SearchViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
 ) : BaseViewModel() {
 
-    private val _searchState = MutableStateFlow(SearchState())
+    private val _searchState = MutableStateFlow(
+        SearchState(
+            mealName = SearchScreenDestination.argsFrom(savedStateHandle).mealName
+        )
+    )
     val searchState: StateFlow<SearchState> = _searchState
-
-    init {
-        savedStateHandle.get<String>("mealName")?.let { mealName ->
-            _searchState.update {
-                it.copy(
-                    mealName = mealName
-                )
-            }
-        }
-    }
 
     fun onEvent(event: SearchEvent) {
         when (event) {
@@ -77,27 +70,21 @@ class SearchViewModel @Inject constructor(
             }
 
             is SearchEvent.ClickedProduct -> {
-                Log.e(TAG, "clicked product")
-                savedStateHandle.get<String>("mealName")?.let { mealName ->
-                    Log.e(TAG, "navigate product")
-                    navigateTo(
-                        ProductScreenDestination(
-                            product = event.product,
-                            mealName = mealName
-                        )
+                navigateTo(
+                    ProductScreenDestination(
+                        product = event.product,
+                        mealName = _searchState.value.mealName
                     )
-                } ?: onError(resourceProvider.getString(R.string.unknown_error))
+                )
             }
 
             is SearchEvent.ClickedNewProduct -> {
-                savedStateHandle.get<String>("mealName")?.let {
                     navigateTo(
                         NewProductScreenDestination(
-                            mealName = it,
-                            barcode = _searchState.value.barcode ?: ""
+                            mealName = _searchState.value.mealName,
+                            barcode = _searchState.value.barcode
                         )
                     )
-                } ?: onError(resourceProvider.getString(R.string.unknown_error))
             }
 
             is SearchEvent.ClickedScanButton -> {
@@ -122,7 +109,7 @@ class SearchViewModel @Inject constructor(
             }
 
             is SearchEvent.ClickedCreateNewRecipe -> {
-                navigateTo(NewRecipeScreenDestination)
+                navigateTo(NewRecipeScreenDestination(mealName = _searchState.value.mealName))
             }
 
             is SearchEvent.ClickedProductsTab -> {
@@ -144,7 +131,12 @@ class SearchViewModel @Inject constructor(
             }
 
             is SearchEvent.ClickedRecipe -> {
-                navigateTo(RecipeScreenDestination(recipe = event.recipe, mealName = ""))
+                navigateTo(
+                    RecipeScreenDestination(
+                        recipe = event.recipe,
+                        mealName = _searchState.value.mealName
+                    )
+                )
             }
         }
     }
@@ -227,24 +219,14 @@ class SearchViewModel @Inject constructor(
                     showSnackbarError(resource.uiText)
                 }
             } else {
-                savedStateHandle.get<String>("mealName")?.let { mealName ->
-                    resource.data?.let { product ->
-                        navigate(
-                            ProductScreenDestination(
-                                product = product,
-                                mealName = mealName
-                            )
+                resource.data?.let { product ->
+                    navigate(
+                        ProductScreenDestination(
+                            product = product,
+                            mealName = _searchState.value.mealName
                         )
-                    }
-                } ?: showSnackbarError(resourceProvider.getString(R.string.unknown_error))
-            }
-        }
-    }
-
-    private fun onError(errorMessage: String?) {
-        if (errorMessage != null) {
-            viewModelScope.launch {
-                showSnackbarError(errorMessage)
+                    )
+                }
             }
         }
     }

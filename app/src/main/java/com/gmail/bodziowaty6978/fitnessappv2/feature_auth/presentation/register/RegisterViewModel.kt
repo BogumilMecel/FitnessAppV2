@@ -3,7 +3,6 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_auth.presentation.register
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavOptions
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.TextFieldState
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
@@ -81,9 +80,8 @@ class RegisterViewModel @Inject constructor(
                     if (result is CustomResult.Error){
                         showSnackbarError(result.message)
                     }else{
-                        navigateTo(
-                            destination = SplashScreenDestination,
-                            navOptions = NavOptions.Builder().setPopUpTo(0, true).build()
+                        navigateWithPopUp(
+                            destination = SplashScreenDestination
                         )
                     }
                     _isLoading.value = false

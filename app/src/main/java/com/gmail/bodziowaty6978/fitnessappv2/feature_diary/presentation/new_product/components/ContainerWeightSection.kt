@@ -15,6 +15,9 @@ import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,7 +34,6 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_prod
 
 @Composable
 fun ContainerWeightSection(
-    containerWeightText: String,
     state: NewProductState,
     onEvent: (NewProductEvent) -> Unit
 ) {
@@ -43,7 +45,11 @@ fun ContainerWeightSection(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = containerWeightText,
+            text = when (state.nutritionValuesInSelectedTabIndex) {
+                1 -> stringResource(R.string.container_weight) + "*"
+                2 -> stringResource(R.string.average_weight) + "*"
+                else -> stringResource(R.string.container_weight)
+            },
             style = MaterialTheme.typography.body1,
             modifier = Modifier.weight(0.3F)
         )
@@ -84,14 +90,14 @@ fun ContainerWeightSection(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = state.dropDownItems.getOrNull(state.dropDownSelectedIndex) ?: "",
+                    text = stringResource(id = state.selectedMeasurementUnit.getDisplayValue()),
                     style = MaterialTheme.typography.body1,
                     modifier = Modifier
                         .padding(horizontal = 15.dp, vertical = 15.dp)
 
                 )
                 Icon(
-                    imageVector = state.dropDownMenuImageVector,
+                    imageVector = if (state.isDropDownMenuExpanded) Icons.Default.ArrowDropUp else Icons.Default.ArrowDropDown,
                     contentDescription = "DropDown",
                     modifier = Modifier
                         .padding(end = 10.dp)
@@ -103,16 +109,16 @@ fun ContainerWeightSection(
                         onEvent(NewProductEvent.ClickedDropDownMenu)
                     }
                 ) {
-                    state.dropDownItems.forEachIndexed { index, item ->
+                    state.measurementUnits.forEach { item ->
                         DropdownMenuItem(
                             onClick = {
-                                onEvent(NewProductEvent.ClickedDropDownMenuItem(index))
+                                onEvent(NewProductEvent.SelectedMeasurementUnit(item))
                             },
                             modifier = Modifier
-                                .testTag(item + "DROPDOWN_MENU_ITEM")
+                                .testTag(stringResource(id = item.getDisplayValue()) + "DROPDOWN_MENU_ITEM")
                         ) {
                             Text(
-                                text = item,
+                                text = stringResource(id = item.getDisplayValue()),
                                 style = MaterialTheme.typography.body1
                             )
                         }

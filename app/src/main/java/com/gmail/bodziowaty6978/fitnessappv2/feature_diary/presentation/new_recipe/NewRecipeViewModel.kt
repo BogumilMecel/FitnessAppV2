@@ -1,8 +1,12 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_recipe
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
-import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
+import com.gmail.bodziowaty6978.fitnessappv2.destinations.NewRecipeScreenDestination
+import com.gmail.bodziowaty6978.fitnessappv2.destinations.RecipeScreenDestination
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Price
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.calculateNutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.Ingredient
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.new_recipe.NewRecipeUseCases
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_recipe.util.SelectedNutritionType
@@ -16,20 +20,16 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NewRecipeViewModel @Inject constructor(
-    private val newRecipeUseCases: NewRecipeUseCases
+    private val newRecipeUseCases: NewRecipeUseCases,
+    savedStateHandle: SavedStateHandle
 ) : BaseViewModel() {
 
-    private val _state = MutableStateFlow(NewRecipeState())
+    private val _state = MutableStateFlow(
+        NewRecipeState(
+            mealName = NewRecipeScreenDestination.argsFrom(savedStateHandle).mealName
+        )
+    )
     val state: StateFlow<NewRecipeState> = _state
-
-    init {
-        _state.update {
-            it.copy(
-                times = listOf("15 min", "30 min", "45 min", "60+ min"),
-                difficulties = listOf("1", "2", "3", "4", "5")
-            )
-        }
-    }
 
     fun onEvent(event: NewRecipeEvent) {
         when (event) {
@@ -66,7 +66,7 @@ class NewRecipeViewModel @Inject constructor(
             is NewRecipeEvent.SelectedDifficulty -> {
                 _state.update {
                     it.copy(
-                        selectedDifficulty = it.difficulties[event.index],
+                        selectedDifficulty = event.difficulty,
                         isDifficultyExpanded = !it.isDifficultyExpanded
                     )
                 }
@@ -85,7 +85,7 @@ class NewRecipeViewModel @Inject constructor(
             is NewRecipeEvent.SelectedTime -> {
                 _state.update {
                     it.copy(
-                        selectedTime = it.times[event.index].split(" ").getOrNull(0) ?: "15",
+                        selectedTime = event.time,
                         isTimeExpanded = !it.isTimeExpanded
                     )
                 }
@@ -152,80 +152,127 @@ class NewRecipeViewModel @Inject constructor(
             is NewRecipeEvent.ClickedSaveRecipe -> {
                 saveNewRecipe()
             }
+
+            is NewRecipeEvent.SwitchedPublic -> {
+                _state.update {
+                    it.copy(
+                        isRecipePublic = event.value
+                    )
+                }
+            }
+
+            is NewRecipeEvent.ClickedIngredientsListArrow -> {
+                _state.update {
+                    it.copy(
+                        isIngredientsListExpanded = !it.isIngredientsListExpanded
+                    )
+                }
+            }
         }
     }
 
     private fun saveNewRecipe() {
         viewModelScope.launch {
-            val state = _state.value
-            val resource = newRecipeUseCases.addNewRecipe(
-                ingredients = state.ingredients,
-                time = state.selectedTime,
-                servings = state.servings,
-                difficulty = state.selectedDifficulty,
-                recipeName = state.name,
-                nutritionValues = state.nutritionData.nutritionValues,
-                userId = sharedPreferencesUtils.getUserId(),
-                username = sharedPreferencesUtils.getUsername()
-            )
-            when (resource) {
-                is Resource.Success -> {
-
-                }
-
-                is Resource.Error -> {
-                    showSnackbarError(resource.uiText)
+            with(_state.value) {
+                newRecipeUseCases.addNewRecipe(
+                    ingredients = ingredients,
+                    time = selectedTime,
+                    servings = servings,
+                    difficulty = selectedDifficulty,
+                    recipeName = name,
+                    isRecipePublic = isRecipePublic
+                ).handle {
+                    navigateTo(
+                        destination = RecipeScreenDestination(
+                            recipe = it,
+                            mealName = mealName
+                        )
+                    )
                 }
             }
         }
     }
 
     private fun addProductToRecipe() {
-        _state.value.selectedProduct?.let { product ->
-            val productWeight = _state.value.productWeight.toIntOrNull()
-            productWeight?.let { weight ->
-                val newRecipeList = _state.value.ingredients.toMutableList()
-                newRecipeList.removeIf { it.product == product }
-                newRecipeList.add(
-                    Ingredient(
-                        weight = weight,
-                        product = product
-                    )
-                )
-                _state.update {
-                    it.copy(
-                        ingredients = newRecipeList
-                    )
+        viewModelScope.launch(Dispatchers.Default) {
+            with(_state.value) {
+                selectedProduct?.let { product ->
+                    productWeight.toIntOrNull()?.let { weight ->
+                        val newIngredients = ingredients.toMutableList()
+                        newIngredients.removeIf { it.productId == selectedProduct.id }
+                        newIngredients.add(
+                            Ingredient(
+                                weight = weight,
+                                productName = selectedProduct.name,
+                                measurementUnit = selectedProduct.measurementUnit,
+                                nutritionValues = selectedProduct.calculateNutritionValues(weight),
+                                productId = selectedProduct.id
+                            )
+                        )
+                        _state.update {
+                            it.copy(
+                                ingredients = newIngredients
+                            )
+                        }
+                        recalculatePrice(price = selectedProduct.price, weight = weight)
+                        changeState(isRecipeSectionVisible = true)
+                    }
                 }
-                changeState(isRecipeSectionVisible = true)
+                calculateRecipeInformation()
             }
         }
-        calculateRecipeInformation()
     }
 
     private fun calculateRecipeInformation() {
         viewModelScope.launch(Dispatchers.Default) {
-            val servings: Int? =
-                if (_state.value.selectedNutritionType is SelectedNutritionType.Recipe) 1 else _state.value.servings.toIntOrNull()
-            servings?.let {
-                if (servings > 0) {
-                    val newPrice = newRecipeUseCases.calculateRecipePrice(
-                        ingredients = _state.value.ingredients,
-                        servings = servings
-                    )
-                    _state.update {
-                        it.copy(
-                            nutritionData = it.nutritionData.copy(
-                                nutritionValues = newRecipeUseCases.calculateRecipeNutritionValues(
-                                    servings = servings,
-                                    ingredients = _state.value.ingredients
-                                )
-                            ),
-                            recipePrice = newPrice.first,
-                            shouldShowPriceWarning = newPrice.second
-                        )
+            with(_state.value) {
+                val servings: Int? =
+                    if (selectedNutritionType is SelectedNutritionType.Recipe) 1 else servings.toIntOrNull()
+                servings?.let {
+                    if (servings > 0) {
+                        val newPrice = recipePrice?.let { price ->
+                            newRecipeUseCases.calculatePricePerServingUseCase(
+                                price = price,
+                                servings = servings
+                            )
+                        }
+                        _state.update {
+                            it.copy(
+                                nutritionData = it.nutritionData.copy(
+                                    nutritionValues = newRecipeUseCases.calculateRecipeNutritionValues(
+                                        servings = servings,
+                                        ingredients = ingredients
+                                    )
+                                ),
+                                recipePrice = newPrice
+                            )
+                        }
                     }
                 }
+            }
+        }
+    }
+
+    private fun recalculatePrice(price: Price?, weight: Int) {
+        val newPrice = price?.let {
+            newRecipeUseCases.calculatePrice(
+                price = price,
+                weight = weight
+            )
+        }
+        with(_state.value) {
+            _state.update {
+                it.copy(
+                    recipePrice = if (recipePrice == null && newPrice != null) newPrice else {
+                        newPrice?.let { newPrice ->
+                            recipePrice?.let { currentPrice ->
+                                currentPrice.copy(
+                                    value = currentPrice.value + newPrice.value
+                                )
+                            }
+                        }
+                    }
+                )
             }
         }
     }
@@ -246,20 +293,13 @@ class NewRecipeViewModel @Inject constructor(
 
     private fun getProducts() {
         viewModelScope.launch {
-            val resource = newRecipeUseCases.searchForProducts(
+            newRecipeUseCases.searchForProducts(
                 searchText = _state.value.searchText
-            )
-            when (resource) {
-                is Resource.Error -> {
-                    showSnackbarError(resource.uiText)
-                }
-
-                is Resource.Success -> {
-                    _state.update {
-                        it.copy(
-                            searchItems = resource.data
-                        )
-                    }
+            ).handle { products ->
+                _state.update {
+                    it.copy(
+                        searchItems = products
+                    )
                 }
             }
         }

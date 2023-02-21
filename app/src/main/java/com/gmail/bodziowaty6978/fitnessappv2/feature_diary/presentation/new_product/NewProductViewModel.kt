@@ -1,16 +1,12 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_product
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
-import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
+import com.gmail.bodziowaty6978.fitnessappv2.destinations.NewProductScreenDestination
 import com.gmail.bodziowaty6978.fitnessappv2.destinations.ProductScreenDestination
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.product.NutritionValuesIn
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.new_product.SaveNewProduct
-import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator.navigate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,22 +18,16 @@ import javax.inject.Inject
 @HiltViewModel
 class NewProductViewModel @Inject constructor(
     private val saveNewProduct: SaveNewProduct,
-    private val savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle
 ) : BaseViewModel() {
 
-    private val _state = MutableStateFlow(NewProductState())
+    private val _state = MutableStateFlow(
+        NewProductState(
+            mealName = NewProductScreenDestination.argsFrom(savedStateHandle).mealName,
+            barcode = NewProductScreenDestination.argsFrom(savedStateHandle).barcode ?: "",
+        )
+    )
     val state: StateFlow<NewProductState> = _state
-
-    init{
-        val barcode = savedStateHandle.get<String>("barcode")
-        if (!barcode.isNullOrBlank()){
-            _state.update {
-                it.copy(
-                    barcode = barcode
-                )
-            }
-        }
-    }
 
     fun onEvent(event: NewProductEvent) {
         when (event) {
@@ -47,19 +37,12 @@ class NewProductViewModel @Inject constructor(
                         isDropDownMenuExpanded = !it.isDropDownMenuExpanded
                     )
                 }
-                _state.update {
-                    it.copy(
-                        dropDownMenuImageVector = if (_state.value.isDropDownMenuExpanded) {
-                            Icons.Default.ArrowDropUp
-                        } else {
-                            Icons.Default.ArrowDropDown
-                        }
-                    )
-                }
             }
+
             is NewProductEvent.ClickedBackArrow -> {
                 navigateUp()
             }
+
             is NewProductEvent.EnteredProductName -> {
                 _state.update {
                     it.copy(
@@ -67,57 +50,36 @@ class NewProductViewModel @Inject constructor(
                     )
                 }
             }
-            is NewProductEvent.ClickedDropDownMenuItem -> {
+
+            is NewProductEvent.SelectedMeasurementUnit -> {
                 _state.update {
                     it.copy(
-                        dropDownSelectedIndex = event.position,
+                        selectedMeasurementUnit = event.measurementUnit,
                         isDropDownMenuExpanded = false
                     )
                 }
             }
+
             is NewProductEvent.ClickedNutritionTab -> {
                 _state.update {
                     it.copy(
-                        nutritionSelectedTabIndex = event.position
+                        nutritionValuesInSelectedTabIndex = event.position
                     )
                 }
-                when (event.position) {
-                    0 -> {
-                        _state.update {
-                            it.copy(
-                                containerWeight = resourceProvider.getString(R.string.container_weight)
-                            )
-                        }
-                    }
-
-                    1 -> {
-                        _state.update {
-                            it.copy(
-                                containerWeight = resourceProvider.getString(R.string.container_weight) + "*"
-                            )
-                        }
-                    }
-
-                    2 -> {
-                        _state.update {
-                            it.copy(
-                                containerWeight = resourceProvider.getString(R.string.average_weight) + "*"
-                            )
-                        }
-                    }
-                }
             }
+
             is NewProductEvent.EnteredCalories -> {
                 _state.update {
                     it.copy(
-                        calories = event.calories.replace(",", "").replace(".", "")
+                        calories = event.calories
                     )
                 }
             }
+
             is NewProductEvent.EnteredCarbohydrates -> {
                 _state.update {
                     it.copy(
-                        carbohydrates = event.carbohydrates.replace(",", ".")
+                        carbohydrates = event.carbohydrates
                     )
                 }
             }
@@ -125,7 +87,7 @@ class NewProductViewModel @Inject constructor(
             is NewProductEvent.EnteredProtein -> {
                 _state.update {
                     it.copy(
-                        protein = event.protein.replace(",", ".")
+                        protein = event.protein
                     )
                 }
             }
@@ -133,7 +95,7 @@ class NewProductViewModel @Inject constructor(
             is NewProductEvent.EnteredFat -> {
                 _state.update {
                     it.copy(
-                        fat = event.fat.replace(",", ".")
+                        fat = event.fat
                     )
                 }
             }
@@ -141,7 +103,7 @@ class NewProductViewModel @Inject constructor(
             is NewProductEvent.EnteredContainerWeight -> {
                 _state.update {
                     it.copy(
-                        containerWeightValue = event.containerWeight.replace(",",".")
+                        containerWeightValue = event.containerWeight
                     )
                 }
             }
@@ -152,29 +114,27 @@ class NewProductViewModel @Inject constructor(
                         it.copy(isLoading = true)
                     }
 
-                    val state = _state.value
-
-                    val resource = saveNewProduct(
-                        name = state.productName,
-                        containerWeight = state.containerWeightValue,
-                        position = state.nutritionSelectedTabIndex,
-                        unit = state.dropDownItems[state.dropDownSelectedIndex],
-                        barcode = state.barcode,
-                        calories = state.calories,
-                        carbohydrates = state.carbohydrates,
-                        protein = state.protein,
-                        fat = state.fat,
-                    )
-
-                    if(resource is Resource.Error){
-                        showSnackbarError(resource.uiText)
-                    }else{
-                        savedStateHandle.get<String>("mealName")?.let { mealName ->
-                            resource.data?.let { product ->
-                                navigate(ProductScreenDestination(mealName = mealName, product = product))
-                            }
+                    with(_state.value) {
+                        saveNewProduct(
+                            name = productName,
+                            containerWeight = containerWeightValue,
+                            nutritionValuesIn = NutritionValuesIn.getValueFromIndex(nutritionValuesInSelectedTabIndex),
+                            measurementUnit = selectedMeasurementUnit,
+                            barcode = barcode,
+                            calories = calories,
+                            carbohydrates = carbohydrates,
+                            protein = protein,
+                            fat = fat
+                        ).handle { product ->
+                            navigateWithPopUp(
+                                destination = ProductScreenDestination(
+                                    mealName = _state.value.mealName,
+                                    product = product
+                                )
+                            )
                         }
                     }
+
                     _state.update {
                         it.copy(
                             isLoading = false
@@ -182,14 +142,16 @@ class NewProductViewModel @Inject constructor(
                     }
                 }
             }
+
             is NewProductEvent.EnteredBarcode -> {
                 _state.update {
                     it.copy(
-                        barcode = event.barcode.replace(".","").replace(",",""),
+                        barcode = event.barcode,
                         isScannerVisible = false
                     )
                 }
             }
+
             is NewProductEvent.ClickedScannerButton -> {
                 _state.update {
                     it.copy(
@@ -197,6 +159,7 @@ class NewProductViewModel @Inject constructor(
                     )
                 }
             }
+
             is NewProductEvent.ClosedScanner -> {
                 _state.update {
                     it.copy(
@@ -204,15 +167,6 @@ class NewProductViewModel @Inject constructor(
                     )
                 }
             }
-        }
-    }
-
-    fun initData() {
-        _state.update {
-            it.copy(
-                containerWeight = resourceProvider.getString(R.string.container_weight),
-                dropDownItems = resourceProvider.getStringArray(R.array.units)
-            )
         }
     }
 }

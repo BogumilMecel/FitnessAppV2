@@ -33,6 +33,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValues
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.DefaultCardBackground
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.TextWhite
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Price
 
@@ -49,10 +50,8 @@ fun PriceSection(
     onForEntered: (String) -> Unit,
     onSubmitPriceClicked: () -> Unit
 ) {
-    Card(
+    DefaultCardBackground(
         modifier = modifier,
-        shape = RoundedCornerShape(if (price != null) 10 else 15),
-        elevation = 3.dp
     ) {
         Column(
             modifier = Modifier

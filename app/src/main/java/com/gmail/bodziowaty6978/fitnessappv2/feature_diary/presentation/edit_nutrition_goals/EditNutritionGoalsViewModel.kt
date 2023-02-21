@@ -93,7 +93,7 @@ class EditNutritionGoalsViewModel @Inject constructor(
                 }
 
                 is Resource.Success -> {
-                    navigateTo(AccountScreenDestination)
+                    navigateWithPopUp(AccountScreenDestination)
                 }
             }
         }

@@ -22,11 +22,10 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.data.api.DiaryApi
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.data.repository.remote.DiaryRepositoryImp
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.diary.*
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.new_product.CalculateNutritionValuesIn100G
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.new_product.SaveNewProduct
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.new_recipe.AddNewRecipe
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.new_recipe.CalculatePrice
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.new_recipe.CalculateRecipeNutritionValues
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.new_recipe.CalculateRecipePrice
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.new_recipe.NewRecipeUseCases
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.product.*
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.recipe.PostRecipeDiaryEntryUseCase
@@ -76,7 +75,10 @@ object AppModule {
     @Singleton
     fun provideMasterKeyAlias(
         @ApplicationContext context: Context
-    ): MasterKey = MasterKey.Builder(context, MasterKey.DEFAULT_MASTER_KEY_ALIAS)
+    ): MasterKey = MasterKey.Builder(
+        context,
+        MasterKey.DEFAULT_MASTER_KEY_ALIAS
+    )
         .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
         .build()
 
@@ -273,7 +275,7 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideCalculateRecipePriceUseCase(): CalculateRecipePrice = CalculateRecipePrice()
+    fun provideCalculateRecipePriceUseCase(): CalculatePrice = CalculatePrice()
 
     @Singleton
     @Provides
@@ -289,18 +291,19 @@ object AppModule {
     @Provides
     fun provideNewRecipeUseCases(
         addNewRecipe: AddNewRecipe,
-        calculateRecipePrice: CalculateRecipePrice,
+        calculatePrice: CalculatePrice,
         calculateRecipeNutritionValues: CalculateRecipeNutritionValues,
         createPieChartData: CreatePieChartData,
         searchForProducts: SearchForProducts,
         calculateProductNutritionValues: CalculateProductNutritionValues
     ): NewRecipeUseCases = NewRecipeUseCases(
         addNewRecipe = addNewRecipe,
-        calculateRecipePrice = calculateRecipePrice,
+        calculatePrice = calculatePrice,
         calculateRecipeNutritionValues = calculateRecipeNutritionValues,
         createPieChartData = createPieChartData,
         searchForProducts = searchForProducts,
-        calculateProductNutritionValues = calculateProductNutritionValues
+        calculateProductNutritionValues = calculateProductNutritionValues,
+        calculatePricePerServingUseCase = CalculatePricePerServingUseCase()
     )
 
     @Singleton
@@ -310,10 +313,8 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideCalculateRecipeNutritionValues(
-        calculateProductNutritionValues: CalculateProductNutritionValues
-    ): CalculateRecipeNutritionValues =
-        CalculateRecipeNutritionValues(calculateProductNutritionValues = calculateProductNutritionValues)
+    fun provideCalculateRecipeNutritionValues(): CalculateRecipeNutritionValues =
+        CalculateRecipeNutritionValues()
 
     @Singleton
     @Provides
@@ -438,8 +439,10 @@ object AppModule {
                 diaryRepository,
                 resourceProvider = resourceProvider
             ),
-            calculatePriceFor100g = CalculatePriceFor100g(),
-            addNewPrice = AddNewPrice(diaryRepository = diaryRepository)
+            submitNewPriceUseCase = SubmitNewPriceUseCase(
+                diaryRepository = diaryRepository,
+                resourceProvider = resourceProvider
+            )
         )
 
     @Singleton
@@ -449,8 +452,7 @@ object AppModule {
         resourceProvider: ResourceProvider
     ): SaveNewProduct = SaveNewProduct(
         diaryRepository = diaryRepository,
-        resourceProvider = resourceProvider,
-        calculateNutritionValuesIn100G = CalculateNutritionValuesIn100G()
+        resourceProvider = resourceProvider
     )
 
 }

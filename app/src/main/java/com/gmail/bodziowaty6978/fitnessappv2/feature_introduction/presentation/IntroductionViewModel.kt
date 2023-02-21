@@ -3,7 +3,6 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.presentation
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavOptions
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
@@ -111,9 +110,8 @@ class IntroductionViewModel @Inject constructor(
                     if (result is CustomResult.Error) {
                         showSnackbarError(message = result.message)
                     } else {
-                        navigateTo(
-                            destination = SummaryScreenDestination,
-                            navOptions = NavOptions.Builder().setPopUpTo(0, true).build()
+                        navigateWithPopUp(
+                            destination = SummaryScreenDestination
                         )
                     }
                 }

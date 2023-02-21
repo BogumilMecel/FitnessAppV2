@@ -10,5 +10,5 @@ data class RecipeState(
     val nutritionData: NutritionData = NutritionData(),
     val isUserRecipeOwner: Boolean = true,
     val isIngredientsListExpanded: Boolean = false,
-    val isFavorite: Boolean = false
+    val isFavorite: Boolean = false,
 )

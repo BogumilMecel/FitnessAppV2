@@ -6,7 +6,6 @@ import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
 import com.gmail.bodziowaty6978.fitnessappv2.destinations.EditNutritionGoalsScreenDestination
 import com.gmail.bodziowaty6978.fitnessappv2.destinations.LoginScreenDestination
-import com.gmail.bodziowaty6978.fitnessappv2.destinations.SummaryScreenDestination
 import com.gmail.bodziowaty6978.fitnessappv2.feature_account.domain.use_case.DeleteToken
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.product.CreatePieChartData
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.NutritionData
@@ -37,7 +36,7 @@ class AccountViewModel @Inject constructor(
             }
 
             is AccountEvent.BackPressed -> {
-                navigateTo(SummaryScreenDestination)
+                navigateUp()
             }
         }
     }
@@ -67,7 +66,7 @@ class AccountViewModel @Inject constructor(
         viewModelScope.launch {
             val result = deleteToken()
             if (result is CustomResult.Success) {
-                navigateTo(LoginScreenDestination)
+                navigateWithPopUp(LoginScreenDestination)
             } else if (result is CustomResult.Error) {
                 showSnackbarError(result.message)
             }
