@@ -10,19 +10,19 @@ class TokenRepositoryImp(
     private val sharedPreferences: SharedPreferences,
     resourceProvider: ResourceProvider
 ) : TokenRepository, BaseRepository(resourceProvider) {
-    override fun getToken(): Resource<String> {
+    override suspend fun getToken(): Resource<String> {
         return handleRequest {
             sharedPreferences.getString("token", null) ?: throw NullPointerException()
         }
     }
 
-    override fun saveToken(token: String): Resource<Unit> {
+    override suspend fun saveToken(token: String): Resource<Unit> {
         return handleRequest {
             sharedPreferences.edit().putString("token", token).apply()
         }
     }
 
-    override fun deleteToken(): Resource<Unit> {
+    override suspend fun deleteToken(): Resource<Unit> {
         return handleRequest {
             sharedPreferences.edit().remove("token").apply()
         }

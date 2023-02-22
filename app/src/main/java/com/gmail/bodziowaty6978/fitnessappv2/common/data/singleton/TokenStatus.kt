@@ -1,10 +1,15 @@
 package com.gmail.bodziowaty6978.fitnessappv2.common.data.singleton
 
-object TokenStatus {
-    var isTokenPresent:Boolean? = null
-        private set
+import kotlinx.coroutines.channels.Channel
 
-    fun changeTokenStatus(status:Boolean){
-        isTokenPresent = status
+object TokenStatus {
+    val tokenStatus = Channel<Status>()
+
+    suspend fun tokenNotPresent() {
+        tokenStatus.send(Status.UNAVAILABLE)
+    }
+
+    enum class Status {
+        UNAVAILABLE
     }
 }

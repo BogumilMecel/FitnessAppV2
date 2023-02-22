@@ -97,8 +97,8 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideDefaultInterceptor(getToken: GetToken): DefaultInterceptor =
-        DefaultInterceptor(getToken = getToken)
+    fun provideDefaultInterceptor(sharedPreferences: SharedPreferences): DefaultInterceptor =
+        DefaultInterceptor(sharedPreferences = sharedPreferences)
 
     @Singleton
     @Provides
