@@ -14,23 +14,17 @@ class WeighRepositoryImp(
     private val customSharedPreferencesUtils: CustomSharedPreferencesUtils
 ) : WeightRepository, BaseRepository(resourceProvider) {
     override suspend fun getLatestWeightEntries(): Resource<List<WeightEntry>> {
-        return try {
-            Resource.Success(data = customSharedPreferencesUtils.getWeightEntries())
-        } catch (e: Exception) {
-            handleExceptionWithResource(exception = e)
+        return handleRequest {
+            customSharedPreferencesUtils.getWeightEntries()
         }
     }
 
-    override suspend fun addWeightEntry(weightEntry: WeightEntry): Resource<Boolean> {
-        return try {
-            var wasAcknowledged = false
+    override suspend fun addWeightEntry(weightEntry: WeightEntry): Resource<WeightEntry> {
+        return handleRequest {
             if (weightApi.addWeightEntry(weightEntry = weightEntry)) {
                 customSharedPreferencesUtils.updateLatestWeightEntries(weightEntry = weightEntry)
-                wasAcknowledged = true
             }
-            Resource.Success(data = wasAcknowledged)
-        } catch (e: Exception) {
-            handleExceptionWithResource(exception = e)
+            weightEntry
         }
     }
 }

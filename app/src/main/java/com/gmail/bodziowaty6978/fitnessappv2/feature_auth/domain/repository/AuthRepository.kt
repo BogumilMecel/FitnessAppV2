@@ -1,8 +1,8 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_auth.domain.repository
 
-import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.domain.model.LoginRequest
+import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.domain.model.RegisterRequest
 import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.domain.model.TokenResponse
 
 interface AuthRepository {
@@ -12,12 +12,10 @@ interface AuthRepository {
     ): Resource<TokenResponse>
 
     suspend fun registerUser(
-        username: String,
-        email: String,
-        password: String
-    ): CustomResult
+        registerRequest: RegisterRequest
+    ): Resource<Boolean>
 
     suspend fun sendPasswordResetEmail(
         email: String
-    ): CustomResult
+    ): Resource<Boolean>
 }

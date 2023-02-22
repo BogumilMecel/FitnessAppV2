@@ -16,14 +16,11 @@ class LoadingRepositoryImp(
 ) : LoadingRepository, BaseRepository(resourceProvider) {
 
     override suspend fun authenticateUser(authenticationRequest: AuthenticationRequest): Resource<User?> {
-        return try {
-            Resource.Success(loadingApi.authenticate(authenticationRequest)?.let {
+        return handleRequest {
+            loadingApi.authenticate(authenticationRequest = authenticationRequest)?.let {
                 customSharedPreferencesUtils.saveUser(it)
                 it
             }
-            )
-        } catch (e: Exception) {
-            handleExceptionWithResource(exception = e)
         }
     }
 }

@@ -3,7 +3,6 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_auth.domain.use_case
 import android.util.Patterns
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.use_case.SaveToken
-import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.domain.model.LoginRequest
@@ -15,12 +14,12 @@ class LogInUser(
     private val saveToken: SaveToken
 ) {
 
-    suspend operator fun invoke(email: String, password: String): CustomResult {
+    suspend operator fun invoke(email: String, password: String): Resource<Unit> {
         if (email.isBlank() || password.isBlank()) {
-            return CustomResult.Error(resourceProvider.getString(R.string.please_make_sure_all_fields_are_filled_in_correctly))
+            return Resource.Error(resourceProvider.getString(R.string.please_make_sure_all_fields_are_filled_in_correctly))
         }
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            return CustomResult.Error(resourceProvider.getString(R.string.please_make_sure_you_have_entered_correct_email))
+            return Resource.Error(resourceProvider.getString(R.string.please_make_sure_you_have_entered_correct_email))
         }
         val loginResource = repository.logInUser(
             loginRequest = LoginRequest(
@@ -28,16 +27,11 @@ class LogInUser(
                 password = password
             )
         )
-        return when (loginResource) {
-            is Resource.Success -> {
-                if (saveToken(loginResource.data.token)) CustomResult.Success else CustomResult.Error(
-                    resourceProvider.getString(R.string.unknown_error)
-                )
-            }
 
-            is Resource.Error -> {
-                CustomResult.Error(loginResource.uiText)
-            }
+        return if (loginResource is Resource.Success && saveToken(loginResource.data.token)) {
+            Resource.Success(Unit)
+        } else {
+            Resource.Error(loginResource.uiText ?: "")
         }
     }
 }

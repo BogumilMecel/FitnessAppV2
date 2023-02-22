@@ -1,6 +1,5 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.data.repository.remote
 
-import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.DiaryEntry
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product

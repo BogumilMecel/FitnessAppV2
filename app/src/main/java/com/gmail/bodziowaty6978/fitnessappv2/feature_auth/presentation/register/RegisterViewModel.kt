@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.TextFieldState
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
-import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.destinations.LoginScreenDestination
 import com.gmail.bodziowaty6978.fitnessappv2.destinations.SplashScreenDestination
@@ -71,15 +70,12 @@ class RegisterViewModel @Inject constructor(
             is AuthEvent.AuthButtonClicked -> {
                 viewModelScope.launch(Dispatchers.IO) {
                     _isLoading.value = true
-                    val result = authUseCases.registerUser(
+                    authUseCases.registerUser(
                         email = _emailState.value.text,
                         password = _passwordState.value.text,
                         confirmPassword = _confirmPasswordState.value.text,
                         username = _usernameState.value.text
-                    )
-                    if (result is CustomResult.Error){
-                        showSnackbarError(result.message)
-                    }else{
+                    ).handle {
                         navigateWithPopUp(
                             destination = SplashScreenDestination
                         )

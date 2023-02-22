@@ -4,7 +4,6 @@ import androidx.lifecycle.viewModelScope
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.singleton.CurrentDate
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
-import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.destinations.SearchScreenDestination
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Meal
@@ -78,10 +77,7 @@ class DiaryViewModel @Inject constructor(
             is DiaryEvent.ClickedDeleteInDialog -> {
                 _state.value.longClickedDiaryItem?.let { diaryEntry ->
                     viewModelScope.launch(Dispatchers.IO) {
-                        val result = deleteDiaryEntry(diaryEntry.id)
-                        if (result is CustomResult.Error) {
-                            showSnackbarError(result.message)
-                        } else {
+                        deleteDiaryEntry(diaryEntry.id).handle {
                             _state.update {
                                 it.copy(
                                     isDialogShowed = false,

@@ -6,7 +6,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.reposit
 
 class SaveNutritionValues(private val userDataRepository: UserDataRepository) {
 
-    suspend operator fun invoke(nutritionValues: NutritionValues): Resource<Boolean> {
+    suspend operator fun invoke(nutritionValues: NutritionValues): Resource<Unit> {
         return userDataRepository.saveNutritionValues(nutritionValues = nutritionValues)
     }
 }

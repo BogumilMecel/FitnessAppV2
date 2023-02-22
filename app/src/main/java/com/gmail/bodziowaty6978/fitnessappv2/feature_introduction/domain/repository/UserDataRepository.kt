@@ -5,6 +5,6 @@ import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.UserInformation
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 
 interface UserDataRepository {
-    suspend fun saveNutritionValues(nutritionValues: NutritionValues): Resource<Boolean>
-    suspend fun saveUserInformation(userInformation: UserInformation) : Resource<Boolean>
+    suspend fun saveNutritionValues(nutritionValues: NutritionValues): Resource<Unit>
+    suspend fun saveUserInformation(userInformation: UserInformation) : Resource<Unit>
 }
