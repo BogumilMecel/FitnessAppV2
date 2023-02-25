@@ -3,17 +3,15 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.presentation
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
-import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
-import com.gmail.bodziowaty6978.fitnessappv2.destinations.SummaryScreenDestination
-import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.model.Question
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.use_cases.SaveIntroductionInformation
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.presentation.util.IntroductionExpectedQuestionAnswer
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,42 +21,8 @@ class IntroductionViewModel @Inject constructor(
     private val saveIntroductionInformation: SaveIntroductionInformation,
 ) : BaseViewModel() {
 
-    private val _questionState = mutableStateOf(
-        mapOf(
-            IntroductionExpectedQuestionAnswer.Gender to Question(
-                title = resourceProvider.getString(R.string.what_is_your_gender),
-                tiles = resourceProvider.getStringArray(R.array.gender)
-            ),
-            IntroductionExpectedQuestionAnswer.Age to Question(
-                title = resourceProvider.getString(R.string.what_is_your_age),
-            ),
-            IntroductionExpectedQuestionAnswer.Height to Question(
-                title = resourceProvider.getString(R.string.what_is_your_height),
-                unit = "cm",
-            ),
-            IntroductionExpectedQuestionAnswer.CurrentWeight to Question(
-                title = resourceProvider.getString(R.string.what_is_your_current_weight),
-                unit = "kg",
-            ),
-            IntroductionExpectedQuestionAnswer.TypeOfWork to Question(
-                title = resourceProvider.getString(R.string.what_type_of_work_do_you_have),
-                tiles = resourceProvider.getStringArray(R.array.works)
-            ),
-            IntroductionExpectedQuestionAnswer.HowOftenDoYouTrain to Question(
-                title = resourceProvider.getString(R.string.how_often_do_you_train_in_a_week),
-                tiles = resourceProvider.getStringArray(R.array.trainingsPerWeek),
-            ),
-            IntroductionExpectedQuestionAnswer.ActivityDuringADay to Question(
-                title = resourceProvider.getString(R.string.how_would_you_describe_your_activity_level_during_a_day),
-                tiles = resourceProvider.getStringArray(R.array.activity),
-            ),
-            IntroductionExpectedQuestionAnswer.DesiredWeight to Question(
-                title = resourceProvider.getString(R.string.what_is_your_desired_weight),
-                unit = "kg",
-            )
-        )
-    )
-    val questionState: State<Map<IntroductionExpectedQuestionAnswer, Question>> = _questionState
+    private val _state = MutableStateFlow(IntroductionState())
+    val state: StateFlow<IntroductionState> = _state
 
     private val _introductionUiEvent = MutableSharedFlow<IntroductionUiEvent>()
     val introductionUiEvent: SharedFlow<IntroductionUiEvent> = _introductionUiEvent
@@ -103,13 +67,13 @@ class IntroductionViewModel @Inject constructor(
             }
 
             is IntroductionEvent.FinishIntroduction -> {
-                viewModelScope.launch(Dispatchers.IO) {
-                    saveIntroductionInformation(answers = _introductionAnswerState.value).handle {
-                        navigateWithPopUp(
-                            destination = SummaryScreenDestination
-                        )
-                    }
-                }
+//                viewModelScope.launch(Dispatchers.IO) {
+//                    saveIntroductionInformation(answers = _introductionAnswerState.value).handle {
+//                        navigateWithPopUp(
+//                            destination = SummaryScreenDestination
+//                        )
+//                    }
+//                }
             }
         }
     }
