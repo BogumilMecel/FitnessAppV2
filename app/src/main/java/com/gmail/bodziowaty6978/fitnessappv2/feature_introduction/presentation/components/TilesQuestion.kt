@@ -5,27 +5,29 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.model.QuestionName
+import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.model.Tile
 
 @Composable
 fun TilesQuestion(
-    tilesValues: List<String>,
-    currentItem:String,
-    onItemClick:(Int) -> Unit,
+    questionName: QuestionName,
+    currentItem:Tile,
+    onItemClick:(Tile) -> Unit,
 ) {
     Row(
         horizontalArrangement = Arrangement.SpaceAround,
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        tilesValues.forEachIndexed { index, content ->
+        questionName.getQuestionTiles().forEach {
             Tile(
-                content = content,
-                isSelected = index==currentItem.toInt(),
+                content = stringResource(id = it.getDisplayValue()),
+                isSelected = it == currentItem,
                 onItemClick = {
-                    onItemClick(index)
+                    onItemClick(it)
                 }
             )
         }
-
     }
 }

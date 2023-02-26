@@ -28,6 +28,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.extensions.TAG
+import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.model.GenderQuestion
+import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.model.QuestionName
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.model.QuestionType
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.presentation.components.BottomButton
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.presentation.components.QuestionSection
@@ -49,6 +51,7 @@ fun IntroductionScreen(
     viewModel: IntroductionViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle().value
+    val questionSize = QuestionName.values().size
 
     val pagerState = rememberPagerState(initialPage = 0)
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -77,7 +80,7 @@ fun IntroductionScreen(
                 }
 
                 is IntroductionUiEvent.MoveForward -> {
-                    if (pagerState.currentPage != state.questions.size - 1) {
+                    if (pagerState.currentPage != questionSize - 1) {
                         pagerState.animateScrollToPage(pagerState.currentPage + 1)
                         keyboardController?.hide()
                     }
@@ -99,23 +102,44 @@ fun IntroductionScreen(
         )
 
         HorizontalPager(
-            count = state.questions.size,
+            count = questionSize,
             state = pagerState
         ) { index ->
-            val currentQuestion = state.questions[index]
-            QuestionSection(title = stringResource(id = currentQuestion.questionName.getQuestionTitle())) {
-
-                when (currentQuestion.questionType) {
-                    QuestionType.TILE -> {
-                        TilesQuestion(
-                            tilesValues = currentQuestion.,
-                            onItemClick =,
-                            currentItem =
-                        )
+            val currentItem = QuestionName.values().toList()[index]
+            QuestionSection(title = stringResource(id = currentItem.getQuestionTitle())) {
+                when (currentItem.getQuestionType()) {
+                    QuestionType.INPUT -> {
+                        state.getStringAnswer(currentItem)?.let { answer ->
+                            TextQuestion(
+                                text = answer,
+                                onTextEntered = {
+                                    viewModel.onEvent(
+                                        IntroductionEvent.EnteredAnswer(
+                                            questionName = currentItem,
+                                            newValue = it
+                                        )
+                                    )
+                                },
+                                tag = currentItem.name
+                            )
+                        }
                     }
 
-                    QuestionType.INPUT -> {
-
+                    QuestionType.TILE -> {
+                        state.getTileAnswer(questionName = currentItem)?.let {
+                            TilesQuestion(
+                                questionName = currentItem,
+                                currentItem =,
+                                onItemClick = {
+                                    viewModel.onEvent(
+                                        IntroductionEvent.ClickedTile(
+                                            questionName = currentItem,
+                                            tile = it
+                                        )
+                                    )
+                                }
+                            )
+                        }
                     }
                 }
             }
@@ -138,7 +162,7 @@ fun IntroductionScreen(
                 .align(Alignment.BottomCenter)
                 .testTag(stringResource(id = R.string.NEXT)),
             text = stringResource(
-                id = if (pagerState.currentPage == state.questions.size - 1) R.string.finish else R.string.next
+                id = if (pagerState.currentPage == questionSize - 1) R.string.finish else R.string.next
             ),
             onClick = {
                 viewModel.onEvent(IntroductionEvent.ClickedArrowForward)

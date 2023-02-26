@@ -170,6 +170,8 @@
     <string name="introduction_activity_very_high">Very High</string>
     <string name="introduction_male">Male</string>
     <string name="introduction_female">Female</string>
+    <string name="introduction_loose">Loose</string>
+    <string name="introduction_gain">Gain</string>
 
 
 <!--    Test tags-->
