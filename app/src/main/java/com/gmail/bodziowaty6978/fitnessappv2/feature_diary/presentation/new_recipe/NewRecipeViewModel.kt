@@ -199,14 +199,14 @@ class NewRecipeViewModel @Inject constructor(
                 selectedProduct?.let { product ->
                     productWeight.toIntOrNull()?.let { weight ->
                         val newIngredients = ingredients.toMutableList()
-                        newIngredients.removeIf { it.productId == selectedProduct.id }
+                        newIngredients.removeIf { it.productId == product.id }
                         newIngredients.add(
                             Ingredient(
                                 weight = weight,
-                                productName = selectedProduct.name,
-                                measurementUnit = selectedProduct.measurementUnit,
-                                nutritionValues = selectedProduct.calculateNutritionValues(weight),
-                                productId = selectedProduct.id
+                                productName = product.name,
+                                measurementUnit = product.measurementUnit,
+                                nutritionValues = product.calculateNutritionValues(weight),
+                                productId = product.id
                             )
                         )
                         _state.update {
