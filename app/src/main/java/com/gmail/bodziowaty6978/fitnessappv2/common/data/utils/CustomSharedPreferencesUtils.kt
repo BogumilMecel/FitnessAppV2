@@ -4,7 +4,7 @@ import android.content.Context
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.domain.model.User
 import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.domain.model.LogEntry
-import com.gmail.bodziowaty6978.fitnessappv2.feature_weight.domain.model.WeightEntry
+import com.gmail.bodziowaty6978.fitnessappv2.feature_weight.domain.model.NewWeightEntryResponse
 import com.google.gson.Gson
 
 class CustomSharedPreferencesUtils(
@@ -17,13 +17,12 @@ class CustomSharedPreferencesUtils(
 
     private val sharedPreferences = context.getSharedPreferences("fitness_app", Context.MODE_PRIVATE)
 
-    fun updateLatestWeightEntries(weightEntry: WeightEntry): Boolean{
+    fun updateWeightInfo(newWeightEntryResponse: NewWeightEntryResponse): Boolean{
         return getUser()?.let {
             saveUser(
                 user = it.copy(
-                    weightEntries = it.weightEntries?.toMutableList()?.apply {
-                        add(weightEntry)
-                    }
+                    latestWeightEntry = newWeightEntryResponse.latestWeightEntry,
+                    weightProgress = newWeightEntryResponse.weightProgress
                 )
             )
         } ?: false
@@ -42,7 +41,8 @@ class CustomSharedPreferencesUtils(
     fun getUserId() = getUser()?.id ?: ""
     fun getUsername() = getUser()?.username ?: ""
     fun getFavoriteRecipesIds() = getUser()?.favoriteUserRecipesIds ?: emptyList()
-    fun getWeightEntries() = getUser()?.weightEntries ?: emptyList()
+    fun getLatestWeightEntry() = getUser()?.latestWeightEntry
+    fun getWeightProgress() = getUser()?.weightProgress
     fun getLatestLogEntry() = getUser()?.latestLogEntry ?: LogEntry()
 
     private fun getUser(): User? {

@@ -29,25 +29,38 @@ open class BaseViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    inline fun <T> Resource<T>.handle(block: (T) -> Unit) {
+    inline fun <T> Resource<T>.handle(
+        showSnackbar: Boolean = true,
+        finally: () -> Unit = {},
+        block: (T) -> Unit
+    ) {
         if (this is Resource.Error) {
-            showSnackbarError(message = this.uiText)
+            if (showSnackbar) {
+                showSnackbarError(message = this.uiText)
+            }
         } else if (this is Resource.Success) {
             block(this.data)
         }
+        finally()
     }
 
     fun navigateWithPopUp(destination: Direction) {
         navigateTo(
             destination = destination,
-            navOptions = NavOptions.Builder().setPopUpTo(0, true).build()
+            navOptions = NavOptions.Builder().setPopUpTo(
+                0,
+                true
+            ).build()
         )
     }
 
     fun navigateTo(destination: Direction, navOptions: NavOptions = NavOptions.Builder().build()) =
         viewModelScope.launch {
             navigator.navigate(
-                NavigationAction(direction = destination, navOptions = navOptions)
+                NavigationAction(
+                    direction = destination,
+                    navOptions = navOptions
+                )
             )
         }
 
