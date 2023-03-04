@@ -3,11 +3,8 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.presentation
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -19,7 +16,6 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -27,8 +23,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bodziowaty6978.fitnessappv2.R
-import com.gmail.bodziowaty6978.fitnessappv2.common.util.extensions.TAG
-import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.model.GenderQuestion
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.model.QuestionName
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.model.QuestionType
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.presentation.components.BottomButton
@@ -83,6 +77,8 @@ fun IntroductionScreen(
                     if (pagerState.currentPage != questionSize - 1) {
                         pagerState.animateScrollToPage(pagerState.currentPage + 1)
                         keyboardController?.hide()
+                    } else {
+                        viewModel.onEvent(IntroductionEvent.FinishIntroduction)
                     }
                 }
             }
@@ -120,21 +116,21 @@ fun IntroductionScreen(
                                         )
                                     )
                                 },
+                                unitResId = currentItem.getQuestionUnit(),
                                 tag = currentItem.name
                             )
                         }
                     }
 
                     QuestionType.TILE -> {
-                        state.getTileAnswer(questionName = currentItem)?.let {
+                        state.getTileAnswer(questionName = currentItem)?.let { selectedTile ->
                             TilesQuestion(
                                 questionName = currentItem,
-                                currentItem =,
-                                onItemClick = {
+                                currentItem = selectedTile,
+                                onItemClick = { clickedTile ->
                                     viewModel.onEvent(
                                         IntroductionEvent.ClickedTile(
-                                            questionName = currentItem,
-                                            tile = it
+                                            tile = clickedTile
                                         )
                                     )
                                 }
@@ -153,13 +149,16 @@ fun IntroductionScreen(
                 text = stringResource(id = R.string.back),
                 onClick = {
                     viewModel.onEvent(IntroductionEvent.ClickedArrowBackwards)
-                }
+                },
+                buttonColors = ButtonDefaults.buttonColors(
+                    backgroundColor = MaterialTheme.colors.secondary
+                )
             )
         }
 
         BottomButton(
             modifier = Modifier
-                .align(Alignment.BottomCenter)
+                .align(Alignment.BottomEnd)
                 .testTag(stringResource(id = R.string.NEXT)),
             text = stringResource(
                 id = if (pagerState.currentPage == questionSize - 1) R.string.finish else R.string.next
@@ -169,9 +168,4 @@ fun IntroductionScreen(
             }
         )
     }
-}
-
-@Composable
-fun getProperQuestion() {
-
 }

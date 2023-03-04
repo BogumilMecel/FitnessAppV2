@@ -36,12 +36,6 @@ enum class TrainingFrequency: Tile {
 enum class ActivityLevel: Tile {
     LOW, MODERATE, HIGH, VERY_HIGH;
 
-    companion object {
-        fun getDisplayValues() = ActivityLevel.values().map {
-            it.getDisplayValue()
-        }
-    }
-
     override fun getDisplayValue() = when (this) {
         LOW -> R.string.introduction_activity_low
         MODERATE -> R.string.introduction_activity_moderate
@@ -51,12 +45,12 @@ enum class ActivityLevel: Tile {
 }
 
 enum class DesiredWeight : Tile {
-    LOOSE,
-    GAIN;
+    LOOSE, KEEP, GAIN;
 
     override fun getDisplayValue() = when(this) {
         LOOSE -> R.string.introduction_loose
         GAIN -> R.string.introduction_gain
+        KEEP -> R.string.introduction_keep
     }
 }
 
@@ -77,6 +71,12 @@ enum class QuestionName {
     fun getQuestionType() = when (this) {
         GENDER, TYPE_OF_WORK, TRAINING_FREQUENCY, ACTIVITY_LEVEL, DESIRED_WEIGHT -> QuestionType.TILE
         AGE, HEIGHT, CURRENT_WEIGHT -> QuestionType.INPUT
+    }
+
+    fun getQuestionUnit() = when(this) {
+        HEIGHT -> R.string.cm
+        CURRENT_WEIGHT -> R.string.kg
+        else -> null
     }
 
     fun getQuestionTiles(): List<Tile> = when (this) {
