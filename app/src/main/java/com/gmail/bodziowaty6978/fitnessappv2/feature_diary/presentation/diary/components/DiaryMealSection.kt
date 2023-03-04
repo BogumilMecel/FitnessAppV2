@@ -10,8 +10,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -28,6 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValues
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.DefaultCardBackground
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.OrangeYellow1
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Meal
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.diary.DiaryEvent
@@ -40,11 +39,7 @@ fun DiaryMealSection(
 ) {
     val diaryEntriesValues = meal.diaryEntries
 
-    Card(
-        shape = RoundedCornerShape(15.dp),
-        modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
-        elevation = 3.dp
-    ) {
+    DefaultCardBackground(modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()

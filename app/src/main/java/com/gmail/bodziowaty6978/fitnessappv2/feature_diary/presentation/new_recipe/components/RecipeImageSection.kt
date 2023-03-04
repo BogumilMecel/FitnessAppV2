@@ -1,9 +1,20 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_recipe.components
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedButton
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.CameraAlt
@@ -14,16 +25,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.gmail.bodziowaty6978.fitnessappv2.R
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.DefaultCardBackground
 
 @Composable
 fun RecipeImageSection(
     modifier: Modifier
 ) {
-    Card(
-        modifier = modifier,
-        shape = RoundedCornerShape(15),
-        elevation = 2.dp
-    ) {
+    DefaultCardBackground(modifier = modifier) {
         Column(
             Modifier
                 .fillMaxWidth()

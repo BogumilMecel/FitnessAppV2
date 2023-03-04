@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
-import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -29,6 +28,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.BackArrow
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.CustomBasicTextField
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.DefaultCardBackground
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.TextGrey
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.edit_nutrition_goals.components.MacroElementsSection
 import com.ramcosta.composedestinations.annotation.Destination
@@ -68,12 +68,10 @@ fun EditNutritionGoalsScreen(
 
         Spacer(modifier = Modifier.height(6.dp))
 
-        Card(
+        DefaultCardBackground(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 10.dp),
-            shape = RoundedCornerShape(12.dp),
-            elevation = 3.dp
+                .padding(horizontal = 10.dp)
         ) {
             Row(
                 modifier = Modifier

@@ -16,7 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
-import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.DarkGreyElevation6
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.DarkGreyElevation9
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.TextGrey
 
 @Composable
@@ -32,7 +32,7 @@ fun CustomBasicTextField(
     Box(
         modifier = modifier
             .clip(RoundedCornerShape(15.dp))
-            .background(DarkGreyElevation6)
+            .background(DarkGreyElevation9)
     ) {
         BasicTextField(
             value = value,
