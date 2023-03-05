@@ -102,26 +102,22 @@ fun SearchScreen(
                     state = pagerState
                 ) { pagerScope ->
                     when (pagerScope) {
-                        0 -> {
-                            SearchProductSection(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(paddingValues),
-                                onEvent = { event ->
-                                    viewModel.onEvent(event)
-                                },
-                                state = state
-                            )
-                        }
+                        0 -> SearchProductSection(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(paddingValues),
+                            onEvent = { event ->
+                                viewModel.onEvent(event)
+                            },
+                            state = state
+                        )
 
-                        1 -> {
-                            SearchRecipeSection(
-                                recipes = state.recipes,
-                                onEvent = {
-                                    viewModel.onEvent(it)
-                                }
-                            )
-                        }
+                        1 -> SearchRecipeSection(
+                            recipes = state.recipes,
+                            onEvent = {
+                                viewModel.onEvent(it)
+                            }
+                        )
                     }
                 }
 

@@ -7,12 +7,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.DarkGreyElevation
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.DarkGreyElevation2
 
 @Composable
 fun DefaultCardBackground(
     modifier: Modifier = Modifier,
-    background: Color = DarkGreyElevation,
+    background: Color = DarkGreyElevation2,
     content: @Composable () -> Unit,
 ) {
     Box(

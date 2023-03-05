@@ -25,12 +25,16 @@ class RecipeViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : BaseViewModel() {
 
-    private val _state = MutableStateFlow(RecipeState(
-        recipe = RecipeScreenDestination.argsFrom(savedStateHandle = savedStateHandle).recipe.also {
-            initializeRecipeData()
-        }
-    ))
+    private val _state = MutableStateFlow(
+        RecipeState(
+            recipe = RecipeScreenDestination.argsFrom(savedStateHandle = savedStateHandle).recipe
+        )
+    )
     val state: StateFlow<RecipeState> = _state
+
+    init {
+        initializeRecipeData()
+    }
 
     fun onEvent(event: RecipeEvent) {
         when (event) {
