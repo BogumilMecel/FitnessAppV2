@@ -48,7 +48,7 @@ fun ButtonWithIcon(
                 tint = iconTint
             )
 
-            WidthSpacer()
+            WidthSpacer(width = 8.dp)
 
             Text(
                 text = text.uppercase(),
