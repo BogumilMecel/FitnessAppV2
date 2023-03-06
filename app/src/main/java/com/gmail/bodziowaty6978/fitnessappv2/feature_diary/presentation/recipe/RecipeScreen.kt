@@ -275,7 +275,7 @@ fun RecipeScreen(
                         icon = Icons.Default.Save,
                         text = stringResource(id = R.string.recipe_save_to, state.mealName)
                     ) {
-
+                        viewModel.onEvent(RecipeEvent.ClickedSaveRecipeDiaryEntry)
                     }
                 }
             }

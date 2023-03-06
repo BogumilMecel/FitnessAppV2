@@ -1,13 +1,17 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.recipe
 
+import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.DateModel
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
+import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
+import com.gmail.bodziowaty6978.fitnessappv2.common.util.extensions.toValidInt
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntryRequest
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 
 class PostRecipeDiaryEntryUseCase(
-    private val diaryRepository: DiaryRepository
+    private val diaryRepository: DiaryRepository,
+    private val resourceProvider: ResourceProvider
 ) {
     suspend operator fun invoke(
         recipe: Recipe,
@@ -15,10 +19,10 @@ class PostRecipeDiaryEntryUseCase(
         dateModel: DateModel,
         mealName: String
     ): Resource<Unit> {
-        val servingsValue = servingsString.toIntOrNull()
+        val servingsValue = servingsString.toValidInt()
 
-        return if (servingsValue == null) {
-            Resource.Error(uiText = "")
+        return if (servingsValue == null || servingsValue <= 0) {
+            Resource.Error(uiText = resourceProvider.getString(R.string.recipe_servings_error))
         } else {
             diaryRepository.addRecipeDiaryEntry(
                 recipeDiaryEntryRequest = RecipeDiaryEntryRequest(
