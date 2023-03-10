@@ -4,6 +4,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.DateModel
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.MealName
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntryPostRequest
@@ -16,7 +17,7 @@ class AddDiaryEntry(
 
     suspend operator fun invoke(
         product: Product,
-        mealName: String,
+        mealName: MealName,
         dateModel: DateModel,
         weight: Int?,
     ): Resource<ProductDiaryEntry> {

@@ -4,6 +4,8 @@ import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseRepository
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.data.api.DiaryApi
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.DeleteDiaryEntryRequest
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.DiaryEntriesResponse
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Price
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
@@ -19,7 +21,7 @@ class DiaryRepositoryImp(
     private val diaryApi: DiaryApi, private val resourceProvider: ResourceProvider
 ) : DiaryRepository, BaseRepository(resourceProvider) {
 
-    override suspend fun getDiaryEntries(date: String): Resource<List<ProductDiaryEntry>> {
+    override suspend fun getDiaryEntries(date: String): Resource<DiaryEntriesResponse> {
         return handleRequest {
             diaryApi.getDiaryEntries(date = date)
         }
@@ -68,10 +70,10 @@ class DiaryRepositoryImp(
     }
 
     override suspend fun deleteDiaryEntry(
-        diaryEntryId: String
+        deleteDiaryEntryRequest: DeleteDiaryEntryRequest
     ): Resource<Unit> {
         return handleRequest {
-            diaryApi.deleteDiaryEntry(entryId = diaryEntryId)
+            diaryApi.deleteDiaryEntry(deleteDiaryEntryRequest = deleteDiaryEntryRequest)
         }
     }
 

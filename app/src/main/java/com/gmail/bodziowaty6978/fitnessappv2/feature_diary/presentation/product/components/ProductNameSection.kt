@@ -10,23 +10,24 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.gmail.bodziowaty6978.fitnessappv2.R
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.CustomBasicTextField
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.DefaultCardBackground
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.BlueViolet3
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.DarkGreyElevation
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.TextGrey
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.TextWhite
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
@@ -71,14 +72,16 @@ fun ProductNameSection(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     DefaultCardBackground() {
-                        BasicTextField(
+                        CustomBasicTextField(
                             value = currentWeight,
                             onValueChange = {
                                 onWeightEntered(it)
                             },
                             modifier = Modifier
-                                .width(80.dp)
-                                .padding(horizontal = 8.dp, vertical = 10.dp)
+                                .width(90.dp)
+                                .padding(
+                                    horizontal = 8.dp
+                                )
                                 .testTag(stringResource(id = R.string.WEIGHT_TEXT_FIELD)),
                             textStyle = MaterialTheme.typography.body1.copy(
                                 color = TextWhite,
@@ -88,7 +91,6 @@ fun ProductNameSection(
                             keyboardOptions = KeyboardOptions.Default.copy(
                                 keyboardType = KeyboardType.Number
                             ),
-                            cursorBrush = SolidColor(MaterialTheme.colors.primary),
                         )
                     }
 
@@ -119,6 +121,9 @@ fun ProductNameSection(
                         },
                         border = BorderStroke(1.dp, BlueViolet3),
                         shape = RoundedCornerShape(25),
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            backgroundColor = DarkGreyElevation
+                        ),
                         modifier = Modifier
                             .testTag(i.toString() + stringResource(id = R.string.WEIGHT_BUTTON))
                     ) {

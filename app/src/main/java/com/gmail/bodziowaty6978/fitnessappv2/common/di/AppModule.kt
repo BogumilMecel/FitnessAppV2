@@ -197,6 +197,16 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideCalculateNutritionValuesFromDiaryEntriesUseCase(): CalculateNutritionValuesFromDiaryEntriesUseCase =
+        CalculateNutritionValuesFromDiaryEntriesUseCase()
+
+    @Provides
+    @Singleton
+    fun provideCalculateNutritionValuesFromNutritionValuesUseCase(): CalculateNutritionValuesFromNutritionValuesUseCase =
+        CalculateNutritionValuesFromNutritionValuesUseCase()
+
+    @Provides
+    @Singleton
     fun provideAuthUseCases(
         authRepository: AuthRepository,
         resourceProvider: ResourceProvider,

@@ -9,13 +9,10 @@ import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.BlueViolet3
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.LightGreen3
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.OrangeYellow3
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Meal
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.sumNutritionValues
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.util.NutritionType
 
 @Composable
 fun NutritionBottomSection(
-    meals: List<Meal>,
+    currentNutritionValues: NutritionValues,
     wantedNutritionValues: NutritionValues,
     modifier: Modifier
 ) {
@@ -23,7 +20,7 @@ fun NutritionBottomSection(
         modifier = modifier
     ) {
         NutritionBottomItem(
-            currentValue =  meals.sumOf { it.sumNutritionValues(NutritionType.Calories) }.toInt(),
+            currentValue =  currentNutritionValues.calories,
             wantedValue = wantedNutritionValues.calories,
             name = stringResource(id = R.string.calories),
             modifier = Modifier
@@ -31,7 +28,7 @@ fun NutritionBottomSection(
         )
 
         NutritionBottomItem(
-            currentValue = meals.sumOf { it.sumNutritionValues(NutritionType.Carbs) }.toInt(),
+            currentValue = currentNutritionValues.carbohydrates.toInt(),
             wantedValue = wantedNutritionValues.carbohydrates.toInt(),
             name = stringResource(id = R.string.carbs),
             modifier = Modifier
@@ -40,7 +37,7 @@ fun NutritionBottomSection(
         )
 
         NutritionBottomItem(
-            currentValue = meals.sumOf { it.sumNutritionValues(NutritionType.Protein) }.toInt(),
+            currentValue = currentNutritionValues.protein.toInt(),
             wantedValue = wantedNutritionValues.protein.toInt(),
             name = stringResource(id = R.string.protein),
             modifier = Modifier
@@ -49,7 +46,7 @@ fun NutritionBottomSection(
         )
 
         NutritionBottomItem(
-            currentValue = meals.sumOf { it.sumNutritionValues(NutritionType.Fat) }.toInt(),
+            currentValue = currentNutritionValues.fat.toInt(),
             wantedValue = wantedNutritionValues.fat.toInt(),
             name = stringResource(id = R.string.fat),
             modifier = Modifier

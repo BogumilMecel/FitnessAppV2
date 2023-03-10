@@ -5,6 +5,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.DateModel
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.extensions.toValidInt
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.MealName
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntryRequest
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.repository.DiaryRepository
@@ -17,7 +18,7 @@ class PostRecipeDiaryEntryUseCase(
         recipe: Recipe,
         servingsString: String,
         dateModel: DateModel,
-        mealName: String
+        mealName: MealName
     ): Resource<Unit> {
         val servingsValue = servingsString.toValidInt()
 

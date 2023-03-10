@@ -25,25 +25,31 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.gmail.bodziowaty6978.fitnessappv2.R
+import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.DiaryItem
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.DefaultCardBackground
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.OrangeYellow1
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Meal
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.MealName
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.diary.DiaryEvent
 
 @Composable
 fun DiaryMealSection(
-    meal: Meal,
+    mealName: MealName,
+    diaryEntries: List<DiaryItem>,
+    nutritionValues: NutritionValues? = null,
     onEvent: (DiaryEvent) -> Unit,
-    wantedNutritionValues: NutritionValues = NutritionValues()
+    wantedNutritionValues: NutritionValues
 ) {
-    val diaryEntriesValues = meal.diaryEntries
-
-    DefaultCardBackground(modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)) {
+    DefaultCardBackground(
+        modifier = Modifier.padding(
+            horizontal = 10.dp,
+            vertical = 6.dp
+        )
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .testTag(meal.mealName)
+                .testTag(stringResource(id = mealName.getDisplayValue()))
                 .padding(bottom = 15.dp)
         ) {
 
@@ -55,7 +61,7 @@ fun DiaryMealSection(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = meal.mealName,
+                    text = stringResource(id = mealName.getDisplayValue()),
                     style = MaterialTheme.typography.h3,
                 )
 
@@ -74,7 +80,7 @@ fun DiaryMealSection(
                          contentDescription = "Add",
                          modifier = Modifier
                              .clickable {
-                                 onEvent(DiaryEvent.ClickedAddProduct(mealName = meal.mealName))
+                                 onEvent(DiaryEvent.ClickedAddProduct(mealName = mealName))
                              }
                              .padding(10.dp)
                              .size(32.dp),
@@ -82,26 +88,36 @@ fun DiaryMealSection(
                 }
             }
 
-            diaryEntriesValues.forEach {
-                DiaryEntryItem(diaryItem = it, onItemClicked = {
-                    onEvent(DiaryEvent.ClickedDiaryEntry(it))
-                }, onItemLongClick = {
-                    onEvent(DiaryEvent.LongClickedDiaryEntry(it))
-                })
+            diaryEntries.forEach {
+                DiaryEntryItem(
+                    diaryItem = it,
+                    onItemClicked = {
+                        onEvent(DiaryEvent.ClickedDiaryEntry(it))
+                    },
+                    onItemLongClick = {
+                        onEvent(DiaryEvent.LongClickedDiaryEntry(
+                            diaryItem = it,
+                            mealName = mealName
+                        ))
+                    })
             }
 
             Divider(
-                modifier = Modifier.height(16.dp), color = Color.Transparent
+                modifier = Modifier.height(16.dp),
+                color = Color.Transparent
             )
 
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(end = 15.dp, start = 15.dp)
+                    .padding(
+                        end = 15.dp,
+                        start = 15.dp
+                    )
             ) {
                 MealSectionNutritionItem(
-                    currentValue = diaryEntriesValues.sumOf { it.nutritionValues.calories },
+                    currentValue = nutritionValues?.calories ?: 0,
                     wantedValue = wantedNutritionValues.calories,
                     name = stringResource(id = R.string.calories),
                     modifier = Modifier
@@ -111,9 +127,7 @@ fun DiaryMealSection(
 
 
                 MealSectionNutritionItem(
-                    currentValue = diaryEntriesValues.sumOf { it.nutritionValues.carbohydrates }
-                        .toInt(),
-
+                    currentValue = nutritionValues?.carbohydrates?.toInt() ?: 0,
                     wantedValue = wantedNutritionValues.carbohydrates.toInt(),
                     name = stringResource(id = R.string.carbs),
                     modifier = Modifier
@@ -121,22 +135,23 @@ fun DiaryMealSection(
 
                 Spacer(modifier = Modifier.width(32.dp))
 
-                MealSectionNutritionItem(currentValue = diaryEntriesValues.sumOf { it.nutritionValues.protein }
-                    .toInt(),
-                                         wantedValue = wantedNutritionValues.protein.toInt(),
-                                         name = stringResource(id = R.string.protein),
-                                         modifier = Modifier
+                MealSectionNutritionItem(
+                    currentValue = nutritionValues?.protein?.toInt() ?: 0,
+                    wantedValue = wantedNutritionValues.protein.toInt(),
+                    name = stringResource(id = R.string.protein),
+                    modifier = Modifier
 
                 )
 
                 Spacer(modifier = Modifier.width(32.dp))
 
 
-                MealSectionNutritionItem(currentValue = diaryEntriesValues.sumOf { it.nutritionValues.fat }
-                    .toInt(),
-                                         wantedValue = wantedNutritionValues.fat.toInt(),
-                                         name = stringResource(id = R.string.fat),
-                                         modifier = Modifier)
+                MealSectionNutritionItem(
+                    currentValue = nutritionValues?.fat?.toInt() ?: 0,
+                    wantedValue = wantedNutritionValues.fat.toInt(),
+                    name = stringResource(id = R.string.fat),
+                    modifier = Modifier
+                )
             }
         }
     }

@@ -14,7 +14,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.DefaultTextField
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.CustomBasicTextField
 
 @Composable
 fun TextQuestion(
@@ -30,7 +30,7 @@ fun TextQuestion(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        DefaultTextField(
+        CustomBasicTextField(
             value = text,
             onValueChange = {
                 onTextEntered(it)

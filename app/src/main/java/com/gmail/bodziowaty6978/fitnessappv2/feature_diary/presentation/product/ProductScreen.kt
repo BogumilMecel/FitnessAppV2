@@ -72,7 +72,7 @@ fun ProductScreen(
                 .padding(paddingValues.calculateBottomPadding())
         ) {
             ProductTopSection(
-                mealName = state.mealName,
+                mealName = stringResource(id = state.mealName.getDisplayValue()),
                 currentDate = CurrentDate.dateModel(LocalContext.current).valueToDisplay
                     ?: CurrentDate.dateModel(LocalContext.current).date,
                 onBackArrowPressed = {

@@ -1,5 +1,6 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search
 
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.MealName
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 
@@ -12,7 +13,7 @@ data class SearchState(
     val isScannerVisible: Boolean = false,
     val hasPermissionDialogBeenShowed: Boolean = false,
     val barcode: String? = null,
-    val mealName: String = "",
+    val mealName: MealName = MealName.BREAKFAST,
     val recipes: List<Recipe> = emptyList(),
     val currentTabIndex: Int = 0,
 )

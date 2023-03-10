@@ -87,7 +87,7 @@ fun SearchScreen(
                         0 -> state.productSearchBarText
                         else -> state.recipesSearchBarText
                     },
-                    mealName = state.mealName,
+                    mealName = stringResource(id = state.mealName.getDisplayValue()),
                     date = CurrentDate.dateModel(LocalContext.current).valueToDisplay
                         ?: CurrentDate.dateModel(LocalContext.current).date,
                     onEvent = { searchEvent ->
