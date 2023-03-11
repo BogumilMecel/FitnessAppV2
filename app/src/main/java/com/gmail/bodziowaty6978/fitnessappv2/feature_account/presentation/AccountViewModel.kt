@@ -7,7 +7,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.destinations.EditNutritionGoalsScre
 import com.gmail.bodziowaty6978.fitnessappv2.destinations.LoginScreenDestination
 import com.gmail.bodziowaty6978.fitnessappv2.feature_account.domain.use_case.DeleteToken
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.product.CreatePieChartData
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.NutritionData
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.domain.model.NutritionData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -55,7 +55,7 @@ class AccountViewModel @Inject constructor(
             it.copy(
                 nutritionData = NutritionData(
                     nutritionValues = wantedNutritionValues,
-                    pieEntries = createPieChartData(nutritionValues = wantedNutritionValues)
+                    pieChartData = createPieChartData(nutritionValues = wantedNutritionValues)
                 ),
             )
         }

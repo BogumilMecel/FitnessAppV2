@@ -17,17 +17,19 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.DefaultCardBackground
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.PieChartWithMiddleText
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.LightGreen1
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.LightGreen3
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.TextGrey
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Price
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_recipe.util.SelectedNutritionType
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.ChartSection
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.NutritionData
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.NutritionValuesList
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.PriceRows
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.domain.model.NutritionData
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.presentation.components.NutritionValuesList
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.presentation.components.PriceRows
 
 @Composable
 fun RecipeNutritionSection(
@@ -93,8 +95,12 @@ fun RecipeNutritionSection(
                         .height(IntrinsicSize.Max),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    ChartSection(
-                        nutritionData = nutritionData,
+                    PieChartWithMiddleText(
+                        pieChartData = nutritionData.pieChartData,
+                        middleText = stringResource(
+                            id = R.string.kcal_with_value,
+                            nutritionData.nutritionValues.calories
+                        ),
                         modifier = Modifier
                             .weight(0.4F)
                             .fillMaxHeight()
@@ -118,7 +124,8 @@ fun RecipeNutritionSection(
                 )
             } else {
                 Column(
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .padding(start = 15.dp)
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {

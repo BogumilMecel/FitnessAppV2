@@ -1,6 +1,7 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.edit_nutrition_goals
 
 import androidx.lifecycle.viewModelScope
+import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValue
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.use_case.CalculateNutritionValuesPercentages
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.use_case.SaveNutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
@@ -156,9 +157,9 @@ class EditNutritionGoalsViewModel @Inject constructor(
         val percentages = calculateNutritionValuesPercentages(_state.value.nutritionValues)
         _state.update {
             it.copy(
-                carbohydratesPercentageValue = percentages["carbohydrates"] ?: 0F,
-                proteinPercentageValue = percentages["protein"] ?: 0F,
-                fatPercentageValue = percentages["fat"] ?: 0F,
+                carbohydratesPercentageValue = percentages[NutritionValue.CARBOHYDRATES] ?: 0F,
+                proteinPercentageValue = percentages[NutritionValue.PROTEIN] ?: 0F,
+                fatPercentageValue = percentages[NutritionValue.FAT] ?: 0F,
             )
         }
         calculateTotalPercentage()

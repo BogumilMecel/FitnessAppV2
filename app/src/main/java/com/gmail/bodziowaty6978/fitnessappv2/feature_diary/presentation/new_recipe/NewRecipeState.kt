@@ -7,7 +7,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.I
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.utils.Difficulty
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.utils.TimeRequired
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_recipe.util.SelectedNutritionType
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.NutritionData
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.domain.model.NutritionData
 
 data class NewRecipeState(
     val isDifficultyExpanded: Boolean = false,

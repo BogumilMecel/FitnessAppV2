@@ -1,25 +1,45 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.product
 
-import com.github.mikephil.charting.data.PieEntry
+import com.github.tehras.charts.piechart.PieChartData
+import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValue
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.use_case.CalculateNutritionValuesPercentages
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.BlueViolet3
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.DarkGreyElevation2
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.LightGreen3
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.OrangeYellow3
 
 class CreatePieChartData(
     private val calculateNutritionValuesPercentages: CalculateNutritionValuesPercentages
 ) {
+    operator fun invoke(nutritionValues: NutritionValues): PieChartData {
+        val slices = mutableListOf<PieChartData.Slice>()
+        calculateNutritionValuesPercentages(nutritionValues).forEach {
+            if (it.value != 0f) {
+                slices.add(
+                    PieChartData.Slice(
+                        value = it.value,
+                        color = getColorForNutritionValue(nutritionValue = it.key)
+                    )
+                )
 
-    operator fun invoke(nutritionValues: NutritionValues): List<PieEntry> {
-        val calculatedPercentages = calculateNutritionValuesPercentages(nutritionValues)
-        val entries = mutableListOf<PieEntry>()
-
-        calculatedPercentages.keys.forEach { key ->
-            calculatedPercentages[key]?.let {
-                if (it != 0f) {
-                    entries.add(PieEntry(it, key))
-                    entries.add(PieEntry(1F, ""))
-                }
+                slices.add(getBackgroundSlice())
             }
         }
-        return entries
+
+        return PieChartData(
+            slices = slices
+        )
+    }
+
+    private fun getBackgroundSlice() = PieChartData.Slice(
+        value = 1f,
+        color = DarkGreyElevation2
+    )
+
+    private fun getColorForNutritionValue(nutritionValue: NutritionValue) = when (nutritionValue) {
+        NutritionValue.CARBOHYDRATES -> LightGreen3
+        NutritionValue.PROTEIN -> BlueViolet3
+        NutritionValue.FAT -> OrangeYellow3
     }
 }

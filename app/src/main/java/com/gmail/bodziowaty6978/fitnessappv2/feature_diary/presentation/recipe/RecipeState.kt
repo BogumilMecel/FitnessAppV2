@@ -2,7 +2,7 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.recipe
 
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.MealName
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.Recipe
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.NutritionData
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.domain.model.NutritionData
 
 data class RecipeState(
     val recipe: Recipe = Recipe(),

@@ -49,7 +49,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.Defa
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.DropdownArrow
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.HeightSpacer
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.TextGrey
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.ProductNutritionSection
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.presentation.components.ProductNutritionSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search.componens.SearchProductItem
 import com.ramcosta.composedestinations.annotation.Destination
 

@@ -1,4 +1,4 @@
-package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components
+package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.presentation.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.domain.model.NutritionData
 
 @Composable
 fun ProductMainSection(
