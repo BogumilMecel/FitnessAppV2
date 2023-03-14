@@ -14,7 +14,8 @@ class CreatePieChartData(
 ) {
     operator fun invoke(nutritionValues: NutritionValues): PieChartData {
         val slices = mutableListOf<PieChartData.Slice>()
-        calculateNutritionValuesPercentages(nutritionValues).forEach {
+        val calculatedNutritionValues = calculateNutritionValuesPercentages(nutritionValues)
+        calculatedNutritionValues.forEach {
             if (it.value != 0f) {
                 slices.add(
                     PieChartData.Slice(
@@ -22,8 +23,9 @@ class CreatePieChartData(
                         color = getColorForNutritionValue(nutritionValue = it.key)
                     )
                 )
-
-                slices.add(getBackgroundSlice())
+                if (calculatedNutritionValues.values.count { value -> value == 0f } != 2) {
+                    slices.add(getBackgroundSlice())
+                }
             }
         }
 
