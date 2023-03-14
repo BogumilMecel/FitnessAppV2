@@ -50,8 +50,8 @@ open class BaseViewModel @Inject constructor() : ViewModel() {
         navigateTo(
             destination = destination,
             navOptions = NavOptions.Builder().setPopUpTo(
-                0,
-                true
+                route = "pop_up",
+                inclusive = true
             ).build()
         )
     }

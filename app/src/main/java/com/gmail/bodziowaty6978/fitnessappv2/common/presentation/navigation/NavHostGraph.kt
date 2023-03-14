@@ -48,6 +48,14 @@ fun NavHostGraph(
             it?.let {
                 if (it.direction.route == "navigate_up") {
                     navController.navigateUp()
+                } else if (it.navOptions.popUpToRoute == "pop_up" && navController.currentDestination?.route != null){
+                    navController.navigate(it.direction.route) {
+                        navController.currentDestination?.route?.let { currentRoute ->
+                            popUpTo(currentRoute) {
+                                inclusive = true
+                            }
+                        }
+                    }
                 } else {
                     navController.navigate(
                         it.direction.route,
@@ -108,6 +116,4 @@ fun NavHostGraph(
             )
         }
     }
-
-
 }
