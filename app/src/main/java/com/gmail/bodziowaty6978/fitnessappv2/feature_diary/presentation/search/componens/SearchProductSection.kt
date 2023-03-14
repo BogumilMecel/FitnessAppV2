@@ -159,7 +159,7 @@ fun SearchProductSection(
                         SearchProductItem(
                             name = product.name,
                             unit = stringResource(id = product.measurementUnit.getDisplayValue()),
-                            weight = product.containerWeight,
+                            weight = product.containerWeight ?: 100,
                             calories = product.nutritionValues.calories,
                             onItemClick = {
                                 onEvent(

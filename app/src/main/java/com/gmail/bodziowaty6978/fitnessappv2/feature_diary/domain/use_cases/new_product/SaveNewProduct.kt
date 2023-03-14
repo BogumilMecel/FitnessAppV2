@@ -32,7 +32,7 @@ class SaveNewProduct(
         val carbohydratesValue = carbohydrates.toValidDouble()
         val proteinValue = protein.toValidDouble()
         val fatValue = fat.toValidDouble()
-        val containerWeightValue = containerWeight.toValidInt()
+        val containerWeightValue = if (containerWeight.isEmpty()) null else containerWeight.toValidInt()
 
         return if (name.isBlank()) {
             Resource.Error(resourceProvider.getString(R.string.new_product_empty_name))
@@ -45,23 +45,21 @@ class SaveNewProduct(
         } else if (!validateContainerWeight(nutritionValuesIn = nutritionValuesIn, containerWeight = containerWeightValue)) {
             Resource.Error(resourceProvider.getString(R.string.new_product_bad_container_weight))
         } else {
-            val newProductRequest = NewProductRequest(
-                name = name,
-                measurementUnit = measurementUnit,
-                containerWeight = containerWeightValue ?: 100,
-                barcode = barcode.ifEmpty { null },
-                nutritionValues = NutritionValues(
-                    calories = caloriesValue,
-                    carbohydrates = carbohydratesValue,
-                    protein = proteinValue,
-                    fat = fatValue
-                ),
-                nutritionValuesIn = nutritionValuesIn,
-                timestamp = System.currentTimeMillis()
-            )
-
             diaryRepository.saveNewProduct(
-                newProductRequest = newProductRequest
+                newProductRequest = NewProductRequest(
+                    name = name,
+                    measurementUnit = measurementUnit,
+                    containerWeight = containerWeightValue,
+                    barcode = barcode.ifEmpty { null },
+                    nutritionValues = NutritionValues(
+                        calories = caloriesValue,
+                        carbohydrates = carbohydratesValue,
+                        protein = proteinValue,
+                        fat = fatValue
+                    ),
+                    nutritionValuesIn = nutritionValuesIn,
+                    timestamp = System.currentTimeMillis()
+                )
             )
         }
     }
