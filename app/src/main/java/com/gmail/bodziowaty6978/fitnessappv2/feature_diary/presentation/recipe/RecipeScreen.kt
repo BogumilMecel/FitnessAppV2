@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -43,7 +42,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.BackArrow
-import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.ButtonWithIcon
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.Button
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.CustomBasicTextField
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.DefaultCardBackground
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.DropdownArrow
@@ -270,9 +269,9 @@ fun RecipeScreen(
 
                     Spacer(modifier = Modifier.height(12.dp))
 
-                    ButtonWithIcon(
+                    Button(
                         modifier = Modifier.fillMaxWidth(),
-                        icon = Icons.Default.Save,
+                        iconLeft = Icons.Default.Save,
                         text = stringResource(id = R.string.recipe_save_to, state.mealName)
                     ) {
                         viewModel.onEvent(RecipeEvent.ClickedSaveRecipeDiaryEntry)
@@ -356,13 +355,11 @@ fun RecipeScreen(
         if (state.isUserRecipeOwner) {
             Spacer(modifier = Modifier.height(12.dp))
 
-            ButtonWithIcon(
+            Button(
                 modifier = Modifier.padding(horizontal = 15.dp),
-                icon = Icons.Default.Edit,
+                iconLeft = Icons.Default.Edit,
                 text = stringResource(id = R.string.recipe_edit),
-                buttonColors = ButtonDefaults.buttonColors(
-                    backgroundColor = MaterialTheme.colors.secondaryVariant
-                )
+                backgroundColor = MaterialTheme.colors.secondaryVariant
             ) {
 
             }

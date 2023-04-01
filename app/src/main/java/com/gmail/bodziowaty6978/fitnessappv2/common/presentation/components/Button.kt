@@ -1,12 +1,12 @@
 package com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
-import androidx.compose.material.ButtonColors
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -19,11 +19,13 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ButtonWithIcon(
+fun Button(
     modifier: Modifier,
-    icon: ImageVector,
+    buttonStyle: ButtonStyle = ButtonStyle.Button,
+    backgroundColor: Color = MaterialTheme.colors.primary,
+    textColor: Color = MaterialTheme.colors.onPrimary,
+    iconLeft: ImageVector?,
     iconTint: Color = MaterialTheme.colors.onPrimary,
-    buttonColors: ButtonColors = ButtonDefaults.buttonColors(),
     text: String,
     onClick: () -> Unit
 ) {
@@ -33,7 +35,15 @@ fun ButtonWithIcon(
         onClick = {
             onClick()
         },
-        colors = buttonColors,
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = backgroundColor
+        ),
+        border = if (buttonStyle is ButtonStyle.OutlinedButton) {
+            BorderStroke(
+                width = 1.dp,
+                color = buttonStyle.borderColor
+            )
+        } else null
     ) {
         Row(
             modifier = Modifier
@@ -42,18 +52,26 @@ fun ButtonWithIcon(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = text,
-                tint = iconTint
-            )
+            iconLeft?.let {
+                Icon(
+                    imageVector = iconLeft,
+                    contentDescription = text,
+                    tint = iconTint
+                )
+            }
 
             WidthSpacer(width = 8.dp)
 
             Text(
                 text = text.uppercase(),
-                style = MaterialTheme.typography.button
+                style = MaterialTheme.typography.button,
+                color = textColor
             )
         }
     }
+}
+
+sealed interface ButtonStyle{
+    data class OutlinedButton(val borderColor: Color) : ButtonStyle
+    object Button: ButtonStyle
 }
