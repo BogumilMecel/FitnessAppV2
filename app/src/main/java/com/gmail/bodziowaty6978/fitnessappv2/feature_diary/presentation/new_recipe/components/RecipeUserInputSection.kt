@@ -22,8 +22,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.gmail.bodziowaty6978.fitnessappv2.R
-import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.Button
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.CustomBasicTextField
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.CustomButton
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.DefaultCardBackground
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.HeightSpacer
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.WidthSpacer
@@ -200,7 +200,7 @@ fun RecipeUserInputSection(
 
         HeightSpacer()
 
-        Button(
+        CustomButton(
             modifier = Modifier.fillMaxWidth(),
             iconLeft = Icons.Default.Save,
             text = stringResource(id = R.string.new_recipe_save)

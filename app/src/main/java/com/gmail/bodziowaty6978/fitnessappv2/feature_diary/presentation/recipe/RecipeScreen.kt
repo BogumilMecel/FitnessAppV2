@@ -42,8 +42,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.BackArrow
-import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.Button
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.CustomBasicTextField
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.CustomButton
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.DefaultCardBackground
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.DropdownArrow
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.HeightSpacer
@@ -269,7 +269,7 @@ fun RecipeScreen(
 
                     Spacer(modifier = Modifier.height(12.dp))
 
-                    Button(
+                    CustomButton(
                         modifier = Modifier.fillMaxWidth(),
                         iconLeft = Icons.Default.Save,
                         text = stringResource(id = R.string.recipe_save_to, state.mealName)
@@ -355,7 +355,7 @@ fun RecipeScreen(
         if (state.isUserRecipeOwner) {
             Spacer(modifier = Modifier.height(12.dp))
 
-            Button(
+            CustomButton(
                 modifier = Modifier.padding(horizontal = 15.dp),
                 iconLeft = Icons.Default.Edit,
                 text = stringResource(id = R.string.recipe_edit),
