@@ -1,9 +1,13 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.data.api
 
+import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.Currency
+import com.gmail.bodziowaty6978.fitnessappv2.common.util.Headers
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.DeleteDiaryEntryRequest
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.DiaryEntriesResponse
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Price
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.ProductPrice
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.ProductPriceResponse
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.RecipePriceResponse
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntryPostRequest
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.product.NewPriceRequest
@@ -11,6 +15,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.product.
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.NewRecipeRequest
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntryRequest
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.RecipePriceRequest
 import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.domain.model.CaloriesSumResponse
 import retrofit2.http.*
 
@@ -31,7 +36,11 @@ interface DiaryApi {
         @Body recipeDiaryEntryRequest: RecipeDiaryEntryRequest
     ): Boolean
 
-    @HTTP(method = "DELETE", path = "/diaryEntries", hasBody = true)
+    @HTTP(
+        method = "DELETE",
+        path = "/diaryEntries",
+        hasBody = true
+    )
     suspend fun deleteDiaryEntry(
         @Body deleteDiaryEntryRequest: DeleteDiaryEntryRequest
     )
@@ -64,13 +73,27 @@ interface DiaryApi {
         @Query("date") date: String
     ): CaloriesSumResponse
 
-    @POST("/products/{productId}/prices")
+    @POST("/products/{productId}/price")
     suspend fun addNewPriceForProduct(
-        @Body newPriceRequest: NewPriceRequest
-    ): Price
+        @Body newPriceRequest: NewPriceRequest,
+        @Path("productId") productId: String,
+        @Header(Headers.CURRENCY) currency: Currency
+    ): ProductPrice
 
     @POST("/recipes")
     suspend fun addNewRecipe(
         @Body newRecipeRequest: NewRecipeRequest
     ): Recipe
+
+    @GET("/products/{productId}/price")
+    suspend fun getProductPrice(
+        @Path("productId") productId: String,
+        @Header(Headers.CURRENCY) currency: Currency
+    ): ProductPriceResponse
+
+    @POST("/recipes/price")
+    suspend fun getRecipePriceFromIngredients(
+        @Body recipePriceRequest: RecipePriceRequest,
+        @Header(Headers.CURRENCY) currency: Currency
+    ): RecipePriceResponse?
 }

@@ -1,51 +1,46 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.presentation.components
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.gmail.bodziowaty6978.fitnessappv2.R
-import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValues
-import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.CustomBasicTextField
-import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.DefaultCardBackground
-import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.TextWhite
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Price
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.HeightSpacer
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.WidthSpacer
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.BlueViolet3
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.LightGreen3
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.OrangeYellow3
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.TextGrey
+import com.gmail.bodziowaty6978.fitnessappv2.components.DefaultCardBackground
+import com.gmail.bodziowaty6978.fitnessappv2.components.defaultRoundedCornerShapeValue
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.ProductPrice
 
 @Composable
 fun PriceSection(
     modifier: Modifier,
-    price: Price?,
-    nutritionValues: NutritionValues,
-    unit: String,
-    currency: String,
-    priceValue: String,
-    priceFor: String,
-    onPriceValueEntered: (String) -> Unit,
-    onForEntered: (String) -> Unit,
-    onSubmitPriceClicked: () -> Unit
+    productPrice: ProductPrice?,
+    onSubmitPriceClicked: () -> Unit,
+    onInfoButtonClicked: () -> Unit
 ) {
     DefaultCardBackground(
         modifier = modifier,
@@ -54,110 +49,142 @@ fun PriceSection(
             modifier = Modifier
                 .fillMaxWidth()
         ) {
-            var text = stringResource(id = R.string.submit_new_price)
-            var spacerHeight = 4.dp
-            if (price != null) {
-                PriceRows(
-                    price = price,
-                    nutritionValues = nutritionValues
-                )
-            } else {
-                spacerHeight = 16.dp
-                text =
-                    stringResource(id = R.string.no_one_has_entered_price_for_this_product_be_the_first_one_to_do_so)
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = text,
-                style = MaterialTheme.typography.h3.copy(
-                    textAlign = TextAlign.Center
-                ),
-                modifier = Modifier
-                    .fillMaxWidth()
-            )
-
-            Spacer(modifier = Modifier.height(spacerHeight))
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 15.dp, start = 15.dp, end = 15.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
+            Box(modifier = Modifier.fillMaxWidth()) {
                 Text(
-                    text = stringResource(id = R.string.i_paid),
-                    style = MaterialTheme.typography.body1
-                )
-
-                DefaultCardBackground {
-                    CustomBasicTextField(
-                        value = priceValue,
-                        onValueChange = {
-                            onPriceValueEntered(it)
-                        },
-                        modifier = Modifier
-                            .width(80.dp)
-                            .padding(horizontal = 8.dp, vertical = 10.dp)
-                            .testTag(stringResource(id = R.string.WEIGHT_TEXT_FIELD)),
-                        textStyle = MaterialTheme.typography.body1.copy(
-                            color = TextWhite,
-                            textAlign = TextAlign.End
-                        ),
-                        singleLine = true,
-                        keyboardOptions = KeyboardOptions.Default.copy(
-                            keyboardType = KeyboardType.Number
-                        )
-                    )
-                }
-
-                Text(
-                    text = String.format(stringResource(id = R.string.for_x), currency),
-                    style = MaterialTheme.typography.body1
-                )
-
-                DefaultCardBackground() {
-                    CustomBasicTextField(
-                        value = priceFor,
-                        onValueChange = {
-                            onForEntered(it)
-                        },
-                        modifier = Modifier
-                            .width(80.dp)
-                            .padding(horizontal = 8.dp, vertical = 10.dp)
-                            .testTag(stringResource(id = R.string.WEIGHT_TEXT_FIELD)),
-                        textStyle = MaterialTheme.typography.body1.copy(
-                            color = TextWhite,
-                            textAlign = TextAlign.End
-                        ),
-                        singleLine = true,
-                        keyboardOptions = KeyboardOptions.Default.copy(
-                            keyboardType = KeyboardType.Number
-                        )
-                    )
-                }
-
-                Text(
-                    text = unit,
-                    style = MaterialTheme.typography.body1
+                    text = stringResource(id = R.string.prices),
+                    style = MaterialTheme.typography.h3.copy(
+                        textAlign = TextAlign.Start
+                    ),
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .align(Alignment.Center)
                 )
 
                 IconButton(
                     onClick = {
-                        onSubmitPriceClicked()
+                        onInfoButtonClicked()
                     },
-                    modifier = Modifier
-                        .clip(CircleShape)
-                        .background(MaterialTheme.colors.primary),
+                    modifier = Modifier.align(Alignment.CenterEnd)
                 ) {
                     Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = "",
-                        tint = Color.Black
+                        imageVector = Icons.Default.Info,
+                        contentDescription = "info",
+                        tint = MaterialTheme.colors.primary
                     )
                 }
+            }
+
+            productPrice?.let {
+                Divider(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(1.dp)
+                )
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 16.dp),
+                ) {
+                    Column(
+                        modifier = Modifier.weight(1f),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        PriceItem(
+                            priceValue = productPrice.valueFor100Calories,
+                            dividerColor = MaterialTheme.colors.primary,
+                            rightTextFirstLine = "100",
+                            rightTextSecondLine = stringResource(id = R.string.calories)
+                        )
+
+                        HeightSpacer()
+
+                        PriceItem(
+                            priceValue = productPrice.valueFor100Carbohydrates,
+                            dividerColor = LightGreen3,
+                            rightTextFirstLine = stringResource(
+                                id = R.string.value_with_short_grams,
+                                100
+                            ),
+                            rightTextSecondLine = stringResource(id = R.string.carbs)
+                        )
+                    }
+
+                    Column(
+                        modifier = Modifier.weight(1f),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        PriceItem(
+                            priceValue = productPrice.valueFor10Protein,
+                            dividerColor = BlueViolet3,
+                            rightTextFirstLine = stringResource(
+                                id = R.string.value_with_short_grams,
+                                10
+                            ),
+                            rightTextSecondLine = stringResource(id = R.string.protein)
+                        )
+
+                        HeightSpacer()
+
+                        PriceItem(
+                            priceValue = productPrice.valueFor10Fat,
+                            dividerColor = OrangeYellow3,
+                            rightTextFirstLine = stringResource(
+                                id = R.string.value_with_short_grams,
+                                10
+                            ),
+                            rightTextSecondLine = stringResource(id = R.string.fat)
+                        )
+                    }
+                }
+            } ?: kotlin.run {
+                Text(
+                    text = stringResource(id = R.string.product_no_price),
+                    style = MaterialTheme.typography.body2.copy(
+                        color = TextGrey,
+                        textAlign = TextAlign.Center
+                    ),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp)
+                )
+            }
+
+            Divider(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(1.dp)
+            )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(
+                        RoundedCornerShape(
+                            bottomEnd = defaultRoundedCornerShapeValue(),
+                            bottomStart = defaultRoundedCornerShapeValue(),
+                            topStart = 0.dp,
+                            topEnd = 0.dp
+                        )
+                    )
+                    .clickable { onSubmitPriceClicked() }
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "add",
+                    tint = MaterialTheme.colors.primary
+                )
+
+                WidthSpacer(width = 8.dp)
+
+                Text(
+                    text = stringResource(id = R.string.submit_new_price),
+                    style = MaterialTheme.typography.button,
+                    color = MaterialTheme.colors.primary
+                )
             }
         }
     }

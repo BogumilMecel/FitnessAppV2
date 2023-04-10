@@ -1,7 +1,6 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe
 
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValues
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Price
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.utils.Difficulty
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.utils.TimeRequired
 import kotlinx.serialization.Serializable
@@ -20,5 +19,4 @@ data class Recipe(
     var isPublic: Boolean = false,
     val username: String = "",
     val userId: String = "",
-    val price: Price? = null
 )

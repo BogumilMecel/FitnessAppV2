@@ -13,6 +13,7 @@ class CustomSharedPreferencesUtils(
 ) {
     companion object{
         const val USER_KEY = "user"
+        const val CURRENCY = "currency"
     }
 
     private val sharedPreferences = context.getSharedPreferences("fitness_app", Context.MODE_PRIVATE)

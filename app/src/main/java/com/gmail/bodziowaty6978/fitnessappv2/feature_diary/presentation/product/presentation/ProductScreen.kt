@@ -24,10 +24,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.singleton.CurrentDate
+import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.Currency
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.LightRed
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.presentation.components.PriceSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.presentation.components.ProductMainSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.presentation.components.ProductTopSection
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.presentation.components.SubmitNewPriceDialog
 import com.ramcosta.composedestinations.annotation.Destination
 
 @Destination(
@@ -66,6 +68,19 @@ fun ProductScreen(
             )
         }
     ) { paddingValues ->
+        if (state.isSubmitPriceDialogVisible) {
+            SubmitNewPriceDialog(
+                productName = state.product.name,
+                price = state.priceValue,
+                forValue = state.priceForValue,
+                currency = Currency.PLN,
+                measurementUnit = state.product.measurementUnit,
+                onEvent = {
+                    viewModel.onEvent(it)
+                }
+            )
+        }
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -98,20 +113,12 @@ fun ProductScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 15.dp),
-                price = state.product.price,
-                nutritionValues = state.product.nutritionValues,
-                currency = "zł",
-                unit = stringResource(id = state.product.measurementUnit.getDisplayValue()),
-                priceValue = state.priceValue,
-                priceFor = state.priceForValue,
-                onForEntered = {
-                    viewModel.onEvent(ProductEvent.EnteredPriceFor(it))
-                },
-                onPriceValueEntered = {
-                    viewModel.onEvent(ProductEvent.EnteredPriceValue(it))
-                },
+                productPrice = state.productPrice,
                 onSubmitPriceClicked = {
                     viewModel.onEvent(ProductEvent.ClickedSubmitNewPrice)
+                },
+                onInfoButtonClicked = {
+                    viewModel.onEvent(ProductEvent.ClickedInfoPriceButton)
                 }
             )
 

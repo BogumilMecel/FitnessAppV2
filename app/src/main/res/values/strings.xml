@@ -7,6 +7,9 @@
     <string name="kg">kg</string>
 
     <string name="kcal_with_value">%s Kcal</string>
+    <string name="value_with_short_grams">%sg</string>
+
+    <string name="not_available">N/A</string>
 
 <!--    Auth-->
     <string name="email_address">Email Address</string>
@@ -98,15 +101,17 @@
     <string name="days">%s days in a row</string>
     
 <!--    product-->
-    <string name="prices">Prices for:</string>
+    <string name="prices">Prices</string>
     <string name="price_for_100g_of_protein">100 Grams of protein</string>
     <string name="price_for_100g_of_fat">100 Grams of fat</string>
     <string name="price_for_100g_of_carbohydrates">100 Grams of carbs</string>
     <string name="price_for_100_kcal">100 Calories</string>
-    <string name="submit_new_price">Submit new price</string>
-    <string name="i_paid">I paid</string>
-    <string name="for_x">%s for</string>
-    <string name="no_one_has_entered_price_for_this_product_be_the_first_one_to_do_so">No one has entered a price for this product. Be the first one to do so!</string>
+    <string name="price_how_much_paid">How much did you paid for %s</string>
+    <string name="submit_new_price">Submit New Price</string>
+    <string name="submit">Submit</string>
+    <string name="paid">Paid</string>
+    <string name="price_for">For</string>
+    <string name="product_no_price">No one has entered a price for this product.</string>
     <string name="please_make_sure_you_have_entered_correct_values_for_new_price">Please make sure you have entered correct values for the new price</string>
     <string name="successfully_submitted_new_price">Successfully submitted new price</string>
 
@@ -137,6 +142,12 @@
     <string name="recipe_save_to">Save to %s</string>
     <string name="recipe_edit">Edit recipe</string>
     <string name="recipe_servings_error">Please make sure you have entered correct servings value</string>
+    <string name="recipe_price">Recipe price</string>
+    <string name="recipe_information">Recipe information</string>
+    <string name="serving">Serving</string>
+    <string name="recipe">Recipe</string>
+    <string name="recipe_price_warning">Not every product has a price!</string>
+    <string name="selected">Selected</string>
 
     <string name="new_recipe_public">Should recipe be public</string>
     <string name="new_recipe_public_des">Everybody will be able to see it and you will not be able to delete it</string>

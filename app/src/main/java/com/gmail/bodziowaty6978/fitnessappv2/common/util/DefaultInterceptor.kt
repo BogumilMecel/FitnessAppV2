@@ -13,7 +13,14 @@ class DefaultInterceptor(
         sharedPreferences.getString("token", null)?.let {
             request.addHeader("Authorization", "Bearer $it")
         }
-        request.addHeader("country", Country.POLAND.shortName)
-        return chain.proceed(request.build())
+        request.addHeader(Headers.COUNTRY, Country.POLAND.shortName)
+
+        val response = chain.proceed(request.build())
+
+        return if (response.code == 204) {
+            response.newBuilder().code(200).build()
+        } else {
+            response
+        }
     }
 }

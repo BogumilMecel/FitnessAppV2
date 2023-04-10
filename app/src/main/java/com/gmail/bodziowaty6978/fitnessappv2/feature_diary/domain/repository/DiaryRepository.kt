@@ -1,10 +1,12 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.repository
 
+import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.Currency
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.DeleteDiaryEntryRequest
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.DiaryEntriesResponse
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Price
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.ProductPrice
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.RecipePriceResponse
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntryPostRequest
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.product.NewPriceRequest
@@ -12,6 +14,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.product.
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.NewRecipeRequest
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntryRequest
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.RecipePriceRequest
 
 interface DiaryRepository {
     suspend fun getDiaryEntries(date: String): Resource<DiaryEntriesResponse>
@@ -25,6 +28,17 @@ interface DiaryRepository {
     suspend fun editDiaryEntry(productDiaryEntry: ProductDiaryEntry): Resource<Unit>
     suspend fun saveNewProduct(newProductRequest: NewProductRequest): Resource<Product>
     suspend fun getCaloriesSum(date: String): Resource<Int>
-    suspend fun addNewPrice(newPriceRequest: NewPriceRequest): Resource<Price>
+    suspend fun getPrice(productId: String, currency: Currency): Resource<ProductPrice?>
+    suspend fun getRecipePriceFromIngredients(
+        recipePriceRequest: RecipePriceRequest,
+        currency: Currency
+    ): Resource<RecipePriceResponse?>
+
+    suspend fun submitNewPrice(
+        newPriceRequest: NewPriceRequest,
+        productId: String,
+        currency: Currency
+    ): Resource<ProductPrice>
+
     suspend fun addNewRecipe(newRecipeRequest: NewRecipeRequest): Resource<Recipe>
 }

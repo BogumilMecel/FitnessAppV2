@@ -5,8 +5,12 @@ import androidx.lifecycle.viewModelScope
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.singleton.CurrentDate
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.multiplyBy
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
+import com.gmail.bodziowaty6978.fitnessappv2.common.util.extensions.toValidInt
 import com.gmail.bodziowaty6978.fitnessappv2.destinations.DiaryScreenDestination
 import com.gmail.bodziowaty6978.fitnessappv2.destinations.RecipeScreenDestination
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.RecipePrice
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.CalculateSelectedServingPriceUseCase
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.GetRecipePriceFromIngredientsUseCase
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.product.CreatePieChartData
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.recipe.PostRecipeDiaryEntryUseCase
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.domain.model.NutritionData
@@ -22,6 +26,8 @@ import javax.inject.Inject
 class RecipeViewModel @Inject constructor(
     private val createPieChartData: CreatePieChartData,
     private val postRecipeDiaryEntryUseCase: PostRecipeDiaryEntryUseCase,
+    private val getRecipePriceFromIngredientsUseCase: GetRecipePriceFromIngredientsUseCase,
+    private val calculateSelectedServingPriceUseCase: CalculateSelectedServingPriceUseCase,
     savedStateHandle: SavedStateHandle
 ) : BaseViewModel() {
 
@@ -35,6 +41,7 @@ class RecipeViewModel @Inject constructor(
 
     init {
         initializeRecipeData()
+        fetchRecipePrice()
     }
 
     fun onEvent(event: RecipeEvent) {
@@ -44,13 +51,14 @@ class RecipeViewModel @Inject constructor(
                 onFavoriteClicked()
             }
 
-            is RecipeEvent.EnteredPortions -> {
+            is RecipeEvent.EnteredServings -> {
                 _state.update {
                     it.copy(
-                        portions = event.value
+                        servings = event.value
                     )
                 }
                 recalculateNutritionData()
+                updateServingPrice()
             }
 
             is RecipeEvent.ClickedExpandIngredientsList -> {
@@ -67,7 +75,7 @@ class RecipeViewModel @Inject constructor(
                         dateModel = CurrentDate.dateModel(resourceProvider = resourceProvider),
                         mealName = _state.value.mealName,
                         recipe = _state.value.recipe,
-                        servingsString = _state.value.portions
+                        servingsString = _state.value.servings
                     ).handle {
                         navigateWithPopUp(
                             destination = DiaryScreenDestination
@@ -107,7 +115,7 @@ class RecipeViewModel @Inject constructor(
         val recipe = _state.value.recipe
         val recipeServings = if (recipe.servings == 0) 1.0 else recipe.servings.toDouble()
         recipe.nutritionValues.multiplyBy(
-            number = _state.value.portions.toDoubleOrNull()?.let { portions ->
+            number = _state.value.servings.toDoubleOrNull()?.let { portions ->
                 portions / recipeServings
             } ?: (1.0 / recipeServings)
         ).let { calculatedNutritionValues ->
@@ -117,6 +125,42 @@ class RecipeViewModel @Inject constructor(
                         nutritionValues = calculatedNutritionValues
                     )
                 )
+            }
+        }
+    }
+
+    private fun fetchRecipePrice() {
+        viewModelScope.launch {
+            getRecipePriceFromIngredientsUseCase(
+                ingredients = _state.value.recipe.ingredients
+            ).handle(showSnackbar = false) { response ->
+                _state.update {
+                    it.copy(
+                        recipePrice = response?.let {
+                            RecipePrice(
+                                totalPrice = response.totalPrice,
+                                shouldShowPriceWarning = response.shouldShowPriceWarning
+                            )
+                        }
+                    )
+                }
+                updateServingPrice()
+            }
+        }
+    }
+
+    private fun updateServingPrice() = with(_state.value){
+        servings.toValidInt()?.let { servings ->
+            recipePrice?.let { recipePrice ->
+                _state.update {
+                    it.copy(
+                        servingPrice = calculateSelectedServingPriceUseCase(
+                            recipeServings = it.recipe.servings,
+                            selectedServings = servings,
+                            totalPrice = recipePrice.totalPrice
+                        ),
+                    )
+                }
             }
         }
     }
