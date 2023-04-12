@@ -1,0 +1,153 @@
+package com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.use_cases
+
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.ResourceProvider
+import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.repository.UserDataRepository
+import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.presentation.util.IntroductionExpectedQuestionAnswer
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runTest
+import org.junit.After
+import org.junit.Before
+import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.runner.RunWith
+import org.mockito.Mock
+import org.mockito.Mockito
+import org.mockito.MockitoAnnotations
+import org.mockito.kotlin.any
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.RuntimeEnvironment
+
+@OptIn(ExperimentalCoroutinesApi::class)
+@RunWith(RobolectricTestRunner::class)
+internal class SaveIntroductionInformationTest {
+
+    private lateinit var saveIntroductionInformation: SaveIntroductionInformation
+    private lateinit var answers: MutableMap<IntroductionExpectedQuestionAnswer, String>
+
+    @Mock
+    private lateinit var mockUserDataRepository: UserDataRepository
+
+    private lateinit var closeable: AutoCloseable
+
+    @Before
+    fun setUp() = runTest{
+        closeable = MockitoAnnotations.openMocks(this)
+        mockUserDataRepository = Mockito.mock(UserDataRepository::class.java)
+        Mockito.`when`(mockUserDataRepository.saveNutritionValues(
+            any(),
+            any()
+        )).thenReturn(CustomResult.Success)
+        saveIntroductionInformation = SaveIntroductionInformation(
+            calculateNutritionValues = CalculateNutritionValues(),
+            resourceProvider = ResourceProvider(RuntimeEnvironment.getApplication()),
+            userDataRepository = mockUserDataRepository
+        )
+        answers = mutableMapOf(
+            IntroductionExpectedQuestionAnswer.Gender to "0",
+            IntroductionExpectedQuestionAnswer.Age to "18",
+            IntroductionExpectedQuestionAnswer.Height to "180.0",
+            IntroductionExpectedQuestionAnswer.CurrentWeight to "80.0",
+            IntroductionExpectedQuestionAnswer.TypeOfWork to "0",
+            IntroductionExpectedQuestionAnswer.HowOftenDoYouTrain to "0",
+            IntroductionExpectedQuestionAnswer.TypeOfWork to "0",
+            IntroductionExpectedQuestionAnswer.DesiredWeight to "80.0",
+            IntroductionExpectedQuestionAnswer.ActivityDuringADay to "0"
+        )
+    }
+
+    @Test
+    fun `passed empty currentWeight, return Result Error`() = runTest {
+        answers[IntroductionExpectedQuestionAnswer.CurrentWeight] = ""
+        val result = saveIntroductionInformation(answers)
+        assertTrue(result is CustomResult.Error)
+    }
+
+    @Test
+    fun `passed empty wantedWeight, return Result Error`() = runTest {
+        answers[IntroductionExpectedQuestionAnswer.DesiredWeight] = ""
+        val result = saveIntroductionInformation(answers)
+        assertTrue(result is CustomResult.Error)
+    }
+
+    @Test
+    fun `passed empty age, return Result Error`() = runTest {
+        answers[IntroductionExpectedQuestionAnswer.Age] = ""
+        val result = saveIntroductionInformation(answers)
+        assertTrue(result is CustomResult.Error)
+    }
+
+    @Test
+    fun `passed empty height, return Result Error`() = runTest {
+        answers[IntroductionExpectedQuestionAnswer.Height] = ""
+        val result = saveIntroductionInformation(answers)
+        assertTrue(result is CustomResult.Error)
+    }
+
+    @Test
+    fun `passed letters as currentWeight, return Result Error`() = runTest {
+        answers[IntroductionExpectedQuestionAnswer.CurrentWeight] = "abc"
+        val result = saveIntroductionInformation(answers)
+        assertTrue(result is CustomResult.Error)
+    }
+
+    @Test
+    fun `passed letters as wantedWeight, return Result Error`() = runTest {
+        answers[IntroductionExpectedQuestionAnswer.DesiredWeight] = "abc"
+        val result = saveIntroductionInformation(answers)
+        assertTrue(result is CustomResult.Error)
+    }
+
+    @Test
+    fun `passed letters as age, return Result Error`() = runTest {
+        answers[IntroductionExpectedQuestionAnswer.Age] = "abc"
+        val result = saveIntroductionInformation(answers)
+        assertTrue(result is CustomResult.Error)
+    }
+
+    @Test
+    fun `passed letters as height, return Result Error`() = runTest {
+        answers[IntroductionExpectedQuestionAnswer.Height] = "abc"
+        val result = saveIntroductionInformation(answers)
+        assertTrue(result is CustomResult.Error)
+    }
+
+    @Test
+    fun `passed negative number as height, return Result Error`() = runTest {
+        answers[IntroductionExpectedQuestionAnswer.Height] = "-50"
+        val result = saveIntroductionInformation(answers)
+        assertTrue(result is CustomResult.Error)
+    }
+
+    @Test
+    fun `passed negative number as age, return Result Error`() = runTest {
+        answers[IntroductionExpectedQuestionAnswer.Height] = "-50"
+        val result = saveIntroductionInformation(answers)
+        assertTrue(result is CustomResult.Error)
+    }
+
+    @Test
+    fun `passed negative number as wantedWeight, return Result Error`() = runTest {
+        answers[IntroductionExpectedQuestionAnswer.Height] = "-50"
+        val result = saveIntroductionInformation(answers)
+        assertTrue(result is CustomResult.Error)
+    }
+
+    @Test
+    fun `passed negative number as currentWeight, return Result Error`() = runTest {
+        answers[IntroductionExpectedQuestionAnswer.Height] = "-50"
+        val result = saveIntroductionInformation(answers)
+        assertTrue(result is CustomResult.Error)
+    }
+
+    @Test
+    fun `passed correct data, Result Success`() = runTest{
+        val result = saveIntroductionInformation(answers)
+        assertTrue(result is CustomResult.Success)
+    }
+
+    @After
+    fun after(){
+        closeable.close()
+    }
+
+}

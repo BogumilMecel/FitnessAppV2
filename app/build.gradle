@@ -12,13 +12,13 @@ android {
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.gmail.bodziowaty6978.fitnessappv2"
+        applicationId "com.gmail.bogumilmecel2.fitnessappv2"
         minSdk 24
         targetSdk 33
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "com.gmail.bodziowaty6978.fitnessappv2.HiltTestRunner"
+        testInstrumentationRunner "com.gmail.bogumilmecel2.fitnessappv2.HiltTestRunner"
         vectorDrawables {
             useSupportLibrary true
         }
@@ -52,7 +52,7 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
-    namespace 'com.gmail.bodziowaty6978.fitnessappv2'
+    namespace 'com.gmail.bogumilmecel2.fitnessappv2'
 
     packagingOptions {
         resources.excludes.add("META-INF/*")
