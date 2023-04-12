@@ -1,8 +1,7 @@
-package com.gmail.bogumilmecel2.fitnessappv2.components.theme
+package com.gmail.bogumilmecel2.ui.theme
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.staticCompositionLocalOf
-import com.gmail.bogumilmecel2.fitnessappv2.components.FitnessAppColor
 
 val LocalTypography = staticCompositionLocalOf { FitnessAppTypography() }
 val LocalColor = staticCompositionLocalOf { FitnessAppColor() }

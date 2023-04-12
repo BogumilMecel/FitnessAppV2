@@ -1,4 +1,4 @@
-package com.gmail.bogumilmecel2.fitnessappv2.components
+package com.gmail.bogumilmecel2.ui.theme
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
