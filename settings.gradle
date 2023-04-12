@@ -16,3 +16,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "FitnessAppV2"
 include ':app'
+include ':ui'
