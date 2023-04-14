@@ -31,8 +31,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.BackHandler
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.HeightSpacer
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.WidthSpacer
+import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
+import com.gmail.bogumilmecel2.ui.components.base.WidthSpacer
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.DarkGreyElevation6
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.Grey
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.TextGrey

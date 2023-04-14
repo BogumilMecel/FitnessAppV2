@@ -18,15 +18,12 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Equalizer
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.SupervisorAccount
 import androidx.compose.runtime.Composable
@@ -36,22 +33,23 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.CustomButton
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.DropdownArrow
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.HeightSpacer
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.WidthSpacer
+import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
+import com.gmail.bogumilmecel2.ui.components.base.WidthSpacer
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.TextGrey
-import com.gmail.bogumilmecel2.fitnessappv2.components.BackArrow
 import com.gmail.bogumilmecel2.fitnessappv2.components.CustomBasicTextField
 import com.gmail.bogumilmecel2.fitnessappv2.components.DefaultCardBackground
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_recipe.components.RecipePriceSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.presentation.components.ProductNutritionSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.componens.SearchProductItem
+import com.gmail.bogumilmecel2.ui.components.base.CustomIconStyle
+import com.gmail.bogumilmecel2.ui.components.base.IconParams
+import com.gmail.bogumilmecel2.ui.components.complex.HeaderRow
 import com.ramcosta.composedestinations.annotation.Destination
 
 @Destination(
@@ -69,66 +67,26 @@ fun RecipeScreen(
             .fillMaxSize()
             .verticalScroll(scrollState)
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            BackArrow(
-                modifier = Modifier.weight(0.1F)
-            ) {
+        HeaderRow(
+            middlePrimaryText = state.recipe.name,
+            middleSecondaryText = stringResource(
+                id = R.string.kcal_with_value,
+                state.recipe.nutritionValues.calories
+            ),
+            onBackPressed = {
                 viewModel.onEvent(RecipeEvent.ClickedBackArrow)
-            }
-
-            WidthSpacer()
-
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .weight(0.8F)
-                    .padding(top = 10.dp)
-            ) {
-                Text(
-                    text = state.recipe.name,
-                    style = MaterialTheme.typography.h3.copy(
-                        textAlign = TextAlign.Center
-                    ),
-                    maxLines = 4
-                )
-
-                HeightSpacer(height = 4.dp)
-
-                Text(
-                    text = stringResource(
-                        id = R.string.kcal_with_value,
-                        state.recipe.nutritionValues.calories
-                    ),
-                    style = MaterialTheme.typography.body2.copy(
-                        color = TextGrey
-                    )
-                )
-            }
-
-            WidthSpacer()
-
-            IconButton(
+            },
+            endIconParams = IconParams(
+                iconStyle = if (!state.isFavorite) {
+                    CustomIconStyle.HeartIcon
+                } else {
+                    CustomIconStyle.HeartIconFilled
+                },
                 onClick = {
                     viewModel.onEvent(RecipeEvent.ClickedFavorite)
-                },
-                modifier = Modifier.weight(0.1F)
-            ) {
-                Icon(
-                    imageVector = if (!state.isFavorite) {
-                        Icons.Default.FavoriteBorder
-                    } else {
-                        Icons.Filled.Favorite
-                    },
-                    contentDescription = null
-                )
-            }
-        }
+                }
+            )
+        )
 
         HeightSpacer()
 

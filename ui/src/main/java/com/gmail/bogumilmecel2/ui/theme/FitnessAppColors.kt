@@ -6,7 +6,9 @@ import androidx.compose.ui.graphics.Color
 data class FitnessAppColor(
     val Black: Color = Color.Black,
     val White: Color = Color.White,
-    val Primary: Color = LocalColors.OrangeYellow3
+    val Primary: Color = LocalColors.OrangeYellow3,
+    val ContentPrimary: Color = LocalColors.ContentPrimary,
+    val ContentSecondary: Color = LocalColors.ContentSecondary
 )
 
 object LocalColors {
@@ -39,8 +41,8 @@ object LocalColors {
     val LightGrey = Color(0xFF383838)
     val DarkGreyElevation = Color(0xFF242424)
 
-    val TextWhite = Color(0xffeeeeee)
-    val TextGrey = Color(0xFFbfbfbf)
+    val ContentPrimary = Color(0xffeeeeee)
+    val ContentSecondary = Color(0xFFbfbfbf)
     val TextGreyPlaceholder = Color(0xFF999999)
     val Green = Color(0xFF81c784)
     val RedError = Color(0xFFe57373)
@@ -50,18 +52,22 @@ enum class FitnessAppColors {
     Black,
     White,
     Primary,
-    TextWhite,
-    TextGrey,
+    ContentWhite,
+    ContentSecondary,
     TextGreyPlaceholder,
     Calories,
     Carbohydrates,
     Protein,
-    Fat;
+    Fat,
+    Error;
 
     @Composable
     operator fun invoke() = when (this) {
         Black -> Color.Black
         White -> Color.White
+        Error -> LocalColors.RedError
+        ContentWhite -> LocalColors.ContentPrimary
+        ContentSecondary -> LocalColors.ContentSecondary
         else -> Color.White
     }
 }

@@ -28,8 +28,8 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.Currency
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.LightRed
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.presentation.components.PriceSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.presentation.components.ProductMainSection
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.presentation.components.ProductTopSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.presentation.components.SubmitNewPriceDialog
+import com.gmail.bogumilmecel2.ui.components.complex.HeaderRow
 import com.ramcosta.composedestinations.annotation.Destination
 
 @Destination(
@@ -86,11 +86,11 @@ fun ProductScreen(
                 .fillMaxSize()
                 .padding(paddingValues.calculateBottomPadding())
         ) {
-            ProductTopSection(
-                mealName = stringResource(id = state.mealName.getDisplayValue()),
-                currentDate = CurrentDate.dateModel(LocalContext.current).valueToDisplay
+            HeaderRow(
+                middlePrimaryText = stringResource(id = state.mealName.getDisplayValue()),
+                middleSecondaryText = CurrentDate.dateModel(LocalContext.current).valueToDisplay
                     ?: CurrentDate.dateModel(LocalContext.current).date,
-                onBackArrowPressed = {
+                onBackPressed = {
                     viewModel.onEvent(ProductEvent.ClickedBackArrow)
                 }
             )

@@ -6,23 +6,21 @@ import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.gmail.bogumilmecel2.fitnessappv2.components.BackArrow
-import com.gmail.bogumilmecel2.fitnessappv2.components.CustomBasicTextField
+import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.DarkGreyElevation1
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.TextGrey
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.TextWhite
+import com.gmail.bogumilmecel2.fitnessappv2.components.CustomBasicTextField
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.SearchEvent
+import com.gmail.bogumilmecel2.ui.components.complex.HeaderRow
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.PagerState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import com.gmail.bogumilmecel2.fitnessappv2.R
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
@@ -39,33 +37,13 @@ fun SearchTopSection(
         modifier = modifier
             .fillMaxWidth()
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth(),
-        ) {
-            BackArrow(
-                modifier = Modifier.align(Alignment.CenterStart)
-            ) {
+        HeaderRow(
+            middlePrimaryText = mealName,
+            middleSecondaryText = date,
+            onBackPressed = {
                 onEvent(SearchEvent.ClickedBackArrow)
             }
-
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.align(Alignment.Center)
-            ) {
-                Text(
-                    text = mealName,
-                    style = MaterialTheme.typography.h2
-                )
-
-                Text(
-                    text = date,
-                    style = MaterialTheme.typography.body2,
-                    color = TextGrey
-                )
-
-            }
-        }
+        )
 
         Spacer(modifier = Modifier.height(5.dp))
 

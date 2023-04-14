@@ -1,10 +1,8 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_product
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.FloatingActionButton
@@ -23,13 +21,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.R
-import com.gmail.bogumilmecel2.fitnessappv2.components.BackArrow
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.BackHandler
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_product.components.BarcodeSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_product.components.ContainerWeightSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_product.components.NutritionSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_product.components.TextFieldSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.shared.ScannerSection
+import com.gmail.bogumilmecel2.ui.components.complex.HeaderRow
 import com.ramcosta.composedestinations.annotation.Destination
 
 @Destination(
@@ -71,14 +69,12 @@ fun NewProductScreen(
                     .fillMaxSize()
                     .padding(vertical = paddingValues.calculateBottomPadding())
             ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                ) {
-                    BackArrow {
+                HeaderRow(
+                    middlePrimaryText = stringResource(id = R.string.create_product),
+                    onBackPressed = {
                         viewModel.onEvent(NewProductEvent.ClickedBackArrow)
                     }
-                }
+                )
 
                 Spacer(modifier = Modifier.height(5.dp))
 

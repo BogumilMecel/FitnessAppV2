@@ -1,7 +1,6 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.edit_nutrition_goals
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -26,11 +25,11 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.fitnessappv2.R
-import com.gmail.bogumilmecel2.fitnessappv2.components.BackArrow
+import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.TextGrey
 import com.gmail.bogumilmecel2.fitnessappv2.components.CustomBasicTextField
 import com.gmail.bogumilmecel2.fitnessappv2.components.DefaultCardBackground
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.TextGrey
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.edit_nutrition_goals.components.MacroElementsSection
+import com.gmail.bogumilmecel2.ui.components.complex.HeaderRow
 import com.ramcosta.composedestinations.annotation.Destination
 
 @Destination
@@ -48,23 +47,12 @@ fun EditNutritionGoalsScreen(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-        ) {
-            BackArrow(
-                modifier = Modifier.align(Alignment.CenterStart)
-            ) {
+        HeaderRow(
+            middlePrimaryText = stringResource(id = R.string.nutrition_goals),
+            onBackPressed = {
                 viewModel.onEvent(EditNutritionGoalsEvent.BackArrowPressed)
             }
-
-            Text(
-                text = stringResource(id = R.string.nutrition_goals),
-                style = MaterialTheme.typography.h2,
-                modifier = Modifier
-                    .align(Alignment.Center)
-            )
-        }
+        )
 
         Spacer(modifier = Modifier.height(6.dp))
 
