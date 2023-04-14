@@ -27,12 +27,12 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.Currency
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.MeasurementUnit
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.ButtonStyle
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.CustomButton
-import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
-import com.gmail.bogumilmecel2.ui.components.base.WidthSpacer
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.DarkGreyElevation2
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.TextGrey
 import com.gmail.bogumilmecel2.fitnessappv2.components.CustomBasicTextField
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.presentation.ProductEvent
+import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
+import com.gmail.bogumilmecel2.ui.components.base.WidthSpacer
+import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
+import com.gmail.bogumilmecel2.ui.theme.LocalColor.DarkGreyElevation2
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -98,7 +98,7 @@ fun SubmitNewPriceDialog(
                     Text(
                         text = stringResource(id = currency.getDisplayValue()),
                         style = MaterialTheme.typography.body2.copy(
-                            color = TextGrey
+                            color = FitnessAppTheme.colors.ContentSecondary
                         )
                     )
                 }
@@ -141,7 +141,7 @@ fun SubmitNewPriceDialog(
                     Text(
                         text = stringResource(id = measurementUnit.getDisplayValue()),
                         style = MaterialTheme.typography.body2.copy(
-                            color = TextGrey
+                            color = FitnessAppTheme.colors.ContentSecondary
                         )
                     )
                 }

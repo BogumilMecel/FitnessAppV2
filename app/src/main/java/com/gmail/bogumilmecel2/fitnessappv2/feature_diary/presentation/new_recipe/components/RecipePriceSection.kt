@@ -19,10 +19,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.gmail.bogumilmecel2.fitnessappv2.R
-import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.LightRed
 import com.gmail.bogumilmecel2.fitnessappv2.components.DefaultCardBackground
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.presentation.components.PriceItem
+import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
+import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 
 @Composable
 fun RecipePriceSection(
@@ -103,7 +103,7 @@ fun RecipePriceSection(
                     Text(
                         text = stringResource(id = R.string.recipe_price_warning),
                         style = MaterialTheme.typography.body2,
-                        color = LightRed,
+                        color = FitnessAppTheme.colors.Error,
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center
                     )

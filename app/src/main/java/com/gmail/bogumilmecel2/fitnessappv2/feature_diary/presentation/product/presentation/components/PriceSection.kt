@@ -25,15 +25,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.gmail.bogumilmecel2.fitnessappv2.R
-import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
-import com.gmail.bogumilmecel2.ui.components.base.WidthSpacer
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.BlueViolet3
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.LightGreen3
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.OrangeYellow3
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.TextGrey
 import com.gmail.bogumilmecel2.fitnessappv2.components.DefaultCardBackground
 import com.gmail.bogumilmecel2.fitnessappv2.components.defaultRoundedCornerShapeValue
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductPrice
+import com.gmail.bogumilmecel2.ui.components.base.CustomText
+import com.gmail.bogumilmecel2.ui.components.base.FitnessAppTextStyle
+import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
+import com.gmail.bogumilmecel2.ui.components.base.WidthSpacer
+import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
+import com.gmail.bogumilmecel2.ui.theme.LocalColor.BlueViolet3
+import com.gmail.bogumilmecel2.ui.theme.LocalColor.LightGreen3
+import com.gmail.bogumilmecel2.ui.theme.LocalColor.OrangeYellow3
 
 @Composable
 fun PriceSection(
@@ -50,11 +52,10 @@ fun PriceSection(
                 .fillMaxWidth()
         ) {
             Box(modifier = Modifier.fillMaxWidth()) {
-                Text(
+                CustomText(
                     text = stringResource(id = R.string.prices),
-                    style = MaterialTheme.typography.h3.copy(
-                        textAlign = TextAlign.Start
-                    ),
+                    fitnessAppTextStyle = FitnessAppTextStyle.CardTitle,
+                    textAlign = TextAlign.Center,
                     modifier = Modifier
                         .padding(16.dp)
                         .align(Alignment.Center)
@@ -141,7 +142,7 @@ fun PriceSection(
                 Text(
                     text = stringResource(id = R.string.product_no_price),
                     style = MaterialTheme.typography.body2.copy(
-                        color = TextGrey,
+                        color = FitnessAppTheme.colors.ContentSecondary,
                         textAlign = TextAlign.Center
                     ),
                     modifier = Modifier

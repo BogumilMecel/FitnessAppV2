@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.chargemap.compose.numberpicker.ListItemPicker
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.TextGrey
+import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 
 @Composable
 fun NutritionPercentagePicker(
@@ -27,7 +27,7 @@ fun NutritionPercentagePicker(
         Text(
             text = nutritionName,
             style = MaterialTheme.typography.body2.copy(
-                color = TextGrey
+                color = FitnessAppTheme.colors.ContentSecondary
             )
         )
 

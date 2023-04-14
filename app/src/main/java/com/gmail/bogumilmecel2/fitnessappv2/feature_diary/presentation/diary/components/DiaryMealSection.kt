@@ -28,9 +28,9 @@ import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.DiaryItem
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.components.DefaultCardBackground
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.OrangeYellow1
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.MealName
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.diary.DiaryEvent
+import com.gmail.bogumilmecel2.ui.theme.LocalColor.OrangeYellow1
 
 @Composable
 fun DiaryMealSection(

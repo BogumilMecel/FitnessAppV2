@@ -17,11 +17,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.gmail.bogumilmecel2.fitnessappv2.R
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.BlueViolet1
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.OrangeYellow1
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.ErrorUtils
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.SearchEvent
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.SearchState
+import com.gmail.bogumilmecel2.ui.theme.LocalColor.BlueViolet1
+import com.gmail.bogumilmecel2.ui.theme.LocalColor.OrangeYellow1
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.isGranted

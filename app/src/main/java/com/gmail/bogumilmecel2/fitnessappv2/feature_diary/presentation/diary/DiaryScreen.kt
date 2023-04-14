@@ -31,17 +31,17 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.BackHandler
-import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
-import com.gmail.bogumilmecel2.ui.components.base.WidthSpacer
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.DarkGreyElevation6
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.Grey
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.TextGrey
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.MealName
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.diary.components.CalendarSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.diary.components.DiaryMealSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.diary.components.NutritionBottomSection
+import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
+import com.gmail.bogumilmecel2.ui.components.base.WidthSpacer
+import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
+import com.gmail.bogumilmecel2.ui.theme.LocalColor.DarkGreyElevation6
+import com.gmail.bogumilmecel2.ui.theme.LocalColor.Grey
 import com.ramcosta.composedestinations.annotation.Destination
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -104,7 +104,7 @@ fun DiaryScreen(
                                         Text(
                                             text = "(${diaryItem.getDisplayValue()})",
                                             style = MaterialTheme.typography.body2,
-                                            color = TextGrey
+                                            color = FitnessAppTheme.colors.ContentSecondary
                                         )
                                     }
                                 }

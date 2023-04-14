@@ -23,8 +23,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.components.DefaultCardBackground
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.TextGrey
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.presentation.SummaryEvent
+import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 
 @Composable
 fun WeightSection(
@@ -67,7 +67,7 @@ fun WeightSection(
                     Text(
                         text = "${weightProgress}kg",
                         style = MaterialTheme.typography.body2.copy(
-                            color = TextGrey
+                            color = FitnessAppTheme.colors.ContentSecondary
                         )
                     )
                 }

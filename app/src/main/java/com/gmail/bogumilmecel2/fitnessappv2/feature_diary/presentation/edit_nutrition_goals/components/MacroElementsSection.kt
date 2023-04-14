@@ -16,14 +16,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.components.DefaultCardBackground
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.BlueViolet3
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.Green
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.LightGreen3
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.OrangeYellow3
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.RedError
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.TextGrey
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.edit_nutrition_goals.EditNutritionGoalsEvent
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.edit_nutrition_goals.EditNutritionGoalsState
+import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
+import com.gmail.bogumilmecel2.ui.theme.LocalColor.BlueViolet3
+import com.gmail.bogumilmecel2.ui.theme.LocalColor.Green
+import com.gmail.bogumilmecel2.ui.theme.LocalColor.LightGreen3
+import com.gmail.bogumilmecel2.ui.theme.LocalColor.OrangeYellow3
 
 @Composable
 fun MacroElementsSection(
@@ -103,14 +102,14 @@ fun MacroElementsSection(
                 Text(
                     text = "${state.totalPercentage.toInt()}%",
                     style = MaterialTheme.typography.h3.copy(
-                        color = if (state.totalPercentage == 100F) Green else RedError
+                        color = if (state.totalPercentage == 100F) Green else FitnessAppTheme.colors.Error
                     )
                 )
             }
             Text(
                 text = stringResource(id = R.string.your_total_has_to_be_at_100),
                 style = MaterialTheme.typography.body2.copy(
-                    color = TextGrey
+                    color = FitnessAppTheme.colors.ContentSecondary
                 )
             )
         }

@@ -26,11 +26,10 @@ import androidx.compose.ui.unit.dp
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.components.CustomBasicTextField
 import com.gmail.bogumilmecel2.fitnessappv2.components.DefaultCardBackground
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.BlueViolet3
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.DarkGreyElevation
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.TextGrey
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.TextWhite
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
+import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
+import com.gmail.bogumilmecel2.ui.theme.LocalColor.BlueViolet3
+import com.gmail.bogumilmecel2.ui.theme.LocalColor.DarkGreyElevation
 
 @Composable
 fun ProductNameSection(
@@ -62,7 +61,7 @@ fun ProductNameSection(
                         Text(
                             text = product.name,
                             style = MaterialTheme.typography.body2.copy(
-                                color = TextWhite
+                                color = FitnessAppTheme.colors.ContentPrimary
                             ),
                         )
                     }
@@ -84,7 +83,7 @@ fun ProductNameSection(
                                 )
                                 .testTag(stringResource(id = R.string.WEIGHT_TEXT_FIELD)),
                             textStyle = MaterialTheme.typography.body1.copy(
-                                color = TextWhite,
+                                color = FitnessAppTheme.colors.ContentPrimary,
                                 textAlign = TextAlign.End
                             ),
                             singleLine = true,
@@ -100,7 +99,7 @@ fun ProductNameSection(
                     Text(
                         text = stringResource(id = R.string.g),
                         style = MaterialTheme.typography.body2.copy(
-                            color = TextGrey
+                            color = FitnessAppTheme.colors.ContentSecondary
                         )
                     )
                 }

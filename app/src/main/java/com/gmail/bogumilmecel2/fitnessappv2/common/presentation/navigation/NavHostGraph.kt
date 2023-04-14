@@ -19,14 +19,14 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.navigation.NavigationA
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.navigation.Navigator
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.BottomBar
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.CustomSnackbar
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.DarkGrey
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.DarkGreyElevation1
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.ErrorUtils
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.AccountScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.DiaryScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.LoginScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.SearchScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.SummaryScreenDestination
+import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
+import com.gmail.bogumilmecel2.ui.theme.LocalColor.DarkGreyElevation1
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.ramcosta.composedestinations.DestinationsNavHost
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -39,7 +39,7 @@ fun NavHostGraph(
     val currentDestination = navController.currentBackStackEntryAsState().value?.destination?.route
 
     val systemUiController = rememberSystemUiController()
-    systemUiController.setSystemBarsColor(color = if (currentDestination == SearchScreenDestination.route) DarkGreyElevation1 else DarkGrey)
+    systemUiController.setSystemBarsColor(color = if (currentDestination == SearchScreenDestination.route) DarkGreyElevation1 else FitnessAppTheme.colors.Background)
 
     val scaffoldState = rememberScaffoldState()
 

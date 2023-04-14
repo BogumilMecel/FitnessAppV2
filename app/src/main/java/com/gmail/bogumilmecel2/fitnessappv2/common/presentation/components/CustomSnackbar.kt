@@ -6,7 +6,7 @@ import androidx.compose.material.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.DarkGreyElevation6
+import com.gmail.bogumilmecel2.ui.theme.LocalColor.DarkGreyElevation6
 
 @Composable
 fun CustomSnackbar(

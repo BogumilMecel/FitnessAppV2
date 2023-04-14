@@ -4,10 +4,10 @@ import com.github.tehras.charts.piechart.PieChartData
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValue
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.CalculateNutritionValuesPercentages
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.BlueViolet3
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.DarkGreyElevation2
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.LightGreen3
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.OrangeYellow3
+import com.gmail.bogumilmecel2.ui.theme.LocalColor.BlueViolet3
+import com.gmail.bogumilmecel2.ui.theme.LocalColor.DarkGreyElevation2
+import com.gmail.bogumilmecel2.ui.theme.LocalColor.LightGreen3
+import com.gmail.bogumilmecel2.ui.theme.LocalColor.OrangeYellow3
 
 class CreatePieChartData(
     private val calculateNutritionValuesPercentages: CalculateNutritionValuesPercentages

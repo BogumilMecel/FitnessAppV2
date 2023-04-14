@@ -25,11 +25,11 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.fitnessappv2.R
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.TextGrey
 import com.gmail.bogumilmecel2.fitnessappv2.components.CustomBasicTextField
 import com.gmail.bogumilmecel2.fitnessappv2.components.DefaultCardBackground
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.edit_nutrition_goals.components.MacroElementsSection
 import com.gmail.bogumilmecel2.ui.components.complex.HeaderRow
+import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 import com.ramcosta.composedestinations.annotation.Destination
 
 @Destination
@@ -94,7 +94,7 @@ fun EditNutritionGoalsScreen(
                     Text(
                         text = stringResource(id = R.string.kcal),
                         style = MaterialTheme.typography.body2.copy(
-                            color = TextGrey
+                            color = FitnessAppTheme.colors.ContentSecondary
                         )
                     )
                 }

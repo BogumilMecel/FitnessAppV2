@@ -18,8 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.gmail.bogumilmecel2.fitnessappv2.R
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.TextGrey
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.TextWhite
+import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 
 @Composable
 fun PriceItem(
@@ -39,7 +38,7 @@ fun PriceItem(
             text = priceValue?.let { "$priceValue $currency" } ?: stringResource(id = R.string.not_available),
             style = MaterialTheme.typography.body1.copy(
                 fontWeight = FontWeight.Medium,
-                color = priceValue?.let { TextWhite } ?: TextGrey
+                color = priceValue?.let { FitnessAppTheme.colors.ContentPrimary } ?: FitnessAppTheme.colors.ContentSecondary
             ),
             modifier = Modifier
                 .constrainAs(value) {
@@ -73,7 +72,7 @@ fun PriceItem(
             Text(
                 text = rightTextFirstLine,
                 style = MaterialTheme.typography.body2.copy(
-                    color = TextGrey
+                    color = FitnessAppTheme.colors.ContentSecondary
                 )
             )
 
@@ -81,7 +80,7 @@ fun PriceItem(
                 Text(
                     text = rightTextSecondLine,
                     style = MaterialTheme.typography.body2.copy(
-                        color = TextGrey
+                        color = FitnessAppTheme.colors.ContentSecondary
                     )
                 )
             }

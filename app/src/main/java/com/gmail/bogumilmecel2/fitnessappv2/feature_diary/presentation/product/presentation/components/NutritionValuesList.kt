@@ -15,11 +15,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.BlueViolet2
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.BlueViolet3
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.LightGreen3
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.OrangeYellow2
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.round
+import com.gmail.bogumilmecel2.ui.theme.LocalColor.BlueViolet2
+import com.gmail.bogumilmecel2.ui.theme.LocalColor.BlueViolet3
+import com.gmail.bogumilmecel2.ui.theme.LocalColor.LightGreen3
+import com.gmail.bogumilmecel2.ui.theme.LocalColor.OrangeYellow2
 
 @Composable
 fun NutritionValuesList(

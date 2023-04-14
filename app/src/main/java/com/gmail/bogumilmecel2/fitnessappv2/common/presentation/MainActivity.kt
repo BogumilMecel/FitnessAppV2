@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.navigation.Navigator
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.navigation.NavHostGraph
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.FitnessAppV2Theme
+import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -20,7 +20,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 //        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         setContent {
-            FitnessAppV2Theme {
+            FitnessAppTheme {
                 NavHostGraph(
                     navigator = navigator
                 )

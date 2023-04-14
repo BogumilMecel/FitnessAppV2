@@ -12,11 +12,11 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.gmail.bogumilmecel2.fitnessappv2.R
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.DarkGreyElevation1
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.TextWhite
 import com.gmail.bogumilmecel2.fitnessappv2.components.CustomBasicTextField
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.SearchEvent
 import com.gmail.bogumilmecel2.ui.components.complex.HeaderRow
+import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
+import com.gmail.bogumilmecel2.ui.theme.LocalColor.DarkGreyElevation1
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.PagerState
 import kotlinx.coroutines.CoroutineScope
@@ -74,7 +74,7 @@ fun SearchTopSection(
                     Text(
                         text = stringResource(id = R.string.products),
                         style = MaterialTheme.typography.button.copy(
-                            color = TextWhite
+                            color = FitnessAppTheme.colors.ContentPrimary
                         )
                     )
                 },
@@ -92,7 +92,7 @@ fun SearchTopSection(
                     Text(
                         text = stringResource(id = R.string.recipes),
                         style = MaterialTheme.typography.button.copy(
-                            color = TextWhite
+                            color = FitnessAppTheme.colors.ContentPrimary
                         )
                     )
                 },
