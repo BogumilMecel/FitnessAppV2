@@ -12,11 +12,11 @@ import com.gmail.bogumilmecel2.ui.R
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTypography.Companion.Roboto
 
 data class FitnessAppTypography(
-    val Button: TextStyle = text(fontSize = 14.sp, fontWeight = FontWeight.Medium),
+    val Button: TextStyle = importantText(fontSize = 14.sp),
     val ParagraphLarge: TextStyle = paragraph(fontSize = 16.sp),
     val ParagraphMedium: TextStyle = paragraph(fontSize = 14.sp),
     val ParagraphSmall: TextStyle = paragraph(fontSize = 12.sp),
-    val ImportantTextMedium: TextStyle = text(fontSize = 14.sp, fontWeight = FontWeight.Medium),
+    val ImportantTextMedium: TextStyle = importantText(fontSize = 14.sp),
     val HeaderLarge: TextStyle = header(fontSize = 20.sp),
     val HeaderSmall: TextStyle = header(fontSize = 16.sp)
 ) {
@@ -30,9 +30,8 @@ data class FitnessAppTypography(
 }
 
 private fun header(fontSize: TextUnit) = text(fontSize = fontSize, fontWeight = FontWeight.Bold)
-
+private fun importantText(fontSize: TextUnit) = text(fontSize = fontSize, fontWeight = FontWeight.Medium)
 private fun paragraph(fontSize: TextUnit) = text(fontSize = fontSize, fontWeight = FontWeight.Normal)
-
 private fun text(fontSize: TextUnit, fontWeight: FontWeight) = TextStyle(
     fontSize = fontSize,
     fontFamily = Roboto,
