@@ -33,7 +33,7 @@ fun SearchForProductSection(
                 onEvent(NewRecipeEvent.ClickedBackArrow)
             },
             endIconParams = IconParams(
-                iconStyle = CustomIconStyle.SearchIcon,
+                iconStyle = CustomIconStyle.Search,
                 onClick = {
                     onEvent(NewRecipeEvent.ClickedSearchButton)
                 }

@@ -78,9 +78,9 @@ fun RecipeScreen(
             },
             endIconParams = IconParams(
                 iconStyle = if (!state.isFavorite) {
-                    CustomIconStyle.HeartIcon
+                    CustomIconStyle.Heart
                 } else {
-                    CustomIconStyle.HeartIconFilled
+                    CustomIconStyle.HeartFilled
                 },
                 onClick = {
                     viewModel.onEvent(RecipeEvent.ClickedFavorite)

@@ -10,9 +10,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
@@ -25,11 +22,13 @@ import androidx.compose.ui.unit.dp
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.Currency
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.MeasurementUnit
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.ButtonStyle
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.CustomButton
 import com.gmail.bogumilmecel2.fitnessappv2.components.CustomBasicTextField
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.presentation.ProductEvent
+import com.gmail.bogumilmecel2.ui.components.base.ButtonType
+import com.gmail.bogumilmecel2.ui.components.base.CustomButton
+import com.gmail.bogumilmecel2.ui.components.base.CustomIconStyle
 import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
+import com.gmail.bogumilmecel2.ui.components.base.IconParams
 import com.gmail.bogumilmecel2.ui.components.base.WidthSpacer
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 import com.gmail.bogumilmecel2.ui.theme.LocalColor.DarkGreyElevation2
@@ -152,10 +151,10 @@ fun SubmitNewPriceDialog(
             Row(modifier = Modifier.fillMaxWidth()) {
                 CustomButton(
                     modifier = Modifier.weight(1f),
-                    iconLeft = Icons.Default.Cancel,
+                    iconLeft = IconParams(iconStyle = CustomIconStyle.Cancel),
                     contentColor = MaterialTheme.colors.primary,
                     text = stringResource(id = R.string.cancel),
-                    buttonStyle = ButtonStyle.OutlinedButton(
+                    buttonType = ButtonType.OutlinedButton(
                         borderColor = MaterialTheme.colors.primary
                     ),
                     backgroundColor = DarkGreyElevation2
@@ -167,7 +166,7 @@ fun SubmitNewPriceDialog(
 
                 CustomButton(
                     modifier = Modifier.weight(1f),
-                    iconLeft = Icons.Default.Add,
+                    iconLeft = IconParams(iconStyle = CustomIconStyle.Add),
                     text = stringResource(id = R.string.submit)
                 ) {
                     onEvent(ProductEvent.SubmitNewPrice)

@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
@@ -34,21 +35,29 @@ sealed class CustomIconStyle(
     val imageVector: ImageVector,
     val contentDescription: String
 ) {
-    object HeartIcon: CustomIconStyle(
+    object Heart: CustomIconStyle(
         imageVector = Icons.Default.FavoriteBorder,
-        contentDescription = "icon favorite"
+        contentDescription = "favorite"
     )
-    object HeartIconFilled: CustomIconStyle(
+    object HeartFilled: CustomIconStyle(
         imageVector = Icons.Filled.Favorite,
-        contentDescription = "icon favorite filled"
+        contentDescription = "favorite filled"
     )
-    object BackIcon: CustomIconStyle(
+    object Back: CustomIconStyle(
         imageVector = Icons.Default.ArrowBack,
-        contentDescription = "icon back"
+        contentDescription = "back"
     )
-    object SearchIcon: CustomIconStyle(
+    object Search: CustomIconStyle(
         imageVector = Icons.Default.Search,
-        contentDescription = "icon search"
+        contentDescription = "search"
+    )
+    object Cancel: CustomIconStyle(
+        imageVector = Icons.Default.Search,
+        contentDescription = "cancel"
+    )
+    object Add: CustomIconStyle(
+        imageVector = Icons.Default.Add,
+        contentDescription = "add"
     )
 }
 
