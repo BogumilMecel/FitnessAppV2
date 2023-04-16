@@ -63,7 +63,7 @@ fun HeaderRow(
             middleSecondaryText?.let {
                 CustomText(
                     text = middleSecondaryText,
-                    fitnessAppTextStyle = FitnessAppTextStyle.ParagraphSecondary
+                    fitnessAppTextStyle = FitnessAppTextStyle.ParagraphSecondaryMedium
                 )
             }
         }
