@@ -24,8 +24,8 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_recip
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.domain.model.NutritionData
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.presentation.components.NutritionValuesList
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
-import com.gmail.bogumilmecel2.ui.theme.LocalColor.LightGreen1
 import com.gmail.bogumilmecel2.ui.theme.LocalColor.LightGreen3
+import com.gmail.bogumilmecel2.ui.theme.LocalColor.Secondary
 
 @Composable
 fun RecipeNutritionSection(
@@ -70,7 +70,7 @@ fun RecipeNutritionSection(
                             onSelectedNutritionType(if (it) SelectedNutritionType.Recipe else SelectedNutritionType.Serving)
                         },
                         colors = SwitchDefaults.colors(
-                            uncheckedThumbColor = LightGreen1,
+                            uncheckedThumbColor = Secondary,
                             uncheckedTrackColor = LightGreen3
                         )
                     )

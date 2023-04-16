@@ -7,7 +7,8 @@ data class FitnessAppColors(
     val Black: Color = Color.Black,
     val White: Color = Color.White,
     val Primary: Color = LocalColor.OrangeYellow1,
-    val Background: Color = LocalColor.DarkGrey,
+    val Secondary: Color = LocalColor.Secondary,
+    val Background: Color = LocalColor.BackgroundDark,
     val ContentPrimary: Color = LocalColor.ContentPrimary,
     val ContentSecondary: Color = LocalColor.ContentSecondary,
     val Error: Color = LocalColor.RedError
@@ -26,14 +27,14 @@ object LocalColor {
     val Beige1 = Color(0xfffdbda1)
     val Beige2 = Color(0xfffcaf90)
     val Beige3 = Color(0xfff9a27b)
-    val LightGreen1 = Color(0xff54e1b6)
+    val Secondary = Color(0xff54e1b6)
     val LightGreen2 = Color(0xff36ddab)
     val LightGreen3 = Color(0xff11d79b)
     val BlueViolet1 = Color(0xffaeb4fd)
     val BlueViolet2 = Color(0xff9fa5fe)
     val BlueViolet3 = Color(0xff8f98fd)
 
-    val DarkGrey = Color(0xFF121212)
+    val BackgroundDark = Color(0xFF121212)
     val DarkGreyElevation9 = Color(0xFF323232)
     val DarkGreyElevation6 = Color(0xFF2b2b2b)
     val DarkGreyElevation3 = Color(0xFF292929)
@@ -51,9 +52,11 @@ object LocalColor {
 }
 
 enum class FitnessAppColor {
+    Background,
     Black,
     White,
     Primary,
+    Secondary,
     ContentWhite,
     ContentSecondary,
     TextGreyPlaceholder,
@@ -67,9 +70,12 @@ enum class FitnessAppColor {
     operator fun invoke() = when (this) {
         Black -> Color.Black
         White -> Color.White
-        Error -> LocalColor.RedError
-        ContentWhite -> LocalColor.ContentPrimary
-        ContentSecondary -> LocalColor.ContentSecondary
+        Error -> FitnessAppTheme.colors.Error
+        ContentWhite -> FitnessAppTheme.colors.ContentPrimary
+        ContentSecondary -> FitnessAppTheme.colors.ContentSecondary
+        Background -> FitnessAppTheme.colors.Background
+        Secondary -> FitnessAppTheme.colors.Secondary
+        Primary -> FitnessAppTheme.colors.Primary
         else -> Color.White
     }
 }

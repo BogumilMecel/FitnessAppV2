@@ -16,7 +16,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Logout
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -27,9 +26,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.BackHandler
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.CustomButton
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.PieChartWithMiddleText
 import com.gmail.bogumilmecel2.fitnessappv2.components.DefaultCardBackground
+import com.gmail.bogumilmecel2.ui.components.base.CustomButton
+import com.gmail.bogumilmecel2.ui.components.base.CustomIconStyle
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 import com.gmail.bogumilmecel2.ui.theme.LocalColor.BlueViolet3
 import com.gmail.bogumilmecel2.ui.theme.LocalColor.LightGreen3
@@ -169,7 +169,7 @@ fun AccountScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 10.dp),
-            iconLeft = Icons.Default.Logout,
+            iconLeft = CustomIconStyle.Logout,
             text = stringResource(id = R.string.log_out),
         ) {
             viewModel.onEvent(AccountEvent.ClickedLogOutButtonClicked)
