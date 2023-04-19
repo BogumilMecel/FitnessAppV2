@@ -1,6 +1,7 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_recipe
 
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Ingredient
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.utils.Difficulty
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.utils.TimeRequired
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_recipe.util.SelectedNutritionType
@@ -11,6 +12,7 @@ sealed interface NewRecipeEvent {
     object ClickedServingsArrow : NewRecipeEvent
     object ClickedBackArrow : NewRecipeEvent
     object ClickedAddNewIngredient : NewRecipeEvent
+    data class ClickedIngredient(val ingredient: Ingredient) : NewRecipeEvent
     data class SwitchedPublic(val value: Boolean) : NewRecipeEvent
     data class EnteredServing(val value: String) : NewRecipeEvent
     data class SelectedTime(val time: TimeRequired) : NewRecipeEvent
