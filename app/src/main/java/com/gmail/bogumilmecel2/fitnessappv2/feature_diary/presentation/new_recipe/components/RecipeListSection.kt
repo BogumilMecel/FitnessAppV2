@@ -83,8 +83,8 @@ fun RecipeListSection(
                         unit = stringResource(id = ingredient.measurementUnit.getDisplayValue()),
                         calories = ingredient.nutritionValues.calories,
                         weight = ingredient.weight,
-                        onItemClick = {
-                            onEvent(NewRecipeEvent.ClickedIngredient(ingredient = ingredient))
+                        onItemLongClick = {
+                            onEvent(NewRecipeEvent.LongClickedIngredient(ingredient = ingredient))
                         }
                     )
                 }

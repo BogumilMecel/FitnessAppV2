@@ -9,6 +9,7 @@ data class FitnessAppColors(
     val Primary: Color = LocalColor.OrangeYellow1,
     val Secondary: Color = LocalColor.Secondary,
     val Background: Color = LocalColor.BackgroundDark,
+    val BackgroundLight: Color = LocalColor.DarkGreyElevation9,
     val ContentPrimary: Color = LocalColor.ContentPrimary,
     val ContentSecondary: Color = LocalColor.ContentSecondary,
     val Error: Color = LocalColor.RedError

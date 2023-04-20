@@ -31,7 +31,7 @@ fun FitnessAppTextStyle.getTextStyle(): TextStyle {
     return when (this) {
         is FitnessAppTextStyle.ButtonOnPrimary, FitnessAppTextStyle.ButtonOnSurface -> FitnessAppTheme.typography.Button
 
-        is FitnessAppTextStyle.CardTitle -> FitnessAppTheme.typography.HeaderSmall
+        is FitnessAppTextStyle.HeaderSmall -> FitnessAppTheme.typography.HeaderSmall
 
         is FitnessAppTextStyle.HeaderLarge -> FitnessAppTheme.typography.HeaderLarge
 
@@ -65,7 +65,7 @@ sealed class FitnessAppTextStyle(
         color = FitnessAppColor.Primary
     )
 
-    object CardTitle : FitnessAppTextStyle()
+    object HeaderSmall : FitnessAppTextStyle()
     object ParagraphSecondaryMedium : FitnessAppTextStyle(color = FitnessAppColor.ContentSecondary)
     object ParagraphSecondaryLarge : FitnessAppTextStyle(color = FitnessAppColor.ContentSecondary)
     object ImportantTextMedium : FitnessAppTextStyle()

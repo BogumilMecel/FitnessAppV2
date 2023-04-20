@@ -11,9 +11,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.gmail.bogumilmecel2.fitnessappv2.R
-import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_recipe.NewRecipeEvent
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_recipe.NewRecipeState
+import com.gmail.bogumilmecel2.ui.components.base.CustomDialog
+import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
 import com.gmail.bogumilmecel2.ui.components.complex.HeaderRow
 
 @Composable
@@ -27,6 +28,21 @@ fun RecipeSection(
             .fillMaxSize()
             .verticalScroll(scrollState)
     ) {
+        if (state.isDeleteIngredientDialogVisible) {
+            state.longClickedIngredient?.let {
+                CustomDialog(
+                    title = stringResource(id = R.string.new_recipe_delete_ingredient_title, it.productName),
+                    confirmButtonText = stringResource(id = R.string.delete),
+                    onDismissRequest = {
+                        onEvent(NewRecipeEvent.DismissedDeleteIngredientDialog)
+                    },
+                    onConfirmButtonClicked = {
+                        onEvent(NewRecipeEvent.ClickedConfirmButtonOnDeleteIngredientDialog)
+                    }
+                )
+            }
+        }
+
         HeaderRow(
             middlePrimaryText = stringResource(id = R.string.add_recipe),
             onBackPressed = {
