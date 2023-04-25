@@ -14,6 +14,7 @@ import com.gmail.bogumilmecel2.ui.components.base.CustomIconStyle
 import com.gmail.bogumilmecel2.ui.components.base.CustomText
 import com.gmail.bogumilmecel2.ui.components.base.FitnessAppTextStyle
 import com.gmail.bogumilmecel2.ui.components.base.IconParams
+import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 
 @Composable
 fun HeaderRow(
@@ -35,8 +36,9 @@ fun HeaderRow(
                     iconStyle = CustomIconStyle.Back,
                     onClick = {
                         onBackPressed()
-                    }
-                )
+                    },
+                ),
+                iconColor = FitnessAppTheme.colors.ContentPrimary
             )
         }
 

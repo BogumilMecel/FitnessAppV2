@@ -2,9 +2,7 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_reci
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExtendedFloatingActionButton
 import androidx.compose.material.Icon
@@ -23,6 +21,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_recipe.components.RecipeSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_recipe.components.SearchForProductSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.presentation.components.ProductMainSection
+import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
 import com.gmail.bogumilmecel2.ui.components.complex.HeaderRow
 import com.ramcosta.composedestinations.annotation.Destination
 
@@ -72,7 +71,7 @@ fun NewRecipeScreen(
                 state.selectedProduct?.let { product ->
                     Column(
                         modifier = Modifier
-                            .padding(horizontal = 15.dp)
+                            .fillMaxSize()
                     ) {
                         HeaderRow(
                             middlePrimaryText = stringResource(id = R.string.add_product),
@@ -81,9 +80,10 @@ fun NewRecipeScreen(
                             }
                         )
 
-                        Spacer(modifier = Modifier.height(10.dp))
+                        HeightSpacer()
 
                         ProductMainSection(
+                            modifier = Modifier.padding(horizontal = 16.dp),
                             product = product,
                             currentWeight = state.productWeight,
                             onWeightEntered = {
