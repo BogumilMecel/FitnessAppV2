@@ -65,12 +65,14 @@ enum class FitnessAppColor {
     Carbohydrates,
     Protein,
     Fat,
+    Transparent,
     Error;
 
     @Composable
     operator fun invoke() = when (this) {
         Black -> Color.Black
         White -> Color.White
+        Transparent -> Color.Transparent
         Error -> FitnessAppTheme.colors.Error
         ContentWhite -> FitnessAppTheme.colors.ContentPrimary
         ContentSecondary -> FitnessAppTheme.colors.ContentSecondary

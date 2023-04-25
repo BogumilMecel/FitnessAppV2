@@ -8,8 +8,13 @@ enum class MeasurementUnit {
     GRAMS,
     MILLILITERS;
 
-    fun getDisplayValue() = when(this) {
+    fun getStringRes() = when(this) {
         GRAMS -> R.string.measurement_unit_gram
         MILLILITERS -> R.string.measurement_unit_milliliter
+    }
+
+    fun getStringResWithValue() = when(this) {
+        GRAMS -> R.string.measurement_unit_gram_with_value
+        MILLILITERS -> R.string.measurement_unit_gram_with_value
     }
 }

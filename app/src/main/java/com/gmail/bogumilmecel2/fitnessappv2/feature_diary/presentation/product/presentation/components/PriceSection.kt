@@ -104,7 +104,7 @@ fun PriceSection(
                             priceValue = productPrice.valueFor100Carbohydrates,
                             dividerColor = LightGreen3,
                             rightTextFirstLine = stringResource(
-                                id = R.string.value_with_short_grams,
+                                id = R.string.measurement_unit_gram_with_value,
                                 100
                             ),
                             rightTextSecondLine = stringResource(id = R.string.carbs)
@@ -119,7 +119,7 @@ fun PriceSection(
                             priceValue = productPrice.valueFor10Protein,
                             dividerColor = BlueViolet3,
                             rightTextFirstLine = stringResource(
-                                id = R.string.value_with_short_grams,
+                                id = R.string.measurement_unit_gram_with_value,
                                 10
                             ),
                             rightTextSecondLine = stringResource(id = R.string.protein)
@@ -131,7 +131,7 @@ fun PriceSection(
                             priceValue = productPrice.valueFor10Fat,
                             dividerColor = OrangeYellow3,
                             rightTextFirstLine = stringResource(
-                                id = R.string.value_with_short_grams,
+                                id = R.string.measurement_unit_gram_with_value,
                                 10
                             ),
                             rightTextSecondLine = stringResource(id = R.string.fat)

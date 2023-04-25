@@ -27,5 +27,5 @@ sealed interface NewRecipeEvent {
     object ClickedSearchButton : NewRecipeEvent
     object ClickedSaveRecipe : NewRecipeEvent
     object DismissedDeleteIngredientDialog: NewRecipeEvent
-    object ClickedConfirmButtonOnDeleteIngredientDialog: NewRecipeEvent
+    object ClickedDeleteInIngredientDialog: NewRecipeEvent
 }

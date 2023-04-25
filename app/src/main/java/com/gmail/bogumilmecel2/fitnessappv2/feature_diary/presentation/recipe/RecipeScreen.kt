@@ -323,7 +323,7 @@ fun RecipeScreen(
                         ingredients.forEach { ingredient ->
                             SearchProductItem(
                                 weight = ingredient.weight,
-                                unit = stringResource(id = ingredient.measurementUnit.getDisplayValue()),
+                                unit = stringResource(id = ingredient.measurementUnit.getStringRes()),
                                 name = ingredient.productName,
                                 calories = ingredient.nutritionValues.calories,
                                 background = Color.Transparent

@@ -21,6 +21,6 @@ data class ProductDiaryEntry(
     val product: Product
 ) : DiaryItem {
     @Composable
-    override fun getDisplayValue() = "${this.weight} ${stringResource(id = this.product.measurementUnit.getDisplayValue())}"
+    override fun getDisplayValue() = "${this.weight} ${stringResource(id = this.product.measurementUnit.getStringRes())}"
     override fun getDiaryEntryType() = DiaryEntryType.PRODUCT
 }

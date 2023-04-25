@@ -2,9 +2,10 @@ package com.gmail.bogumilmecel2.ui.components.base
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
@@ -44,6 +45,7 @@ fun CustomButton(
                 ButtonContent(
                     iconLeft = iconLeft,
                     text = text,
+                    contentColor = buttonStyle.contentColor
                 )
             }
         }
@@ -62,6 +64,7 @@ fun CustomButton(
                 ButtonContent(
                     iconLeft = iconLeft,
                     text = text,
+                    contentColor = buttonStyle.contentColor
                 )
             }
         }
@@ -72,10 +75,11 @@ fun CustomButton(
 private fun ButtonContent(
     iconLeft: CustomIconStyle?,
     text: String,
+    contentColor: FitnessAppColor
 ) {
     Row(
         modifier = Modifier
-            .fillMaxWidth()
+            .width(IntrinsicSize.Max)
             .padding(2.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
@@ -83,21 +87,23 @@ private fun ButtonContent(
         iconLeft?.let {
             CustomIcon(
                 iconStyle = it,
-                iconPosition = Position.OnPrimary
+                iconColor = contentColor(),
             )
-        }
 
-        WidthSpacer(width = 8.dp)
+            WidthSpacer(width = 8.dp)
+        }
 
         CustomText(
             text = text,
-            fitnessAppTextStyle = FitnessAppTextStyle.ButtonOnPrimary
+            fitnessAppTextStyle = FitnessAppTextStyle.Button(
+                color = contentColor
+            )
         )
     }
 }
 
 enum class ButtonType {
-    OutlinedButton, Button
+    OutlinedButton, Button;
 }
 
 sealed class ButtonStyle(
@@ -110,13 +116,12 @@ sealed class ButtonStyle(
         contentColor = FitnessAppColor.Black
     )
     object OutlinedPrimaryButton: ButtonStyle(
-        backgroundColor = FitnessAppColor.Background,
+        backgroundColor = FitnessAppColor.Transparent,
         contentColor = FitnessAppColor.Primary,
-        buttonType = ButtonType.Button
+        buttonType = ButtonType.OutlinedButton
     )
     object ButtonSecondary: ButtonStyle(
         backgroundColor = FitnessAppColor.Secondary,
         contentColor = FitnessAppColor.Black
     )
-
 }

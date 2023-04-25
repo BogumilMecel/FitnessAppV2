@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import com.gmail.bogumilmecel2.ui.R
@@ -18,12 +19,12 @@ import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 @Composable
 fun CustomIcon(
     iconStyle: CustomIconStyle,
-    iconPosition: Position = Position.OnBackground
+    iconColor: Color = FitnessAppTheme.colors.Primary
 ) = with(iconStyle) {
     androidx.compose.material.Icon(
         imageVector = imageVector,
         contentDescription = stringResource(id = iconStyle.contentDescriptionId),
-        tint = iconPosition.getContentColor()
+        tint = iconColor
     )
 }
 
@@ -67,14 +68,4 @@ sealed class CustomIconStyle(
         imageVector = Icons.Default.Edit,
         contentDescriptionId = R.string.edit
     )
-}
-
-enum class Position {
-    OnPrimary, OnBackground;
-
-    @Composable
-    fun getContentColor() = when(this) {
-        OnPrimary -> FitnessAppTheme.colors.Black
-        OnBackground -> FitnessAppTheme.colors.ContentPrimary
-    }
 }

@@ -7,6 +7,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.destinations.SearchScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.MealName
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.CalculateNutritionValuesFromDiaryEntriesUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.CalculateNutritionValuesFromNutritionValuesUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.CreateLongClickedDiaryItemParamsUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.DeleteDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.GetDiaryEntries
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.UpdateDiaryEntriesListAfterDelete
@@ -24,7 +25,8 @@ class DiaryViewModel @Inject constructor(
     private val deleteDiaryEntry: DeleteDiaryEntry,
     private val updateDiaryEntriesListAfterDelete: UpdateDiaryEntriesListAfterDelete,
     private val calculateNutritionValuesFromDiaryEntriesUseCase: CalculateNutritionValuesFromDiaryEntriesUseCase,
-    private val calculateNutritionValuesFromNutritionValuesUseCase: CalculateNutritionValuesFromNutritionValuesUseCase
+    private val calculateNutritionValuesFromNutritionValuesUseCase: CalculateNutritionValuesFromNutritionValuesUseCase,
+    private val createLongClickedDiaryItemParamsUseCase: CreateLongClickedDiaryItemParamsUseCase
 ) : BaseViewModel() {
 
     private val _state = MutableStateFlow(DiaryState())
@@ -47,8 +49,7 @@ class DiaryViewModel @Inject constructor(
             is DiaryEvent.LongClickedDiaryEntry -> {
                 _state.update {
                     it.copy(
-                        longClickedDiaryItem = event.diaryItem,
-                        isDialogShowed = true,
+                        longClickedDiaryItemParams = createLongClickedDiaryItemParamsUseCase(event.diaryItem),
                         currentlySelectedMealName = event.mealName
                     )
                 }
@@ -61,8 +62,8 @@ class DiaryViewModel @Inject constructor(
             is DiaryEvent.ClickedDeleteInDialog -> {
                     viewModelScope.launch(Dispatchers.IO) {
                         with(_state.value) {
-                            longClickedDiaryItem?.let { diaryEntry ->
-                                deleteDiaryEntry(diaryEntry).handle(
+                            longClickedDiaryItemParams?.let { diaryItemParams ->
+                                deleteDiaryEntry(diaryItemParams.longClickedDiaryItem).handle(
                                     finally = {
                                         currentlySelectedMealName?.let {
                                             calculateMealNutritionValues(mealName = it)
@@ -75,7 +76,7 @@ class DiaryViewModel @Inject constructor(
                                         diaryEntries[mealName]?.let { mealDiaryEntries ->
                                             val mutableDiaryEntries = _state.value.diaryEntries.toMutableMap()
                                             mutableDiaryEntries[mealName] = updateDiaryEntriesListAfterDelete(
-                                                diaryEntry = diaryEntry,
+                                                diaryEntry = diaryItemParams.longClickedDiaryItem,
                                                 diaryEntries = mealDiaryEntries
                                             )
                                             _state.update {
@@ -109,8 +110,8 @@ class DiaryViewModel @Inject constructor(
     private fun hideDiaryEntryDialog() {
         _state.update {
             it.copy(
-                isDialogShowed = false,
-                currentlySelectedMealName = null
+                currentlySelectedMealName = null,
+                longClickedDiaryItemParams = null
             )
         }
     }
