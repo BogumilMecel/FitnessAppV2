@@ -1,11 +1,9 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.TAG
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.NewProductScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.NewRecipeScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.ProductScreenDestination
@@ -13,6 +11,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.destinations.RecipeScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.SearchScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.SearchDiaryUseCases
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.presentation.ProductEntryData
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator.navigate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -77,7 +76,8 @@ class SearchViewModel @Inject constructor(
                 navigateTo(
                     ProductScreenDestination(
                         product = event.product,
-                        mealName = _searchState.value.mealName
+                        mealName = _searchState.value.mealName,
+                        entryData = ProductEntryData.Adding,
                     )
                 )
             }
@@ -188,7 +188,6 @@ class SearchViewModel @Inject constructor(
                         showOrHideLoader(isLoadingVisible = false)
                     }
                 ) { recipes ->
-                    Log.e(TAG, recipes.toString())
                     _searchState.update {
                         it.copy(
                             recipes = recipes
@@ -250,7 +249,8 @@ class SearchViewModel @Inject constructor(
                     navigate(
                         ProductScreenDestination(
                             product = product,
-                            mealName = _searchState.value.mealName
+                            mealName = _searchState.value.mealName,
+                            entryData = ProductEntryData.Adding,
                         )
                     )
                 }
