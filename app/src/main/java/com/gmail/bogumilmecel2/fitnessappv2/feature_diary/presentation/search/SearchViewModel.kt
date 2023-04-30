@@ -75,9 +75,10 @@ class SearchViewModel @Inject constructor(
             is SearchEvent.ClickedProduct -> {
                 navigateTo(
                     ProductScreenDestination(
-                        product = event.product,
-                        mealName = _searchState.value.mealName,
-                        entryData = ProductEntryData.Adding,
+                        entryData = ProductEntryData.Adding(
+                            product = event.product,
+                            mealName = _searchState.value.mealName
+                        ),
                     )
                 )
             }
@@ -248,9 +249,10 @@ class SearchViewModel @Inject constructor(
                 product?.let {
                     navigate(
                         ProductScreenDestination(
-                            product = product,
-                            mealName = _searchState.value.mealName,
-                            entryData = ProductEntryData.Adding,
+                            entryData = ProductEntryData.Adding(
+                                product = product,
+                                mealName = _searchState.value.mealName
+                            ),
                         )
                     )
                 }

@@ -8,6 +8,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.toValidInt
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.DiaryScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.ProductScreenDestination
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.EditProductDiaryEntryUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.ProductUseCases
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.domain.model.NutritionData
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,15 +22,14 @@ import javax.inject.Inject
 @HiltViewModel
 class ProductViewModel @Inject constructor(
     private val productUseCases: ProductUseCases,
+    private val editProductDiaryEntryUseCase: EditProductDiaryEntryUseCase,
     savedStateHandle: SavedStateHandle
 ) : BaseViewModel() {
 
     private val _state = MutableStateFlow(
         with(ProductScreenDestination.argsFrom(savedStateHandle)) {
             ProductState(
-                mealName = mealName,
-                product = product,
-                weight = if (this.entryData is ProductEntryData.Editing) this.entryData.weight else "",
+                weight = if (entryData is ProductEntryData.Editing) entryData.productDiaryEntry.weight.toString() else "",
                 entryData = entryData
             )
         }
@@ -52,7 +52,7 @@ class ProductViewModel @Inject constructor(
                                 nutritionData = it.nutritionData.copy(
                                     nutritionValues = productUseCases.calculateProductNutritionValues(
                                         weight = newWeight,
-                                        product = _state.value.product
+                                        product = _state.value.entryData.product
                                     )
                                 )
                             )
@@ -72,8 +72,8 @@ class ProductViewModel @Inject constructor(
                         when(entryData) {
                             is ProductEntryData.Adding -> {
                                 productUseCases.addDiaryEntry(
-                                    product = product,
-                                    mealName = mealName,
+                                    product = entryData.product,
+                                    mealName = entryData.mealName,
                                     weight = weight.toIntOrNull(),
                                     dateModel = CurrentDate.dateModel(resourceProvider = resourceProvider)
                                 ).handle {
@@ -83,7 +83,12 @@ class ProductViewModel @Inject constructor(
                                 }
                             }
                             is ProductEntryData.Editing -> {
-                                // TODO: editing
+                                editProductDiaryEntryUseCase(
+                                    productDiaryEntry = entryData.productDiaryEntry,
+                                    newWeightStringValue = weight
+                                ).handle {
+                                    navigateUp()
+                                }
                             }
                         }
                     }
@@ -106,7 +111,7 @@ class ProductViewModel @Inject constructor(
                         productUseCases.submitNewPriceUseCase(
                             paidHowMuch = priceValue,
                             paidForWeight = priceForValue,
-                            productId = product.id
+                            productId = entryData.product.id
                         ).handle { newPrice ->
                             _state.update {
                                 it.copy(
@@ -160,7 +165,7 @@ class ProductViewModel @Inject constructor(
     }
 
     private fun initializeProductData() {
-        with(_state.value.product.nutritionValues) {
+        with(_state.value.entryData.product.nutritionValues) {
             _state.update {
                 it.copy(
                     nutritionData = NutritionData(
@@ -174,7 +179,7 @@ class ProductViewModel @Inject constructor(
 
     private fun getProductPrice() {
         viewModelScope.launch {
-            productUseCases.getPriceUseCase(productId = _state.value.product.id).handle { price ->
+            productUseCases.getPriceUseCase(productId = _state.value.entryData.product.id).handle { price ->
                 _state.update {
                     it.copy(
                         productPrice = price
