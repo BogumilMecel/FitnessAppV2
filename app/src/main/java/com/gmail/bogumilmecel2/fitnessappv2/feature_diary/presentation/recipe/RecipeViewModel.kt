@@ -12,6 +12,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Re
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CalculateSelectedServingPriceUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetRecipePriceFromIngredientsUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.CreatePieChartData
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.recipe.EditRecipeDiaryEntryUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.recipe.PostRecipeDiaryEntryUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.domain.model.NutritionData
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,14 +29,17 @@ class RecipeViewModel @Inject constructor(
     private val postRecipeDiaryEntryUseCase: PostRecipeDiaryEntryUseCase,
     private val getRecipePriceFromIngredientsUseCase: GetRecipePriceFromIngredientsUseCase,
     private val calculateSelectedServingPriceUseCase: CalculateSelectedServingPriceUseCase,
+    private val editRecipeDiaryEntryUseCase: EditRecipeDiaryEntryUseCase,
     savedStateHandle: SavedStateHandle
 ) : BaseViewModel() {
 
     private val _state = MutableStateFlow(
-        RecipeState(
-            recipe = RecipeScreenDestination.argsFrom(savedStateHandle = savedStateHandle).recipe,
-            mealName = RecipeScreenDestination.argsFrom(savedStateHandle = savedStateHandle).mealName
-        )
+        with(RecipeScreenDestination.argsFrom(savedStateHandle = savedStateHandle)) {
+            RecipeState(
+                entryData = entryData,
+                servings = if (entryData is RecipeEntryData.Editing) entryData.recipeDiaryEntry.servings.toString() else ""
+            )
+        }
     )
     val state: StateFlow<RecipeState> = _state
 
@@ -70,16 +74,34 @@ class RecipeViewModel @Inject constructor(
             }
 
             is RecipeEvent.ClickedSaveRecipeDiaryEntry -> {
-                viewModelScope.launch {
-                    postRecipeDiaryEntryUseCase(
-                        dateModel = CurrentDate.dateModel(resourceProvider = resourceProvider),
-                        mealName = _state.value.mealName,
-                        recipe = _state.value.recipe,
-                        servingsString = _state.value.servings
-                    ).handle {
-                        navigateWithPopUp(
-                            destination = DiaryScreenDestination
-                        )
+                handleSaveButtonClicked()
+            }
+        }
+    }
+
+    private fun handleSaveButtonClicked() {
+        viewModelScope.launch {
+            with(_state.value) {
+                when(entryData) {
+                    is RecipeEntryData.Editing -> {
+                        editRecipeDiaryEntryUseCase(
+                            recipeDiaryEntry = entryData.recipeDiaryEntry,
+                            newServingsStringValue = servings
+                        ).handle {
+                            navigateUp()
+                        }
+                    }
+                    is RecipeEntryData.Adding -> {
+                        postRecipeDiaryEntryUseCase(
+                            dateModel = CurrentDate.dateModel(resourceProvider = resourceProvider),
+                            mealName = _state.value.entryData.mealName,
+                            recipe = _state.value.entryData.recipe,
+                            servingsString = _state.value.servings
+                        ).handle {
+                            navigateWithPopUp(
+                                destination = DiaryScreenDestination
+                            )
+                        }
                     }
                 }
             }
@@ -99,7 +121,7 @@ class RecipeViewModel @Inject constructor(
     }
 
     private fun initializeRecipeData() {
-        _state.value.recipe.nutritionValues.let { recipeNutritionValues ->
+        _state.value.entryData.recipe.nutritionValues.let { recipeNutritionValues ->
             _state.update {
                 it.copy(
                     nutritionData = NutritionData(
@@ -112,7 +134,7 @@ class RecipeViewModel @Inject constructor(
     }
 
     private fun assignNutritionValues() {
-        val recipe = _state.value.recipe
+        val recipe = _state.value.entryData.recipe
         val recipeServings = if (recipe.servings == 0) 1.0 else recipe.servings.toDouble()
         recipe.nutritionValues.multiplyBy(
             number = _state.value.servings.toDoubleOrNull()?.let { portions ->
@@ -132,7 +154,7 @@ class RecipeViewModel @Inject constructor(
     private fun fetchRecipePrice() {
         viewModelScope.launch {
             getRecipePriceFromIngredientsUseCase(
-                ingredients = _state.value.recipe.ingredients
+                ingredients = _state.value.entryData.recipe.ingredients
             ).handle(showSnackbar = false) { response ->
                 _state.update {
                     it.copy(
@@ -155,7 +177,7 @@ class RecipeViewModel @Inject constructor(
                 _state.update {
                     it.copy(
                         servingPrice = calculateSelectedServingPriceUseCase(
-                            recipeServings = it.recipe.servings,
+                            recipeServings = it.entryData.recipe.servings,
                             selectedServings = servings,
                             totalPrice = recipePrice.totalPrice
                         ),

@@ -13,6 +13,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.In
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.RecipePrice
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_recipe.NewRecipeUseCases
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_recipe.util.SelectedNutritionType
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.recipe.RecipeEntryData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -216,8 +217,10 @@ class NewRecipeViewModel @Inject constructor(
                 ).handle {
                     navigateTo(
                         destination = RecipeScreenDestination(
-                            recipe = it,
-                            mealName = mealName
+                            entryData = RecipeEntryData.Adding(
+                                recipe = it,
+                                mealName = mealName
+                            )
                         )
                     )
                 }

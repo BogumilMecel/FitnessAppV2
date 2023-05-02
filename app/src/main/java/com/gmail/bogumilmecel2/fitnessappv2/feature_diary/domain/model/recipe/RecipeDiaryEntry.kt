@@ -18,12 +18,12 @@ data class RecipeDiaryEntry(
     override val mealName: MealName,
     override val date: String,
     val recipe: Recipe,
-    val portions: Int,
+    val servings: Int,
 ) : DiaryItem {
     @Composable
     override fun getDisplayValue() = stringResource(
-            id = if (this.portions == 1) R.string.diary_serving else R.string.diary_multiple_serving,
-            this.portions
+        id = if (this.servings == 1) R.string.diary_serving else R.string.diary_multiple_serving,
+        this.servings
         )
     override fun getDiaryEntryType() = DiaryEntryType.RECIPE
 }

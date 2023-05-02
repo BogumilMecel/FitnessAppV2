@@ -12,6 +12,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.destinations.SearchScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.SearchDiaryUseCases
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.presentation.ProductEntryData
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.recipe.RecipeEntryData
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator.navigate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -138,8 +139,10 @@ class SearchViewModel @Inject constructor(
             is SearchEvent.ClickedRecipe -> {
                 navigateTo(
                     RecipeScreenDestination(
-                        recipe = event.recipe,
-                        mealName = _searchState.value.mealName
+                        entryData = RecipeEntryData.Adding(
+                            recipe = event.recipe,
+                            mealName = _searchState.value.mealName
+                        )
                     )
                 )
             }

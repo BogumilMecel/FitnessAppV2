@@ -8,6 +8,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.data.api.DiaryApi
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.DeleteDiaryEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.DiaryEntriesResponse
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.EditProductDiaryEntryRequest
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.EditRecipeDiaryEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductPrice
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.RecipePriceResponse
@@ -87,9 +88,9 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun editRecipeDiaryEntry(editRecipeDiaryEntryRequest: EditProductDiaryEntryRequest): Resource<Unit> {
+    override suspend fun editRecipeDiaryEntry(editRecipeDiaryEntryRequest: EditRecipeDiaryEntryRequest): Resource<Unit> {
         return handleRequest {
-
+            diaryApi.editRecipeDiaryEntry(editRecipeDiaryEntryRequest = editRecipeDiaryEntryRequest)
         }
     }
 

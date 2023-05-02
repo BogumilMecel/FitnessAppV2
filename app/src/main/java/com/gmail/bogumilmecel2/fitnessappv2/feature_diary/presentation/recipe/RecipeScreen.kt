@@ -36,12 +36,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.DropdownArrow
-import com.gmail.bogumilmecel2.ui.components.base.CustomBasicTextField
 import com.gmail.bogumilmecel2.fitnessappv2.components.DefaultCardBackground
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_recipe.components.RecipePriceSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.presentation.components.ProductNutritionSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.componens.SearchProductItem
 import com.gmail.bogumilmecel2.ui.components.base.ButtonStyle
+import com.gmail.bogumilmecel2.ui.components.base.CustomBasicTextField
 import com.gmail.bogumilmecel2.ui.components.base.CustomButton
 import com.gmail.bogumilmecel2.ui.components.base.CustomIconStyle
 import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
@@ -51,9 +51,7 @@ import com.gmail.bogumilmecel2.ui.components.complex.HeaderRow
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 import com.ramcosta.composedestinations.annotation.Destination
 
-@Destination(
-    navArgsDelegate = RecipeNavArguments::class
-)
+@Destination(navArgsDelegate = RecipeNavArguments::class)
 @Composable
 fun RecipeScreen(
     viewModel: RecipeViewModel = hiltViewModel()
@@ -67,10 +65,10 @@ fun RecipeScreen(
             .verticalScroll(scrollState)
     ) {
         HeaderRow(
-            middlePrimaryText = state.recipe.name,
+            middlePrimaryText = state.entryData.recipe.name,
             middleSecondaryText = stringResource(
                 id = R.string.kcal_with_value,
-                state.recipe.nutritionValues.calories
+                state.entryData.recipe.nutritionValues.calories
             ),
             onBackPressed = {
                 viewModel.onEvent(RecipeEvent.ClickedBackArrow)
@@ -117,7 +115,7 @@ fun RecipeScreen(
                             WidthSpacer(width = 8.dp)
 
                             Text(
-                                text = state.recipe.timeRequired.displayValue,
+                                text = state.entryData.recipe.timeRequired.displayValue,
                                 style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Medium)
                             )
                         }
@@ -154,7 +152,7 @@ fun RecipeScreen(
                             HeightSpacer(height = 8.dp)
 
                             Text(
-                                text = "${state.recipe.difficulty.displayValue} / 5",
+                                text = "${state.entryData.recipe.difficulty.displayValue} / 5",
                                 style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Medium)
                             )
                         }
@@ -210,7 +208,7 @@ fun RecipeScreen(
                             Text(
                                 text = stringResource(
                                     id = R.string.recipe_serves,
-                                    state.recipe.servings
+                                    state.entryData.recipe.servings
                                 ),
                                 style = MaterialTheme.typography.body2.copy(color = FitnessAppTheme.colors.ContentSecondary)
                             )
@@ -236,7 +234,7 @@ fun RecipeScreen(
                         iconLeft = CustomIconStyle.Save,
                         text = stringResource(
                             id = R.string.recipe_save_to,
-                            state.mealName
+                            state.entryData.mealName
                         )
                     ) {
                         viewModel.onEvent(RecipeEvent.ClickedSaveRecipeDiaryEntry)
@@ -318,7 +316,7 @@ fun RecipeScreen(
 
                         Divider()
 
-                        val ingredients = state.recipe.ingredients
+                        val ingredients = state.entryData.recipe.ingredients
 
                         ingredients.forEach { ingredient ->
                             SearchProductItem(

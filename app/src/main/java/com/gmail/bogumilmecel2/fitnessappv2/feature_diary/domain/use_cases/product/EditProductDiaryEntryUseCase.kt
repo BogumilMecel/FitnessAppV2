@@ -15,13 +15,17 @@ class EditProductDiaryEntryUseCase(
         productDiaryEntry: ProductDiaryEntry,
         newWeightStringValue: String
     ): Resource<Unit> {
-        return newWeightStringValue.toValidInt()?.let { weight ->
-            diaryRepository.editProductDiaryEntry(
-                editProductDiaryEntryRequest = EditProductDiaryEntryRequest(
-                    productDiaryEntry = productDiaryEntry,
-                    newWeight = weight
-                )
+        val weight = newWeightStringValue.toValidInt() ?: return Resource.Error(uiText = resourceProvider.getUnknownErrorString())
+
+        if (weight <= 0) {
+            return Resource.Error(uiText = resourceProvider.getUnknownErrorString())
+        }
+
+        return diaryRepository.editProductDiaryEntry(
+            editProductDiaryEntryRequest = EditProductDiaryEntryRequest(
+                productDiaryEntryId = productDiaryEntry.id,
+                newWeight = weight
             )
-        } ?: Resource.Error(uiText = resourceProvider.getUnknownErrorString())
+        )
     }
 }

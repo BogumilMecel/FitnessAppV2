@@ -5,6 +5,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.util.Headers
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.DeleteDiaryEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.DiaryEntriesResponse
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.EditProductDiaryEntryRequest
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.EditRecipeDiaryEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductPrice
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductPriceResponse
@@ -64,6 +65,11 @@ interface DiaryApi {
     @PUT("/diaryEntries/product")
     suspend fun editProductDiaryEntry(
         @Body editProductDiaryEntryRequest: EditProductDiaryEntryRequest
+    )
+
+    @PUT("/diaryEntries/recipe")
+    suspend fun editRecipeDiaryEntry(
+        @Body editRecipeDiaryEntryRequest: EditRecipeDiaryEntryRequest
     )
 
     @POST("/products")
