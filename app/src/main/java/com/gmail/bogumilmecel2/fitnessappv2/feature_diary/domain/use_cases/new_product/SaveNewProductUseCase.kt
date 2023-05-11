@@ -12,7 +12,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.product.N
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.product.NutritionValuesIn
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 
-class SaveNewProduct(
+class SaveNewProductUseCase(
     private val diaryRepository: DiaryRepository,
     private val resourceProvider: ResourceProvider,
 ) {
@@ -32,7 +32,15 @@ class SaveNewProduct(
         val carbohydratesValue = carbohydrates.toValidDouble()
         val proteinValue = protein.toValidDouble()
         val fatValue = fat.toValidDouble()
-        val containerWeightValue = if (containerWeight.isEmpty()) null else containerWeight.toValidInt()
+        val containerWeightValue = containerWeight.toValidInt()
+
+        if (containerWeight.isNotEmpty() && containerWeightValue == null) {
+            return Resource.Error(resourceProvider.getString(R.string.new_product_bad_container_weight))
+        }
+
+        if ((containerWeightValue == null || containerWeightValue <= 0) && nutritionValuesIn != NutritionValuesIn.HUNDRED_GRAMS) {
+            return Resource.Error(resourceProvider.getString(R.string.new_product_bad_container_weight))
+        }
 
         return if (name.isBlank()) {
             Resource.Error(resourceProvider.getString(R.string.new_product_empty_name))
@@ -42,8 +50,6 @@ class SaveNewProduct(
             Resource.Error(resourceProvider.getString(R.string.new_product_wrong_name_length_short))
         } else if (caloriesValue == null || carbohydratesValue == null || proteinValue == null || fatValue == null) {
             Resource.Error(resourceProvider.getString(R.string.new_product_bad_nutrition_values))
-        } else if (!validateContainerWeight(nutritionValuesIn = nutritionValuesIn, containerWeight = containerWeightValue)) {
-            Resource.Error(resourceProvider.getString(R.string.new_product_bad_container_weight))
         } else {
             diaryRepository.saveNewProduct(
                 newProductRequest = NewProductRequest(

@@ -16,7 +16,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.Diar
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.GetDiaryEntriesUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.SortDiaryEntriesUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_product.CalculateNutritionValuesIn100G
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_product.SaveNewProduct
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_product.SaveNewProductUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.AddDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.CreatePieChartData
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.ProductUseCases
@@ -182,7 +182,7 @@ object TestAppModule {
     fun provideSaveNewProductUseCase(
         diaryRepository: DiaryRepository,
         resourceProvider: ResourceProvider
-    ): SaveNewProduct = SaveNewProduct(
+    ): SaveNewProductUseCase = SaveNewProductUseCase(
         diaryRepository = diaryRepository,
         resourceProvider = resourceProvider,
         calculateNutritionValuesIn100G = CalculateNutritionValuesIn100G()

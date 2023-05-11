@@ -6,7 +6,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.NewProductScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.ProductScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.product.NutritionValuesIn
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_product.SaveNewProduct
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_product.SaveNewProductUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.presentation.ProductEntryData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NewProductViewModel @Inject constructor(
-    private val saveNewProduct: SaveNewProduct,
+    private val saveNewProductUseCase: SaveNewProductUseCase,
     savedStateHandle: SavedStateHandle
 ) : BaseViewModel() {
 
@@ -116,7 +116,7 @@ class NewProductViewModel @Inject constructor(
                     }
 
                     with(_state.value) {
-                        saveNewProduct(
+                        saveNewProductUseCase(
                             name = productName,
                             containerWeight = containerWeightValue,
                             nutritionValuesIn = NutritionValuesIn.getValueFromIndex(nutritionValuesInSelectedTabIndex),

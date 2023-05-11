@@ -27,7 +27,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.Gener
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetPriceUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetRecipePriceFromIngredientsUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.*
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_product.SaveNewProduct
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_recipe.AddNewRecipe
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_recipe.CalculateRecipeNutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_recipe.NewRecipeUseCases
@@ -514,14 +513,4 @@ object AppModule {
                 getUserCurrency = getUserCurrencyUseCase
             )
         )
-
-    @Singleton
-    @Provides
-    fun provideSaveNewProductUseCase(
-        diaryRepository: DiaryRepository,
-        resourceProvider: ResourceProvider
-    ): SaveNewProduct = SaveNewProduct(
-        diaryRepository = diaryRepository,
-        resourceProvider = resourceProvider
-    )
 }

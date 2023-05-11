@@ -16,7 +16,6 @@ import org.mockito.Mockito
 import org.robolectric.RobolectricTestRunner
 import kotlin.test.assertEquals
 
-
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(RobolectricTestRunner::class)
 internal class SearchForProductsUseCaseTest{
