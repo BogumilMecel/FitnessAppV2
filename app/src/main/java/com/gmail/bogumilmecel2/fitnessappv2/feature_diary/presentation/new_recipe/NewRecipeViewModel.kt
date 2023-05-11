@@ -351,7 +351,7 @@ class NewRecipeViewModel @Inject constructor(
 
     private fun getProducts() {
         viewModelScope.launch {
-            newRecipeUseCases.searchForProducts(
+            newRecipeUseCases.searchForProductsUseCase(
                 searchText = _state.value.searchText
             ).handle { products ->
                 _state.update {

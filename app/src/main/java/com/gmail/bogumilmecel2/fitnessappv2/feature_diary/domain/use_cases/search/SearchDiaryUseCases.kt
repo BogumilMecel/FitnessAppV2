@@ -2,7 +2,7 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.sear
 
 data class SearchDiaryUseCases(
     val getDiaryHistory: GetDiaryHistory,
-    val searchForProducts: SearchForProducts,
+    val searchForProductsUseCase: SearchForProductsUseCase,
     val searchForProductWithBarcode: SearchForProductWithBarcode,
     val searchForRecipes: SearchForRecipes
 )

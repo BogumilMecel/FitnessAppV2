@@ -13,8 +13,8 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.use_case.Registe
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.use_case.ResetPasswordWithEmail
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.data.repository.remote.FakeDiaryRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.GetDiaryEntries
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.SortDiaryEntries
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.GetDiaryEntriesUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.SortDiaryEntriesUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_product.CalculateNutritionValuesIn100G
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_product.SaveNewProduct
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.AddDiaryEntry
@@ -23,7 +23,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.produ
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.GetDiaryHistory
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.SearchDiaryUseCases
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.SearchForProductWithBarcode
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.SearchForProducts
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.SearchForProductsUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.repository.UserDataRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.use_cases.CalculateNutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.use_cases.SaveIntroductionInformation
@@ -129,9 +129,9 @@ object TestAppModule {
     @Provides
     fun provideGetDiaryEntriesUseCase(
         diaryRepository: DiaryRepository
-    ): GetDiaryEntries = GetDiaryEntries(
+    ): GetDiaryEntriesUseCase = GetDiaryEntriesUseCase(
         diaryRepository = diaryRepository,
-        sortDiaryEntries = SortDiaryEntries()
+        sortDiaryEntriesUseCase = SortDiaryEntriesUseCase()
     )
 
     @Singleton
@@ -140,7 +140,7 @@ object TestAppModule {
         diaryRepository: DiaryRepository,
         resourceProvider: ResourceProvider,
         getDiaryHistory: GetDiaryHistory
-    ): SearchForProducts = SearchForProducts(
+    ): SearchForProductsUseCase = SearchForProductsUseCase(
         diaryRepository = diaryRepository,
         resourceProvider = resourceProvider,
         getDiaryHistory = getDiaryHistory
@@ -155,10 +155,10 @@ object TestAppModule {
     @Provides
     fun provideDiarySearchUseCases(
         diaryRepository: DiaryRepository,
-        searchForProducts: SearchForProducts
+        searchForProductsUseCase: SearchForProductsUseCase
     ): SearchDiaryUseCases =
         SearchDiaryUseCases(
-            searchForProducts = searchForProducts,
+            searchForProductsUseCase = searchForProductsUseCase,
             getDiaryHistory = GetDiaryHistory(diaryRepository),
             searchForProductWithBarcode = SearchForProductWithBarcode(diaryRepository)
         )

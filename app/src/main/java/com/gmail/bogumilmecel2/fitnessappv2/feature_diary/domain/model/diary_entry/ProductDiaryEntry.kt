@@ -11,14 +11,14 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ProductDiaryEntry(
-    override val id: String = "",
-    override val nutritionValues: NutritionValues,
-    override val timestamp: Long,
-    override val userId: String,
-    override val date: String,
-    override val mealName: MealName,
-    val weight: Int,
-    val product: Product
+    override val id: String,
+    override val nutritionValues: NutritionValues = NutritionValues(),
+    override val timestamp: Long = 0,
+    override val userId: String = "",
+    override val date: String = "",
+    override val mealName: MealName = MealName.BREAKFAST,
+    val weight: Int = 0,
+    val product: Product = Product()
 ) : DiaryItem {
     @Composable
     override fun getDisplayValue() = "${this.weight} ${stringResource(id = this.product.measurementUnit.getStringRes())}"

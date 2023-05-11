@@ -204,7 +204,7 @@ class SearchViewModel @Inject constructor(
     private fun searchForProducts() {
         showOrHideLoader()
         viewModelScope.launch(Dispatchers.IO) {
-            searchDiaryUseCases.searchForProducts(_searchState.value.productSearchBarText).handle(
+            searchDiaryUseCases.searchForProductsUseCase(_searchState.value.productSearchBarText).handle(
                 finally = {
                     showOrHideLoader(isLoadingVisible = false)
                 }

@@ -14,7 +14,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.CalculateNutritionValuesFromNutritionValuesUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.CreateLongClickedDiaryItemParamsUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.DeleteDiaryEntry
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.GetDiaryEntries
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.GetDiaryEntriesUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.UpdateDiaryEntriesListAfterDelete
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.presentation.ProductEntryData
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.recipe.RecipeEntryData
@@ -28,7 +28,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DiaryViewModel @Inject constructor(
-    private val getDiaryEntries: GetDiaryEntries,
+    private val getDiaryEntriesUseCase: GetDiaryEntriesUseCase,
     private val deleteDiaryEntry: DeleteDiaryEntry,
     private val updateDiaryEntriesListAfterDelete: UpdateDiaryEntriesListAfterDelete,
     private val calculateNutritionValuesFromDiaryEntriesUseCase: CalculateNutritionValuesFromDiaryEntriesUseCase,
@@ -182,7 +182,7 @@ class DiaryViewModel @Inject constructor(
     private fun getDiaryEntries() {
         val currentDate = CurrentDate.dateModel(resourceProvider = resourceProvider)
         viewModelScope.launch(Dispatchers.IO) {
-            getDiaryEntries(date = currentDate.date).handle { diaryEntries ->
+            getDiaryEntriesUseCase(date = currentDate.date).handle { diaryEntries ->
                 _state.update {
                     it.copy(
                         diaryEntries = diaryEntries
