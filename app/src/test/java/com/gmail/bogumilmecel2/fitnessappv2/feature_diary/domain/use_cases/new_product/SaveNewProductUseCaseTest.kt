@@ -1,21 +1,20 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_product
 
+import com.gmail.bogumilmecel2.fitnessappv2.common.BaseTest
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.MeasurementUnit
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.RealResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.product.NutritionValuesIn
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.SortDiaryEntriesUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito
-import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
@@ -23,18 +22,16 @@ import kotlin.random.Random
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(RobolectricTestRunner::class)
-internal class SaveNewProductUseCaseTest {
+internal class SaveNewProductUseCaseTest: BaseTest() {
 
     @Mock
     private lateinit var mockDiaryRepository: DiaryRepository
 
-    private lateinit var closable: AutoCloseable
     private lateinit var saveNewProductUseCase: SaveNewProductUseCase
     private lateinit var sortDiaryEntriesUseCase: SortDiaryEntriesUseCase
 
     @Before
     fun setUp() = runTest {
-        closable = MockitoAnnotations.openMocks(this)
         mockDiaryRepository = Mockito.mock(DiaryRepository::class.java)
         sortDiaryEntriesUseCase = SortDiaryEntriesUseCase()
         Mockito.`when`(mockDiaryRepository.saveNewProduct(any())).thenReturn(
@@ -44,7 +41,7 @@ internal class SaveNewProductUseCaseTest {
         )
         saveNewProductUseCase = SaveNewProductUseCase(
             diaryRepository = mockDiaryRepository,
-            resourceProvider = ResourceProvider(RuntimeEnvironment.getApplication())
+            realResourceProvider = RealResourceProvider(RuntimeEnvironment.getApplication())
         )
     }
 
@@ -195,9 +192,4 @@ internal class SaveNewProductUseCaseTest {
         fat = fat,
         barcode = barcode
     )
-
-    @After
-    fun after() {
-        closable.close()
-    }
 }

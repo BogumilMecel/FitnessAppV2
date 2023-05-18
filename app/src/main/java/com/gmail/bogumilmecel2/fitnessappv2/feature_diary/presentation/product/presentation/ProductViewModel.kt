@@ -50,7 +50,7 @@ class ProductViewModel @Inject constructor(
                         _state.update {
                             it.copy(
                                 nutritionData = it.nutritionData.copy(
-                                    nutritionValues = productUseCases.calculateProductNutritionValues(
+                                    nutritionValues = productUseCases.calculateProductNutritionValuesUseCase(
                                         weight = newWeight,
                                         product = _state.value.entryData.product
                                     )
@@ -75,7 +75,7 @@ class ProductViewModel @Inject constructor(
                                     product = entryData.product,
                                     mealName = entryData.mealName,
                                     weight = weight.toIntOrNull(),
-                                    dateModel = CurrentDate.dateModel(resourceProvider = resourceProvider)
+                                    dateModel = CurrentDate.dateModel(realResourceProvider = realResourceProvider)
                                 ).handle {
                                     navigateWithPopUp(
                                         destination = DiaryScreenDestination
@@ -120,7 +120,7 @@ class ProductViewModel @Inject constructor(
                                     priceValue = ""
                                 )
                             }
-                            showSnackbarError(resourceProvider.getString(R.string.successfully_submitted_new_price))
+                            showSnackbarError(realResourceProvider.getString(R.string.successfully_submitted_new_price))
                         }
                     }
                 }

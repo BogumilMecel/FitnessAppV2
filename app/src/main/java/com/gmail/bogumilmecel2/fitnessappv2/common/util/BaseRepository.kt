@@ -4,7 +4,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.data.singleton.TokenStatus
 import retrofit2.HttpException
 
 open class BaseRepository(
-    private val resourceProvider: ResourceProvider
+    private val realResourceProvider: RealResourceProvider
 ) {
     suspend inline fun <R> handleRequest(shouldHandleException: Boolean = true, block: () -> R): Resource<R> {
         return try {
@@ -32,7 +32,7 @@ open class BaseRepository(
         }
 
         return Resource.Error(
-            uiText = exception.message ?: resourceProvider.getUnknownErrorString(),
+            uiText = exception.message ?: realResourceProvider.getUnknownErrorString(),
             data = data
         )
     }

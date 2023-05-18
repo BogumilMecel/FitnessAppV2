@@ -3,13 +3,13 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.use_case
 import android.util.Patterns
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.ResourceProvider
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.RealResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.model.RegisterRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.repository.AuthRepository
 
 class RegisterUser(
     private val repository: AuthRepository,
-    private val resourceProvider: ResourceProvider,
+    private val realResourceProvider: RealResourceProvider,
 ) {
 
     suspend operator fun invoke(
@@ -19,16 +19,16 @@ class RegisterUser(
         username: String
     ): Resource<Boolean> {
         if (email.isBlank() || password.isBlank() || username.isBlank() || confirmPassword.isBlank()) {
-            return Resource.Error(resourceProvider.getString(R.string.please_make_sure_all_fields_are_filled_in_correctly))
+            return Resource.Error(realResourceProvider.getString(R.string.please_make_sure_all_fields_are_filled_in_correctly))
         }
         if (confirmPassword != password) {
-            return Resource.Error(resourceProvider.getString(R.string.please_make_sure_both_passwords_are_the_same))
+            return Resource.Error(realResourceProvider.getString(R.string.please_make_sure_both_passwords_are_the_same))
         }
         if (password.length < 6 || password.length > 24) {
-            return Resource.Error(resourceProvider.getString(R.string.please_make_sure_your_password_is_at_least_6_characters_and_is_not_longer_than_24_characters))
+            return Resource.Error(realResourceProvider.getString(R.string.please_make_sure_your_password_is_at_least_6_characters_and_is_not_longer_than_24_characters))
         }
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            return Resource.Error(resourceProvider.getString(R.string.please_make_sure_you_have_entered_correct_email))
+            return Resource.Error(realResourceProvider.getString(R.string.please_make_sure_you_have_entered_correct_email))
         }
 
         return repository.registerUser(

@@ -3,7 +3,7 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.prod
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.DateModel
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.ResourceProvider
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.RealResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.MealName
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
@@ -12,7 +12,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.Diar
 
 class AddDiaryEntry(
     private val diaryRepository: DiaryRepository,
-    private val resourceProvider: ResourceProvider,
+    private val realResourceProvider: RealResourceProvider,
 ) {
 
     suspend operator fun invoke(
@@ -24,7 +24,7 @@ class AddDiaryEntry(
         return weight?.let {
             if (weight == 0) {
                 Resource.Error(
-                    uiText = resourceProvider.getString(R.string.incorrect_weight_was_entered)
+                    uiText = realResourceProvider.getString(R.string.incorrect_weight_was_entered)
                 )
             } else {
                 val productDiaryEntryPostRequest = ProductDiaryEntryPostRequest(
@@ -40,7 +40,7 @@ class AddDiaryEntry(
                 )
             }
         } ?: Resource.Error(
-            uiText = resourceProvider.getString(R.string.incorrect_weight_was_entered)
+            uiText = realResourceProvider.getString(R.string.incorrect_weight_was_entered)
         )
     }
 }

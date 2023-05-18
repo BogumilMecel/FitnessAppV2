@@ -381,7 +381,7 @@ class NewRecipeViewModel @Inject constructor(
                 _state.update {
                     it.copy(
                         nutritionData = it.nutritionData.copy(
-                            nutritionValues = newRecipeUseCases.calculateProductNutritionValues(
+                            nutritionValues = newRecipeUseCases.calculateProductNutritionValuesUseCase(
                                 weight = weight,
                                 product = product
                             ),
