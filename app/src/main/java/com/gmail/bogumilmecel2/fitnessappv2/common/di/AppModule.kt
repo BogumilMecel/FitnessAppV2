@@ -185,12 +185,8 @@ object AppModule {
     @Singleton
     @Provides
     fun provideTokenRepository(
-        sharedPreferences: SharedPreferences,
-        realResourceProvider: RealResourceProvider
-    ): TokenRepository = TokenRepositoryImp(
-        sharedPreferences = sharedPreferences,
-        realResourceProvider = realResourceProvider
-    )
+        sharedPreferences: SharedPreferences
+    ): TokenRepository = TokenRepositoryImp(sharedPreferences = sharedPreferences)
 
     @Singleton
     @Provides
@@ -219,13 +215,8 @@ object AppModule {
     @Provides
     @Singleton
     fun provideAuthRepository(
-        authApi: AuthApi,
-        realResourceProvider: RealResourceProvider
-    ): AuthRepository =
-        AuthRepositoryImp(
-            authApi = authApi,
-            realResourceProvider = realResourceProvider
-        )
+        authApi: AuthApi
+    ): AuthRepository = AuthRepositoryImp(authApi = authApi)
 
     @Provides
     @Singleton
@@ -288,20 +279,15 @@ object AppModule {
     @Singleton
     @Provides
     fun provideDiaryRepository(
-        diaryApi: DiaryApi,
-        realResourceProvider: RealResourceProvider
-    ): DiaryRepository =
-        DiaryRepositoryImp(
-            realResourceProvider = realResourceProvider,
-            diaryApi = diaryApi
-        )
+        diaryApi: DiaryApi
+    ): DiaryRepository = DiaryRepositoryImp(diaryApi = diaryApi)
 
     @Singleton
     @Provides
     fun provideDeleteDiaryEntryUseCase(
         diaryRepository: DiaryRepository
     ): DeleteDiaryEntry = DeleteDiaryEntry(
-        diaryRepository = diaryRepository,
+        diaryRepository = diaryRepository
     )
 
     @Singleton
@@ -382,11 +368,9 @@ object AppModule {
     @Provides
     fun provideWeightRepository(
         weightApi: WeightApi,
-        realResourceProvider: RealResourceProvider,
         customSharedPreferencesUtils: CustomSharedPreferencesUtils
     ): WeightRepository = WeighRepositoryImp(
         weightApi = weightApi,
-        realResourceProvider = realResourceProvider,
         customSharedPreferencesUtils = customSharedPreferencesUtils
     )
 
@@ -428,11 +412,9 @@ object AppModule {
     @Provides
     fun provideIntroductionRepository(
         userDataApi: UserDataApi,
-        realResourceProvider: RealResourceProvider,
         customSharedPreferencesUtils: CustomSharedPreferencesUtils
     ): UserDataRepository = UserDataRepositoryImp(
         userDataApi = userDataApi,
-        realResourceProvider = realResourceProvider,
         customSharedPreferencesUtils = customSharedPreferencesUtils
     )
 
@@ -440,11 +422,9 @@ object AppModule {
     @Provides
     fun provideLoadingRepository(
         loadingApi: LoadingApi,
-        realResourceProvider: RealResourceProvider,
         customSharedPreferencesUtils: CustomSharedPreferencesUtils
     ): LoadingRepository = LoadingRepositoryImp(
         loadingApi = loadingApi,
-        realResourceProvider = realResourceProvider,
         customSharedPreferencesUtils = customSharedPreferencesUtils
     )
 
