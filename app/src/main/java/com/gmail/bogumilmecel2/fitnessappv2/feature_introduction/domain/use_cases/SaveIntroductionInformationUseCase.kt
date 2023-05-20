@@ -1,8 +1,8 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.use_cases
 
 import com.gmail.bogumilmecel2.fitnessappv2.R
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.RealResourceProvider
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.toValidDouble
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.toValidInt
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.model.User
@@ -14,7 +14,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.model.Tr
 import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.model.TypeOfWork
 import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.repository.UserDataRepository
 
-class SaveIntroductionInformation(
+class SaveIntroductionInformationUseCase(
     private val userDataRepository: UserDataRepository,
     private val realResourceProvider: RealResourceProvider,
 ) {

@@ -41,7 +41,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.searc
 import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.data.api.UserDataApi
 import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.data.repository.UserDataRepositoryImp
 import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.repository.UserDataRepository
-import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.use_cases.SaveIntroductionInformation
+import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.use_cases.SaveIntroductionInformationUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_splash.data.api.LoadingApi
 import com.gmail.bogumilmecel2.fitnessappv2.feature_splash.data.repository.LoadingRepositoryImp
 import com.gmail.bogumilmecel2.fitnessappv2.feature_splash.domain.repository.LoadingRepository
@@ -271,7 +271,7 @@ object AppModule {
     fun provideSaveInformationUseCase(
         userDataRepository: UserDataRepository,
         realResourceProvider: RealResourceProvider,
-    ): SaveIntroductionInformation = SaveIntroductionInformation(
+    ): SaveIntroductionInformationUseCase = SaveIntroductionInformationUseCase(
         userDataRepository = userDataRepository,
         realResourceProvider = realResourceProvider
     )

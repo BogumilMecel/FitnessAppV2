@@ -12,7 +12,7 @@ data class User(
     val username:String = "",
     val nutritionValues: NutritionValues? = null,
     val userInformation: UserInformation? = null,
-    val favoriteUserRecipesIds: List<String>?,
+    val favoriteUserRecipesIds: List<String>? = null,
     val latestLogEntry: LogEntry? = null,
     val latestWeightEntry: WeightEntry? = null,
     val weightProgress: String? = null

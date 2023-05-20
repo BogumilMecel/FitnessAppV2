@@ -9,7 +9,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.model.Ge
 import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.model.QuestionName
 import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.model.TrainingFrequency
 import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.model.TypeOfWork
-import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.use_cases.SaveIntroductionInformation
+import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.use_cases.SaveIntroductionInformationUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -22,7 +22,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class IntroductionViewModel @Inject constructor(
-    private val saveIntroductionInformation: SaveIntroductionInformation,
+    private val saveIntroductionInformationUseCase: SaveIntroductionInformationUseCase,
 ) : BaseViewModel() {
 
     private val _state = MutableStateFlow(IntroductionState())
@@ -90,7 +90,7 @@ class IntroductionViewModel @Inject constructor(
             is IntroductionEvent.FinishIntroduction -> {
                 viewModelScope.launch(Dispatchers.IO) {
                     with(_state.value) {
-                        saveIntroductionInformation(
+                        saveIntroductionInformationUseCase(
                             selectedGender = selectedGender,
                             age = age,
                             height = height,
