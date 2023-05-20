@@ -9,6 +9,6 @@ class GetDiaryHistory(
     private val repository: DiaryRepository,
 ) {
     suspend operator fun invoke():Resource<List<Product>>{
-        return repository.getProductHistory()
+        return Resource.Error()
     }
 }

@@ -18,7 +18,7 @@ import kotlin.test.assertEquals
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(RobolectricTestRunner::class)
-internal class SearchForProductsUseCaseTest{
+internal class SearchForProductsUseCaseTest {
 
     @Mock
     private lateinit var mockDiaryRepository: DiaryRepository
@@ -26,7 +26,7 @@ internal class SearchForProductsUseCaseTest{
     private lateinit var searchForProductsUseCase: SearchForProductsUseCase
 
     @Before
-    fun setUp() = runTest{
+    fun setUp() = runTest {
         mockDiaryRepository = Mockito.mock(DiaryRepository::class.java)
         searchForProductsUseCase = SearchForProductsUseCase(
             diaryRepository = mockDiaryRepository,
@@ -35,35 +35,37 @@ internal class SearchForProductsUseCaseTest{
     }
 
     @Test
-    fun `if called with proper text and repository returns resource success, return resource success`() = runTest{
-        mockRepositoryResponse(response = Resource.Success(data = emptyList()))
+    fun `if called with proper text and repository returns resource success, return resource success`() =
+        runTest {
+            mockRepositoryResponse(response = Resource.Success(data = emptyList()))
 
-        val result = searchForProductsUseCase(searchText = "abc")
-        assertTrue(result is Resource.Success)
-    }
-
-    @Test
-    fun `if called with proper text and repository returns resource error, return resource error`() = runTest{
-        val errorText = "error text"
-        mockRepositoryResponse(response = Resource.Error(uiText = errorText))
-
-        val result = searchForProductsUseCase(searchText = "abc")
-        assertTrue(result is Resource.Error)
-        assertEquals(
-            expected = errorText,
-            actual = result.uiText
-        )
-    }
+            val result = searchForProductsUseCase(searchText = "abc")
+            assertTrue(result is Resource.Success)
+        }
 
     @Test
-    fun `if called with empty search text, return resource error`() = runTest{
+    fun `if called with proper text and repository returns resource error, return resource error`() =
+        runTest {
+            val errorText = "error text"
+            mockRepositoryResponse(response = Resource.Error(uiText = errorText))
+
+            val result = searchForProductsUseCase(searchText = "abc")
+            assertTrue(result is Resource.Error)
+            assertEquals(
+                expected = errorText,
+                actual = result.uiText
+            )
+        }
+
+    @Test
+    fun `if called with empty search text, return resource error`() = runTest {
         val result = searchForProductsUseCase("")
         assertTrue(result is Resource.Error)
     }
 
     private suspend fun mockRepositoryResponse(response: Resource<List<Product>>) {
         Mockito.`when`(mockDiaryRepository.searchForProducts(Mockito.anyString())).thenReturn(
-            Resource.Success(data = emptyList())
+            response
         )
     }
 }
