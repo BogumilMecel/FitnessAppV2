@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.TextFieldState
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.RealResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.RegisterScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.ResetPasswordScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.SplashScreenDestination
@@ -19,20 +18,19 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val authUseCases: AuthUseCases,
-    realResourceProvider: RealResourceProvider
+    private val authUseCases: AuthUseCases
 ) : BaseViewModel() {
 
     private val _emailState = mutableStateOf(
         TextFieldState(
-            hint = realResourceProvider.getString(R.string.email_address)
+            hint = resourceProvider.getString(R.string.email_address)
         )
     )
     val emailState: State<TextFieldState> = _emailState
 
     private val _passwordState = mutableStateOf(
         TextFieldState(
-            hint = realResourceProvider.getString(R.string.password)
+            hint = resourceProvider.getString(R.string.password)
         )
     )
     val passwordState: State<TextFieldState> = _passwordState

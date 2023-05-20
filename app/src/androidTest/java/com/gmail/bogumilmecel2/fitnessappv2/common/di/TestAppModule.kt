@@ -5,7 +5,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.data.navigation.ComposeCustom
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.UserInformation
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.navigation.Navigator
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.RealResourceProvider
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.repository.AuthRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.use_case.AuthUseCases
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.use_case.LogInUser
@@ -47,7 +47,7 @@ object TestAppModule {
 
     @Provides
     @Singleton
-    fun provideResourceProvider(app: Application): RealResourceProvider = RealResourceProvider(app)
+    fun provideResourceProvider(app: Application): ResourceProvider = ResourceProvider(app)
 
     @Provides
     @Singleton
@@ -74,21 +74,21 @@ object TestAppModule {
     @Singleton
     fun provideAuthUseCases(
         authRepository: AuthRepository,
-        realResourceProvider: RealResourceProvider
+        resourceProvider: ResourceProvider
     ): AuthUseCases = AuthUseCases(
         logInUser = LogInUser(
             repository = authRepository,
-            realResourceProvider = realResourceProvider
+            resourceProvider = resourceProvider
         ),
 
         registerUser = RegisterUser(
             repository = authRepository,
-            realResourceProvider = realResourceProvider
+            resourceProvider = resourceProvider
         ),
 
         resetPasswordWithEmail = ResetPasswordWithEmail(
             repository = authRepository,
-            realResourceProvider = realResourceProvider
+            resourceProvider = resourceProvider
         ),
 
         )
@@ -113,11 +113,11 @@ object TestAppModule {
     @Singleton
     fun provideSaveInformationUseCase(
         userDataRepository: UserDataRepository,
-        realResourceProvider: RealResourceProvider,
+        resourceProvider: ResourceProvider,
         calculateNutritionValues: CalculateNutritionValues
     ): SaveIntroductionInformationUseCase = SaveIntroductionInformationUseCase(
         userDataRepository = userDataRepository,
-        realResourceProvider = realResourceProvider,
+        resourceProvider = resourceProvider,
         calculateNutritionValues = calculateNutritionValues
     )
 
@@ -138,11 +138,11 @@ object TestAppModule {
     @Provides
     fun provideSearchForProductsUseCase(
         diaryRepository: DiaryRepository,
-        realResourceProvider: RealResourceProvider,
+        resourceProvider: ResourceProvider,
         getDiaryHistory: GetDiaryHistory
     ): SearchForProductsUseCase = SearchForProductsUseCase(
         diaryRepository = diaryRepository,
-        resourceProvider = realResourceProvider,
+        resourceProvider = resourceProvider,
         getDiaryHistory = getDiaryHistory
     )
 
@@ -167,12 +167,12 @@ object TestAppModule {
     @Provides
     fun provideProductUseCases(
         diaryRepository: DiaryRepository,
-        realResourceProvider: RealResourceProvider
+        resourceProvider: ResourceProvider
     ): ProductUseCases =
         ProductUseCases(
             calculateProductNutritionValuesUseCase = com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.CalculateProductNutritionValuesUseCase(),
             createPieChartData = CreatePieChartData(),
-            addDiaryEntry = AddDiaryEntry(diaryRepository, realResourceProvider = realResourceProvider),
+            addDiaryEntry = AddDiaryEntry(diaryRepository, resourceProvider = resourceProvider),
             saveProductToHistory = SaveProductToHistory(diaryRepository)
 
         )
@@ -181,10 +181,10 @@ object TestAppModule {
     @Provides
     fun provideSaveNewProductUseCase(
         diaryRepository: DiaryRepository,
-        realResourceProvider: RealResourceProvider
+        resourceProvider: ResourceProvider
     ): SaveNewProductUseCase = SaveNewProductUseCase(
         diaryRepository = diaryRepository,
-        realResourceProvider = realResourceProvider,
+        resourceProvider = resourceProvider,
         calculateNutritionValuesIn100G = CalculateNutritionValuesIn100G()
     )
 }

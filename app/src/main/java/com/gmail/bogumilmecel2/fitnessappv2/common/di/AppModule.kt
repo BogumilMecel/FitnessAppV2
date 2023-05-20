@@ -8,11 +8,12 @@ import androidx.security.crypto.MasterKey
 import com.gmail.bogumilmecel2.fitnessappv2.common.data.navigation.ComposeCustomNavigator
 import com.gmail.bogumilmecel2.fitnessappv2.common.data.repository.TokenRepositoryImp
 import com.gmail.bogumilmecel2.fitnessappv2.common.data.utils.CustomSharedPreferencesUtils
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.ResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.navigation.Navigator
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.repository.TokenRepository
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.*
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.DefaultInterceptor
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.RealResourceProvider
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.resourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.feature_account.domain.use_case.DeleteToken
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.data.api.AuthApi
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.data.repository.AuthRepositoryImp
@@ -70,7 +71,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideResourceProvider(app: Application): RealResourceProvider = RealResourceProvider(app)
+    fun provideResourceProvider(app: Application): ResourceProvider = resourceProvider(app)
 
     @Provides
     @Singleton
@@ -111,9 +112,9 @@ object AppModule {
     @Singleton
     @Provides
     fun provideGenerateDiaryItemDialogTitleUseCase(
-        realResourceProvider: RealResourceProvider
+        resourceProvider: ResourceProvider
     ): GenerateDiaryItemDialogTitleUseCase = GenerateDiaryItemDialogTitleUseCase(
-        realResourceProvider = realResourceProvider
+        resourceProvider = resourceProvider
     )
 
     @Singleton
@@ -128,20 +129,18 @@ object AppModule {
     @Provides
     fun provideEditProductDiaryEntryUseCase(
         diaryRepository: DiaryRepository,
-        realResourceProvider: RealResourceProvider
     ): EditProductDiaryEntryUseCase = EditProductDiaryEntryUseCase(
-        diaryRepository = diaryRepository,
-        realResourceProvider = realResourceProvider
+        diaryRepository = diaryRepository
     )
 
     @Singleton
     @Provides
     fun provideEditRecipeDiaryEntryUseCase(
         diaryRepository: DiaryRepository,
-        realResourceProvider: RealResourceProvider
+        resourceProvider: ResourceProvider
     ): EditRecipeDiaryEntryUseCase = EditRecipeDiaryEntryUseCase(
         diaryRepository = diaryRepository,
-        realResourceProvider = realResourceProvider
+        resourceProvider = resourceProvider
     )
 
     @Singleton
@@ -192,10 +191,10 @@ object AppModule {
     @Provides
     fun providePostRecipeDiaryEntryUseCase(
         diaryRepository: DiaryRepository,
-        realResourceProvider: RealResourceProvider
+        resourceProvider: ResourceProvider
     ): PostRecipeDiaryEntryUseCase = PostRecipeDiaryEntryUseCase(
         diaryRepository = diaryRepository,
-        realResourceProvider = realResourceProvider
+        resourceProvider = resourceProvider
     )
 
     @Singleton
@@ -240,23 +239,23 @@ object AppModule {
     @Singleton
     fun provideAuthUseCases(
         authRepository: AuthRepository,
-        realResourceProvider: RealResourceProvider,
+        resourceProvider: ResourceProvider,
         saveToken: SaveToken
     ): AuthUseCases = AuthUseCases(
         logInUser = LogInUser(
             repository = authRepository,
-            realResourceProvider = realResourceProvider,
+            resourceProvider = resourceProvider,
             saveToken = saveToken
         ),
 
         registerUser = RegisterUser(
             repository = authRepository,
-            realResourceProvider = realResourceProvider,
+            resourceProvider = resourceProvider,
         ),
 
         resetPasswordWithEmail = ResetPasswordWithEmail(
             repository = authRepository,
-            realResourceProvider = realResourceProvider
+            resourceProvider = resourceProvider
         ),
 
         )
@@ -270,10 +269,10 @@ object AppModule {
     @Singleton
     fun provideSaveInformationUseCase(
         userDataRepository: UserDataRepository,
-        realResourceProvider: RealResourceProvider,
+        resourceProvider: ResourceProvider,
     ): SaveIntroductionInformationUseCase = SaveIntroductionInformationUseCase(
         userDataRepository = userDataRepository,
-        realResourceProvider = realResourceProvider
+        resourceProvider = resourceProvider
     )
 
     @Singleton
@@ -294,10 +293,10 @@ object AppModule {
     @Provides
     fun provideAddNewRecipe(
         diaryRepository: DiaryRepository,
-        realResourceProvider: RealResourceProvider
+        resourceProvider: ResourceProvider
     ): AddNewRecipe = AddNewRecipe(
         diaryRepository = diaryRepository,
-        realResourceProvider = realResourceProvider
+        resourceProvider = resourceProvider
     )
 
     @Singleton
@@ -472,7 +471,7 @@ object AppModule {
     @Provides
     fun provideProductUseCases(
         diaryRepository: DiaryRepository,
-        realResourceProvider: RealResourceProvider,
+        resourceProvider: ResourceProvider,
         createPieChartData: CreatePieChartData,
         getUserCurrencyUseCase: GetUserCurrencyUseCase
     ): ProductUseCases =
@@ -481,11 +480,11 @@ object AppModule {
             createPieChartData = createPieChartData,
             addDiaryEntry = AddDiaryEntry(
                 diaryRepository = diaryRepository,
-                realResourceProvider = realResourceProvider
+                resourceProvider = resourceProvider
             ),
             submitNewPriceUseCase = SubmitNewPriceUseCase(
                 diaryRepository = diaryRepository,
-                realResourceProvider = realResourceProvider,
+                resourceProvider = resourceProvider,
                 getUserCurrencyUseCase = getUserCurrencyUseCase
             ),
             getPriceUseCase = GetPriceUseCase(

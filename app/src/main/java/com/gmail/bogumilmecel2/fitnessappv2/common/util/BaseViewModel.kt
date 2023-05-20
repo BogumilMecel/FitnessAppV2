@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavOptions
 import com.gmail.bogumilmecel2.fitnessappv2.common.data.utils.CustomSharedPreferencesUtils
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.ResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.navigation.NavigationAction
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.navigation.Navigator
 import com.ramcosta.composedestinations.spec.Direction
@@ -21,7 +22,7 @@ open class BaseViewModel @Inject constructor() : ViewModel() {
     lateinit var sharedPreferencesUtils: CustomSharedPreferencesUtils
 
     @Inject
-    lateinit var realResourceProvider: RealResourceProvider
+    lateinit var resourceProvider: ResourceProvider
 
     fun showSnackbarError(message: String) {
         viewModelScope.launch {

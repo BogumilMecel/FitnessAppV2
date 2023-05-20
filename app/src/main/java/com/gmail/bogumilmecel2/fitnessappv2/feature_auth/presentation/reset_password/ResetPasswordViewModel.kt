@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.TextFieldState
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.RealResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.LoginScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.use_case.AuthUseCases
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.presentation.util.AuthEvent
@@ -18,12 +17,11 @@ import javax.inject.Inject
 @HiltViewModel
 class ResetPasswordViewModel @Inject constructor(
     private val authUseCases: AuthUseCases,
-    realResourceProvider: RealResourceProvider
 ) : BaseViewModel() {
 
     private val _emailState = mutableStateOf(
         TextFieldState(
-            hint = realResourceProvider.getString(R.string.email_address)
+            hint = resourceProvider.getString(R.string.email_address)
         )
     )
     val emailState: State<TextFieldState> = _emailState
