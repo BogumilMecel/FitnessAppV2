@@ -5,7 +5,7 @@ import androidx.annotation.PluralsRes
 import androidx.annotation.StringRes
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.ResourceProvider
 
-class resourceProvider(private val context: Context): ResourceProvider {
+class RealResourceProvider(private val context: Context): ResourceProvider {
 
     override fun getString(@StringRes stringResId: Int, vararg args: Any): String {
         return context.getString(stringResId, args)
