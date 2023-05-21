@@ -2,7 +2,6 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_
 
 import com.gmail.bogumilmecel2.fitnessappv2.common.BaseTest
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.MeasurementUnit
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.product.NutritionValuesIn
@@ -12,16 +11,12 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.kotlin.any
-import org.robolectric.RobolectricTestRunner
-import org.robolectric.RuntimeEnvironment
 import kotlin.random.Random
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@RunWith(RobolectricTestRunner::class)
 internal class SaveNewProductUseCaseTest: BaseTest() {
 
     @Mock
@@ -41,7 +36,7 @@ internal class SaveNewProductUseCaseTest: BaseTest() {
         )
         saveNewProductUseCase = SaveNewProductUseCase(
             diaryRepository = mockDiaryRepository,
-            resourceProvider = ResourceProvider(RuntimeEnvironment.getApplication())
+            resourceProvider = resourceProvider
         )
     }
 

@@ -3,12 +3,9 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.use_case
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.repository.AuthRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.After
-import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.robolectric.RobolectricTestRunner
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@RunWith(RobolectricTestRunner::class)
 internal class RegisterRegisterRequestTest{
 
     @Mock
