@@ -1,45 +1,26 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_auth.presentation.login
 
-import androidx.compose.ui.test.*
-import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import androidx.compose.ui.test.assert
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performTextClearance
+import androidx.compose.ui.test.performTextInput
 import com.gmail.bogumilmecel2.fitnessappv2.R
-import com.gmail.bogumilmecel2.fitnessappv2.common.di.AppModule
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.MainActivity
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.FitnessAppV2Theme
-import dagger.hilt.android.testing.HiltAndroidRule
+import com.gmail.bogumilmecel2.fitnessappv2.common.BaseAndroidTest
 import dagger.hilt.android.testing.HiltAndroidTest
-import dagger.hilt.android.testing.UninstallModules
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 
 @HiltAndroidTest
-@UninstallModules(AppModule::class)
-internal class LoginScreenTest {
-    @get:Rule(order = 0)
-    val hiltRule = HiltAndroidRule(this)
-
-    @get:Rule(order = 1)
-    val composeRule = createAndroidComposeRule<MainActivity>()
+internal class LoginScreenTest: BaseAndroidTest() {
 
     @Before
     fun setUp() {
-        hiltRule.inject()
-        composeRule.setContent {
-            val navController = rememberNavController()
-            FitnessAppV2Theme {
-                NavHost(
-                    navController = navController,
-                    startDestination = AuthScreen.LoginAuthScreen.route
-                ) {
-                    composable(route = AuthScreen.LoginAuthScreen.route) {
-                        LoginScreen()
-                    }
-                }
-            }
+        setContent {
+            LoginScreen()
         }
     }
 
