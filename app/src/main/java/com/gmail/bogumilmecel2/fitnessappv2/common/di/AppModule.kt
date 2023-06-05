@@ -7,12 +7,13 @@ import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import com.gmail.bogumilmecel2.fitnessappv2.common.data.navigation.ComposeCustomNavigator
 import com.gmail.bogumilmecel2.fitnessappv2.common.data.repository.TokenRepositoryImp
-import com.gmail.bogumilmecel2.fitnessappv2.common.data.utils.CustomSharedPreferencesUtils
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.CachedValuesProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.ResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.navigation.Navigator
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.repository.TokenRepository
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.*
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.DefaultInterceptor
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.RealCachedValuesProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.RealResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.feature_account.domain.use_case.DeleteToken
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.data.api.AuthApi
@@ -145,11 +146,11 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideCustomSharedPreferencesUtils(
+    fun provideCachedValuesProvider(
         @ApplicationContext context: Context,
         gson: Gson
-    ): CustomSharedPreferencesUtils = CustomSharedPreferencesUtils(
-        context = context,
+    ): CachedValuesProvider = RealCachedValuesProvider(
+        sharedPreferences = context.getSharedPreferences("fitness_app", Context.MODE_PRIVATE),
         gson = gson
     )
 
@@ -302,9 +303,9 @@ object AppModule {
     @Singleton
     @Provides
     fun provideGetUserCurrencyUseCase(
-        sharedPreferences: SharedPreferences
+        cachedValuesProvider: CachedValuesProvider
     ): GetUserCurrencyUseCase = GetUserCurrencyUseCase(
-        sharedPreferences = sharedPreferences
+        cachedValuesProvider = cachedValuesProvider
     )
 
     @Singleton
@@ -367,10 +368,10 @@ object AppModule {
     @Provides
     fun provideWeightRepository(
         weightApi: WeightApi,
-        customSharedPreferencesUtils: CustomSharedPreferencesUtils
+        cachedValuesProvider: CachedValuesProvider
     ): WeightRepository = WeighRepositoryImp(
         weightApi = weightApi,
-        customSharedPreferencesUtils = customSharedPreferencesUtils
+        cachedValuesProvider = cachedValuesProvider
     )
 
     @Singleton
@@ -411,20 +412,20 @@ object AppModule {
     @Provides
     fun provideIntroductionRepository(
         userDataApi: UserDataApi,
-        customSharedPreferencesUtils: CustomSharedPreferencesUtils
+        cachedValuesProvider: CachedValuesProvider
     ): UserDataRepository = UserDataRepositoryImp(
         userDataApi = userDataApi,
-        customSharedPreferencesUtils = customSharedPreferencesUtils
+        cachedValuesProvider = cachedValuesProvider
     )
 
     @Singleton
     @Provides
     fun provideLoadingRepository(
         loadingApi: LoadingApi,
-        customSharedPreferencesUtils: CustomSharedPreferencesUtils
+        cachedValuesProvider: CachedValuesProvider
     ): LoadingRepository = LoadingRepositoryImp(
         loadingApi = loadingApi,
-        customSharedPreferencesUtils = customSharedPreferencesUtils
+        cachedValuesProvider
     )
 
     @Singleton

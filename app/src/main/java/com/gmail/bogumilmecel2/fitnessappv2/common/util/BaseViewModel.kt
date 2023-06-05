@@ -3,7 +3,7 @@ package com.gmail.bogumilmecel2.fitnessappv2.common.util
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavOptions
-import com.gmail.bogumilmecel2.fitnessappv2.common.data.utils.CustomSharedPreferencesUtils
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.CachedValuesProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.ResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.navigation.NavigationAction
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.navigation.Navigator
@@ -19,7 +19,7 @@ open class BaseViewModel @Inject constructor() : ViewModel() {
     lateinit var navigator: Navigator
 
     @Inject
-    lateinit var sharedPreferencesUtils: CustomSharedPreferencesUtils
+    lateinit var cachedValuesProvider: CachedValuesProvider
 
     @Inject
     lateinit var resourceProvider: ResourceProvider

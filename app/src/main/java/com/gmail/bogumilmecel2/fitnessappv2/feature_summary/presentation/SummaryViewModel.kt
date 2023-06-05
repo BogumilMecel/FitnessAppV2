@@ -76,8 +76,8 @@ class SummaryViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             _state.update {
                 it.copy(
-                    latestWeightEntry = sharedPreferencesUtils.getLatestWeightEntry(),
-                    weightProgress = sharedPreferencesUtils.getWeightProgress()
+                    latestWeightEntry = cachedValuesProvider.getLatestWeightEntry(),
+                    weightProgress = cachedValuesProvider.getWeightProgress()
                 )
             }
         }
@@ -87,7 +87,7 @@ class SummaryViewModel @Inject constructor(
         viewModelScope.launch {
             _state.update {
                 it.copy(
-                    wantedCalories = sharedPreferencesUtils.getWantedNutritionValues().calories
+                    wantedCalories = cachedValuesProvider.getWantedNutritionValues().calories
                 )
             }
         }
@@ -97,7 +97,7 @@ class SummaryViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             _state.update {
                 it.copy(
-                    logStreak = sharedPreferencesUtils.getLatestLogEntry().streak
+                    logStreak = cachedValuesProvider.getLatestLogEntry().streak
                 )
             }
         }
