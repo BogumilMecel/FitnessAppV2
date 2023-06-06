@@ -1,5 +1,6 @@
 package com.gmail.bogumilmecel2.fitnessappv2.common
 
+import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.MainActivity
@@ -22,7 +23,7 @@ open class BaseAndroidTest {
     }
 
     fun setContent(content: @Composable () -> Unit) {
-        composeRule.setContent {
+        composeRule.activity.setContent {
             content()
         }
     }
