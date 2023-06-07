@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
@@ -28,7 +29,8 @@ fun CustomBasicTextField(
     singleLine: Boolean = false,
     placeholder: String? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    textAlign: TextAlign = TextAlign.Start
+    textAlign: TextAlign = TextAlign.Start,
+    visualTransformation: VisualTransformation = VisualTransformation.None
 ) {
     val textPadding = 12.dp
     var isFocused by remember { mutableStateOf(false) }
@@ -57,6 +59,7 @@ fun CustomBasicTextField(
             cursorBrush = SolidColor(Color.White),
             singleLine = singleLine,
             keyboardOptions = keyboardOptions,
+            visualTransformation = visualTransformation
         )
 
         if (value.isBlank() && placeholder != null && !isFocused) {

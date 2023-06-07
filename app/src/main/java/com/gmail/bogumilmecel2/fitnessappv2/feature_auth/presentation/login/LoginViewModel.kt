@@ -1,10 +1,6 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_auth.presentation.login
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
-import com.gmail.bogumilmecel2.fitnessappv2.R
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.TextFieldState
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.RegisterScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.ResetPasswordScreenDestination
@@ -13,6 +9,9 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.use_case.AuthUse
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.presentation.util.AuthEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,31 +20,25 @@ class LoginViewModel @Inject constructor(
     private val authUseCases: AuthUseCases
 ) : BaseViewModel() {
 
-    private val _emailState = mutableStateOf(TextFieldState())
-    val emailState: State<TextFieldState> = _emailState
-
-    private val _passwordState = mutableStateOf(TextFieldState())
-    val passwordState: State<TextFieldState> = _passwordState
-
-    private val _isLoading = mutableStateOf(false)
-    val isLoading: State<Boolean> = _isLoading
-
-    init {
-        initializeHints()
-    }
+    private val _state = MutableStateFlow(LoginState())
+    val state: StateFlow<LoginState> = _state
 
     fun onEvent(event: AuthEvent) {
         when (event) {
             is AuthEvent.EnteredEmail -> {
-                _emailState.value = emailState.value.copy(
-                    text = event.email,
-                )
+                _state.update {
+                    it.copy(
+                        email = event.email
+                    )
+                }
             }
 
             is AuthEvent.EnteredPassword -> {
-                _passwordState.value = passwordState.value.copy(
-                    text = event.password,
-                )
+                _state.update {
+                    it.copy(
+                        password = event.password
+                    )
+                }
             }
 
             is AuthEvent.RegisterLoginButtonClicked -> {
@@ -58,23 +51,25 @@ class LoginViewModel @Inject constructor(
 
             else -> {
                 viewModelScope.launch(Dispatchers.IO) {
-                    _isLoading.value = true
-                    authUseCases.logInUser(
-                        email = _emailState.value.text,
-                        password = _passwordState.value.text
-                    ).handle {
-                        navigateWithPopUp(
-                            destination = SplashScreenDestination
-                        )
+                    _state.update {
+                        it.copy(isLoading = true)
                     }
-                    _isLoading.value = false
+                    with(_state.value) {
+                        authUseCases.logInUser(
+                            email = email,
+                            password = password
+                        ).handle {
+                            navigateWithPopUp(
+                                destination = SplashScreenDestination
+                            )
+                        }
+                    }
+
+                    _state.update {
+                        it.copy(isLoading = false)
+                    }
                 }
             }
         }
-    }
-
-    private fun initializeHints() {
-        _passwordState.value = TextFieldState(hint = resourceProvider.getString(R.string.password))
-        _emailState.value = TextFieldState(hint = resourceProvider.getString(R.string.email_address))
     }
 }
