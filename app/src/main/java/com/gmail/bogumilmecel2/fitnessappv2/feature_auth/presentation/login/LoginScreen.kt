@@ -10,9 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
@@ -29,8 +27,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.Toolbar
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.TestTags
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.presentation.util.AuthEvent
 import com.gmail.bogumilmecel2.ui.components.base.CustomBasicTextField
+import com.gmail.bogumilmecel2.ui.components.base.CustomButton
 import com.gmail.bogumilmecel2.ui.components.base.CustomIconStyle
 import com.ramcosta.composedestinations.annotation.Destination
 
@@ -61,7 +61,6 @@ fun LoginScreen(
                     modifier = Modifier
                         .align(Alignment.Center)
                 ) {
-
                     CustomBasicTextField(
                         value = state.email,
                         placeholder = stringResource(id = R.string.email_address),
@@ -73,9 +72,9 @@ fun LoginScreen(
                         ),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .testTag(stringResource(id = R.string.EMAIL))
                             .padding(horizontal = 20.dp),
-                        leadingIcon = CustomIconStyle.Email
+                        leadingIcon = CustomIconStyle.Email,
+                        testTag = TestTags.General.EMAIL
                     )
 
                     Spacer(modifier = Modifier.height(15.dp))
@@ -95,32 +94,24 @@ fun LoginScreen(
                         visualTransformation = PasswordVisualTransformation(),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .testTag(stringResource(id = R.string.PASSWORD))
                             .padding(horizontal = 20.dp),
-                        leadingIcon = CustomIconStyle.Password
+                        leadingIcon = CustomIconStyle.Password,
+                        testTag = TestTags.General.PASSWORD
                     )
 
                     Spacer(modifier = Modifier.height(40.dp))
 
-                    Button(
+                    CustomButton(
                         onClick = {
                             viewModel.onEvent(AuthEvent.AuthButtonClicked)
                         },
                         modifier = Modifier
                             .padding(horizontal = 20.dp)
                             .fillMaxWidth()
-                            .testTag(stringResource(id = R.string.BUTTON)),
-                        shape = RoundedCornerShape(50)
-                    ) {
-
-                        Text(
-                            text = stringResource(id = R.string.sign_in).uppercase(),
-                            style = MaterialTheme.typography.button,
-                            modifier = Modifier
-                                .padding(5.dp),
-                        )
-
-                    }
+                            .testTag(TestTags.General.PRIMARY_BUTTON),
+                        iconLeft = CustomIconStyle.Login,
+                        text = stringResource(id = R.string.sign_in)
+                    )
 
                     Row(
                         horizontalArrangement = Arrangement.SpaceBetween,

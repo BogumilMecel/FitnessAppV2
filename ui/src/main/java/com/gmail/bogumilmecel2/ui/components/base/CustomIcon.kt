@@ -1,12 +1,14 @@
 package com.gmail.bogumilmecel2.ui.components.base
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.Login
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Password
 import androidx.compose.material.icons.filled.Save
@@ -80,5 +82,13 @@ sealed class CustomIconStyle(
     object Password: CustomIconStyle(
         imageVector = Icons.Default.Password,
         contentDescriptionId = R.string.password
+    )
+    object Login: CustomIconStyle(
+        imageVector = Icons.Default.Login,
+        contentDescriptionId = R.string.login
+    )
+    object Account: CustomIconStyle(
+        imageVector = Icons.Default.AccountCircle,
+        contentDescriptionId = R.string.account
     )
 }

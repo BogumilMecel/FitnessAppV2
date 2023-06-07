@@ -1,9 +1,11 @@
 package com.gmail.bogumilmecel2.fitnessappv2.common
 
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import com.gmail.bogumilmecel2.fitnessappv2.common.data.navigation.ComposeCustomNavigator
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.MainActivity
+import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.navigation.NavHostGraph
+import com.gmail.bogumilmecel2.fitnessappv2.destinations.Destination
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before
@@ -22,9 +24,12 @@ open class BaseAndroidTest {
         hiltRule.inject()
     }
 
-    fun setContent(content: @Composable () -> Unit) {
+    fun setContent(destination: Destination) {
         composeRule.activity.setContent {
-            content()
+            NavHostGraph(
+                navigator = ComposeCustomNavigator(),
+                startDestination = destination
+            )
         }
     }
 }

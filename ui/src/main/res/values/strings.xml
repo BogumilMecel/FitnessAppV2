@@ -12,5 +12,7 @@
     <string name="edit">Edit icon</string>
     <string name="email">Email icon</string>
     <string name="password">Password icon</string>
+    <string name="login">Login icon</string>
+    <string name="account">Account icon</string>
 <!--    Icon description ↑ ↑ ↑-->
 </resources>
