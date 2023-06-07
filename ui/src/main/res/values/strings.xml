@@ -10,5 +10,7 @@
     <string name="log_out">Log out icon</string>
     <string name="save">Save icon</string>
     <string name="edit">Edit icon</string>
+    <string name="email">Email icon</string>
+    <string name="password">Password icon</string>
 <!--    Icon description ↑ ↑ ↑-->
 </resources>

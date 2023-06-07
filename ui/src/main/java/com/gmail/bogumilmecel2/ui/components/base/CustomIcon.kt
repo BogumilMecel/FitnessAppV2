@@ -4,12 +4,15 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Logout
+import androidx.compose.material.icons.filled.Password
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
@@ -18,10 +21,12 @@ import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 
 @Composable
 fun CustomIcon(
+    modifier: Modifier = Modifier,
     iconStyle: CustomIconStyle,
     iconColor: Color = FitnessAppTheme.colors.Primary
 ) = with(iconStyle) {
     androidx.compose.material.Icon(
+        modifier = modifier,
         imageVector = imageVector,
         contentDescription = stringResource(id = iconStyle.contentDescriptionId),
         tint = iconColor
@@ -67,5 +72,13 @@ sealed class CustomIconStyle(
     object Edit: CustomIconStyle(
         imageVector = Icons.Default.Edit,
         contentDescriptionId = R.string.edit
+    )
+    object Email: CustomIconStyle(
+        imageVector = Icons.Default.Email,
+        contentDescriptionId = R.string.email
+    )
+    object Password: CustomIconStyle(
+        imageVector = Icons.Default.Password,
+        contentDescriptionId = R.string.password
     )
 }

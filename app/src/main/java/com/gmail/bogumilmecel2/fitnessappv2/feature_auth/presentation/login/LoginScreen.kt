@@ -31,6 +31,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.Toolbar
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.presentation.util.AuthEvent
 import com.gmail.bogumilmecel2.ui.components.base.CustomBasicTextField
+import com.gmail.bogumilmecel2.ui.components.base.CustomIconStyle
 import com.ramcosta.composedestinations.annotation.Destination
 
 @Composable
@@ -74,9 +75,7 @@ fun LoginScreen(
                             .fillMaxWidth()
                             .testTag(stringResource(id = R.string.EMAIL))
                             .padding(horizontal = 20.dp),
-//                        leadingIcon = {
-//                            Icon(imageVector = Icons.Default.Email, contentDescription = emailState.hint)
-//                        }
+                        leadingIcon = CustomIconStyle.Email
                     )
 
                     Spacer(modifier = Modifier.height(15.dp))
@@ -98,9 +97,7 @@ fun LoginScreen(
                             .fillMaxWidth()
                             .testTag(stringResource(id = R.string.PASSWORD))
                             .padding(horizontal = 20.dp),
-//                        leadingIcon = {
-//                            Icon(imageVector = Icons.Default.Lock, contentDescription = passwordState.hint)
-//                        }
+                        leadingIcon = CustomIconStyle.Password
                     )
 
                     Spacer(modifier = Modifier.height(40.dp))
