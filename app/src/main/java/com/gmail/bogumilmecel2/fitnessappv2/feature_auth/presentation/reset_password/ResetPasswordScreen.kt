@@ -7,16 +7,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,10 +18,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.fitnessappv2.R
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.DefaultTextField
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.Toolbar
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.TestTags
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.presentation.util.AuthEvent
+import com.gmail.bogumilmecel2.ui.components.base.CustomBasicTextField
+import com.gmail.bogumilmecel2.ui.components.base.CustomButton
+import com.gmail.bogumilmecel2.ui.components.base.CustomIconStyle
 import com.ramcosta.composedestinations.annotation.Destination
 
 @Composable
@@ -36,8 +33,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 fun ResetPasswordScreen(
     viewModel: ResetPasswordViewModel = hiltViewModel()
 ) {
-    val isLoadingState = viewModel.isLoading.value
-    val emailState = viewModel.emailState.value
+    val state = viewModel.state.collectAsStateWithLifecycle().value
 
     Scaffold(
         topBar = {
@@ -54,19 +50,15 @@ fun ResetPasswordScreen(
                 .fillMaxSize()
                 .padding(paddingValues.calculateTopPadding())
         ) {
-            if (!isLoadingState) {
+            if (!state.isLoading) {
 
                 Column(
                     modifier = Modifier
                         .align(Alignment.Center)
                 ) {
-
-
-                    DefaultTextField(
-                        value = emailState.text,
-                        placeholder = {
-                            Text(text = emailState.hint)
-                        },
+                    CustomBasicTextField(
+                        value = state.email,
+                        placeholder = stringResource(id = R.string.email_address),
                         onValueChange = {
                             viewModel.onEvent(AuthEvent.EnteredEmail(email = it))
                         },
@@ -75,37 +67,24 @@ fun ResetPasswordScreen(
                         ),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .testTag(stringResource(id = R.string.EMAIL))
                             .padding(horizontal = 20.dp),
-                        leadingIcon = {
-                            Icon(imageVector = Icons.Default.Email, contentDescription = emailState.hint)
-                        }
-
+                        leadingIcon = CustomIconStyle.Email,
+                        testTag = TestTags.General.EMAIL
                     )
 
                     Spacer(modifier = Modifier.height(40.dp))
 
-                    Button(
+                    CustomButton(
                         onClick = {
                             viewModel.onEvent(AuthEvent.AuthButtonClicked)
                         },
                         modifier = Modifier
                             .padding(horizontal = 20.dp)
                             .fillMaxWidth()
-                            .testTag(stringResource(id = R.string.BUTTON)),
-                        shape = RoundedCornerShape(50)
-                    ) {
-
-                        Text(
-                            text = stringResource(id = R.string.reset_my_password).uppercase(),
-                            style = MaterialTheme.typography.button,
-                            modifier = Modifier
-                                .padding(5.dp),
-                        )
-
-                    }
+                            .testTag(TestTags.General.PRIMARY_BUTTON),
+                        text = stringResource(id = R.string.reset_my_password)
+                    )
                 }
-
             } else {
                 CircularProgressIndicator(
                     modifier = Modifier.align(Alignment.Center)

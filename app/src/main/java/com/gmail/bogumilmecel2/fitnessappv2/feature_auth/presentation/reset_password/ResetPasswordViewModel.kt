@@ -1,16 +1,15 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_auth.presentation.reset_password
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
-import com.gmail.bogumilmecel2.fitnessappv2.R
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.TextFieldState
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.LoginScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.use_case.AuthUseCases
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.presentation.util.AuthEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,22 +18,17 @@ class ResetPasswordViewModel @Inject constructor(
     private val authUseCases: AuthUseCases,
 ) : BaseViewModel() {
 
-    private val _emailState = mutableStateOf(
-        TextFieldState(
-            hint = resourceProvider.getString(R.string.email_address)
-        )
-    )
-    val emailState: State<TextFieldState> = _emailState
-
-    private val _isLoading = mutableStateOf(false)
-    val isLoading: State<Boolean> = _isLoading
+    private val _state = MutableStateFlow(ResetPasswordState())
+    val state: StateFlow<ResetPasswordState> = _state
 
     fun onEvent(event: AuthEvent) {
         when (event) {
             is AuthEvent.EnteredEmail -> {
-                _emailState.value = emailState.value.copy(
-                    text = event.email,
-                )
+                _state.update {
+                    it.copy(
+                        email = event.email
+                    )
+                }
             }
 
             is AuthEvent.RegisterLoginButtonClicked -> {
@@ -43,13 +37,21 @@ class ResetPasswordViewModel @Inject constructor(
 
             else -> {
                 viewModelScope.launch(Dispatchers.IO) {
-                    _isLoading.value = true
+                    _state.update {
+                        it.copy(
+                            isLoading = true
+                        )
+                    }
                     authUseCases.resetPasswordWithEmail(
-                        email = _emailState.value.text
+                        email = _state.value.email
                     ).handle {
                         showSnackbarError("Successfully sent an email")
                     }
-                    _isLoading.value = false
+                    _state.update {
+                        it.copy(
+                            isLoading = false
+                        )
+                    }
                 }
             }
         }

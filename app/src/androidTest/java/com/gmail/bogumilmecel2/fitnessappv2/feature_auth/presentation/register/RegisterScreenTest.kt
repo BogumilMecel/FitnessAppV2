@@ -74,7 +74,7 @@ internal class RegisterScreenTest: BaseAndroidTest() {
         composeRule.onNodeWithTag(TestTags.RegisterScreen.USERNAME).performTextClearance()
         composeRule.onNodeWithTag(TestTags.RegisterScreen.CONFIRM_PASSWORD).performTextClearance()
         composeRule.onNodeWithTag(TestTags.General.PRIMARY_BUTTON).performClick()
-        composeRule.onNodeWithText(composeRule.activity.getString(R.string.please_make_sure_all_fields_are_filled_in_correctly))
+        composeRule.onNodeWithText(composeRule.activity.getString(R.string.please_make_sure_all_fields_are_filled_in_correctly)).assertIsDisplayed()
     }
 
 }
