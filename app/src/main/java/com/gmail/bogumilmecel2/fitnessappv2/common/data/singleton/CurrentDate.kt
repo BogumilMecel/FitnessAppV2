@@ -2,16 +2,16 @@ package com.gmail.bogumilmecel2.fitnessappv2.common.data.singleton
 
 import android.content.Context
 import android.text.format.DateUtils
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.DateModel
-import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.ResourceProvider
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.RealResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.formatToAppDateModel
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.formatToString
 import java.util.Date
 
 object CurrentDate {
-    private val date = mutableStateOf(
+    private val date = mutableLongStateOf(
         System.currentTimeMillis()
     )
 
@@ -20,9 +20,9 @@ object CurrentDate {
         resourceProvider: ResourceProvider? = null
     ): DateModel {
         return if (resourceProvider != null) {
-            date.value.formatToAppDateModel(resourceProvider)
+            date.longValue.formatToAppDateModel(resourceProvider)
         } else if (context != null) {
-            date.value.formatToAppDateModel(
+            date.longValue.formatToAppDateModel(
                 RealResourceProvider(context)
             )
         } else {
@@ -35,12 +35,12 @@ object CurrentDate {
     }
 
     fun addDay() {
-        val newDate = date.value + DateUtils.DAY_IN_MILLIS
-        date.value = newDate
+        val newDate = date.longValue + DateUtils.DAY_IN_MILLIS
+        date.longValue = newDate
     }
 
     fun deductDay() {
-        val newDate = date.value - DateUtils.DAY_IN_MILLIS
-        date.value = newDate
+        val newDate = date.longValue - DateUtils.DAY_IN_MILLIS
+        date.longValue = newDate
     }
 }
