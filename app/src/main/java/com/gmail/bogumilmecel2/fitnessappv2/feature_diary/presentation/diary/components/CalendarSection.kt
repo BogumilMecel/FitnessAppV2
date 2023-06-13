@@ -12,16 +12,16 @@ import androidx.compose.material.icons.filled.ArrowForwardIos
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import com.gmail.bogumilmecel2.fitnessappv2.R
-import com.gmail.bogumilmecel2.fitnessappv2.common.data.singleton.CurrentDate
 
 @Composable
 fun CalendarSection(
     modifier: Modifier = Modifier,
-    onArrowPressed: () -> Unit
+    date: String,
+    onArrowForwardClicked: () -> Unit,
+    onArrowBackwardsClicked: () -> Unit,
 ) {
 
     Row(
@@ -31,10 +31,7 @@ fun CalendarSection(
     ) {
 
         IconButton(
-            onClick = {
-                CurrentDate.deductDay()
-                onArrowPressed()
-            },
+            onClick = onArrowBackwardsClicked,
             modifier = Modifier.testTag(stringResource(id = R.string.CALENDAR_BACK))
         ) {
             Icon(
@@ -46,7 +43,7 @@ fun CalendarSection(
 
 
         Text(
-            text = CurrentDate.dateModel(LocalContext.current).valueToDisplay ?: CurrentDate.dateModel(LocalContext.current).date,
+            text = date,
             style = MaterialTheme.typography.h2.copy(
                 color = MaterialTheme.colors.onBackground
             ),
@@ -54,10 +51,7 @@ fun CalendarSection(
         )
 
         IconButton(
-            onClick = {
-                CurrentDate.addDay()
-                onArrowPressed()
-            },
+            onClick = onArrowForwardClicked,
             modifier = Modifier.testTag(stringResource(id = R.string.CALENDAR_FORWARD))
         ) {
             Icon(

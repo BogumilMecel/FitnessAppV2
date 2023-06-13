@@ -3,6 +3,7 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.diary
 import androidx.lifecycle.viewModelScope
 import com.gmail.bogumilmecel2.fitnessappv2.common.data.singleton.CurrentDate
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.DiaryItem
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.DateProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.ProductScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.RecipeScreenDestination
@@ -33,7 +34,8 @@ class DiaryViewModel @Inject constructor(
     private val updateDiaryEntriesListAfterDelete: UpdateDiaryEntriesListAfterDelete,
     private val calculateNutritionValuesFromDiaryEntriesUseCase: CalculateNutritionValuesFromDiaryEntriesUseCase,
     private val calculateNutritionValuesFromNutritionValuesUseCase: CalculateNutritionValuesFromNutritionValuesUseCase,
-    private val createLongClickedDiaryItemParamsUseCase: CreateLongClickedDiaryItemParamsUseCase
+    private val createLongClickedDiaryItemParamsUseCase: CreateLongClickedDiaryItemParamsUseCase,
+    private val dateProvider: DateProvider
 ) : BaseViewModel() {
 
     private val _state = MutableStateFlow(DiaryState())
@@ -67,35 +69,37 @@ class DiaryViewModel @Inject constructor(
             }
 
             is DiaryEvent.ClickedDeleteInDialog -> {
-                    viewModelScope.launch(Dispatchers.IO) {
-                        with(_state.value) {
-                            longClickedDiaryItemParams?.let { diaryItemParams ->
-                                deleteDiaryEntry(diaryItemParams.longClickedDiaryItem).handle(
-                                    finally = {
-                                        currentlySelectedMealName?.let {
-                                            calculateMealNutritionValues(mealName = it)
-                                            recalculateTotalNutritionValues()
-                                        }
-                                        hideDiaryEntryDialog()
+                viewModelScope.launch(Dispatchers.IO) {
+                    with(_state.value) {
+                        longClickedDiaryItemParams?.let { diaryItemParams ->
+                            deleteDiaryEntry(diaryItemParams.longClickedDiaryItem).handle(
+                                finally = {
+                                    currentlySelectedMealName?.let {
+                                        calculateMealNutritionValues(mealName = it)
+                                        recalculateTotalNutritionValues()
                                     }
-                                ) {
-                                    currentlySelectedMealName?.let { mealName ->
-                                        diaryEntries[mealName]?.let { mealDiaryEntries ->
-                                            val mutableDiaryEntries = _state.value.diaryEntries.toMutableMap()
-                                            mutableDiaryEntries[mealName] = updateDiaryEntriesListAfterDelete(
+                                    hideDiaryEntryDialog()
+                                }
+                            ) {
+                                currentlySelectedMealName?.let { mealName ->
+                                    diaryEntries[mealName]?.let { mealDiaryEntries ->
+                                        val mutableDiaryEntries =
+                                            _state.value.diaryEntries.toMutableMap()
+                                        mutableDiaryEntries[mealName] =
+                                            updateDiaryEntriesListAfterDelete(
                                                 diaryEntry = diaryItemParams.longClickedDiaryItem,
                                                 diaryEntries = mealDiaryEntries
                                             )
-                                            _state.update {
-                                                it.copy(
-                                                    diaryEntries = mutableDiaryEntries
-                                                )
-                                            }
+                                        _state.update {
+                                            it.copy(
+                                                diaryEntries = mutableDiaryEntries
+                                            )
                                         }
                                     }
                                 }
                             }
                         }
+                    }
                 }
             }
 
@@ -109,12 +113,31 @@ class DiaryViewModel @Inject constructor(
             is DiaryEvent.BackPressed -> {
                 navigateUp()
             }
+
+            is DiaryEvent.ClickedCalendarArrowBackwards -> {
+                dateProvider.deductDay()
+                getDate()
+            }
+
+            is DiaryEvent.ClickedCalendarArrowForward -> {
+                dateProvider.addDay()
+                getDate()
+            }
         }
     }
 
     fun initData() {
+        getDate()
         getDiaryEntries()
         initWantedNutritionValues()
+    }
+
+    private fun getDate() {
+        _state.update {
+            it.copy(
+                displayedDate = dateProvider.getDateString(resourceProvider)
+            )
+        }
     }
 
     private fun hideDiaryEntryDialog() {
@@ -159,7 +182,7 @@ class DiaryViewModel @Inject constructor(
 
     private fun startEditingDiaryItem(diaryItem: DiaryItem) {
         with(diaryItem) {
-            when(this) {
+            when (this) {
                 is ProductDiaryEntry -> {
                     navigateTo(
                         destination = ProductScreenDestination(
@@ -167,6 +190,7 @@ class DiaryViewModel @Inject constructor(
                         )
                     )
                 }
+
                 is RecipeDiaryEntry -> {
                     navigateTo(
                         destination = RecipeScreenDestination(
@@ -174,6 +198,7 @@ class DiaryViewModel @Inject constructor(
                         )
                     )
                 }
+
                 else -> {}
             }
         }

@@ -8,9 +8,12 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.UtcOffset
+import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
 import java.text.SimpleDateFormat
-import java.time.ZoneId
-import java.time.ZonedDateTime
 import java.util.Date
 import java.util.Locale
 
@@ -22,14 +25,11 @@ class RealDateProvider : DateProvider {
     }
 
     private val _currentDate: MutableStateFlow<Long> = MutableStateFlow(
-        ZonedDateTime.now(ZoneId.systemDefault()).toInstant().epochSecond
+        Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).toInstant(UtcOffset.ZERO).toEpochMilliseconds()
     )
     override val currentDate: StateFlow<Long> = _currentDate
 
-    override fun getDateString(
-        resourceProvider: ResourceProvider,
-        locale: Locale
-    ): String {
+    override fun getDateString(resourceProvider: ResourceProvider): String {
         with(_currentDate.value) {
             return when {
                 isToday() -> {
@@ -42,7 +42,7 @@ class RealDateProvider : DateProvider {
                     resourceProvider.getString(R.string.tomorrow)
                 }
                 else -> {
-                    locale.getCorrectFormat().format(
+                    Locale.getDefault().getCorrectFormat().format(
                         Date(_currentDate.value)
                     )
                 }
