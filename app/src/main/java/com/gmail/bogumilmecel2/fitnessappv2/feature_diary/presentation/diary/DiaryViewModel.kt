@@ -1,7 +1,6 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.diary
 
 import androidx.lifecycle.viewModelScope
-import com.gmail.bogumilmecel2.fitnessappv2.common.data.singleton.CurrentDate
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.DiaryItem
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.DateProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
@@ -205,9 +204,8 @@ class DiaryViewModel @Inject constructor(
     }
 
     private fun getDiaryEntries() {
-        val currentDate = CurrentDate.dateModel(resourceProvider = resourceProvider)
         viewModelScope.launch(Dispatchers.IO) {
-            getDiaryEntriesUseCase(date = currentDate.date).handle { diaryEntries ->
+            getDiaryEntriesUseCase(date = dateProvider.getLocalDateString()).handle { diaryEntries ->
                 _state.update {
                     it.copy(
                         diaryEntries = diaryEntries

@@ -5,7 +5,9 @@ import kotlinx.coroutines.flow.StateFlow
 interface DateProvider {
     val currentDate: StateFlow<Long>
 
-    fun getDateString(resourceProvider: ResourceProvider, ): String
+    fun getDateString(resourceProvider: ResourceProvider): String
+
+    fun getLocalDateString(): String
 
     fun addDay()
 
