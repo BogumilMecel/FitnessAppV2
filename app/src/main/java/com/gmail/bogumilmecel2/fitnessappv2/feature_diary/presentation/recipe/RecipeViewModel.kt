@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.gmail.bogumilmecel2.fitnessappv2.common.data.singleton.CurrentDate
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.multiplyBy
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.DateProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.toValidInt
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.DiaryScreenDestination
@@ -30,6 +31,7 @@ class RecipeViewModel @Inject constructor(
     private val getRecipePriceFromIngredientsUseCase: GetRecipePriceFromIngredientsUseCase,
     private val calculateSelectedServingPriceUseCase: CalculateSelectedServingPriceUseCase,
     private val editRecipeDiaryEntryUseCase: EditRecipeDiaryEntryUseCase,
+    private val dateProvider: DateProvider,
     savedStateHandle: SavedStateHandle
 ) : BaseViewModel() {
 
