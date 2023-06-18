@@ -3,7 +3,6 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.gmail.bogumilmecel2.fitnessappv2.R
-import com.gmail.bogumilmecel2.fitnessappv2.common.data.singleton.CurrentDate
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.toValidInt
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.DiaryScreenDestination
@@ -30,10 +29,10 @@ class ProductViewModel @Inject constructor(
         with(ProductScreenDestination.argsFrom(savedStateHandle)) {
             ProductState(
                 weight = if (entryData is ProductEntryData.Editing) entryData.productDiaryEntry.weight.toString() else "",
-                entryData = entryData
+                entryData = entryData,
+                date = entryData.date
             )
         }
-
     )
     val state: StateFlow<ProductState> = _state
 
@@ -75,7 +74,8 @@ class ProductViewModel @Inject constructor(
                                     product = entryData.product,
                                     mealName = entryData.mealName,
                                     weight = weight.toIntOrNull(),
-                                    dateModel = CurrentDate.dateModel(resourceProvider = resourceProvider)
+                                    date = date,
+                                    timestamp = getCurrentTimestamp()
                                 ).handle {
                                     navigateWithPopUp(
                                         destination = DiaryScreenDestination

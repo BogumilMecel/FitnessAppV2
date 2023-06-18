@@ -26,6 +26,7 @@ class NewProductViewModel @Inject constructor(
         NewProductState(
             mealName = NewProductScreenDestination.argsFrom(savedStateHandle).mealName,
             barcode = NewProductScreenDestination.argsFrom(savedStateHandle).barcode ?: "",
+            date = NewProductScreenDestination.argsFrom(savedStateHandle).date
         )
     )
     val state: StateFlow<NewProductState> = _state
@@ -132,6 +133,7 @@ class NewProductViewModel @Inject constructor(
                                     entryData = ProductEntryData.Adding(
                                         mealName = mealName,
                                         product = product,
+                                        date = date
                                     ),
                                 )
                             )

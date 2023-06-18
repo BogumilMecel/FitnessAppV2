@@ -4,5 +4,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.MealName
 
 data class NewProductNavArguments(
     val mealName: MealName,
-    val barcode: String?
+    val barcode: String?,
+    val date: String
 )
