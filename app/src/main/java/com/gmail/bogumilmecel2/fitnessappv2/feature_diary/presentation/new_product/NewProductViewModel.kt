@@ -10,8 +10,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_p
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.presentation.ProductEntryData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,18 +18,15 @@ import javax.inject.Inject
 class NewProductViewModel @Inject constructor(
     private val saveNewProductUseCase: SaveNewProductUseCase,
     savedStateHandle: SavedStateHandle
-) : BaseViewModel() {
-
-    private val _state = MutableStateFlow(
-        NewProductState(
-            mealName = NewProductScreenDestination.argsFrom(savedStateHandle).mealName,
-            barcode = NewProductScreenDestination.argsFrom(savedStateHandle).barcode ?: "",
-            date = NewProductScreenDestination.argsFrom(savedStateHandle).date
-        )
+) : BaseViewModel<NewProductState, NewProductEvent>(
+    state = NewProductState(
+        mealName = NewProductScreenDestination.argsFrom(savedStateHandle).mealName,
+        barcode = NewProductScreenDestination.argsFrom(savedStateHandle).barcode ?: "",
+        date = NewProductScreenDestination.argsFrom(savedStateHandle).date
     )
-    val state: StateFlow<NewProductState> = _state
+) {
 
-    fun onEvent(event: NewProductEvent) {
+    override fun onEvent(event: NewProductEvent) {
         when (event) {
             is NewProductEvent.ClickedDropDownMenu -> {
                 _state.update {

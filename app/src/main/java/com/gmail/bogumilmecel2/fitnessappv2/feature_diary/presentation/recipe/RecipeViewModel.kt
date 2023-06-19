@@ -4,7 +4,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.gmail.bogumilmecel2.fitnessappv2.common.data.singleton.CurrentDate
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.multiplyBy
-import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.DateProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.toValidInt
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.DiaryScreenDestination
@@ -17,8 +16,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.recip
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.recipe.PostRecipeDiaryEntryUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.domain.model.NutritionData
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -31,26 +28,22 @@ class RecipeViewModel @Inject constructor(
     private val getRecipePriceFromIngredientsUseCase: GetRecipePriceFromIngredientsUseCase,
     private val calculateSelectedServingPriceUseCase: CalculateSelectedServingPriceUseCase,
     private val editRecipeDiaryEntryUseCase: EditRecipeDiaryEntryUseCase,
-    private val dateProvider: DateProvider,
     savedStateHandle: SavedStateHandle
-) : BaseViewModel() {
-
-    private val _state = MutableStateFlow(
-        with(RecipeScreenDestination.argsFrom(savedStateHandle = savedStateHandle)) {
-            RecipeState(
-                entryData = entryData,
-                servings = if (entryData is RecipeEntryData.Editing) entryData.recipeDiaryEntry.servings.toString() else ""
-            )
-        }
-    )
-    val state: StateFlow<RecipeState> = _state
+) : BaseViewModel<RecipeState, RecipeEvent>(
+    state = with(RecipeScreenDestination.argsFrom(savedStateHandle = savedStateHandle)) {
+        RecipeState(
+            entryData = entryData,
+            servings = if (entryData is RecipeEntryData.Editing) entryData.recipeDiaryEntry.servings.toString() else ""
+        )
+    }
+) {
 
     init {
         initializeRecipeData()
         fetchRecipePrice()
     }
 
-    fun onEvent(event: RecipeEvent) {
+    override fun onEvent(event: RecipeEvent) {
         when (event) {
             is RecipeEvent.ClickedBackArrow -> navigateUp()
             is RecipeEvent.ClickedFavorite -> {

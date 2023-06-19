@@ -9,8 +9,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_account.domain.use_case.Dele
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.CreatePieChartData
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.domain.model.NutritionData
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -19,13 +17,10 @@ import javax.inject.Inject
 class AccountViewModel @Inject constructor(
     private val deleteToken: DeleteToken,
     private val createPieChartData: CreatePieChartData
-) : BaseViewModel() {
+) : BaseViewModel<AccountState, AccountEvent>(state = AccountState()) {
 
-    private val _state = MutableStateFlow(AccountState())
-    val state: StateFlow<AccountState> = _state
-
-    fun onEvent(accountEvent: AccountEvent) {
-        when (accountEvent) {
+    override fun onEvent(event: AccountEvent) {
+        when (event) {
             is AccountEvent.ClickedLogOutButtonClicked -> {
                 logOut()
             }

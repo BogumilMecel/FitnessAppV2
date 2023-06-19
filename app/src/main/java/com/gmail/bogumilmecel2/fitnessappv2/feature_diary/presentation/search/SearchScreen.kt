@@ -38,7 +38,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 fun SearchScreen(
     viewModel: SearchViewModel = hiltViewModel()
 ) {
-    val state = viewModel.searchState.collectAsStateWithLifecycle().value
+    val state = viewModel.state.collectAsStateWithLifecycle().value
 
     val scope = rememberCoroutineScope()
     val pagerState = rememberPagerState(initialPage = state.currentTabIndex)

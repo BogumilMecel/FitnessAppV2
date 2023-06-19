@@ -8,7 +8,8 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.navigation.Navigator
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.CachedValuesProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvider
 import com.ramcosta.composedestinations.spec.Direction
-import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
@@ -17,8 +18,10 @@ import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 import javax.inject.Inject
 
-@HiltViewModel
-open class BaseViewModel @Inject constructor() : ViewModel() {
+abstract class BaseViewModel<STATE: Any, EVENT: Any>(state: STATE) : ViewModel() {
+
+    protected val _state = MutableStateFlow(state)
+    val state: StateFlow<STATE> = _state
 
     @Inject
     lateinit var navigator: Navigator
@@ -29,13 +32,15 @@ open class BaseViewModel @Inject constructor() : ViewModel() {
     @Inject
     lateinit var resourceProvider: ResourceProvider
 
-    fun showSnackbarError(message: String) {
+    protected fun showSnackbarError(message: String) {
         viewModelScope.launch {
             ErrorUtils.showSnackbarWithMessage(message = message)
         }
     }
 
-    inline fun <T> Resource<T>.handle(
+    abstract fun onEvent(event: EVENT)
+
+    protected inline fun <T> Resource<T>.handle(
         showSnackbar: Boolean = true,
         finally: () -> Unit = {},
         onError: (String) -> Unit = {},
@@ -47,12 +52,12 @@ open class BaseViewModel @Inject constructor() : ViewModel() {
             }
             onError(this.uiText)
         } else if (this is Resource.Success) {
-            block(this.data)
+            block(this@handle.data)
         }
         finally()
     }
 
-    fun navigateWithPopUp(destination: Direction) {
+    protected fun navigateWithPopUp(destination: Direction) {
         navigateTo(
             destination = destination,
             navOptions = NavOptions.Builder().setPopUpTo(
@@ -62,7 +67,7 @@ open class BaseViewModel @Inject constructor() : ViewModel() {
         )
     }
 
-    fun navigateTo(destination: Direction, navOptions: NavOptions = NavOptions.Builder().build()) =
+    protected fun navigateTo(destination: Direction, navOptions: NavOptions = NavOptions.Builder().build()) =
         viewModelScope.launch {
             navigator.navigate(
                 NavigationAction(
@@ -72,7 +77,7 @@ open class BaseViewModel @Inject constructor() : ViewModel() {
             )
         }
 
-    fun navigateUp() {
+    protected fun navigateUp() {
         navigateTo(
             destination = object : Direction {
                 override val route: String = "navigate_up"
@@ -80,6 +85,6 @@ open class BaseViewModel @Inject constructor() : ViewModel() {
         )
     }
 
-    fun getCurrentTimestamp() = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+    protected fun getCurrentTimestamp() = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
         .toInstant(UtcOffset.ZERO).toEpochMilliseconds()
 }

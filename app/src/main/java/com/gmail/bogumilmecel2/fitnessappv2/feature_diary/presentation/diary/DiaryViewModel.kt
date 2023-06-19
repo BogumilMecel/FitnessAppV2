@@ -20,8 +20,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.p
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.recipe.RecipeEntryData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -35,12 +33,9 @@ class DiaryViewModel @Inject constructor(
     private val calculateNutritionValuesFromNutritionValuesUseCase: CalculateNutritionValuesFromNutritionValuesUseCase,
     private val createLongClickedDiaryItemParamsUseCase: CreateLongClickedDiaryItemParamsUseCase,
     private val dateProvider: DateProvider
-) : BaseViewModel() {
+) : BaseViewModel<DiaryState, DiaryEvent>(state = DiaryState()) {
 
-    private val _state = MutableStateFlow(DiaryState())
-    val state: StateFlow<DiaryState> = _state
-
-    fun onEvent(event: DiaryEvent) {
+    override fun onEvent(event: DiaryEvent) {
         when (event) {
             is DiaryEvent.ChangedDate -> {
                 getDiaryEntries()

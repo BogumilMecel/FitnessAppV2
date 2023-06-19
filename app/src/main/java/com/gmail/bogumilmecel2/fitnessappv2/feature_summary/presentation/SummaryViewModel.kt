@@ -6,8 +6,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.use_case.SummaryUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -15,12 +13,9 @@ import javax.inject.Inject
 @HiltViewModel
 class SummaryViewModel @Inject constructor(
     private val summaryUseCases: SummaryUseCases,
-) : BaseViewModel() {
+) : BaseViewModel<SummaryState, SummaryEvent>(state = SummaryState()) {
 
-    private val _state = MutableStateFlow(SummaryState())
-    val summaryState: StateFlow<SummaryState> = _state
-
-    fun onEvent(event: SummaryEvent) {
+    override fun onEvent(event: SummaryEvent) {
         when (event) {
             is SummaryEvent.DismissedWeightPickerDialog -> {
                 _state.update {
