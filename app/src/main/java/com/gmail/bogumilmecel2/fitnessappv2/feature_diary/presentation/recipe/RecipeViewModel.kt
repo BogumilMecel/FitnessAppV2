@@ -2,7 +2,6 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.recipe
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.gmail.bogumilmecel2.fitnessappv2.common.data.singleton.CurrentDate
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.multiplyBy
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.toValidInt
@@ -33,7 +32,8 @@ class RecipeViewModel @Inject constructor(
     state = with(RecipeScreenDestination.argsFrom(savedStateHandle = savedStateHandle)) {
         RecipeState(
             entryData = entryData,
-            servings = if (entryData is RecipeEntryData.Editing) entryData.recipeDiaryEntry.servings.toString() else ""
+            servings = if (entryData is RecipeEntryData.Editing) entryData.recipeDiaryEntry.servings.toString() else "",
+            date = entryData.date
         )
     }
 ) {
@@ -88,7 +88,8 @@ class RecipeViewModel @Inject constructor(
                     }
                     is RecipeEntryData.Adding -> {
                         postRecipeDiaryEntryUseCase(
-                            dateModel = CurrentDate.dateModel(resourceProvider = resourceProvider),
+                            date = date,
+                            timestamp = getCurrentTimestamp(),
                             mealName = _state.value.entryData.mealName,
                             recipe = _state.value.entryData.recipe,
                             servingsString = _state.value.servings

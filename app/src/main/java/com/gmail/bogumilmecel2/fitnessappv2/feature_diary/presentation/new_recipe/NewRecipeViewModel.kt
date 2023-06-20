@@ -26,7 +26,8 @@ class NewRecipeViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : BaseViewModel<NewRecipeState, NewRecipeEvent>(
     state = NewRecipeState(
-        mealName = NewRecipeScreenDestination.argsFrom(savedStateHandle).mealName
+        mealName = NewRecipeScreenDestination.argsFrom(savedStateHandle).mealName,
+        date = NewRecipeScreenDestination.argsFrom(savedStateHandle).date,
     )
 ) {
 
@@ -214,7 +215,8 @@ class NewRecipeViewModel @Inject constructor(
                         destination = RecipeScreenDestination(
                             entryData = RecipeEntryData.Adding(
                                 recipe = it,
-                                mealName = mealName
+                                mealName = mealName,
+                                date = date
                             )
                         )
                     )

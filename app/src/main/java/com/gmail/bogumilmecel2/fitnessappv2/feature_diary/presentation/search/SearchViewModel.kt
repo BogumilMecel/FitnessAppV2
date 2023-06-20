@@ -113,7 +113,14 @@ class SearchViewModel @Inject constructor(
             }
 
             is SearchEvent.ClickedCreateNewRecipe -> {
-                navigateTo(NewRecipeScreenDestination(mealName = _state.value.mealName))
+                with(_state.value) {
+                    navigateTo(
+                        NewRecipeScreenDestination(
+                            mealName = mealName,
+                            date = date
+                        )
+                    )
+                }
             }
 
             is SearchEvent.ClickedProductsTab -> {
@@ -139,7 +146,8 @@ class SearchViewModel @Inject constructor(
                     RecipeScreenDestination(
                         entryData = RecipeEntryData.Adding(
                             recipe = event.recipe,
-                            mealName = _state.value.mealName
+                            mealName = _state.value.mealName,
+                            date = _state.value.date
                         )
                     )
                 )

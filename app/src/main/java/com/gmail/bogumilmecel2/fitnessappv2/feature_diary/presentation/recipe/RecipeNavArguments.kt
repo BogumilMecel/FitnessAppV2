@@ -7,23 +7,27 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 data class RecipeNavArguments(
-    val entryData: RecipeEntryData
+    val entryData: RecipeEntryData,
 )
 
 @Serializable
 sealed class RecipeEntryData(
     open val recipe: Recipe,
-    open val mealName: MealName
+    open val mealName: MealName,
+    open val date: String
 ) {
     @Serializable
     data class Adding(
         @SerialName("meal_name")
         override val mealName: MealName,
         @SerialName("recipe_data")
-        override val recipe: Recipe
+        override val recipe: Recipe,
+        @SerialName("current_date")
+        override val date: String
     ) : RecipeEntryData(
         mealName = mealName,
-        recipe = recipe
+        recipe = recipe,
+        date = date
     )
 
     @Serializable
@@ -31,6 +35,7 @@ sealed class RecipeEntryData(
         val recipeDiaryEntry: RecipeDiaryEntry
     ) : RecipeEntryData(
         mealName = recipeDiaryEntry.mealName,
-        recipe = recipeDiaryEntry.recipe
+        recipe = recipeDiaryEntry.recipe,
+        date = recipeDiaryEntry.date
     )
 }

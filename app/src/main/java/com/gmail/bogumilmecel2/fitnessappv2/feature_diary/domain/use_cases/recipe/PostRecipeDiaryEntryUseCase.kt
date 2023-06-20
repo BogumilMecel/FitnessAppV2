@@ -1,7 +1,6 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.recipe
 
 import com.gmail.bogumilmecel2.fitnessappv2.R
-import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.DateModel
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.toValidInt
@@ -17,7 +16,8 @@ class PostRecipeDiaryEntryUseCase(
     suspend operator fun invoke(
         recipe: Recipe,
         servingsString: String,
-        dateModel: DateModel,
+        timestamp: Long,
+        date: String,
         mealName: MealName
     ): Resource<Unit> {
         val servingsValue = servingsString.toValidInt()
@@ -29,8 +29,8 @@ class PostRecipeDiaryEntryUseCase(
                 recipeDiaryEntryRequest = RecipeDiaryEntryRequest(
                     recipe = recipe,
                     servings = servingsValue,
-                    date = dateModel.date,
-                    timestamp = dateModel.timestamp,
+                    date = date,
+                    timestamp = timestamp,
                     mealName = mealName
                 )
             )
