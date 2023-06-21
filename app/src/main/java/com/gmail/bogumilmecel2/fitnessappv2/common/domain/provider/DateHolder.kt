@@ -1,6 +1,6 @@
 package com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider
 
-interface DateProvider {
+interface DateHolder {
     fun getDateString(resourceProvider: ResourceProvider): String
 
     fun getLocalDateString(): String

@@ -3,7 +3,6 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.diary
 import androidx.compose.ui.test.*
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.BaseAndroidTest
-import com.gmail.bogumilmecel2.fitnessappv2.common.data.singleton.CurrentDate
 import com.gmail.bogumilmecel2.fitnessappv2.common.di.AppModule
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.DiaryScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.MealName
@@ -51,7 +50,6 @@ internal class DiaryScreenTest: BaseAndroidTest() {
         calendarSectionDate.assertIsDisplayed().assert(
             hasText(composeRule.activity.getString(R.string.yesterday))
         )
-        CurrentDate.addDay()
     }
 
     @Test
@@ -63,6 +61,5 @@ internal class DiaryScreenTest: BaseAndroidTest() {
         calendarSectionDate.assertIsDisplayed().assert(
             hasText(composeRule.activity.getString(R.string.tomorrow))
         )
-        CurrentDate.deductDay()
     }
 }

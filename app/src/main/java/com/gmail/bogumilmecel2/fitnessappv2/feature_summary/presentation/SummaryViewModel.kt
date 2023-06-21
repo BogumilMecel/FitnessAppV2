@@ -1,8 +1,8 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_summary.presentation
 
 import androidx.lifecycle.viewModelScope
-import com.gmail.bogumilmecel2.fitnessappv2.common.data.singleton.CurrentDate
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.DateUtils
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.use_case.SummaryUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -101,9 +101,7 @@ class SummaryViewModel @Inject constructor(
     private fun getCaloriesSum() {
         viewModelScope.launch {
             val caloriesSum = summaryUseCases.getCaloriesSum(
-                date = CurrentDate.dateModel(
-                    resourceProvider = resourceProvider
-                ).date
+                date = DateUtils.getCurrentDateString()
             )
             _state.update {
                 it.copy(

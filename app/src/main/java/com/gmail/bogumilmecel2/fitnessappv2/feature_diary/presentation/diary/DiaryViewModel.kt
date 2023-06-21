@@ -1,8 +1,9 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.diary
 
 import androidx.lifecycle.viewModelScope
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.DateTransferObject
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.DiaryItem
-import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.DateProvider
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.DateHolder
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.ProductScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.RecipeScreenDestination
@@ -32,7 +33,7 @@ class DiaryViewModel @Inject constructor(
     private val calculateNutritionValuesFromDiaryEntriesUseCase: CalculateNutritionValuesFromDiaryEntriesUseCase,
     private val calculateNutritionValuesFromNutritionValuesUseCase: CalculateNutritionValuesFromNutritionValuesUseCase,
     private val createLongClickedDiaryItemParamsUseCase: CreateLongClickedDiaryItemParamsUseCase,
-    private val dateProvider: DateProvider
+    private val dateHolder: DateHolder
 ) : BaseViewModel<DiaryState, DiaryEvent>(state = DiaryState()) {
 
     override fun onEvent(event: DiaryEvent) {
@@ -45,7 +46,10 @@ class DiaryViewModel @Inject constructor(
                 navigateTo(
                     SearchScreenDestination(
                         mealName = event.mealName,
-                        date = dateProvider.getLocalDateString()
+                        dateTransferObject = DateTransferObject(
+                            displayedDate = _state.value.displayedDate,
+                            realDate = dateHolder.getLocalDateString()
+                        )
                     )
                 )
             }
@@ -114,12 +118,12 @@ class DiaryViewModel @Inject constructor(
             }
 
             is DiaryEvent.ClickedCalendarArrowBackwards -> {
-                dateProvider.deductDay()
+                dateHolder.deductDay()
                 getDate()
             }
 
             is DiaryEvent.ClickedCalendarArrowForward -> {
-                dateProvider.addDay()
+                dateHolder.addDay()
                 getDate()
             }
         }
@@ -134,7 +138,7 @@ class DiaryViewModel @Inject constructor(
     private fun getDate() {
         _state.update {
             it.copy(
-                displayedDate = dateProvider.getDateString(resourceProvider)
+                displayedDate = dateHolder.getDateString(resourceProvider)
             )
         }
     }
@@ -187,7 +191,7 @@ class DiaryViewModel @Inject constructor(
                         destination = ProductScreenDestination(
                             entryData = ProductEntryData.Editing(
                                 productDiaryEntry = this,
-                                date = dateProvider.getLocalDateString()
+                                displayedDate = _state.value.displayedDate
                             )
                         )
                     )
@@ -196,7 +200,10 @@ class DiaryViewModel @Inject constructor(
                 is RecipeDiaryEntry -> {
                     navigateTo(
                         destination = RecipeScreenDestination(
-                            entryData = RecipeEntryData.Editing(recipeDiaryEntry = this)
+                            entryData = RecipeEntryData.Editing(
+                                recipeDiaryEntry = this,
+                                displayedDate = _state.value.displayedDate
+                            )
                         )
                     )
                 }
@@ -208,7 +215,7 @@ class DiaryViewModel @Inject constructor(
 
     private fun getDiaryEntries() {
         viewModelScope.launch(Dispatchers.IO) {
-            getDiaryEntriesUseCase(date = dateProvider.getLocalDateString()).handle { diaryEntries ->
+            getDiaryEntriesUseCase(date = dateHolder.getLocalDateString()).handle { diaryEntries ->
                 _state.update {
                     it.copy(
                         diaryEntries = diaryEntries

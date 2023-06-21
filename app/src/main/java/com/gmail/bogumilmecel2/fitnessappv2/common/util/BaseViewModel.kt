@@ -11,11 +11,6 @@ import com.ramcosta.composedestinations.spec.Direction
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.UtcOffset
-import kotlinx.datetime.toInstant
-import kotlinx.datetime.toLocalDateTime
 import javax.inject.Inject
 
 abstract class BaseViewModel<STATE: Any, EVENT: Any>(state: STATE) : ViewModel() {
@@ -84,7 +79,4 @@ abstract class BaseViewModel<STATE: Any, EVENT: Any>(state: STATE) : ViewModel()
             }
         )
     }
-
-    protected fun getCurrentTimestamp() = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
-        .toInstant(UtcOffset.ZERO).toEpochMilliseconds()
 }

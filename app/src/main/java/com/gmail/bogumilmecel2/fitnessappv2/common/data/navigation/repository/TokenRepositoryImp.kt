@@ -1,4 +1,4 @@
-package com.gmail.bogumilmecel2.fitnessappv2.common.data.repository
+package com.gmail.bogumilmecel2.fitnessappv2.common.data.navigation.repository
 
 import android.content.SharedPreferences
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.repository.TokenRepository

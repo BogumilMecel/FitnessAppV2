@@ -23,14 +23,14 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val searchDiaryUseCases: SearchDiaryUseCases,
-    savedStateHandle: SavedStateHandle,
+    private val savedStateHandle: SavedStateHandle,
 ) : BaseViewModel<SearchState, SearchEvent>(
     state = SearchState(
         mealName = SearchScreenDestination.argsFrom(savedStateHandle).mealName,
-        date = SearchScreenDestination.argsFrom(savedStateHandle).date
+        date = SearchScreenDestination.argsFrom(savedStateHandle).dateTransferObject.displayedDate
     )
 ) {
-    
+    private val dateTransferObject = SearchScreenDestination.argsFrom(savedStateHandle).dateTransferObject
     private var productHistory = emptyList<Product>()
 
     override fun onEvent(event: SearchEvent) {
@@ -75,7 +75,7 @@ class SearchViewModel @Inject constructor(
                         entryData = ProductEntryData.Adding(
                             product = event.product,
                             mealName = _state.value.mealName,
-                            date = _state.value.date
+                            dateTransferObject = dateTransferObject
                         ),
                     )
                 )
@@ -86,7 +86,7 @@ class SearchViewModel @Inject constructor(
                     NewProductScreenDestination(
                         mealName = _state.value.mealName,
                         barcode = _state.value.barcode,
-                        date = _state.value.date
+                        dateTransferObject = dateTransferObject
                     )
                 )
             }
@@ -117,7 +117,7 @@ class SearchViewModel @Inject constructor(
                     navigateTo(
                         NewRecipeScreenDestination(
                             mealName = mealName,
-                            date = date
+                            dateTransferObject = dateTransferObject
                         )
                     )
                 }
@@ -147,7 +147,7 @@ class SearchViewModel @Inject constructor(
                         entryData = RecipeEntryData.Adding(
                             recipe = event.recipe,
                             mealName = _state.value.mealName,
-                            date = _state.value.date
+                            dateTransferObject = dateTransferObject
                         )
                     )
                 )
@@ -261,7 +261,7 @@ class SearchViewModel @Inject constructor(
                             entryData = ProductEntryData.Adding(
                                 product = product,
                                 mealName = _state.value.mealName,
-                                date = _state.value.date
+                                dateTransferObject = dateTransferObject
                             ),
                         )
                     )

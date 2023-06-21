@@ -1,12 +1,14 @@
 package com.gmail.bogumilmecel2.fitnessappv2.common.util
 
-import android.text.format.DateUtils
 import android.text.format.DateUtils.DAY_IN_MILLIS
 import com.gmail.bogumilmecel2.fitnessappv2.R
-import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.DateProvider
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.DateHolder
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvider
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.DateUtils.getLocalDateString
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.DateUtils.isToday
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.DateUtils.isTomorrow
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.DateUtils.isYesterday
 import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.UtcOffset
 import kotlinx.datetime.toInstant
@@ -15,12 +17,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class RealDateProvider : DateProvider {
-
-    companion object {
-        private const val US_DATE_PATTERN = "MM/dd/yyyy"
-        private const val EU_DATE_PATTERN = "dd/MM/yyyy"
-    }
+class RealDateHolder : DateHolder {
 
     private var _currentDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
             .toInstant(UtcOffset.ZERO).toEpochMilliseconds()
@@ -49,8 +46,7 @@ class RealDateProvider : DateProvider {
         }
     }
 
-    override fun getLocalDateString() = Instant.fromEpochMilliseconds(_currentDate)
-        .toLocalDateTime(TimeZone.currentSystemDefault()).date.toString()
+    override fun getLocalDateString() = _currentDate.getLocalDateString()
 
     override fun addDay() {
         _currentDate += DAY_IN_MILLIS
@@ -60,16 +56,10 @@ class RealDateProvider : DateProvider {
         _currentDate -= DAY_IN_MILLIS
     }
 
-    private fun Long.isTomorrow() = DateUtils.isToday(this - DateUtils.DAY_IN_MILLIS)
-
-    private fun Long.isYesterday() = DateUtils.isToday(this + DateUtils.DAY_IN_MILLIS)
-
-    private fun Long.isToday() = DateUtils.isToday(this)
-
     private fun Locale.getCorrectFormat(): SimpleDateFormat {
         val pattern = when (country) {
-            "US" -> US_DATE_PATTERN
-            else -> EU_DATE_PATTERN
+            "US" -> DateUtils.US_DATE_PATTERN
+            else -> DateUtils.EU_DATE_PATTERN
         }
 
         return SimpleDateFormat(

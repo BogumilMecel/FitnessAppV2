@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.DateUtils
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.toValidInt
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.DiaryScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.ProductScreenDestination
@@ -26,7 +27,7 @@ class ProductViewModel @Inject constructor(
         ProductState(
             weight = if (entryData is ProductEntryData.Editing) entryData.productDiaryEntry.weight.toString() else "",
             entryData = entryData,
-            date = entryData.date
+            date = entryData.dateTransferObject.displayedDate
         )
     }
 ) {
@@ -68,8 +69,8 @@ class ProductViewModel @Inject constructor(
                                     product = entryData.product,
                                     mealName = entryData.mealName,
                                     weight = weight.toIntOrNull(),
-                                    date = date,
-                                    timestamp = getCurrentTimestamp()
+                                    date = entryData.dateTransferObject.realDate,
+                                    timestamp = DateUtils.getCurrentTimestamp()
                                 ).handle {
                                     navigateWithPopUp(
                                         destination = DiaryScreenDestination
