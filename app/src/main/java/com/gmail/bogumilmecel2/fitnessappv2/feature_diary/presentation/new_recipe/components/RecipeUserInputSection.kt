@@ -28,7 +28,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_recip
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_recipe.NewRecipeState
 import com.gmail.bogumilmecel2.ui.components.base.CustomBasicTextField
 import com.gmail.bogumilmecel2.ui.components.base.CustomButton
-import com.gmail.bogumilmecel2.ui.components.base.CustomIconStyle
+import com.gmail.bogumilmecel2.ui.components.base.IconVector
 import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
 import com.gmail.bogumilmecel2.ui.components.base.WidthSpacer
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
@@ -205,7 +205,7 @@ fun RecipeUserInputSection(
 
         CustomButton(
             modifier = Modifier.fillMaxWidth(),
-            iconLeft = CustomIconStyle.Save,
+            iconLeft = IconVector.Save,
             text = stringResource(id = R.string.new_recipe_save)
         ) {
             onEvent(NewRecipeEvent.ClickedSaveRecipe)

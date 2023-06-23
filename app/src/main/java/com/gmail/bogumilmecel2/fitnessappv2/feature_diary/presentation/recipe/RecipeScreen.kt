@@ -43,7 +43,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.co
 import com.gmail.bogumilmecel2.ui.components.base.ButtonStyle
 import com.gmail.bogumilmecel2.ui.components.base.CustomBasicTextField
 import com.gmail.bogumilmecel2.ui.components.base.CustomButton
-import com.gmail.bogumilmecel2.ui.components.base.CustomIconStyle
+import com.gmail.bogumilmecel2.ui.components.base.IconVector
 import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
 import com.gmail.bogumilmecel2.ui.components.base.IconParams
 import com.gmail.bogumilmecel2.ui.components.base.WidthSpacer
@@ -75,9 +75,9 @@ fun RecipeScreen(
             },
             endIconParams = IconParams(
                 iconStyle = if (!state.isFavorite) {
-                    CustomIconStyle.Heart
+                    IconVector.Heart
                 } else {
-                    CustomIconStyle.HeartFilled
+                    IconVector.HeartFilled
                 },
                 onClick = {
                     viewModel.onEvent(RecipeEvent.ClickedFavorite)
@@ -231,7 +231,7 @@ fun RecipeScreen(
 
                     CustomButton(
                         modifier = Modifier.fillMaxWidth(),
-                        iconLeft = CustomIconStyle.Save,
+                        iconLeft = IconVector.Save,
                         text = stringResource(
                             id = R.string.recipe_save_to,
                             state.entryData.mealName
@@ -337,7 +337,7 @@ fun RecipeScreen(
 
             CustomButton(
                 modifier = Modifier.padding(horizontal = 15.dp),
-                iconLeft = CustomIconStyle.Edit,
+                iconLeft = IconVector.Edit,
                 text = stringResource(id = R.string.recipe_edit),
                 buttonStyle = ButtonStyle.ButtonSecondary
             ) {

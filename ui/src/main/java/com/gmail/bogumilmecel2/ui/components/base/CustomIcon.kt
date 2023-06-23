@@ -24,7 +24,7 @@ import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 @Composable
 fun CustomIcon(
     modifier: Modifier = Modifier,
-    iconStyle: CustomIconStyle,
+    iconStyle: IconVector,
     iconColor: Color = FitnessAppTheme.colors.Primary
 ) = with(iconStyle) {
     androidx.compose.material.Icon(
@@ -35,59 +35,59 @@ fun CustomIcon(
     )
 }
 
-sealed class CustomIconStyle(
+sealed class IconVector(
     val imageVector: ImageVector,
     val contentDescriptionId: Int
 ) {
-    object Heart: CustomIconStyle(
+    object Heart: IconVector(
         imageVector = Icons.Default.FavoriteBorder,
         contentDescriptionId = R.string.favorite
     )
-    object HeartFilled: CustomIconStyle(
+    object HeartFilled: IconVector(
         imageVector = Icons.Filled.Favorite,
         contentDescriptionId = R.string.favorite_filled
     )
-    object Back: CustomIconStyle(
+    object Back: IconVector(
         imageVector = Icons.Default.ArrowBack,
         contentDescriptionId = R.string.back
     )
-    object Search: CustomIconStyle(
+    object Search: IconVector(
         imageVector = Icons.Default.Search,
         contentDescriptionId = R.string.search
     )
-    object Cancel: CustomIconStyle(
+    object Cancel: IconVector(
         imageVector = Icons.Default.Search,
         contentDescriptionId = R.string.cancel
     )
-    object Add: CustomIconStyle(
+    object Add: IconVector(
         imageVector = Icons.Default.Add,
         contentDescriptionId = R.string.add
     )
-    object Logout: CustomIconStyle(
+    object Logout: IconVector(
         imageVector = Icons.Default.Logout,
         contentDescriptionId = R.string.log_out
     )
-    object Save: CustomIconStyle(
+    object Save: IconVector(
         imageVector = Icons.Default.Save,
         contentDescriptionId = R.string.save
     )
-    object Edit: CustomIconStyle(
+    object Edit: IconVector(
         imageVector = Icons.Default.Edit,
         contentDescriptionId = R.string.edit
     )
-    object Email: CustomIconStyle(
+    object Email: IconVector(
         imageVector = Icons.Default.Email,
         contentDescriptionId = R.string.email
     )
-    object Password: CustomIconStyle(
+    object Password: IconVector(
         imageVector = Icons.Default.Password,
         contentDescriptionId = R.string.password
     )
-    object Login: CustomIconStyle(
+    object Login: IconVector(
         imageVector = Icons.Default.Login,
         contentDescriptionId = R.string.login
     )
-    object Account: CustomIconStyle(
+    object Account: IconVector(
         imageVector = Icons.Default.AccountCircle,
         contentDescriptionId = R.string.account
     )

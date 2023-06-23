@@ -30,7 +30,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.util.TestTags
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.presentation.util.AuthEvent
 import com.gmail.bogumilmecel2.ui.components.base.CustomBasicTextField
 import com.gmail.bogumilmecel2.ui.components.base.CustomButton
-import com.gmail.bogumilmecel2.ui.components.base.CustomIconStyle
+import com.gmail.bogumilmecel2.ui.components.base.IconVector
 import com.ramcosta.composedestinations.annotation.Destination
 
 @Composable
@@ -74,7 +74,7 @@ fun RegisterScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 20.dp),
-                        leadingIcon = CustomIconStyle.Email,
+                        leadingIcon = IconVector.Email,
                         testTag = TestTags.General.EMAIL
                     )
 
@@ -91,7 +91,7 @@ fun RegisterScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 20.dp),
-                        leadingIcon = CustomIconStyle.Account,
+                        leadingIcon = IconVector.Account,
                         testTag = TestTags.RegisterScreen.USERNAME
                     )
 
@@ -112,7 +112,7 @@ fun RegisterScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 20.dp),
-                        leadingIcon = CustomIconStyle.Password,
+                        leadingIcon = IconVector.Password,
                         testTag = TestTags.General.PASSWORD
                     )
 
@@ -133,7 +133,7 @@ fun RegisterScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 20.dp),
-                        leadingIcon = CustomIconStyle.Password,
+                        leadingIcon = IconVector.Password,
                         testTag = TestTags.RegisterScreen.CONFIRM_PASSWORD
                     )
 

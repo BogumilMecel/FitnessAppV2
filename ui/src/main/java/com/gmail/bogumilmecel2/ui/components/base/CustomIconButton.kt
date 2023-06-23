@@ -23,6 +23,6 @@ fun CustomIconButton(
 }
 
 data class IconParams(
-    val iconStyle: CustomIconStyle,
+    val iconStyle: IconVector,
     val onClick: () -> Unit
 )

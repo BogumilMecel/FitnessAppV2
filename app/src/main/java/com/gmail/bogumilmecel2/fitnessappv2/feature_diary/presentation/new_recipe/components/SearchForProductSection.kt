@@ -15,7 +15,7 @@ import com.gmail.bogumilmecel2.ui.components.base.CustomBasicTextField
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_recipe.NewRecipeEvent
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_recipe.NewRecipeState
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.componens.SearchProductItem
-import com.gmail.bogumilmecel2.ui.components.base.CustomIconStyle
+import com.gmail.bogumilmecel2.ui.components.base.IconVector
 import com.gmail.bogumilmecel2.ui.components.base.IconParams
 import com.gmail.bogumilmecel2.ui.components.complex.HeaderRow
 
@@ -33,7 +33,7 @@ fun SearchForProductSection(
                 onEvent(NewRecipeEvent.ClickedBackArrow)
             },
             endIconParams = IconParams(
-                iconStyle = CustomIconStyle.Search,
+                iconStyle = IconVector.Search,
                 onClick = {
                     onEvent(NewRecipeEvent.ClickedSearchButton)
                 }
