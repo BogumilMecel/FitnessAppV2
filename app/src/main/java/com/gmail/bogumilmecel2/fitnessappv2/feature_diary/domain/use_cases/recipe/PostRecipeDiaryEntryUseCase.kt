@@ -16,7 +16,6 @@ class PostRecipeDiaryEntryUseCase(
     suspend operator fun invoke(
         recipe: Recipe,
         servingsString: String,
-        timestamp: Long,
         date: String,
         mealName: MealName
     ): Resource<Unit> {
@@ -30,7 +29,6 @@ class PostRecipeDiaryEntryUseCase(
                     recipe = recipe,
                     servings = servingsValue,
                     date = date,
-                    timestamp = timestamp,
                     mealName = mealName
                 )
             )

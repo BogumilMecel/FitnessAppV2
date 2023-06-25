@@ -17,7 +17,6 @@ class AddDiaryEntry(
     suspend operator fun invoke(
         product: Product,
         mealName: MealName,
-        timestamp: Long,
         date: String,
         weight: Int?,
     ): Resource<ProductDiaryEntry> {
@@ -29,7 +28,6 @@ class AddDiaryEntry(
             } else {
                 val productDiaryEntryPostRequest = ProductDiaryEntryPostRequest(
                     product = product,
-                    timestamp = timestamp,
                     weight = it,
                     mealName = mealName,
                     date = date,
