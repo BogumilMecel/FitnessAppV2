@@ -10,7 +10,7 @@ data class Product(
     val id: String = "",
     val name: String = "",
     val containerWeight: Int? = null,
-    val timestamp: Long = System.currentTimeMillis(),
+    val utcTimestamp: Long = System.currentTimeMillis(),
     val nutritionValuesIn: NutritionValuesIn = NutritionValuesIn.HUNDRED_GRAMS,
     val measurementUnit: MeasurementUnit = MeasurementUnit.GRAMS,
     val nutritionValues: NutritionValues = NutritionValues(),

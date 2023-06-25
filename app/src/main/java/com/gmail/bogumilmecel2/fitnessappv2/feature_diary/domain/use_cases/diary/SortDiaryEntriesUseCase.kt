@@ -9,7 +9,7 @@ class SortDiaryEntriesUseCase {
         diaryEntries: List<DiaryItem>
     ):Map<MealName,List<DiaryItem>>{
         return diaryEntries.toMutableList().run {
-            sortByDescending { it.timestamp }
+            sortByDescending { it.utcTimestamp }
             groupBy { it.mealName }
         }
     }
