@@ -63,8 +63,7 @@ class SaveNewProductUseCase(
                         protein = proteinValue,
                         fat = fatValue
                     ),
-                    nutritionValuesIn = nutritionValuesIn,
-                    timestamp = System.currentTimeMillis()
+                    nutritionValuesIn = nutritionValuesIn
                 )
             )
         }
