@@ -1,7 +1,7 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.data.api
 
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.Currency
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.Headers
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.ApiConstants
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.DeleteDiaryEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.DiaryEntriesResponse
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.EditProductDiaryEntryRequest
@@ -89,7 +89,7 @@ interface DiaryApi {
     suspend fun addNewPriceForProduct(
         @Body newPriceRequest: NewPriceRequest,
         @Path("productId") productId: String,
-        @Header(Headers.CURRENCY) currency: Currency
+        @Header(ApiConstants.Headers.CURRENCY) currency: Currency
     ): ProductPrice
 
     @POST("/recipes")
@@ -100,12 +100,12 @@ interface DiaryApi {
     @GET("/products/{productId}/price")
     suspend fun getProductPrice(
         @Path("productId") productId: String,
-        @Header(Headers.CURRENCY) currency: Currency
+        @Header(ApiConstants.Headers.CURRENCY) currency: Currency
     ): ProductPriceResponse
 
     @POST("/recipes/price")
     suspend fun getRecipePriceFromIngredients(
         @Body recipePriceRequest: RecipePriceRequest,
-        @Header(Headers.CURRENCY) currency: Currency
+        @Header(ApiConstants.Headers.CURRENCY) currency: Currency
     ): RecipePriceResponse?
 }

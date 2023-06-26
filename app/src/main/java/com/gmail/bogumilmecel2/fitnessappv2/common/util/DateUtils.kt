@@ -18,6 +18,7 @@ object DateUtils {
     fun getCurrentDateString() = getCurrentLocalDateTime().date.toString()
 
     private fun getCurrentLocalDateTime() = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+    fun getCurrentTimezoneId() = TimeZone.currentSystemDefault().id
 
     fun Long.getLocalDateString() = getLocalDateTime().date.toString()
 
