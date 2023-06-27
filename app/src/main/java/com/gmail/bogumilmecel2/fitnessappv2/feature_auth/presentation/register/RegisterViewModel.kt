@@ -61,9 +61,14 @@ class RegisterViewModel @Inject constructor(
                             confirmPassword = confirmPassword,
                             username = username
                         ).handle {
-                            navigateWithPopUp(
-                                destination = SplashScreenDestination
-                            )
+                            authUseCases.logInUser(
+                                email = email,
+                                password = password
+                            ).handle {
+                                navigateWithPopUp(
+                                    destination = SplashScreenDestination
+                                )
+                            }
                         }
                     }
 
