@@ -29,15 +29,15 @@ class SaveIntroductionInformationUseCase(
         trainingFrequency: TrainingFrequency,
         desiredWeight: DesiredWeight,
     ): Resource<User> {
-        val ageValue = age.toValidInt()
-        val heightValue = height.toValidInt()
-        val weightValue = weight.toValidDouble()
+        val ageValue = age.toValidInt() ?: return getFieldErrorResource()
+        val heightValue = height.toValidInt() ?: return getFieldErrorResource()
+        val weightValue = weight.toValidDouble() ?: return getFieldErrorResource()
 
-        return if (ageValue == null || (ageValue < 0 || ageValue > 100)) {
+        return if (ageValue < 0 || ageValue > 100) {
             Resource.Error(uiText = resourceProvider.getString(R.string.please_make_sure_you_have_entered_your_age))
-        } else if (heightValue == null || (heightValue < 0 || heightValue > 250)) {
+        } else if (heightValue < 0 || heightValue > 250) {
             Resource.Error(uiText = resourceProvider.getString(R.string.introduction_height_error))
-        } else if (weightValue == null || (weightValue < 0 || weightValue > 500)) {
+        } else if (weightValue < 0 || weightValue > 500) {
             Resource.Error(uiText = resourceProvider.getString(R.string.please_make_sure_you_have_entered_your_age))
         } else {
             userDataRepository.saveUserInformation(
@@ -54,4 +54,7 @@ class SaveIntroductionInformationUseCase(
             )
         }
     }
+
+    private fun getFieldErrorResource() =
+        Resource.Error<User>(uiText = resourceProvider.getString(R.string.please_make_sure_all_fields_are_filled_in_correctly))
 }

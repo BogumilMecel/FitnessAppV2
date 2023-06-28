@@ -8,7 +8,7 @@ import kotlinx.datetime.UtcOffset
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 
-object DateUtils {
+object CustomDateUtils {
 
     const val US_DATE_PATTERN = "MM/dd/yyyy"
     const val EU_DATE_PATTERN = "dd/MM/yyyy"

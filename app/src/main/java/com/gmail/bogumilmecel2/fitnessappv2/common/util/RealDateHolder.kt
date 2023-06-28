@@ -4,10 +4,10 @@ import android.text.format.DateUtils.DAY_IN_MILLIS
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.DateHolder
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvider
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.DateUtils.getLocalDateString
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.DateUtils.isToday
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.DateUtils.isTomorrow
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.DateUtils.isYesterday
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.CustomDateUtils.getLocalDateString
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.CustomDateUtils.isToday
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.CustomDateUtils.isTomorrow
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.CustomDateUtils.isYesterday
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.UtcOffset
@@ -58,8 +58,8 @@ class RealDateHolder : DateHolder {
 
     private fun Locale.getCorrectFormat(): SimpleDateFormat {
         val pattern = when (country) {
-            "US" -> DateUtils.US_DATE_PATTERN
-            else -> DateUtils.EU_DATE_PATTERN
+            "US" -> CustomDateUtils.US_DATE_PATTERN
+            else -> CustomDateUtils.EU_DATE_PATTERN
         }
 
         return SimpleDateFormat(
