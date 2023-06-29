@@ -382,12 +382,20 @@ object AppModule {
 
     @Singleton
     @Provides
+    fun provideCheckIfWeightIsValidUseCase(): CheckIfWeightIsValidUseCase = CheckIfWeightIsValidUseCase()
+
+    @Singleton
+    @Provides
     fun provideSummaryUseCases(
         diaryRepository: DiaryRepository,
         weightRepository: WeightRepository,
+        checkIfWeightIsValidUseCase: CheckIfWeightIsValidUseCase
     ): SummaryUseCases = SummaryUseCases(
         getCaloriesSum = GetCaloriesSum(diaryRepository = diaryRepository),
-        addWeightEntryUseCase = AddWeightEntryUseCase(weightRepository = weightRepository),
+        addWeightEntryUseCase = AddWeightEntryUseCase(
+            weightRepository = weightRepository,
+            checkIfWeightIsValidUseCase = checkIfWeightIsValidUseCase
+        ),
     )
 
     @Singleton
