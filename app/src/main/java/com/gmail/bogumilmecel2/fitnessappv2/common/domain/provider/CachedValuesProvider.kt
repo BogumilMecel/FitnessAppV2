@@ -9,7 +9,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.model.WeightEn
 interface CachedValuesProvider {
     suspend fun getWantedNutritionValues(): NutritionValues
     suspend fun saveWantedNutritionValues(nutritionValues: NutritionValues)
-    suspend fun getWeightProgress(): String
+    suspend fun getWeightProgress(): String?
     suspend fun updateWeightInfo(
         weightProgress: String?,
         latestWeightEntry: WeightEntry?
