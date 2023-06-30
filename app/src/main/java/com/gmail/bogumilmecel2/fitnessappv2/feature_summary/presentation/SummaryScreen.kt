@@ -15,6 +15,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.BackHandler
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.BottomSheetContent
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.presentation.components.CaloriesSumSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.presentation.components.LogStreakSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.presentation.components.WeightPickerDialog
@@ -27,7 +28,6 @@ fun SummaryScreen(
     viewModel: SummaryViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.collectAsState().value
-
     val activity = (LocalContext.current as? Activity)
 
     LaunchedEffect(key1 = true) {
@@ -39,24 +39,29 @@ fun SummaryScreen(
     }
 
     if (state.isWeightPickerVisible) {
-        WeightPickerDialog(
-            onEvent = {
-                viewModel.onEvent(it)
-            },
-            startingValue = 100.0f
+        viewModel.showBottomSheet(
+            bottomSheetContent = BottomSheetContent(
+                content = {
+                    WeightPickerDialog(
+                        onEvent = {
+                            viewModel.onEvent(it)
+                        },
+                        startingValue = 100.0f
+                    )
+                },
+                onBottomSheetClosed = {
+                    viewModel.onEvent(SummaryEvent.DismissedWeightPickerDialog)
+                }
+            ),
         )
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        Spacer(modifier = Modifier.height(12.dp))
-
+    Column(modifier = Modifier.fillMaxSize()) {
         LogStreakSection(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 10.dp),
+                .padding(horizontal = 10.dp)
+                .padding(top = 12.dp),
             streak = state.logStreak ?: 1
         )
 
@@ -78,6 +83,7 @@ fun SummaryScreen(
                 .padding(horizontal = 10.dp),
             lastWeightEntry = state.latestWeightEntry?.value,
             weightProgress = state.weightProgress,
+            buttonActive = !state.isWeightPickerVisible,
             onEvent = {
                 viewModel.onEvent(it)
             }

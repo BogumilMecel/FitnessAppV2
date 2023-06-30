@@ -11,12 +11,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.gmail.bogumilmecel2.ui.components.base.CustomBasicTextField
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_recipe.NewRecipeEvent
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_recipe.NewRecipeState
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.componens.SearchProductItem
+import com.gmail.bogumilmecel2.ui.components.base.CustomBasicTextField
+import com.gmail.bogumilmecel2.ui.components.base.IconButtonParams
 import com.gmail.bogumilmecel2.ui.components.base.IconVector
-import com.gmail.bogumilmecel2.ui.components.base.IconParams
 import com.gmail.bogumilmecel2.ui.components.complex.HeaderRow
 
 @Composable
@@ -32,8 +32,8 @@ fun SearchForProductSection(
             onBackPressed = {
                 onEvent(NewRecipeEvent.ClickedBackArrow)
             },
-            endIconParams = IconParams(
-                iconStyle = IconVector.Search,
+            endIconButtonParams = IconButtonParams(
+                iconVector = IconVector.Search,
                 onClick = {
                     onEvent(NewRecipeEvent.ClickedSearchButton)
                 }

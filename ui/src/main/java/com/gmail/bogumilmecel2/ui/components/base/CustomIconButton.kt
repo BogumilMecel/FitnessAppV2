@@ -7,22 +7,24 @@ import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 
 @Composable
 fun CustomIconButton(
-    iconParams: IconParams,
+    params: IconButtonParams,
     iconColor: Color = FitnessAppTheme.colors.Primary
 ) {
     IconButton(
         onClick = {
-            iconParams.onClick()
+            params.onClick()
         },
+        enabled = params.enabled
     ) {
         CustomIcon(
-            iconStyle = iconParams.iconStyle,
+            iconStyle = params.iconVector,
             iconColor = iconColor
         )
     }
 }
 
-data class IconParams(
-    val iconStyle: IconVector,
-    val onClick: () -> Unit
+data class IconButtonParams(
+    val iconVector: IconVector,
+    val onClick: () -> Unit,
+    val enabled: Boolean = true
 )

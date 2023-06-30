@@ -43,9 +43,9 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.co
 import com.gmail.bogumilmecel2.ui.components.base.ButtonStyle
 import com.gmail.bogumilmecel2.ui.components.base.CustomBasicTextField
 import com.gmail.bogumilmecel2.ui.components.base.CustomButton
-import com.gmail.bogumilmecel2.ui.components.base.IconVector
 import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
-import com.gmail.bogumilmecel2.ui.components.base.IconParams
+import com.gmail.bogumilmecel2.ui.components.base.IconButtonParams
+import com.gmail.bogumilmecel2.ui.components.base.IconVector
 import com.gmail.bogumilmecel2.ui.components.base.WidthSpacer
 import com.gmail.bogumilmecel2.ui.components.complex.HeaderRow
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
@@ -73,8 +73,8 @@ fun RecipeScreen(
             onBackPressed = {
                 viewModel.onEvent(RecipeEvent.ClickedBackArrow)
             },
-            endIconParams = IconParams(
-                iconStyle = if (!state.isFavorite) {
+            endIconButtonParams = IconButtonParams(
+                iconVector = if (!state.isFavorite) {
                     IconVector.Heart
                 } else {
                     IconVector.HeartFilled

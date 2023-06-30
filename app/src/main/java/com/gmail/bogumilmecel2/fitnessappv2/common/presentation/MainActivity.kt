@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.navigation.Navigator
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.navigation.NavHostGraph
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.BottomSheetContentProvider
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -16,13 +17,16 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var navigator: Navigator
 
+    @Inject
+    lateinit var bottomSheetContentProvider: BottomSheetContentProvider
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         setContent {
             FitnessAppTheme {
                 NavHostGraph(
-                    navigator = navigator
+                    navigator = navigator,
+                    bottomSheetContentProvider = bottomSheetContentProvider
                 )
             }
         }
