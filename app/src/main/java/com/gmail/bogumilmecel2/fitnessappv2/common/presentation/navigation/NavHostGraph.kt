@@ -17,7 +17,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -118,7 +117,14 @@ fun NavHostGraph(
 
     val sheetState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
-        skipHalfExpanded = true
+        skipHalfExpanded = true,
+        confirmValueChange = {
+            if (it == ModalBottomSheetValue.Hidden) {
+                bottomSheetContent?.onBottomSheetClosed?.invoke()
+                bottomSheetContent = null
+            }
+            true
+        }
     )
 
     LaunchedEffect(key1 = true) {
@@ -128,22 +134,11 @@ fun NavHostGraph(
         }
     }
 
-    LaunchedEffect(key1 = sheetState) {
-        snapshotFlow { sheetState.isVisible }.collect {
-            if (!it) {
-                sheetState.hide()
-                bottomSheetContent?.onBottomSheetClosed?.invoke()
-                bottomSheetContent = null
-            }
-        }
-    }
-
     ModalBottomSheetLayout(
         sheetContent = {
             bottomSheetContent?.content?.invoke()
         },
         sheetState = sheetState,
-        sheetGesturesEnabled = false,
         sheetShape = RoundedCornerShape(
             topStart = defaultRoundedCornerShapeValue(),
             topEnd = defaultRoundedCornerShapeValue()
