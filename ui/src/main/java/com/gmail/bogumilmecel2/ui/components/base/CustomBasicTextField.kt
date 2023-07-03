@@ -99,7 +99,7 @@ fun CustomBasicTextField(
         ) {
             leadingIcon?.let {
                 CustomIcon(
-                    iconStyle = it,
+                    iconVector = it,
                     modifier = Modifier.size(24.dp)
                 )
             }

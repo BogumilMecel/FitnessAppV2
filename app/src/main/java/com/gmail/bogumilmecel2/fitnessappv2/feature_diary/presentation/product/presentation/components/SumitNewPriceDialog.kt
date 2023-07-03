@@ -26,8 +26,9 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.p
 import com.gmail.bogumilmecel2.ui.components.base.ButtonStyle
 import com.gmail.bogumilmecel2.ui.components.base.CustomBasicTextField
 import com.gmail.bogumilmecel2.ui.components.base.CustomButton
-import com.gmail.bogumilmecel2.ui.components.base.IconVector
 import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
+import com.gmail.bogumilmecel2.ui.components.base.IconVector
+import com.gmail.bogumilmecel2.ui.components.base.LeftContent
 import com.gmail.bogumilmecel2.ui.components.base.WidthSpacer
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 import com.gmail.bogumilmecel2.ui.theme.LocalColor.DarkGreyElevation2
@@ -146,7 +147,7 @@ fun SubmitNewPriceDialog(
             Row(modifier = Modifier.fillMaxWidth()) {
                 CustomButton(
                     modifier = Modifier.weight(1f),
-                    iconLeft = IconVector.Cancel,
+                    leftContent = LeftContent.Icon(IconVector.Cancel),
                     text = stringResource(id = R.string.cancel),
                     buttonStyle = ButtonStyle.OutlinedPrimaryButton,
                 ) {
@@ -157,7 +158,7 @@ fun SubmitNewPriceDialog(
 
                 CustomButton(
                     modifier = Modifier.weight(1f),
-                    iconLeft = IconVector.Add,
+                    leftContent = LeftContent.Icon(IconVector.Add),
                     text = stringResource(id = R.string.submit)
                 ) {
                     onEvent(ProductEvent.SubmitNewPrice)

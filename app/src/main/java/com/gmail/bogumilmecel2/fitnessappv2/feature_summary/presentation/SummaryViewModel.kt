@@ -1,11 +1,11 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_summary.presentation
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.BottomSheetContent
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.CustomDateUtils
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.TAG
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.use_case.SummaryUseCases
+import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.presentation.components.WeightPickerDialog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.update
@@ -20,7 +20,6 @@ class SummaryViewModel @Inject constructor(
     override fun onEvent(event: SummaryEvent) {
         when (event) {
             is SummaryEvent.DismissedWeightPickerDialog -> {
-                Log.e(TAG, "dismissed")
                 _state.update {
                     it.copy(
                         isWeightPickerVisible = false
@@ -36,6 +35,24 @@ class SummaryViewModel @Inject constructor(
                 _state.update {
                     it.copy(
                         isWeightPickerVisible = true
+                    )
+                }
+                viewModelScope.launch {
+                    val startingValue = cachedValuesProvider.getLatestWeightEntry()?.value ?: 80.0
+                    showBottomSheet(
+                        bottomSheetContent = BottomSheetContent(
+                            content = {
+                                WeightPickerDialog(
+                                    onEvent = {
+                                        onEvent(it)
+                                    },
+                                    startingValue = startingValue
+                                )
+                            },
+                            onBottomSheetClosed = {
+                                onEvent(SummaryEvent.DismissedWeightPickerDialog)
+                            }
+                        ),
                     )
                 }
             }
@@ -95,7 +112,7 @@ class SummaryViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             _state.update {
                 it.copy(
-                    logStreak = cachedValuesProvider.getLatestLogEntry().streak
+                    logStreak = cachedValuesProvider.getLogStreak()
                 )
             }
         }

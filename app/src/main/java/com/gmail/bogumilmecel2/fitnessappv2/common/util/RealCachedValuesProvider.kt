@@ -5,7 +5,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.Currency
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.CachedValuesProvider
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.model.User
-import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.model.LogEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.model.WeightEntry
 import com.google.gson.Gson
 
@@ -47,7 +46,7 @@ class RealCachedValuesProvider(
         }
     }
 
-    override suspend fun getLatestLogEntry() = getUser()?.latestLogEntry ?: LogEntry()
+    override suspend fun getLogStreak() = getUser()?.logStreak ?: 1
 
     override suspend fun getLatestWeightEntry() = getUser()?.latestWeightEntry
 

@@ -9,7 +9,6 @@ import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
-import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -46,7 +45,7 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.ramcosta.composedestinations.DestinationsNavHost
 import kotlinx.coroutines.flow.receiveAsFlow
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class,)
 @Composable
 fun NavHostGraph(
     navController: NavHostController = rememberNavController(),
@@ -66,7 +65,7 @@ fun NavHostGraph(
             it?.let {
                 if (it.direction.route == "navigate_up") {
                     navController.navigateUp()
-                } else if (it.navOptions.popUpToRoute == "pop_up" && navController.currentDestination?.route != null){
+                } else if (it.navOptions.popUpToRoute == "pop_up" && navController.currentDestination?.route != null) {
                     navController.navigate(it.direction.route) {
                         navController.currentDestination?.route?.let { currentRoute ->
                             popUpTo(currentRoute) {
@@ -90,7 +89,10 @@ fun NavHostGraph(
                 navigator.navigate(
                     navAction = NavigationAction(
                         direction = LoginScreenDestination,
-                        navOptions = NavOptions.Builder().setPopUpTo(0, true).build()
+                        navOptions = NavOptions.Builder().setPopUpTo(
+                            0,
+                            true
+                        ).build()
                     )
                 )
             }
@@ -115,7 +117,7 @@ fun NavHostGraph(
         mutableStateOf<BottomSheetContent?>(null)
     }
 
-    val sheetState = rememberModalBottomSheetState(
+    val sheetState = androidx.compose.material.rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
         skipHalfExpanded = true,
         confirmValueChange = {

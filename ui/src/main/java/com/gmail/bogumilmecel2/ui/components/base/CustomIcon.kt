@@ -24,13 +24,13 @@ import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 @Composable
 fun CustomIcon(
     modifier: Modifier = Modifier,
-    iconStyle: IconVector,
+    iconVector: IconVector,
     iconColor: Color = FitnessAppTheme.colors.Primary
-) = with(iconStyle) {
+) = with(iconVector) {
     androidx.compose.material.Icon(
         modifier = modifier,
         imageVector = imageVector,
-        contentDescription = stringResource(id = iconStyle.contentDescriptionId),
+        contentDescription = stringResource(id = iconVector.contentDescriptionId),
         tint = iconColor
     )
 }
