@@ -7,7 +7,7 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.util.BottomBarScreen
-import com.gmail.bogumilmecel2.ui.theme.LocalColor.Grey
+import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 
 @Composable
 fun BottomBar(navController: NavHostController) {
@@ -19,7 +19,7 @@ fun BottomBar(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    BottomNavigation(backgroundColor = Grey) {
+    BottomNavigation(backgroundColor = FitnessAppTheme.colors.BackgroundSecondary) {
         screens.forEach { screen ->
             AddItem(
                 bottomBarScreen = screen,

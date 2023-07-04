@@ -1,10 +1,5 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_summary.presentation.components
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,7 +26,6 @@ fun WeightSection(
     modifier: Modifier,
     lastWeightEntry: Double?,
     weightProgress: String?,
-    buttonActive: Boolean,
     onEvent: (SummaryEvent) -> Unit
 ) {
     DefaultCardBackground(modifier = modifier) {
@@ -70,25 +64,14 @@ fun WeightSection(
 
                 HeightSpacer(24.dp)
 
-                val animationSpec = tween<Float>(
-                    durationMillis = 100,
-                    easing = LinearEasing
+                CustomIconButton(
+                    params = IconButtonParams(
+                        iconVector = IconVector.Add,
+                        onClick = {
+                            onEvent(SummaryEvent.ClickedAddWeightEntryButton)
+                        }
+                    ),
                 )
-
-                AnimatedVisibility(
-                    visible = buttonActive,
-                    enter = fadeIn(animationSpec = animationSpec),
-                    exit = fadeOut(animationSpec = animationSpec)
-                ) {
-                    CustomIconButton(
-                        params = IconButtonParams(
-                            iconVector = IconVector.Add,
-                            onClick = {
-                                onEvent(SummaryEvent.ClickedAddWeightEntryButton)
-                            }
-                        ),
-                    )
-                }
 
                 HeightSpacer(16.dp)
             }

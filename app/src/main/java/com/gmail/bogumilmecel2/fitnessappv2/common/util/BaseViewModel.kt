@@ -27,17 +27,10 @@ abstract class BaseViewModel<STATE: Any, EVENT: Any>(state: STATE) : ViewModel()
     @Inject
     lateinit var resourceProvider: ResourceProvider
 
-    @Inject
-    lateinit var bottomSheetContentProvider: BottomSheetContentProvider
-
     protected fun showSnackbarError(message: String) {
         viewModelScope.launch {
             ErrorUtils.showSnackbarWithMessage(message = message)
         }
-    }
-
-    protected suspend fun showBottomSheet(bottomSheetContent: BottomSheetContent) {
-        bottomSheetContentProvider.provideContent(bottomSheetContent)
     }
 
     abstract fun onEvent(event: EVENT)

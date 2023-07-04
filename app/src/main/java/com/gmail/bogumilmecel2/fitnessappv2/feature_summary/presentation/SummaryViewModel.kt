@@ -2,12 +2,11 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_summary.presentation
 
 import androidx.lifecycle.viewModelScope
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.BottomSheetContent
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.CustomDateUtils
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.use_case.SummaryUseCases
-import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.presentation.components.WeightPickerDialog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -17,13 +16,13 @@ class SummaryViewModel @Inject constructor(
     private val summaryUseCases: SummaryUseCases,
 ) : BaseViewModel<SummaryState, SummaryEvent>(state = SummaryState()) {
 
+    val uiEvent = Channel<SummaryUiEvent>()
+
     override fun onEvent(event: SummaryEvent) {
         when (event) {
             is SummaryEvent.DismissedWeightPickerDialog -> {
-                _state.update {
-                    it.copy(
-                        isWeightPickerVisible = false
-                    )
+                viewModelScope.launch {
+                    uiEvent.send(SummaryUiEvent.HideBottomSheet)
                 }
             }
 
@@ -32,28 +31,13 @@ class SummaryViewModel @Inject constructor(
             }
 
             is SummaryEvent.ClickedAddWeightEntryButton -> {
-                _state.update {
-                    it.copy(
-                        isWeightPickerVisible = true
-                    )
-                }
                 viewModelScope.launch {
-                    val startingValue = cachedValuesProvider.getLatestWeightEntry()?.value ?: 80.0
-                    showBottomSheet(
-                        bottomSheetContent = BottomSheetContent(
-                            content = {
-                                WeightPickerDialog(
-                                    onEvent = {
-                                        onEvent(it)
-                                    },
-                                    startingValue = startingValue
-                                )
-                            },
-                            onBottomSheetClosed = {
-                                onEvent(SummaryEvent.DismissedWeightPickerDialog)
-                            }
-                        ),
-                    )
+                    _state.update {
+                        it.copy(
+                            bottomSheetContent = SummaryBottomSheetContent.WeightPicker
+                        )
+                    }
+                    uiEvent.send(SummaryUiEvent.ShowBottomSheet)
                 }
             }
         }
@@ -70,11 +54,7 @@ class SummaryViewModel @Inject constructor(
         viewModelScope.launch {
             summaryUseCases.addWeightEntryUseCase(value = value).handle(
                 finally = {
-                    _state.update {
-                        it.copy(
-                            isWeightPickerVisible = false
-                        )
-                    }
+                    uiEvent.send(SummaryUiEvent.HideBottomSheet)
                 }
             ) {
                 _state.update { state ->
