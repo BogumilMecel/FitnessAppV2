@@ -10,6 +10,8 @@ data class SummaryState(
     val weightProgress: String? = null,
     val latestWeightEntry: WeightEntry? = null,
     val wantedCalories: Int = 0,
+    val weightPickerCurrentValue: Double = 80.0,
+    val isWeightPickerLoading: Boolean = false
 )
 
 sealed interface SummaryBottomSheetContent {
