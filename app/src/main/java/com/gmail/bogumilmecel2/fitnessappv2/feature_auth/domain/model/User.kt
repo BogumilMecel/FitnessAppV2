@@ -11,7 +11,6 @@ data class User(
     val username:String = "",
     val nutritionValues: NutritionValues? = null,
     val userInformation: UserInformation? = null,
-    val favoriteUserRecipesIds: List<String>? = null,
     val logStreak: Int = 1,
     val latestWeightEntry: WeightEntry? = null,
     val weightProgress: String? = null,
