@@ -16,5 +16,5 @@ data class SummaryState(
 
 sealed interface SummaryBottomSheetContent {
     object WeightPicker: SummaryBottomSheetContent
-    object AskForDailyWeightDialog: SummaryBottomSheetContent
+    object AskForDailyWeightDialogs: SummaryBottomSheetContent
 }

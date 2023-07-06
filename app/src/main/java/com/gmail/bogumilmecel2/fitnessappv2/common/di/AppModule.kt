@@ -403,8 +403,9 @@ object AppModule {
         getCaloriesSum = GetCaloriesSum(diaryRepository = diaryRepository),
         addWeightEntryUseCase = AddWeightEntryUseCase(
             weightRepository = weightRepository,
-            checkIfWeightIsValidUseCase = checkIfWeightIsValidUseCase
+            checkIfWeightIsValidUseCase = checkIfWeightIsValidUseCase,
         ),
+        checkIfShouldAskForWeightDialogsUseCase = CheckIfShouldAskForWeightDialogsUseCase(weightRepository)
     )
 
     @Singleton

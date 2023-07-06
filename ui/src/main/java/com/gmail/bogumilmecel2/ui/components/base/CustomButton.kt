@@ -114,10 +114,10 @@ private fun ButtonContent(
 
             text?.let {
                 Text(
-                    text = it,
+                    text = it.uppercase(),
                     style = FitnessAppTheme.typography.Button,
                     color = contentColor,
-                    maxLines = 1
+                    maxLines = 1,
                 )
             }
         }
@@ -152,3 +152,8 @@ sealed class ButtonStyle(
         contentColor = FitnessAppColor.Black
     )
 }
+
+data class ButtonParams(
+    val text: String,
+    val onClick: () -> Unit
+)

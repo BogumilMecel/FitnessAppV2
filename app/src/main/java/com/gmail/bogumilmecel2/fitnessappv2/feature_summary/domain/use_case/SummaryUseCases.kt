@@ -4,5 +4,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.use_case.AddWe
 
 data class SummaryUseCases(
     val getCaloriesSum: GetCaloriesSum,
-    val addWeightEntryUseCase: AddWeightEntryUseCase
+    val addWeightEntryUseCase: AddWeightEntryUseCase,
+    val checkIfShouldAskForWeightDialogsUseCase: CheckIfShouldAskForWeightDialogsUseCase
 )
