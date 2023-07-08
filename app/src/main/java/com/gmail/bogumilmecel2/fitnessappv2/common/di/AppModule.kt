@@ -405,7 +405,8 @@ object AppModule {
             weightRepository = weightRepository,
             checkIfWeightIsValidUseCase = checkIfWeightIsValidUseCase,
         ),
-        checkIfShouldAskForWeightDialogsUseCase = CheckIfShouldAskForWeightDialogsUseCase(weightRepository)
+        checkIfShouldAskForWeightDialogsUseCase = CheckIfShouldAskForWeightDialogsUseCase(weightRepository),
+        handleWeightDialogsQuestion = HandleWeightDialogsQuestion(weightRepository)
     )
 
     @Singleton

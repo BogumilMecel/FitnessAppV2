@@ -5,6 +5,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.Currency
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.CachedValuesProvider
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.model.User
+import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.model.WeightDialogsLastTimeAsked
 import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.model.WeightEntry
 import com.google.gson.Gson
 
@@ -16,44 +17,41 @@ class RealCachedValuesProvider(
     companion object {
         const val USER_KEY = "user"
         const val CURRENCY = "currency"
+        const val WEIGHT_DIALOGS = "weight_dialogs"
     }
 
     override suspend fun getWantedNutritionValues() =
-        getUser()?.nutritionValues ?: NutritionValues()
+        getUser().nutritionValues?: NutritionValues()
 
     override suspend fun saveWantedNutritionValues(nutritionValues: NutritionValues) {
-        getUser()?.copy(
-            nutritionValues = nutritionValues
-        )?.let {
-            saveUser(it)
-        }
+        saveUser(
+            user = getUser().copy(
+                nutritionValues = nutritionValues
+            )
+        )
     }
 
-    override suspend fun getWeightProgress() = getUser()?.weightProgress
+    override suspend fun getWeightProgress() = getUser().weightProgress
 
     override suspend fun updateWeightInfo(
         weightProgress: String?,
         latestWeightEntry: WeightEntry?
     ) {
-        getUser()?.let {
-            saveUser(
-                user = it.copy(
-                    latestWeightEntry = latestWeightEntry,
-                    weightProgress = weightProgress
-                )
+        saveUser(
+            user = getUser().copy(
+                latestWeightEntry = latestWeightEntry,
+                weightProgress = weightProgress
             )
-
-        }
+        )
     }
 
-    override suspend fun getLogStreak() = getUser()?.logStreak ?: 1
-
-    override suspend fun getLatestWeightEntry() = getUser()?.latestWeightEntry
+    override suspend fun getLogStreak() = getUser().logStreak
+    override suspend fun getLatestWeightEntry() = getUser().latestWeightEntry
 
     override suspend fun getUser() = getItemFromJson(
         USER_KEY,
         User::class.java
-    )
+    ) ?: throw Exception()
 
     override suspend fun getUserCurrency(): Currency = getItemFromJson(
         key = CURRENCY,
@@ -66,6 +64,28 @@ class RealCachedValuesProvider(
         saveItemToJson(
             item = user,
             key = USER_KEY
+        )
+    }
+
+    override suspend fun updateWeightDialogsAccepted(accepted: Boolean) {
+        saveUser(
+            user = getUser().copy(
+                weightDialogsAccepted = accepted
+            )
+        )
+    }
+
+    override suspend fun getLastTimeAskedForWeightDialogs(): WeightDialogsLastTimeAsked? {
+        return getItemFromJson(
+            key = WEIGHT_DIALOGS,
+            clazz = WeightDialogsLastTimeAsked::class.java
+        )
+    }
+
+    override suspend fun saveLastTimeAskedForWeightDialogs(weightDialogsLastTImeAsked: WeightDialogsLastTimeAsked) {
+        saveItemToJson(
+            key = WEIGHT_DIALOGS,
+            item = weightDialogsLastTImeAsked
         )
     }
 

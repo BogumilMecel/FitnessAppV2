@@ -9,6 +9,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.use_case.Summ
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -26,6 +27,14 @@ class SummaryViewModel @Inject constructor(
             is SummaryEvent.DismissedWeightPickerDialog -> {
                 viewModelScope.launch {
                     bottomBarStatusProvider.bottomBarEvent.send(BottomBarEvent.Show)
+                    if (_state.value.bottomSheetContent is SummaryBottomSheetContent.AskForDailyWeightDialogs) {
+                        handleWeightDialogsAnswer(accepted = null)
+                        _state.update {
+                            it.copy(
+                                bottomSheetContent = SummaryBottomSheetContent.WeightPicker
+                            )
+                        }
+                    }
                 }
             }
 
@@ -59,6 +68,18 @@ class SummaryViewModel @Inject constructor(
                     )
                 }
             }
+
+            is SummaryEvent.ClickedDeclineInWeightDialogsQuestion -> {
+                handleWeightDialogsAnswer(accepted = false)
+            }
+
+            is SummaryEvent.ClickedNotNowInWeightDialogsQuestion -> {
+                handleWeightDialogsAnswer(accepted = null)
+            }
+
+            is SummaryEvent.ClickedAcceptInWeightDialogsQuestion -> {
+                handleWeightDialogsAnswer(accepted = true)
+            }
         }
     }
 
@@ -69,6 +90,29 @@ class SummaryViewModel @Inject constructor(
         getCaloriesSum()
         initWeightData()
         initWantedCalories()
+    }
+
+    private fun handleWeightDialogsAnswer(accepted: Boolean?) {
+        viewModelScope.launch {
+            summaryUseCases.handleWeightDialogsQuestion(
+                accepted = accepted,
+                cachedValuesProvider = cachedValuesProvider
+            ).handle(
+                finally = {
+                    uiEvent.send(SummaryUiEvent.HideBottomSheet)
+                }
+            ) { shouldShowWeightPicker ->
+                if (shouldShowWeightPicker) {
+                    delay(1000)
+                    _state.update {
+                        it.copy(
+                            bottomSheetContent = SummaryBottomSheetContent.WeightPicker
+                        )
+                    }
+                    uiEvent.send(SummaryUiEvent.ShowBottomSheet)
+                }
+            }
+        }
     }
 
     private fun checkIfShouldAskForWeightDialogs() {
