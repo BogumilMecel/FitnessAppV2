@@ -3,7 +3,7 @@ package com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.Currency
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.model.User
-import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.model.WeightDialogsLastTimeAsked
+import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.model.WeightDialogs
 import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.model.WeightEntry
 
 interface CachedValuesProvider {
@@ -19,7 +19,7 @@ interface CachedValuesProvider {
     suspend fun getUser(): User
     suspend fun getUserCurrency(): Currency
     suspend fun saveUser(user: User)
-    suspend fun updateWeightDialogsAccepted(accepted: Boolean)
-    suspend fun getLastTimeAskedForWeightDialogs(): WeightDialogsLastTimeAsked?
-    suspend fun saveLastTimeAskedForWeightDialogs(weightDialogsLastTImeAsked: WeightDialogsLastTimeAsked)
+    suspend fun updateWeightDialogs(weightDialogs: WeightDialogs)
+    suspend fun updateLocalLastTimeAskedForWeightDialogs(date: String)
+    suspend fun getLocalLastTimeAskedForWeightDialogs(): String?
 }

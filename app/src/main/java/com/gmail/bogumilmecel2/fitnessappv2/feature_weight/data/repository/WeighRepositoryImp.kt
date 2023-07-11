@@ -4,10 +4,10 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.CachedValuesP
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseRepository
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.model.WeightDialogsRequest
-import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.model.WeightDialogsResponse
 import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.data.api.WeightApi
 import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.model.NewWeightEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.model.NewWeightEntryResponse
+import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.model.WeightDialogs
 import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.repository.WeightRepository
 
 class WeighRepositoryImp(
@@ -34,7 +34,7 @@ class WeighRepositoryImp(
         }
     }
 
-    override suspend fun handleWeightDialogsQuestion(weightDialogsRequest: WeightDialogsRequest): Resource<WeightDialogsResponse> {
+    override suspend fun handleWeightDialogsQuestion(weightDialogsRequest: WeightDialogsRequest): Resource<WeightDialogs> {
         return handleRequest {
             weightApi.handleWeightDialogAnswer(weightDialogsRequest = weightDialogsRequest)
         }

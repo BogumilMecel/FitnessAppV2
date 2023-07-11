@@ -445,13 +445,8 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideLoadingRepository(
-        loadingApi: LoadingApi,
-        cachedValuesProvider: CachedValuesProvider
-    ): LoadingRepository = LoadingRepositoryImp(
-        loadingApi = loadingApi,
-        cachedValuesProvider
-    )
+    fun provideLoadingRepository(loadingApi: LoadingApi): LoadingRepository =
+        LoadingRepositoryImp(loadingApi = loadingApi)
 
     @Singleton
     @Provides

@@ -35,6 +35,7 @@ class LoadingViewModel @Inject constructor(
             timezoneId = CustomDateUtils.getCurrentTimezoneId()
         )
         authenticationResource.data?.let { user ->
+            cachedValuesProvider.saveUser(user = user)
             if (user.nutritionValues != null && user.userInformation != null) {
                 navigateWithPopUp(
                     destination = SummaryScreenDestination
