@@ -23,5 +23,7 @@ interface CachedValuesProvider {
     suspend fun updateWeightDialogs(weightDialogs: WeightDialogs)
     suspend fun updateLocalLastTimeAskedForWeightDialogs(date: String)
     suspend fun getLocalLastTimeAskedForWeightDialogs(): String?
+    suspend fun getLocalLastTimeShowedWeightPicker(): String?
+    suspend fun setLocalLastTimeShowedWeightPicker(date: String)
     suspend fun updateUserInformation(userInformation: UserInformation)
 }

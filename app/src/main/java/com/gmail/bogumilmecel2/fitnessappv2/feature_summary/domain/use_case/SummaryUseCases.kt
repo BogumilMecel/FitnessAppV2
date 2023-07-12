@@ -6,5 +6,6 @@ data class SummaryUseCases(
     val getCaloriesSum: GetCaloriesSum,
     val addWeightEntryUseCase: AddWeightEntryUseCase,
     val checkIfShouldAskForWeightDialogsUseCase: CheckIfShouldAskForWeightDialogsUseCase,
-    val handleWeightDialogsQuestion: HandleWeightDialogsQuestion
+    val handleWeightDialogsQuestionUseCase: HandleWeightDialogsQuestionUseCase,
+    val checkIfShouldShowWeightPickerUseCase: CheckIfShouldShowWeightPickerUseCase
 )

@@ -30,11 +30,7 @@ class SummaryViewModel @Inject constructor(
                     bottomBarStatusProvider.bottomBarEvent.send(BottomBarEvent.Show)
                     if (_state.value.bottomSheetContent is SummaryBottomSheetContent.AskForDailyWeightDialogs && !handlingWeightDialogsQuestion) {
                         handleWeightDialogsAnswer(accepted = null)
-                        _state.update {
-                            it.copy(
-                                bottomSheetContent = SummaryBottomSheetContent.WeightPicker
-                            )
-                        }
+                        setBottomSheetContent(SummaryBottomSheetContent.WeightPicker)
                     }
                 }
             }
@@ -58,7 +54,8 @@ class SummaryViewModel @Inject constructor(
 
             is SummaryEvent.ClickedAddWeightEntryButton -> {
                 viewModelScope.launch {
-                    showBottomBarSheet(bottomSheetContent = SummaryBottomSheetContent.WeightPicker)
+                    setBottomSheetContent(SummaryBottomSheetContent.WeightPicker)
+                    showBottomBarSheet()
                 }
             }
 
@@ -96,26 +93,41 @@ class SummaryViewModel @Inject constructor(
     private fun handleWeightDialogsAnswer(accepted: Boolean?) {
         handlingWeightDialogsQuestion = true
         viewModelScope.launch {
-            summaryUseCases.handleWeightDialogsQuestion(
+            summaryUseCases.handleWeightDialogsQuestionUseCase(
                 accepted = accepted,
                 cachedValuesProvider = cachedValuesProvider
             ).handle(
                 onError = {
                     uiEvent.send(SummaryUiEvent.HideBottomSheet)
                 }
-            ) { shouldShowWeightPicker ->
-                uiEvent.send(SummaryUiEvent.HideBottomSheet)
-                if (shouldShowWeightPicker) {
-                    delay(1000)
-                    _state.update {
-                        it.copy(
-                            bottomSheetContent = SummaryBottomSheetContent.WeightPicker
-                        )
-                    }
-                    uiEvent.send(SummaryUiEvent.ShowBottomSheet)
-                }
+            ) {
+                delay(1000)
                 handlingWeightDialogsQuestion = false
+                checkIfShouldShowWeightPicker()
             }
+        }
+    }
+
+    private fun checkIfShouldShowWeightPicker() {
+        viewModelScope.launch {
+            summaryUseCases.checkIfShouldShowWeightPickerUseCase(
+                cachedValuesProvider = cachedValuesProvider
+            ).handle(
+                showSnackbar = false
+            ) {
+                if (_state.value.bottomSheetContent !is  SummaryBottomSheetContent.WeightPicker) {
+                    setBottomSheetContent(SummaryBottomSheetContent.WeightPicker)
+                }
+                showBottomBarSheet()
+            }
+        }
+    }
+
+    private fun setBottomSheetContent(bottomSheetContent: SummaryBottomSheetContent) {
+        _state.update {
+            it.copy(
+                bottomSheetContent = bottomSheetContent
+            )
         }
     }
 
@@ -124,23 +136,22 @@ class SummaryViewModel @Inject constructor(
             summaryUseCases.checkIfShouldAskForWeightDialogsUseCase(
                 cachedValuesProvider = cachedValuesProvider
             ).handle(
-                showSnackbar = false
+                showSnackbar = false,
+                onError = {
+                    checkIfShouldShowWeightPicker()
+                }
             ) {
-                showBottomBarSheet(bottomSheetContent = SummaryBottomSheetContent.AskForDailyWeightDialogs)
+                if (_state.value.bottomSheetContent !is SummaryBottomSheetContent.AskForDailyWeightDialogs) {
+                    setBottomSheetContent(SummaryBottomSheetContent.AskForDailyWeightDialogs)
+                }
+                showBottomBarSheet()
             }
         }
     }
 
-    private fun showBottomBarSheet(bottomSheetContent: SummaryBottomSheetContent) {
+    private fun showBottomBarSheet() {
         viewModelScope.launch {
             bottomBarStatusProvider.bottomBarEvent.send(BottomBarEvent.Hide)
-            if (_state.value.bottomSheetContent != bottomSheetContent) {
-                _state.update {
-                    it.copy(
-                        bottomSheetContent = bottomSheetContent
-                    )
-                }
-            }
             uiEvent.send(SummaryUiEvent.ShowBottomSheet)
         }
     }

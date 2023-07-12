@@ -6,13 +6,13 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.model.WeightDialogsRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.repository.WeightRepository
 
-class HandleWeightDialogsQuestion(
+class HandleWeightDialogsQuestionUseCase(
     private val weightRepository: WeightRepository
 ) {
     suspend operator fun invoke(
         accepted: Boolean?,
         cachedValuesProvider: CachedValuesProvider
-    ): Resource<Boolean> {
+    ): Resource<Unit> {
         val resource = weightRepository.handleWeightDialogsQuestion(
             weightDialogsRequest = WeightDialogsRequest(
                 accepted = accepted
@@ -26,15 +26,7 @@ class HandleWeightDialogsQuestion(
         return when (resource) {
             is Resource.Success -> {
                 cachedValuesProvider.updateWeightDialogs(weightDialogs = resource.data)
-
-                val shouldShowWeightPicker = when(val entry = cachedValuesProvider.getUser().latestWeightEntry) {
-                    null -> false
-                    else -> {
-                        entry.date != CustomDateUtils.getCurrentDateString()
-                    }
-                }
-
-                Resource.Success(data = shouldShowWeightPicker)
+                Resource.Success(Unit)
             }
 
             is Resource.Error -> {
