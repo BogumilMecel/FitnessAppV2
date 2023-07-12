@@ -3,6 +3,7 @@ package com.gmail.bogumilmecel2.fitnessappv2.common.util
 import android.content.SharedPreferences
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.Currency
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.UserInformation
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.CachedValuesProvider
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.model.User
 import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.model.WeightDialogs
@@ -86,6 +87,14 @@ class RealCachedValuesProvider(
         key = WEIGHT_DIALOGS,
         clazz = String::class.java
     )
+
+    override suspend fun updateUserInformation(userInformation: UserInformation) {
+        saveUser(
+            user = getUser().copy(
+                userInformation = userInformation
+            )
+        )
+    }
 
     private fun <T> getItemFromJson(key: String, clazz: Class<T>): T? {
         return try {
