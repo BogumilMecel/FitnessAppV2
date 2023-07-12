@@ -1,6 +1,5 @@
 package com.gmail.bogumilmecel2.ui.theme
 
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 data class FitnessAppColors(
@@ -15,7 +14,8 @@ data class FitnessAppColors(
     val ContentSecondary: Color = LocalColor.Grey250,
     val ContentTertiary: Color = LocalColor.Grey400,
     val ContentQuaternary: Color = LocalColor.Grey600,
-    val Error: Color = LocalColor.RedError
+    val Error: Color = LocalColor.RedError,
+    val Transparent: Color = Color.Transparent
 )
 
 object LocalColor {
@@ -54,35 +54,4 @@ object LocalColor {
     val Grey600 = Color(0xFF595959)
     val Green = Color(0xFF81c784)
     val RedError = Color(0xFFe57373)
-}
-
-enum class FitnessAppColor {
-    Background,
-    Black,
-    White,
-    Primary,
-    Secondary,
-    ContentWhite,
-    ContentSecondary,
-    TextGreyPlaceholder,
-    Calories,
-    Carbohydrates,
-    Protein,
-    Fat,
-    Transparent,
-    Error;
-
-    @Composable
-    operator fun invoke() = when (this) {
-        Black -> Color.Black
-        White -> Color.White
-        Transparent -> Color.Transparent
-        Error -> FitnessAppTheme.colors.Error
-        ContentWhite -> FitnessAppTheme.colors.ContentPrimary
-        ContentSecondary -> FitnessAppTheme.colors.ContentSecondary
-        Background -> FitnessAppTheme.colors.Background
-        Secondary -> FitnessAppTheme.colors.Secondary
-        Primary -> FitnessAppTheme.colors.Primary
-        else -> Color.White
-    }
 }

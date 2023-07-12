@@ -19,18 +19,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.gmail.bogumilmecel2.ui.theme.FitnessAppColor
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 
 @Composable
 fun CustomButton(
     modifier: Modifier = Modifier,
-    buttonStyle: ButtonStyle = ButtonStyle.PrimaryButton,
+    buttonStyle: ButtonStyle = ButtonStyle.Primary,
     leftContent: LeftContent? = null,
     text: String?,
     onClick: () -> Unit
 ) = with(buttonStyle) {
     val shape = RoundedCornerShape(15.dp)
+    val backgroundColor = buttonStyle.getBackgroundColor()
+    val contentColor = buttonStyle.getContentColor()
 
     when (buttonType) {
         ButtonType.OutlinedButton -> {
@@ -40,18 +41,18 @@ fun CustomButton(
                     onClick()
                 },
                 colors = ButtonDefaults.outlinedButtonColors(
-                    backgroundColor = backgroundColor(),
+                    backgroundColor = backgroundColor,
                 ),
                 shape = shape,
                 border = BorderStroke(
                     width = 1.dp,
-                    color = contentColor()
+                    color = contentColor
                 )
             ) {
                 ButtonContent(
                     leftContent = leftContent,
                     text = text,
-                    contentColor = buttonStyle.contentColor()
+                    contentColor = contentColor
                 )
             }
         }
@@ -63,14 +64,14 @@ fun CustomButton(
                     onClick()
                 },
                 colors = ButtonDefaults.buttonColors(
-                    backgroundColor = backgroundColor()
+                    backgroundColor = backgroundColor
                 ),
                 shape = shape
             ) {
                 ButtonContent(
                     leftContent = leftContent,
                     text = text,
-                    contentColor = buttonStyle.contentColor()
+                    contentColor = contentColor
                 )
             }
         }
@@ -134,23 +135,24 @@ enum class ButtonType {
 }
 
 sealed class ButtonStyle(
-    open val backgroundColor: FitnessAppColor,
-    open val contentColor: FitnessAppColor,
     val buttonType: ButtonType = ButtonType.Button
 ) {
-    object PrimaryButton : ButtonStyle(
-        backgroundColor = FitnessAppColor.Primary,
-        contentColor = FitnessAppColor.Black
-    )
-    object OutlinedPrimaryButton: ButtonStyle(
-        backgroundColor = FitnessAppColor.Transparent,
-        contentColor = FitnessAppColor.Primary,
-        buttonType = ButtonType.OutlinedButton
-    )
-    object ButtonSecondary: ButtonStyle(
-        backgroundColor = FitnessAppColor.Secondary,
-        contentColor = FitnessAppColor.Black
-    )
+    object Primary : ButtonStyle()
+    object OutlinedPrimary: ButtonStyle(buttonType = ButtonType.OutlinedButton)
+    object Secondary: ButtonStyle()
+
+    @Composable
+    fun getBackgroundColor() = when(this) {
+        is Primary -> FitnessAppTheme.colors.Primary
+        is Secondary -> FitnessAppTheme.colors.Secondary
+        is OutlinedPrimary -> FitnessAppTheme.colors.Transparent
+    }
+
+    @Composable
+    fun getContentColor() = when(this) {
+        is Primary, Secondary -> FitnessAppTheme.colors.Black
+        is OutlinedPrimary -> FitnessAppTheme.colors.Primary
+    }
 }
 
 data class ButtonParams(

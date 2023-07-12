@@ -149,7 +149,7 @@ fun SubmitNewPriceDialog(
                     modifier = Modifier.weight(1f),
                     leftContent = LeftContent.Icon(IconVector.Cancel),
                     text = stringResource(id = R.string.cancel),
-                    buttonStyle = ButtonStyle.OutlinedPrimaryButton,
+                    buttonStyle = ButtonStyle.OutlinedPrimary,
                 ) {
                     onEvent(ProductEvent.DismissedSubmitNewPriceDialog)
                 }

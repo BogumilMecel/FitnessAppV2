@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.AlertDialog
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -23,16 +24,17 @@ fun CustomDialog(
             onDismissRequest()
         },
         title = {
-            CustomText(
+            Text(
                 text = title,
-                fitnessAppTextStyle = FitnessAppTextStyle.ImportantTextMedium
+                style = FitnessAppTheme.typography.ImportantTextMedium
             )
         },
         text = {
             secondaryText?.let {
-                CustomText(
+                Text(
                     text = secondaryText,
-                    fitnessAppTextStyle = FitnessAppTextStyle.ParagraphSecondaryMedium
+                    style = FitnessAppTheme.typography.ParagraphMedium,
+                    color = FitnessAppTheme.colors.ContentSecondary
                 )
             }
         },
@@ -46,7 +48,7 @@ fun CustomDialog(
                     CustomButton(
                         text = it.text,
                         modifier = Modifier.weight(1f),
-                        buttonStyle = ButtonStyle.OutlinedPrimaryButton
+                        buttonStyle = ButtonStyle.OutlinedPrimary
                     ) {
                         it.onClick()
                     }
