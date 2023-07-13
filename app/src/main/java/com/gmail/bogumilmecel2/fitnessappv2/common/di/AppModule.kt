@@ -407,7 +407,10 @@ object AppModule {
             checkIfWeightIsValidUseCase = checkIfWeightIsValidUseCase,
         ),
         checkIfShouldAskForWeightDialogsUseCase = CheckIfShouldAskForWeightDialogsUseCase(weightRepository),
-        handleWeightDialogsQuestionUseCase = HandleWeightDialogsQuestionUseCase(weightRepository),
+        handleWeightDialogsQuestionUseCase = HandleWeightDialogsQuestionUseCase(
+            weightRepository = weightRepository,
+            cachedValuesProvider = cachedValuesProvider
+        ),
         checkIfShouldShowWeightPickerUseCase = CheckIfShouldShowWeightPickerUseCase(cachedValuesProvider)
     )
 

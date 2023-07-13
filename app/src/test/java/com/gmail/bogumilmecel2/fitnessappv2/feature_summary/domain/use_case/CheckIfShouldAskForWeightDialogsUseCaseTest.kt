@@ -17,8 +17,6 @@ class CheckIfShouldAskForWeightDialogsUseCaseTest : BaseMockkTest() {
     private val weightRepository = mockk<WeightRepository>()
     private val checkIfShouldAskForWeightDialogsUseCase =
         CheckIfShouldAskForWeightDialogsUseCase(weightRepository = weightRepository)
-    private val mockedDate = "2023-12-12"
-    private val mockedDate2 = "2022-12-12"
 
     @Test
     fun `check if user has already accepted weight dialogs, resource error is returned`() =

@@ -9,6 +9,9 @@ import io.mockk.mockkObject
 
 open class BaseMockkTest {
 
+    val mockedDate = "2023-12-12"
+    val mockedDate2 = "2022-12-12"
+
     val resourceProvider = mockk<ResourceProvider>()
     val cachedValuesProvider = mockk<CachedValuesProvider>()
 
