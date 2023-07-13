@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class WeightDialogs(
-    val accepted: Boolean?,
-    val lastTimeAsked: String,
-    val askedCount: Int
+    val accepted: Boolean? = false,
+    val lastTimeAsked: String = "",
+    val askedCount: Int = 1
 )

@@ -110,9 +110,7 @@ class SummaryViewModel @Inject constructor(
 
     private fun checkIfShouldShowWeightPicker() {
         viewModelScope.launch {
-            summaryUseCases.checkIfShouldShowWeightPickerUseCase(
-                cachedValuesProvider = cachedValuesProvider
-            ).handle(
+            summaryUseCases.checkIfShouldShowWeightPickerUseCase().handle(
                 showSnackbar = false
             ) {
                 if (_state.value.bottomSheetContent !is  SummaryBottomSheetContent.WeightPicker) {

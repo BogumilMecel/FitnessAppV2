@@ -4,8 +4,8 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.CachedValuesP
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.CustomDateUtils
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 
-class CheckIfShouldShowWeightPickerUseCase {
-    suspend operator fun invoke(cachedValuesProvider: CachedValuesProvider): Resource<Unit> {
+class CheckIfShouldShowWeightPickerUseCase(private val cachedValuesProvider: CachedValuesProvider) {
+    suspend operator fun invoke(): Resource<Unit> {
         val lastTimeWeightDialogsShown = cachedValuesProvider.getLocalLastTimeShowedWeightPicker()
         val currentDate = CustomDateUtils.getCurrentDateString()
 
