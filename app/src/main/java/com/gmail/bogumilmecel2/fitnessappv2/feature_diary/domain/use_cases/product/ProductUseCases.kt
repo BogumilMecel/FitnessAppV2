@@ -7,5 +7,5 @@ data class ProductUseCases(
     val calculateProductNutritionValuesUseCase: CalculateProductNutritionValuesUseCase,
     val addDiaryEntry: AddDiaryEntry,
     val submitNewPriceUseCase: SubmitNewPriceUseCase,
-    val getPriceUseCase: GetPriceUseCase
+    val getPriceUseCase: GetPriceUseCase,
 )

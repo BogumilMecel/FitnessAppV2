@@ -23,13 +23,14 @@ interface DiaryRepository {
     suspend fun searchForProducts(searchText: String): Resource<List<Product>>
     suspend fun searchForProductWithBarcode(barcode: String): Resource<Product?>
     suspend fun searchForRecipes(searchText: String): Resource<List<Recipe>>
-    suspend fun getProductHistory(): Resource<List<Product>>
+    suspend fun getDiaryEntriesHistory(): Resource<List<Product>>
     suspend fun addProductDiaryEntry(productDiaryEntryPostRequest: ProductDiaryEntryPostRequest): Resource<ProductDiaryEntry>
     suspend fun addRecipeDiaryEntry(recipeDiaryEntryRequest: RecipeDiaryEntryRequest): Resource<Unit>
     suspend fun deleteDiaryEntry(deleteDiaryEntryRequest: DeleteDiaryEntryRequest): Resource<Unit>
     suspend fun editProductDiaryEntry(editProductDiaryEntryRequest: EditProductDiaryEntryRequest): Resource<Unit>
     suspend fun editRecipeDiaryEntry(editRecipeDiaryEntryRequest: EditRecipeDiaryEntryRequest): Resource<Unit>
     suspend fun saveNewProduct(newProductRequest: NewProductRequest): Resource<Product>
+    suspend fun getProduct(productId: String): Resource<Product?>
     suspend fun getCaloriesSum(date: String): Resource<Int>
     suspend fun getPrice(productId: String, currency: Currency): Resource<ProductPrice?>
     suspend fun getRecipePriceFromIngredients(

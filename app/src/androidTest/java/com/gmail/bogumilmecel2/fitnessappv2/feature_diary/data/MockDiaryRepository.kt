@@ -39,7 +39,7 @@ class MockDiaryRepository: DiaryRepository {
         data = emptyList<Recipe>()
     )
 
-    override suspend fun getProductHistory() = Resource.Success(
+    override suspend fun getDiaryEntriesHistory() = Resource.Success(
         data = emptyList<Product>()
     )
 

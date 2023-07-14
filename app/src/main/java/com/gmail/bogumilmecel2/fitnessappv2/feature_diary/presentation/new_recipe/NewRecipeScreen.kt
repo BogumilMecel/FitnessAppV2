@@ -84,7 +84,7 @@ fun NewRecipeScreen(
 
                         ProductMainSection(
                             modifier = Modifier.padding(horizontal = 16.dp),
-                            product = product,
+                            productName = product.name,
                             currentWeight = state.productWeight,
                             onWeightEntered = {
                                 viewModel.onEvent(NewRecipeEvent.EnteredProductWeight(it))

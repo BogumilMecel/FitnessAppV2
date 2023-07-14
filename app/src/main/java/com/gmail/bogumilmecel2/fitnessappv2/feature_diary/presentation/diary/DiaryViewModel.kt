@@ -17,6 +17,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.DeleteDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.GetDiaryEntriesUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.UpdateDiaryEntriesListAfterDelete
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.GetProductUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.presentation.ProductEntryData
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.recipe.RecipeEntryData
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,6 +34,7 @@ class DiaryViewModel @Inject constructor(
     private val calculateNutritionValuesFromDiaryEntriesUseCase: CalculateNutritionValuesFromDiaryEntriesUseCase,
     private val calculateNutritionValuesFromNutritionValuesUseCase: CalculateNutritionValuesFromNutritionValuesUseCase,
     private val createLongClickedDiaryItemParamsUseCase: CreateLongClickedDiaryItemParamsUseCase,
+    private val getProductUseCase: GetProductUseCase,
     private val dateHolder: DateHolder
 ) : BaseViewModel<DiaryState, DiaryEvent>(state = DiaryState()) {
 
@@ -183,18 +185,32 @@ class DiaryViewModel @Inject constructor(
         }
     }
 
+    private fun getProductAndNavigateToEditScreen(diaryEntry: ProductDiaryEntry) {
+        viewModelScope.launch {
+            getProductUseCase(diaryEntry.productId).handle { product ->
+                if (product != null) {
+                    navigateTo(
+                        ProductScreenDestination(
+                            entryData = ProductEntryData.Editing(
+                                mealName = diaryEntry.mealName,
+                                product = product,
+                                productDiaryEntryId = diaryEntry.id,
+                                date = diaryEntry.date,
+                                displayedDate = _state.value.displayedDate,
+                                weight = diaryEntry.weight.toString(),
+                            )
+                        )
+                    )
+                }
+            }
+        }
+    }
+
     private fun startEditingDiaryItem(diaryItem: DiaryItem) {
         with(diaryItem) {
             when (this) {
                 is ProductDiaryEntry -> {
-                    navigateTo(
-                        destination = ProductScreenDestination(
-                            entryData = ProductEntryData.Editing(
-                                productDiaryEntry = this,
-                                displayedDate = _state.value.displayedDate
-                            )
-                        )
-                    )
+                    getProductAndNavigateToEditScreen(this)
                 }
 
                 is RecipeDiaryEntry -> {

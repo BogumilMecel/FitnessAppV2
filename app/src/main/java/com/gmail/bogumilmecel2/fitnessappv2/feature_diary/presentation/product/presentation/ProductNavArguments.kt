@@ -3,7 +3,6 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.DateTransferObject
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.MealName
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
 import kotlinx.serialization.PolymorphicSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -32,14 +31,20 @@ sealed class ProductEntryData(
 
     @Serializable
     data class Editing(
-        val productDiaryEntry: ProductDiaryEntry,
-        val displayedDate: String
+        @SerialName("meal_name")
+        override val mealName: MealName,
+        @SerialName("product_data")
+        override val product: Product,
+        val productDiaryEntryId: String,
+        val date: String,
+        val displayedDate: String,
+        val weight: String
     ) : ProductEntryData(
-        mealName = productDiaryEntry.mealName,
-        product = productDiaryEntry.product,
+        mealName = mealName,
+        product = product,
         dateTransferObject = DateTransferObject(
             displayedDate = displayedDate,
-            realDate = productDiaryEntry.date
+            realDate = date
         )
     )
 

@@ -25,7 +25,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.components.DefaultCardBackground
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bogumilmecel2.ui.components.base.CustomBasicTextField
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 import com.gmail.bogumilmecel2.ui.theme.LocalColor.BlueViolet3
@@ -33,7 +32,7 @@ import com.gmail.bogumilmecel2.ui.theme.LocalColor.DarkGreyElevation
 
 @Composable
 fun ProductNameSection(
-    product: Product,
+    productName: String,
     currentWeight: String,
     modifier: Modifier,
     onWeightEntered: (String) -> Unit
@@ -59,7 +58,7 @@ fun ProductNameSection(
 
                     Row {
                         Text(
-                            text = product.name,
+                            text = productName,
                             style = MaterialTheme.typography.body2.copy(
                                 color = FitnessAppTheme.colors.ContentPrimary
                             ),
@@ -70,7 +69,7 @@ fun ProductNameSection(
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    DefaultCardBackground() {
+                    DefaultCardBackground {
                         CustomBasicTextField(
                             value = currentWeight,
                             onValueChange = {

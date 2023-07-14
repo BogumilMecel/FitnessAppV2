@@ -21,9 +21,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Re
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.RecipePriceRequest
 
-class DiaryRepositoryImp(
-    private val diaryApi: DiaryApi
-) : DiaryRepository, BaseRepository() {
+class DiaryRepositoryImp(private val diaryApi: DiaryApi) : DiaryRepository, BaseRepository() {
 
     override suspend fun getDiaryEntries(date: String): Resource<DiaryEntriesResponse> {
         return handleRequest {
@@ -31,7 +29,7 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun getProductHistory(): Resource<List<Product>> {
+    override suspend fun getDiaryEntriesHistory(): Resource<List<Product>> {
         return handleRequest {
             diaryApi.getProductHistory()
         }
@@ -70,6 +68,12 @@ class DiaryRepositoryImp(
     override suspend fun saveNewProduct(newProductRequest: NewProductRequest): Resource<Product> {
         return handleRequest {
             diaryApi.insertProduct(newProductRequest = newProductRequest)
+        }
+    }
+
+    override suspend fun getProduct(productId: String): Resource<Product?> {
+        return handleRequest {
+            diaryApi.getProduct(productId)
         }
     }
 
