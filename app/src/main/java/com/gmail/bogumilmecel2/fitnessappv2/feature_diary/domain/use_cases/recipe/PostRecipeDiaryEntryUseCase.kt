@@ -5,7 +5,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvi
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.toValidInt
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.MealName
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 
@@ -14,7 +13,7 @@ class PostRecipeDiaryEntryUseCase(
     private val resourceProvider: ResourceProvider
 ) {
     suspend operator fun invoke(
-        recipe: Recipe,
+        recipeId: String,
         servingsString: String,
         date: String,
         mealName: MealName
@@ -26,7 +25,7 @@ class PostRecipeDiaryEntryUseCase(
         } else {
             diaryRepository.addRecipeDiaryEntry(
                 recipeDiaryEntryRequest = RecipeDiaryEntryRequest(
-                    recipe = recipe,
+                    recipeId = recipeId,
                     servings = servingsValue,
                     date = date,
                     mealName = mealName

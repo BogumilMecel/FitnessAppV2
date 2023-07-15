@@ -82,6 +82,11 @@ interface DiaryApi {
         @Path("productId") productId: String
     ): Product?
 
+    @GET("/recipes/recipe/{recipeId}")
+    suspend fun getRecipe(
+        @Path("recipeId") recipeId: String
+    ) : Recipe?
+
     @GET("/products/history")
     suspend fun getProductHistory(): List<Product>
 

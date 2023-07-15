@@ -146,4 +146,10 @@ class DiaryRepositoryImp(private val diaryApi: DiaryApi) : DiaryRepository, Base
             diaryApi.addNewRecipe(newRecipeRequest = newRecipeRequest)
         }
     }
+
+    override suspend fun getRecipe(recipeId: String): Resource<Recipe?> {
+        return handleRequest {
+            diaryApi.getRecipe(recipeId)
+        }
+    }
 }
