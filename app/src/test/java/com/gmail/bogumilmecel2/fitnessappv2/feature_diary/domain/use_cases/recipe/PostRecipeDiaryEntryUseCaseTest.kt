@@ -4,7 +4,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.BaseMockkTest
 import com.gmail.bogumilmecel2.fitnessappv2.common.MockConstants
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.toValidInt
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.MealName
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
@@ -68,7 +67,7 @@ class PostRecipeDiaryEntryUseCaseTest : BaseMockkTest() {
     fun `Check if data is correct and repository returns resource success, resource success is returned`() = runTest {
         val expectedRequest = RecipeDiaryEntryRequest(
             recipeId = MockConstants.Diary.RECIPE_DIARY_ENTRY_ID_41,
-            servings = MockConstants.Diary.CORRECT_RECIPE_SERVINGS_1.toValidInt() ?: throw Exception(),
+            servings = MockConstants.Diary.CORRECT_RECIPE_SERVINGS_2.toValidIntOrThrow(),
             date = MockConstants.MOCK_DATE_2021,
             mealName = MealName.BREAKFAST,
         )
@@ -86,7 +85,7 @@ class PostRecipeDiaryEntryUseCaseTest : BaseMockkTest() {
 
     private suspend fun callTestedMethod(
         recipeDiaryEntryId: String = MockConstants.Diary.RECIPE_DIARY_ENTRY_ID_41,
-        servings: String = MockConstants.Diary.CORRECT_RECIPE_SERVINGS_1,
+        servings: String = MockConstants.Diary.CORRECT_RECIPE_SERVINGS_2,
         date: String = MockConstants.MOCK_DATE_2021
     ) = postRecipeDiaryEntryUseCase(
         recipeId = recipeDiaryEntryId,
