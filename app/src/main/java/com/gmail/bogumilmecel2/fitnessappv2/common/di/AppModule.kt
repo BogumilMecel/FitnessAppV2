@@ -499,7 +499,7 @@ object AppModule {
         ProductUseCases(
             calculateProductNutritionValuesUseCase = CalculateProductNutritionValuesUseCase(),
             createPieChartData = createPieChartData,
-            addDiaryEntry = AddDiaryEntry(
+            insertProductDiaryEntryUseCase = InsertProductDiaryEntryUseCase(
                 diaryRepository = diaryRepository,
                 resourceProvider = resourceProvider
             ),

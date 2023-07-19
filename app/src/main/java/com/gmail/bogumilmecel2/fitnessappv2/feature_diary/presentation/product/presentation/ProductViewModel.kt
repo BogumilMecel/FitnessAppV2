@@ -66,10 +66,10 @@ class ProductViewModel @Inject constructor(
                     with(_state.value) {
                         when (entryData) {
                             is ProductEntryData.Adding -> {
-                                productUseCases.addDiaryEntry(
+                                productUseCases.insertProductDiaryEntryUseCase(
                                     productId = entryData.product.id,
                                     mealName = entryData.mealName,
-                                    weight = weight.toIntOrNull(),
+                                    weightStringValue = weight,
                                     date = entryData.dateTransferObject.realDate
                                 ).handle {
                                     navigateWithPopUp(

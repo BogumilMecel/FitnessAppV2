@@ -53,7 +53,7 @@ class DiaryRepositoryImp(private val diaryApi: DiaryApi) : DiaryRepository, Base
         }
     }
 
-    override suspend fun addProductDiaryEntry(productDiaryEntryPostRequest: ProductDiaryEntryPostRequest): Resource<ProductDiaryEntry> {
+    override suspend fun insertProductDiaryEntry(productDiaryEntryPostRequest: ProductDiaryEntryPostRequest): Resource<Unit> {
         return handleRequest {
             diaryApi.insertProductDiaryEntry(productDiaryEntryPostRequest = productDiaryEntryPostRequest)
         }

@@ -9,7 +9,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.EditRecip
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductPrice
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.RecipePriceResponse
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntryPostRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.product.NewPriceRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.product.NewProductRequest
@@ -24,7 +23,7 @@ interface DiaryRepository {
     suspend fun searchForProductWithBarcode(barcode: String): Resource<Product?>
     suspend fun searchForRecipes(searchText: String): Resource<List<Recipe>>
     suspend fun getDiaryEntriesHistory(): Resource<List<Product>>
-    suspend fun addProductDiaryEntry(productDiaryEntryPostRequest: ProductDiaryEntryPostRequest): Resource<ProductDiaryEntry>
+    suspend fun insertProductDiaryEntry(productDiaryEntryPostRequest: ProductDiaryEntryPostRequest): Resource<Unit>
     suspend fun addRecipeDiaryEntry(recipeDiaryEntryRequest: RecipeDiaryEntryRequest): Resource<Unit>
     suspend fun getRecipe(recipeId: String): Resource<Recipe?>
     suspend fun deleteDiaryEntry(deleteDiaryEntryRequest: DeleteDiaryEntryRequest): Resource<Unit>

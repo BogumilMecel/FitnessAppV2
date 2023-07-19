@@ -22,7 +22,7 @@ class EditRecipeDiaryEntryUseCaseTest : BaseMockkTest() {
     fun `Check if new servings are not valid integer, resource error is returned`() = runTest {
         assertIs<Resource.Error<Unit>>(
             callTestedMethod(
-                newServings = MockConstants.Diary.INVALID_RECIPE_SERVINGS
+                newServings = MockConstants.Diary.INVALID_WEIGHT_OR_SERVINGS
             )
         )
     }
@@ -31,7 +31,7 @@ class EditRecipeDiaryEntryUseCaseTest : BaseMockkTest() {
     fun `Check if original servings are not valid integer, resource error is returned`() = runTest {
         assertIs<Resource.Error<Unit>>(
             callTestedMethod(
-                originalServings = MockConstants.Diary.INVALID_RECIPE_SERVINGS
+                originalServings = MockConstants.Diary.INVALID_WEIGHT_OR_SERVINGS
             )
         )
     }

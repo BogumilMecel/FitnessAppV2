@@ -43,7 +43,7 @@ class MockDiaryRepository: DiaryRepository {
         data = emptyList<Product>()
     )
 
-    override suspend fun addProductDiaryEntry(productDiaryEntryPostRequest: ProductDiaryEntryPostRequest) = Resource.Success(
+    override suspend fun insertProductDiaryEntry(productDiaryEntryPostRequest: ProductDiaryEntryPostRequest) = Resource.Success(
         data = ProductDiaryEntry(id = "")
     )
 
