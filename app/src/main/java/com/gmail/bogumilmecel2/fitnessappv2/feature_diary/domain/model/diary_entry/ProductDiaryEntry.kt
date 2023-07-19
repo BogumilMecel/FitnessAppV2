@@ -17,9 +17,9 @@ data class ProductDiaryEntry(
     override val userId: String = "",
     override val date: String = "",
     override val mealName: MealName = MealName.BREAKFAST,
-    val productMeasurementUnit: MeasurementUnit,
-    val productName: String,
-    val productId: String,
+    val productMeasurementUnit: MeasurementUnit = MeasurementUnit.GRAMS,
+    val productName: String = "",
+    val productId: String = "",
     val weight: Int = 0,
 ) : DiaryItem {
     @Composable
