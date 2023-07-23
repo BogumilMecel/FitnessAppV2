@@ -4,14 +4,10 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -25,7 +21,7 @@ import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 fun CustomButton(
     modifier: Modifier = Modifier,
     buttonStyle: ButtonStyle = ButtonStyle.Primary,
-    leftContent: LeftContent? = null,
+    leftIcon: Icon? = null,
     text: String?,
     onClick: () -> Unit
 ) = with(buttonStyle) {
@@ -50,7 +46,7 @@ fun CustomButton(
                 )
             ) {
                 ButtonContent(
-                    leftContent = leftContent,
+                    leftIcon = leftIcon,
                     text = text,
                     contentColor = contentColor
                 )
@@ -69,7 +65,7 @@ fun CustomButton(
                 shape = shape
             ) {
                 ButtonContent(
-                    leftContent = leftContent,
+                    leftIcon = leftIcon,
                     text = text,
                     contentColor = contentColor
                 )
@@ -80,54 +76,34 @@ fun CustomButton(
 
 @Composable
 private fun ButtonContent(
-    leftContent: LeftContent?,
+    leftIcon: Icon?,
     text: String?,
     contentColor: Color
 ) {
     Row(
         modifier = Modifier
-            .height(28.dp)
             .width(IntrinsicSize.Max),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxHeight()
-        ) {
-            leftContent?.let { content ->
-                when(content) {
-                    is LeftContent.Icon -> CustomIcon(
-                        iconVector = content.iconVector,
-                        iconColor = contentColor,
-                    )
+        leftIcon?.let { content ->
+            CustomIcon(
+                icon = content,
+                iconColor = contentColor,
+            )
+        }
 
-                    is LeftContent.Loading -> {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(24.dp),
-                            color = contentColor,
-                            strokeWidth = 3.dp
-                        )
-                    }
-                }
-            }
+        WidthSpacer(8.dp)
 
-            text?.let {
-                Text(
-                    text = it.uppercase(),
-                    style = FitnessAppTheme.typography.Button,
-                    color = contentColor,
-                    maxLines = 1,
-                )
-            }
+        text?.let {
+            Text(
+                text = it.uppercase(),
+                style = FitnessAppTheme.typography.Button,
+                color = contentColor,
+                maxLines = 1,
+            )
         }
     }
-}
-
-sealed interface LeftContent {
-    data class Icon(val iconVector: IconVector): LeftContent
-    object Loading: LeftContent
 }
 
 enum class ButtonType {
@@ -138,18 +114,18 @@ sealed class ButtonStyle(
     val buttonType: ButtonType = ButtonType.Button
 ) {
     object Primary : ButtonStyle()
-    object OutlinedPrimary: ButtonStyle(buttonType = ButtonType.OutlinedButton)
-    object Secondary: ButtonStyle()
+    object OutlinedPrimary : ButtonStyle(buttonType = ButtonType.OutlinedButton)
+    object Secondary : ButtonStyle()
 
     @Composable
-    fun getBackgroundColor() = when(this) {
+    fun getBackgroundColor() = when (this) {
         is Primary -> FitnessAppTheme.colors.Primary
         is Secondary -> FitnessAppTheme.colors.Secondary
         is OutlinedPrimary -> FitnessAppTheme.colors.Transparent
     }
 
     @Composable
-    fun getContentColor() = when(this) {
+    fun getContentColor() = when (this) {
         is Primary, Secondary -> FitnessAppTheme.colors.Black
         is OutlinedPrimary -> FitnessAppTheme.colors.Primary
     }

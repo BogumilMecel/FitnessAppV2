@@ -13,10 +13,13 @@ import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Password
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.gmail.bogumilmecel2.ui.R
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
@@ -24,10 +27,35 @@ import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 @Composable
 fun CustomIcon(
     modifier: Modifier = Modifier,
+    icon: Icon,
+    iconColor: Color = FitnessAppTheme.colors.Primary
+) {
+    when(icon) {
+        is IconPainter -> {
+            CustomIcon(
+                iconPainter = icon,
+                iconColor = iconColor,
+                modifier = modifier
+            )
+        }
+
+        is IconVector -> {
+            CustomIcon(
+                iconVector = icon,
+                iconColor = iconColor,
+                modifier = modifier
+            )
+        }
+    }
+}
+
+@Composable
+private fun CustomIcon(
+    modifier: Modifier = Modifier,
     iconVector: IconVector,
     iconColor: Color = FitnessAppTheme.colors.Primary
 ) = with(iconVector) {
-    androidx.compose.material.Icon(
+    Icon(
         modifier = modifier,
         imageVector = imageVector,
         contentDescription = stringResource(id = iconVector.contentDescriptionId),
@@ -35,10 +63,41 @@ fun CustomIcon(
     )
 }
 
+@Composable
+private fun CustomIcon(
+    modifier: Modifier = Modifier,
+    iconPainter: IconPainter,
+    iconColor: Color = FitnessAppTheme.colors.Primary
+) = with(iconPainter) {
+    Icon(
+        modifier = modifier,
+        painter = imagePainter,
+        contentDescription = stringResource(id = contentDescriptionId),
+        tint = iconColor
+    )
+}
+
+interface Icon {
+    val contentDescriptionId: Int
+}
+
+data class IconPainter(
+    val imagePainter: Painter,
+    override val contentDescriptionId: Int
+): Icon
+
 sealed class IconVector(
     val imageVector: ImageVector,
-    val contentDescriptionId: Int
-) {
+    override val contentDescriptionId: Int
+): Icon {
+    companion object {
+        @Composable
+        fun barcode() = IconPainter(
+            imagePainter = painterResource(id = R.drawable.barcode_scan),
+            contentDescriptionId = R.string.barcode
+        )
+    }
+
     object Heart: IconVector(
         imageVector = Icons.Default.FavoriteBorder,
         contentDescriptionId = R.string.favorite
