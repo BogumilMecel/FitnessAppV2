@@ -3,7 +3,6 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.GetDiaryHistory
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.SearchForProductsUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -25,10 +24,7 @@ internal class SearchForProductsUseCaseTest {
     @Before
     fun setUp() = runTest {
         mockDiaryRepository = Mockito.mock(DiaryRepository::class.java)
-        searchForProductsUseCase = SearchForProductsUseCase(
-            diaryRepository = mockDiaryRepository,
-            getDiaryHistory = GetDiaryHistory(mockDiaryRepository)
-        )
+        searchForProductsUseCase = SearchForProductsUseCase(diaryRepository = mockDiaryRepository)
     }
 
     @Test

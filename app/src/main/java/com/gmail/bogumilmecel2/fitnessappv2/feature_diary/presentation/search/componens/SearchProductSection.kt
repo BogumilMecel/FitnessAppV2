@@ -2,26 +2,22 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.c
 
 import android.Manifest
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.ErrorUtils
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.SearchEvent
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.SearchState
-import com.gmail.bogumilmecel2.ui.theme.LocalColor.BlueViolet1
-import com.gmail.bogumilmecel2.ui.theme.LocalColor.OrangeYellow1
+import com.gmail.bogumilmecel2.ui.components.base.ButtonParams
+import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
+import com.gmail.bogumilmecel2.ui.components.base.IconVector
+import com.gmail.bogumilmecel2.ui.components.complex.SearchButtonParams
+import com.gmail.bogumilmecel2.ui.components.complex.SearchButtonRow
+import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.isGranted
@@ -50,54 +46,38 @@ fun SearchProductSection(
     Column(
         modifier = modifier
     ) {
-        Spacer(modifier = Modifier.height(24.dp))
+        HeightSpacer()
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 10.dp),
-        ) {
-            SearchButton(
-                text = stringResource(id = R.string.scan),
-                color = BlueViolet1,
-                onClick = {
-                    if (!cameraPermissionState.status.isGranted) {
-                        onEvent(SearchEvent.ShowedPermissionDialog)
-                        cameraPermissionState.launchPermissionRequest()
-                    } else {
-                        onEvent(SearchEvent.ClickedScanButton)
-                    }
-                },
-                icon = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.barcode_scan),
-                        contentDescription = stringResource(id = R.string.scan),
-                        tint = Color.Black
-                    )
-                },
-                modifier = Modifier
-                    .weight(1F)
-                    .testTag(stringResource(id = R.string.scan))
-            )
+        SearchButtonRow(
+            buttons = listOf(
+                SearchButtonParams(
+                    buttonParams = ButtonParams(
+                        text = stringResource(id = R.string.scan_barcode),
+                        onClick = {
+                            if (!cameraPermissionState.status.isGranted) {
+                                onEvent(SearchEvent.ShowedPermissionDialog)
+                                cameraPermissionState.launchPermissionRequest()
+                            } else {
+                                onEvent(SearchEvent.ClickedScanButton)
+                            }
+                        }
+                    ),
+                    icon = IconVector.barcode(),
+                ),
+                SearchButtonParams(
+                    buttonParams = ButtonParams(
+                        text = stringResource(id = R.string.create_product),
+                        onClick = {
+                            onEvent(SearchEvent.ClickedNewProduct)
+                        }
+                    ),
+                    icon = IconVector.Add
+                )
+            ),
+            buttonsColor = FitnessAppTheme.colors.Tertiary
+        )
 
-            SearchButton(
-                text = stringResource(id = R.string.create_product),
-                modifier = Modifier.weight(1F),
-                color = OrangeYellow1,
-                onClick = {
-                    onEvent(SearchEvent.ClickedNewProduct)
-                },
-                icon = {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = stringResource(id = R.string.add),
-                        tint = Color.Black
-                    )
-                },
-            )
-        }
-
-        Spacer(modifier = Modifier.height(24.dp))
+        HeightSpacer()
 
         Box(
             modifier = Modifier
@@ -110,67 +90,28 @@ fun SearchProductSection(
                 ) {
                     CircularProgressIndicator()
                 }
-            } else if (state.barcode != null) {
-                Column(
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                ) {
-
-                    Text(
-                        text = stringResource(id = R.string.there_is_no_product_with_provided_barcode_do_you_want_to_add_it),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 30.dp),
-                        style = MaterialTheme.typography.h1.copy(
-                            textAlign = TextAlign.Center
-                        )
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Button(
-                        onClick = {
-                            onEvent(SearchEvent.ClickedNewProduct)
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 60.dp)
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.add),
-                            style = MaterialTheme.typography.button
-                        )
-
-                    }
-
-                    Spacer(modifier = Modifier.height(32.dp))
-
-                }
             } else if (state.productItems.isNotEmpty()) {
-
-                val items = state.productItems
-
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                ) {
-                    items(items.size) { itemPosition ->
-                        val product = items[itemPosition]
-                        SearchProductItem(
-                            name = product.name,
-                            unit = stringResource(id = product.measurementUnit.getStringRes()),
-                            weight = product.containerWeight ?: 100,
-                            calories = product.nutritionValues.calories,
-                            onItemClick = {
-                                onEvent(
-                                    SearchEvent.ClickedProduct(
-                                        product = items[itemPosition]
-                                    )
-                                )
-                            }
-                        )
-                    }
-                }
+//
+//                val items = state.productItems
+//
+//                LazyColumn(modifier = Modifier.fillMaxWidth()) {
+//                    items(items.size) { itemPosition ->
+//                        val product = items[itemPosition]
+//                        SearchItem(
+//                            name = product.name,
+//                            unit = stringResource(id = product.measurementUnit.getStringRes()),
+//                            weight = product.containerWeight ?: 100,
+//                            calories = product.nutritionValues.calories,
+//                            onItemClick = {
+//                                onEvent(
+//                                    SearchEvent.ClickedProduct(
+//                                        product = items[itemPosition]
+//                                    )
+//                                )
+//                            }
+//                        )
+//                    }
+//                }
             }
         }
     }

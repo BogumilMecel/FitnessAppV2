@@ -9,9 +9,9 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.DiaryEntr
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.EditProductDiaryEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.EditRecipeDiaryEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductDiarySearchItem
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductPrice
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.RecipePriceResponse
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntryPostRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.product.NewPriceRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.product.NewProductRequest
@@ -29,9 +29,9 @@ class DiaryRepositoryImp(private val diaryApi: DiaryApi) : DiaryRepository, Base
         }
     }
 
-    override suspend fun getDiaryEntriesHistory(): Resource<List<Product>> {
+    override suspend fun getProductDiaryHistory(): Resource<List<ProductDiarySearchItem>> {
         return handleRequest {
-            diaryApi.getProductHistory()
+            diaryApi.getProductDiaryHistory()
         }
     }
 

@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -15,20 +14,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.gmail.bogumilmecel2.fitnessappv2.R
-import com.gmail.bogumilmecel2.ui.components.base.CustomBasicTextField
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_product.NewProductEvent
+import com.gmail.bogumilmecel2.ui.components.base.CustomBasicTextField
 
 @Composable
 fun BarcodeSection(
     barcode: String,
     onEvent: (NewProductEvent) -> Unit
 ) {
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -64,15 +61,12 @@ fun BarcodeSection(
                     onEvent(NewProductEvent.ClickedScannerButton)
                 }
             ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.barcode_scan),
-                    contentDescription = stringResource(id = R.string.scan),
-                    tint = MaterialTheme.colors.primary
-                )
-
+//                Icon(
+//                    painter = painterResource(id = R.drawable.barcode_scan),
+//                    contentDescription = stringResource(id = R.string.scan),
+//                    tint = MaterialTheme.colors.primary
+//                )
             }
         }
-
-
     }
 }

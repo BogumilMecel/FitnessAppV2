@@ -1,8 +1,11 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.presentation
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -29,15 +32,12 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.presentation.co
 import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.presentation.components.QuestionSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.presentation.components.TextQuestion
 import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.presentation.components.TilesQuestion
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.rememberPagerState
 import com.ramcosta.composedestinations.annotation.Destination
 import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(
-    ExperimentalPagerApi::class,
-    ExperimentalComposeUiApi::class
+    ExperimentalComposeUiApi::class,
+    ExperimentalFoundationApi::class
 )
 @Destination
 @Composable
@@ -47,7 +47,11 @@ fun IntroductionScreen(
     val state = viewModel.state.collectAsStateWithLifecycle().value
     val questionSize = QuestionName.values().size
 
-    val pagerState = rememberPagerState(initialPage = 0)
+    val pagerState = rememberPagerState(
+        initialPage = 0,
+    ) {
+        questionSize
+    }
     val keyboardController = LocalSoftwareKeyboardController.current
 
     var arrowState by remember {
@@ -97,10 +101,7 @@ fun IntroductionScreen(
                 .padding(top = 100.dp)
         )
 
-        HorizontalPager(
-            count = questionSize,
-            state = pagerState
-        ) { index ->
+        HorizontalPager(state = pagerState) { index ->
             val currentItem = QuestionName.values().toList()[index]
             QuestionSection(title = stringResource(id = currentItem.getQuestionTitle())) {
                 when (currentItem.getQuestionType()) {

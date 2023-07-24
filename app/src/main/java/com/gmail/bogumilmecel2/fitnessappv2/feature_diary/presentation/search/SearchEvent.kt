@@ -13,8 +13,9 @@ sealed interface SearchEvent {
     data class ScannedBarcode(val code: String) : SearchEvent
     data class ClickedProduct(val product: Product) : SearchEvent
     data class ClickedRecipe(val recipe: Recipe) : SearchEvent
+    data class SelectedTab(val index: Int) : SearchEvent
     object ClosedScanner : SearchEvent
     object ClickedCreateNewRecipe : SearchEvent
-    object ClickedRecipesTab : SearchEvent
-    object ClickedProductsTab : SearchEvent
+//    object ClickedRecipesTab : SearchEvent
+//    object ClickedProductsTab : SearchEvent
 }

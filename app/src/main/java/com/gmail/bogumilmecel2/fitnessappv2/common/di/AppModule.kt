@@ -38,7 +38,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_r
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.*
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.recipe.EditRecipeDiaryEntryUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.recipe.PostRecipeDiaryEntryUseCase
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.GetDiaryHistory
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.SearchDiaryUseCases
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.SearchForProductWithBarcode
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.SearchForProductsUseCase
@@ -416,13 +415,8 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideSearchForProductsUseCase(
-        diaryRepository: DiaryRepository,
-        getDiaryHistory: GetDiaryHistory
-    ): SearchForProductsUseCase = SearchForProductsUseCase(
-        diaryRepository = diaryRepository,
-        getDiaryHistory = getDiaryHistory
-    )
+    fun provideSearchForProductsUseCase(diaryRepository: DiaryRepository): SearchForProductsUseCase =
+        SearchForProductsUseCase(diaryRepository = diaryRepository)
 
     @Singleton
     @Provides
@@ -450,12 +444,6 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideGetDiaryHistoryUseCase(
-        diaryRepository: DiaryRepository,
-    ): GetDiaryHistory = GetDiaryHistory(repository = diaryRepository)
-
-    @Singleton
-    @Provides
     fun provideCalculateSelectedServingPriceUseCase(): CalculateSelectedServingPriceUseCase =
         CalculateSelectedServingPriceUseCase()
 
@@ -464,11 +452,9 @@ object AppModule {
     fun provideDiarySearchUseCases(
         diaryRepository: DiaryRepository,
         searchForProductsUseCase: SearchForProductsUseCase,
-        getDiaryHistory: GetDiaryHistory
     ): SearchDiaryUseCases =
         SearchDiaryUseCases(
             searchForProductsUseCase = searchForProductsUseCase,
-            getDiaryHistory = getDiaryHistory,
             searchForProductWithBarcode = SearchForProductWithBarcode(diaryRepository),
             searchForRecipes = SearchForRecipes(diaryRepository)
         )

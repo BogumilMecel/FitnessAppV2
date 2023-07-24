@@ -9,7 +9,8 @@ import com.gmail.bogumilmecel2.fitnessappv2.destinations.NewRecipeScreenDestinat
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.ProductScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.RecipeScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.SearchScreenDestination
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductDiarySearchItem
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.SearchDiaryUseCases
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.presentation.ProductEntryData
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.recipe.RecipeEntryData
@@ -23,6 +24,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val searchDiaryUseCases: SearchDiaryUseCases,
+    private val diaryRepository: DiaryRepository,
     private val savedStateHandle: SavedStateHandle,
 ) : BaseViewModel<SearchState, SearchEvent>(
     state = SearchState(
@@ -31,7 +33,7 @@ class SearchViewModel @Inject constructor(
     )
 ) {
     private val dateTransferObject = SearchScreenDestination.argsFrom(savedStateHandle).dateTransferObject
-    private var productHistory = emptyList<Product>()
+    private var productHistory = emptyList<ProductDiarySearchItem>()
 
     override fun onEvent(event: SearchEvent) {
         when (event) {
@@ -48,7 +50,7 @@ class SearchViewModel @Inject constructor(
             }
 
             is SearchEvent.ClickedSearch -> {
-                when (_state.value.currentTabIndex) {
+                when (_state.value.selectedTabIndex) {
                     0 -> searchForProducts()
                     1 -> searchForRecipes()
                 }
@@ -56,7 +58,7 @@ class SearchViewModel @Inject constructor(
 
             is SearchEvent.EnteredSearchText -> {
                 _state.update {
-                    when (_state.value.currentTabIndex) {
+                    when (_state.value.selectedTabIndex) {
                         0 -> it.copy(
                             productSearchBarText = event.text
                         )
@@ -123,20 +125,10 @@ class SearchViewModel @Inject constructor(
                 }
             }
 
-            is SearchEvent.ClickedProductsTab -> {
+            is SearchEvent.SelectedTab -> {
                 _state.update {
                     it.copy(
-                        searchBarPlaceholderText = resourceProvider.getString(R.string.product_name),
-                        currentTabIndex = 0
-                    )
-                }
-            }
-
-            is SearchEvent.ClickedRecipesTab -> {
-                _state.update {
-                    it.copy(
-                        searchBarPlaceholderText = resourceProvider.getString(R.string.recipe_name),
-                        currentTabIndex = 1
+                        selectedTabIndex = event.index
                     )
                 }
             }
@@ -157,36 +149,36 @@ class SearchViewModel @Inject constructor(
 
     fun initializeHistory() {
         viewModelScope.launch(Dispatchers.IO) {
-            searchDiaryUseCases.getDiaryHistory().handle { history ->
-                productHistory = history
-                _state.update {
-                    it.copy(
-                        productItems = productHistory
-                    )
-                }
-            }
+//            diaryRepository.getProductDiaryHistory().handle {
+//                productHistory = history
+//                _state.update {
+//                    it.copy(
+//                        productItems = productHistory
+//                    )
+//                }
+//            }
         }
     }
 
     private fun clearItemsIfHistoryIsPresent() {
-        with(_state.value) {
-            when(currentTabIndex) {
-                0 -> {
-                    if (productHistory.isNotEmpty()) {
-                        _state.update {
-                            it.copy(
-                                productItems = productHistory.filter { product ->
-                                    product.name.contains(productSearchBarText)
-                                }
-                            )
-                        }
-                    }
-                }
-                else -> {
-
-                }
-            }
-        }
+//        with(_state.value) {
+//            when(currentTabIndex) {
+//                0 -> {
+//                    if (productHistory.isNotEmpty()) {
+//                        _state.update {
+//                            it.copy(
+//                                productItems = productHistory.filter { product ->
+//                                    product.name.contains(productSearchBarText)
+//                                }
+//                            )
+//                        }
+//                    }
+//                }
+//                else -> {
+//
+//                }
+//            }
+//        }
     }
 
     private fun searchForRecipes() {
@@ -269,4 +261,10 @@ class SearchViewModel @Inject constructor(
             }
         }
     }
+}
+
+enum class SearchTab(val textResId: Int) {
+    EVERYTHING(textResId = R.string.search_everything),
+    PRODUCTS(textResId = R.string.search_my_products),
+    RECIPES(textResId = R.string.search_my_recipes)
 }
