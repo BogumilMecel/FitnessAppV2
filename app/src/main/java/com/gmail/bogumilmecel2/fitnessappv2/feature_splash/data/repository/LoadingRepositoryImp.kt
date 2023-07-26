@@ -8,7 +8,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_splash.domain.repository.Loa
 
 class LoadingRepositoryImp(private val loadingApi: LoadingApi) : LoadingRepository, BaseRepository() {
 
-    override suspend fun authenticateUser(timezoneId: String): Resource<User?> {
+    override suspend fun authenticateUser(): Resource<User?> {
         return handleRequest {
             loadingApi.authenticate()
         }
