@@ -30,7 +30,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.Dropd
 import com.gmail.bogumilmecel2.fitnessappv2.components.DefaultCardBackground
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_recipe.NewRecipeEvent
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_recipe.NewRecipeState
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.componens.SearchItem
 
 @Composable
 fun RecipeListSection(
@@ -78,15 +77,15 @@ fun RecipeListSection(
 
             if (state.isIngredientsListExpanded) {
                 state.ingredients.forEach { ingredient ->
-                    SearchItem(
-                        name = ingredient.productName,
-                        unit = stringResource(id = ingredient.measurementUnit.getStringRes()),
-                        calories = ingredient.nutritionValues.calories,
-                        weight = ingredient.weight,
-                        onItemLongClick = {
-                            onEvent(NewRecipeEvent.LongClickedIngredient(ingredient = ingredient))
-                        }
-                    )
+//                    SearchItem(
+//                        name = ingredient.productName,
+//                        unit = stringResource(id = ingredient.measurementUnit.getStringRes()),
+//                        calories = ingredient.nutritionValues.calories,
+//                        weight = ingredient.weight,
+//                        onItemLongClick = {
+//                            onEvent(NewRecipeEvent.LongClickedIngredient(ingredient = ingredient))
+//                        }
+//                    )
                 }
             }
 
