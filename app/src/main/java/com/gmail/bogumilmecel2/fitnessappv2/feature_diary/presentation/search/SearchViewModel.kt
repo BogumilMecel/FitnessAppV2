@@ -9,7 +9,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.destinations.NewRecipeScreenDestinat
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.ProductScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.RecipeScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.SearchScreenDestination
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductDiarySearchItem
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductDiaryHistoryItem
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.SearchDiaryUseCases
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.presentation.ProductEntryData
@@ -33,7 +33,7 @@ class SearchViewModel @Inject constructor(
     )
 ) {
     private val dateTransferObject = SearchScreenDestination.argsFrom(savedStateHandle).dateTransferObject
-    private var productHistory = emptyList<ProductDiarySearchItem>()
+    private var productHistory = emptyList<ProductDiaryHistoryItem>()
 
     override fun onEvent(event: SearchEvent) {
         when (event) {

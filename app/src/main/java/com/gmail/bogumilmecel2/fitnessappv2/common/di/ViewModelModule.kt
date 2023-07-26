@@ -2,6 +2,7 @@ package com.gmail.bogumilmecel2.fitnessappv2.common.di
 
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetDiaryHistoryAndSaveItLocallyUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.GetDiaryEntriesListFromResponseUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.GetDiaryEntriesUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.SortDiaryEntriesUseCase
@@ -54,4 +55,11 @@ object ViewModelModule {
     fun provideGetProductUseCase(
         diaryRepository: DiaryRepository
     ): GetProductUseCase = GetProductUseCase(diaryRepository)
+
+    @ViewModelScoped
+    @Provides
+    fun provideGetDiaryHistoryAndSaveItLocallyUseCase(
+        diaryRepository: DiaryRepository
+    ): GetDiaryHistoryAndSaveItLocallyUseCase =
+        GetDiaryHistoryAndSaveItLocallyUseCase(diaryRepository)
 }

@@ -3,8 +3,10 @@ package com.gmail.bogumilmecel2.fitnessappv2.common.di
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.room.Room
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
+import com.gmail.bogumilmecel2.fitnessappv2.common.data.AppDatabase
 import com.gmail.bogumilmecel2.fitnessappv2.common.data.navigation.ComposeCustomNavigator
 import com.gmail.bogumilmecel2.fitnessappv2.common.data.navigation.repository.TokenRepositoryImp
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.navigation.Navigator
@@ -25,6 +27,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.repository.AuthR
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.use_case.*
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.data.api.DiaryApi
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.data.repository.remote.DiaryRepositoryImp
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.dao.ProductDiaryHistoryDao
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CalculateSelectedServingPriceUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CalculateServingPrice
@@ -75,6 +78,21 @@ object AppModule {
     @Provides
     @Singleton
     fun provideResourceProvider(app: Application): ResourceProvider = RealResourceProvider(app)
+
+    @Singleton
+    @Provides
+    fun provideRoomDatabase(@ApplicationContext context: Context): AppDatabase = Room
+        .databaseBuilder(
+            context = context,
+            klass = AppDatabase::class.java,
+            name = AppDatabase.DATABASE_NAME
+        ).build()
+
+    @Singleton
+    @Provides
+    fun provideProductDiaryHistoryDao(
+        database: AppDatabase
+    ): ProductDiaryHistoryDao = database.productDiaryHistoryDao()
 
     @Provides
     @Singleton
@@ -283,8 +301,12 @@ object AppModule {
     @Singleton
     @Provides
     fun provideDiaryRepository(
-        diaryApi: DiaryApi
-    ): DiaryRepository = DiaryRepositoryImp(diaryApi = diaryApi)
+        diaryApi: DiaryApi,
+        productDiaryHistoryDao: ProductDiaryHistoryDao
+    ): DiaryRepository = DiaryRepositoryImp(
+        diaryApi = diaryApi,
+        productDiaryHistoryDao = productDiaryHistoryDao
+    )
 
     @Singleton
     @Provides
