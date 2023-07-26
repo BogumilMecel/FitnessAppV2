@@ -90,7 +90,8 @@ fun SearchProductSection(
                 ) {
                     CircularProgressIndicator()
                 }
-            } else if (state.productItems.isNotEmpty()) {
+            }
+//            else if (state.productItems.isNotEmpty()) {
 //
 //                val items = state.productItems
 //
@@ -112,7 +113,7 @@ fun SearchProductSection(
 //                        )
 //                    }
 //                }
-            }
+//            }
         }
     }
 }

@@ -21,32 +21,36 @@ class LoadingViewModel @Inject constructor(
         viewModelScope.launch {
             getToken()?.let {
                 authenticateUser()
-            } ?: kotlin.run {
-                navigateWithPopUp(
-                    destination = LoginScreenDestination
-                )
+            } ?: run {
+                navigateToLoginScreen()
             }
         }
     }
 
     private suspend fun authenticateUser() {
-        val authenticationResource = loadingRepository.authenticateUser()
-        authenticationResource.data?.let { user ->
-            cachedValuesProvider.saveUser(user = user)
-            if (user.nutritionValues != null && user.userInformation != null) {
-                navigateWithPopUp(
-                    destination = SummaryScreenDestination
-                )
-            } else {
-                navigateWithPopUp(
-                    destination = IntroductionScreenDestination
-                )
+        loadingRepository.authenticateUser().handle(
+            onError = { navigateToLoginScreen() }
+        ) { user ->
+            when {
+                user == null -> {
+                    navigateToLoginScreen()
+                }
+
+                user.nutritionValues != null && user.userInformation != null -> {
+                    cachedValuesProvider.saveUser(user = user)
+                    navigateWithPopUp(destination = SummaryScreenDestination)
+                }
+
+                else -> {
+                    cachedValuesProvider.saveUser(user = user)
+                    navigateWithPopUp(destination = IntroductionScreenDestination)
+                }
             }
-        } ?: kotlin.run {
-            navigateWithPopUp(
-                destination = LoginScreenDestination
-            )
         }
+    }
+
+    private fun navigateToLoginScreen() {
+        navigateWithPopUp(destination = LoginScreenDestination)
     }
 
     override fun onEvent(event: Unit) {}

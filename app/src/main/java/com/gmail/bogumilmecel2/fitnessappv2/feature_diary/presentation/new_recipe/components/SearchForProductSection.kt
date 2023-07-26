@@ -9,11 +9,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_recipe.NewRecipeEvent
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_recipe.NewRecipeState
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.componens.SearchItem
 import com.gmail.bogumilmecel2.ui.components.base.CustomBasicTextField
 import com.gmail.bogumilmecel2.ui.components.base.IconButtonParams
 import com.gmail.bogumilmecel2.ui.components.base.IconVector
@@ -58,15 +56,15 @@ fun SearchForProductSection(
         LazyColumn(modifier = Modifier.fillMaxWidth()) {
             items(state.searchItems.size) {
                 val product = state.searchItems[it]
-                SearchItem(
-                    name = product.name,
-                    unit = stringResource(id = product.measurementUnit.getStringRes()),
-                    weight = 100,
-                    calories = product.nutritionValues.calories,
-                    onItemClick = {
-                        onEvent(NewRecipeEvent.ClickedProduct(state.searchItems[it]))
-                    }
-                )
+//                SearchItem(
+//                    name = product.name,
+//                    unit = stringResource(id = product.measurementUnit.getStringRes()),
+//                    weight = 100,
+//                    calories = product.nutritionValues.calories,
+//                    onItemClick = {
+//                        onEvent(NewRecipeEvent.ClickedProduct(state.searchItems[it]))
+//                    }
+//                )
             }
         }
     }

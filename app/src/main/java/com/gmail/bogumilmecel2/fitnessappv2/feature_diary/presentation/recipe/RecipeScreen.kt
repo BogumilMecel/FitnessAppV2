@@ -27,7 +27,6 @@ import androidx.compose.material.icons.filled.SupervisorAccount
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -39,7 +38,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.Dropd
 import com.gmail.bogumilmecel2.fitnessappv2.components.DefaultCardBackground
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_recipe.components.RecipePriceSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.presentation.components.ProductNutritionSection
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.componens.SearchItem
 import com.gmail.bogumilmecel2.ui.components.base.ButtonStyle
 import com.gmail.bogumilmecel2.ui.components.base.CustomBasicTextField
 import com.gmail.bogumilmecel2.ui.components.base.CustomButton
@@ -319,13 +317,13 @@ fun RecipeScreen(
                         val ingredients = state.entryData.recipe.ingredients
 
                         ingredients.forEach { ingredient ->
-                            SearchItem(
-                                weight = ingredient.weight,
-                                unit = stringResource(id = ingredient.measurementUnit.getStringRes()),
-                                name = ingredient.productName,
-                                calories = ingredient.nutritionValues.calories,
-                                background = Color.Transparent
-                            )
+//                            SearchItem(
+//                                weight = ingredient.weight,
+//                                unit = stringResource(id = ingredient.measurementUnit.getStringRes()),
+//                                name = ingredient.productName,
+//                                calories = ingredient.nutritionValues.calories,
+//                                background = Color.Transparent
+//                            )
                         }
                     }
                 }
