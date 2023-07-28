@@ -6,7 +6,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.IntroductionScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.LoginScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.SummaryScreenDestination
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetDiaryHistoryAndSaveItLocallyUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetUserDiaryAndSaveItLocallyUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_splash.domain.repository.LoadingRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -16,7 +16,7 @@ import javax.inject.Inject
 class LoadingViewModel @Inject constructor(
     private val loadingRepository: LoadingRepository,
     private val getToken: GetToken,
-    private val getDiaryHistoryAndSaveItLocallyUseCase: GetDiaryHistoryAndSaveItLocallyUseCase
+    private val getUserDiaryAndSaveItLocallyUseCase: GetUserDiaryAndSaveItLocallyUseCase
 ) : BaseViewModel<Unit, Unit>(state = Unit) {
 
     fun checkIfTokenIsPresent() {
@@ -40,7 +40,7 @@ class LoadingViewModel @Inject constructor(
 
                 user.nutritionValues != null && user.userInformation != null -> {
                     cachedValuesProvider.saveUser(user = user)
-                    getDiaryHistoryAndSaveItLocallyUseCase()
+                    getUserDiaryAndSaveItLocallyUseCase()
                     navigateWithPopUp(destination = SummaryScreenDestination)
                 }
 

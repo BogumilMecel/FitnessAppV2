@@ -10,6 +10,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductDiaryHistoryItem
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductPrice
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.RecipePriceResponse
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.UserDiaryItemsResponse
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntryPostRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.product.NewPriceRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.product.NewProductRequest
@@ -23,7 +24,6 @@ interface DiaryRepository {
     suspend fun searchForProducts(searchText: String): Resource<List<Product>>
     suspend fun searchForProductWithBarcode(barcode: String): Resource<Product?>
     suspend fun getProductDiaryHistory(): Resource<List<ProductDiaryHistoryItem>>
-    suspend fun saveProductDiaryHistoryLocally(productDiaryHistoryItems: List<ProductDiaryHistoryItem>): Resource<Unit>
     suspend fun searchForRecipes(searchText: String): Resource<List<Recipe>>
     suspend fun insertProductDiaryEntry(productDiaryEntryPostRequest: ProductDiaryEntryPostRequest): Resource<Unit>
     suspend fun addRecipeDiaryEntry(recipeDiaryEntryRequest: RecipeDiaryEntryRequest): Resource<Unit>
@@ -47,4 +47,7 @@ interface DiaryRepository {
     ): Resource<ProductPrice>
 
     suspend fun addNewRecipe(newRecipeRequest: NewRecipeRequest): Resource<Recipe>
+    suspend fun getUserDiaryItems(): Resource<UserDiaryItemsResponse>
+    suspend fun insertUserProductsLocally(userProducts: List<Product>): Resource<Unit>
+    suspend fun insertUserRecipesLocally(userRecipes: List<Recipe>): Resource<Unit>
 }
