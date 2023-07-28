@@ -11,6 +11,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductDi
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductPrice
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductPriceResponse
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.RecipePriceResponse
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.UserDiaryItemsResponse
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntryPostRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.product.NewPriceRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.product.NewProductRequest
@@ -118,4 +119,7 @@ interface DiaryApi {
         @Body recipePriceRequest: RecipePriceRequest,
         @Header(ApiConstants.Headers.CURRENCY) currency: Currency
     ): RecipePriceResponse?
+
+    @GET("/userData/diaryItems")
+    suspend fun getUserDiaryItems(): UserDiaryItemsResponse
 }
