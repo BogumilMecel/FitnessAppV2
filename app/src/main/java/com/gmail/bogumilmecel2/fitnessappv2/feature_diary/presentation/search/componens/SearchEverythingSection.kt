@@ -13,7 +13,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.gmail.bogumilmecel2.fitnessappv2.R
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.SearchState
 import com.gmail.bogumilmecel2.ui.components.base.ButtonParams
 import com.gmail.bogumilmecel2.ui.components.base.CustomButton
 import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
@@ -24,10 +23,11 @@ import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 
 @Composable
 fun SearchEverythingSection(
-    state: SearchState.EverythingState,
+    searchItems: List<SearchItemParams>,
+    isBarcodeLayoutVisible: Boolean,
     onScanBarcodeClicked: () -> Unit,
     onBarcodeAddProductClicked: () -> Unit,
-) = with(state) {
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -60,7 +60,7 @@ fun SearchEverythingSection(
         HeightSpacer()
 
         Box {
-            if (state.barcode != null) {
+            if (isBarcodeLayoutVisible) {
                 Column(
                     modifier = Modifier
                         .align(Alignment.Center)
@@ -81,8 +81,8 @@ fun SearchEverythingSection(
                         text = stringResource(id = R.string.add)
                     )
                 }
-            } else if (state.searchItems.isNotEmpty()) {
-                SearchList(state.searchItems)
+            } else if (searchItems.isNotEmpty()) {
+                SearchList(searchItems)
             }
         }
     }

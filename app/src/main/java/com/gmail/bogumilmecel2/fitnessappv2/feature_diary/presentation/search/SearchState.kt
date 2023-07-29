@@ -12,20 +12,8 @@ data class SearchState(
     val mealName: MealName = MealName.BREAKFAST,
     val selectedTabIndex: Int = 0,
     val date: String,
-    val everythingState: EverythingState = EverythingState(),
-    val myRecipesState: MyRecipesState = MyRecipesState(),
-    val myProductsState: MyProductsState = MyProductsState()
-) {
-    data class EverythingState(
-        val searchItems: List<SearchItemParams> = emptyList(),
-        val barcode: String? = null
-    )
-
-    data class MyProductsState(
-        val searchItems: List<SearchItemParams> = emptyList()
-    )
-
-    data class MyRecipesState(
-        val searchItems: List<SearchItemParams> = emptyList()
-    )
-}
+    val barcode: String? = null,
+    val everythingSearchItems: List<SearchItemParams> = emptyList(),
+    val myRecipesSearchItems: List<SearchItemParams> = emptyList(),
+    val myProductsSearchItems: List<SearchItemParams> = emptyList()
+)

@@ -106,7 +106,8 @@ fun SearchScreen(
                     when (pagerScope) {
                         SearchTab.EVERYTHING.ordinal -> {
                             SearchEverythingSection(
-                                state = state.everythingState,
+                                searchItems = state.everythingSearchItems,
+                                isBarcodeLayoutVisible = state.barcode != null,
                                 onScanBarcodeClicked = {
                                     viewModel.onEvent(SearchEvent.ClickedScanButton)
                                 },
