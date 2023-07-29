@@ -81,7 +81,7 @@ class SearchViewModel @Inject constructor(
                 navigateTo(
                     NewProductScreenDestination(
                         mealName = _state.value.mealName,
-                        barcode = _state.value.everythingState.barcode,
+                        barcode = _state.value.barcode,
                         dateTransferObject = dateTransferObject
                     )
                 )
@@ -91,9 +91,7 @@ class SearchViewModel @Inject constructor(
                 _state.update {
                     it.copy(
                         isScannerVisible = true,
-                        everythingState = _state.value.everythingState.copy(
-                            barcode = null
-                        )
+                        barcode = null
                     )
                 }
             }
