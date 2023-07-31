@@ -14,16 +14,22 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.BackHandler
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.componens.SearchEverythingSection
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.componens.SearchList
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.componens.SearchProductSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.componens.SearchTopSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.shared.ScannerSection
+import com.gmail.bogumilmecel2.ui.components.base.ButtonParams
 import com.gmail.bogumilmecel2.ui.components.base.CustomIcon
+import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
 import com.gmail.bogumilmecel2.ui.components.base.IconVector
+import com.gmail.bogumilmecel2.ui.components.complex.SearchButtonParams
+import com.gmail.bogumilmecel2.ui.components.complex.SearchButtonRow
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 import com.ramcosta.composedestinations.annotation.Destination
 
@@ -42,6 +48,7 @@ fun SearchScreen(
 
     LaunchedEffect(key1 = true) {
         viewModel.initializeHistory()
+        viewModel.initializeData()
     }
 
     LaunchedEffect(
@@ -128,12 +135,44 @@ fun SearchScreen(
                         )
 
                         SearchTab.RECIPES.ordinal -> {
-//                            SearchRecipeSection(
-//                                recipes = state.myR,
-//                                onEvent = {
-//                                    viewModel.onEvent(it)
-//                                }
-//                            )
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(
+                                        top = 16.dp,
+                                        bottom = paddingValues.calculateBottomPadding()
+                                    )
+                            ) {
+                                SearchButtonRow(
+                                    buttons = listOf(
+                                        SearchButtonParams(
+                                            buttonParams = ButtonParams(
+                                                text = stringResource(id = R.string.search_browse_recipes),
+                                                onClick = {
+
+                                                }
+                                            ),
+                                            icon = IconVector.Search,
+                                        ),
+                                        SearchButtonParams(
+                                            buttonParams = ButtonParams(
+                                                text = stringResource(id = R.string.add_recipe),
+                                                onClick = {
+                                                    viewModel.onEvent(SearchEvent.ClickedCreateNewRecipe)
+                                                }
+                                            ),
+                                            icon = IconVector.Add
+                                        )
+                                    ),
+                                    buttonsColor = FitnessAppTheme.colors.Quaternary
+                                )
+
+                                HeightSpacer()
+
+                                if (state.myRecipesSearchItems.isNotEmpty()) {
+                                    SearchList(state.myRecipesSearchItems)
+                                }
+                            }
                         }
                     }
                 }
