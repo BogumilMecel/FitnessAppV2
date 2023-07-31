@@ -9,6 +9,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.ut
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.utils.TimeRequired
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_recipe.util.SelectedNutritionType
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.domain.model.NutritionData
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.componens.SearchItemParams
 
 data class NewRecipeState(
     val isDifficultyExpanded: Boolean = false,
@@ -21,10 +22,10 @@ data class NewRecipeState(
     val servings: String = "1",
     val name: String = "",
     val mealName: MealName,
-    val ingredients: List<Ingredient> = listOf(),
+    val ingredientsItemsParams: List<SearchItemParams> = listOf(),
     val prices: MutableMap<Ingredient, ProductPrice> = mutableMapOf(),
     val isSearchSectionVisible: Boolean = false,
-    val searchItems: List<Product> = emptyList(),
+    val searchItems: List<SearchItemParams> = emptyList(),
     val searchText: String = "",
     val isProductSectionVisible: Boolean = false,
     val isRecipeSectionVisible: Boolean = true,

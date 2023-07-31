@@ -14,3 +14,10 @@ fun SearchList(items: List<SearchItemParams>) {
         }
     }
 }
+
+@Composable
+fun ForEachSearchList(items: List<SearchItemParams>) {
+    items.forEach {
+        SearchItem(searchItemParams = it)
+    }
+}
