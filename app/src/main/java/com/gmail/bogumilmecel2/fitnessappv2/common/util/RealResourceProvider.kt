@@ -8,7 +8,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvi
 class RealResourceProvider(private val context: Context): ResourceProvider {
 
     override fun getString(@StringRes stringResId: Int, vararg args: Any): String {
-        return context.getString(stringResId, args)
+        return context.getString(stringResId, *args)
     }
 
     override fun getPluralString(@PluralsRes pluralResId: Int, quantity: Int): String {
