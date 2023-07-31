@@ -31,6 +31,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.dao.UserDiaryIt
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CalculateSelectedServingPriceUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CalculateServingPrice
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CreateSearchItemParamsFromRecipeUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GenerateDiaryItemDialogTitleUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetPriceUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetRecipePriceFromIngredientsUseCase
@@ -474,11 +475,13 @@ object AppModule {
     fun provideDiarySearchUseCases(
         diaryRepository: DiaryRepository,
         searchForProductsUseCase: SearchForProductsUseCase,
+        resourceProvider: ResourceProvider
     ): SearchDiaryUseCases =
         SearchDiaryUseCases(
             searchForProductsUseCase = searchForProductsUseCase,
             searchForProductWithBarcode = SearchForProductWithBarcode(diaryRepository),
-            searchForRecipes = SearchForRecipes(diaryRepository)
+            searchForRecipes = SearchForRecipes(diaryRepository),
+            createSearchItemParamsFromRecipeUseCase = CreateSearchItemParamsFromRecipeUseCase(resourceProvider)
         )
 
     @Singleton
