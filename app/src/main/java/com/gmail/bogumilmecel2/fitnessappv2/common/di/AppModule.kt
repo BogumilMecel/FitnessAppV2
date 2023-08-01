@@ -31,6 +31,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.dao.UserDiaryIt
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CalculateSelectedServingPriceUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CalculateServingPrice
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CreateSearchItemParamsFromIngredientUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CreateSearchItemParamsFromRecipeUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GenerateDiaryItemDialogTitleUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetPriceUseCase
@@ -333,6 +334,11 @@ object AppModule {
     ): GetUserCurrencyUseCase = GetUserCurrencyUseCase(
         cachedValuesProvider = cachedValuesProvider
     )
+
+    @Singleton
+    @Provides
+    fun provideCreateSearchItemParamsFromIngredientUseCase(resourceProvider: ResourceProvider): CreateSearchItemParamsFromIngredientUseCase =
+        CreateSearchItemParamsFromIngredientUseCase(resourceProvider = resourceProvider)
 
     @Singleton
     @Provides

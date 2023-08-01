@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -38,6 +37,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.Dropd
 import com.gmail.bogumilmecel2.fitnessappv2.components.DefaultCardBackground
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_recipe.components.RecipePriceSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.presentation.components.ProductNutritionSection
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.componens.ForEachSearchList
 import com.gmail.bogumilmecel2.ui.components.base.ButtonStyle
 import com.gmail.bogumilmecel2.ui.components.base.CustomBasicTextField
 import com.gmail.bogumilmecel2.ui.components.base.CustomButton
@@ -280,10 +280,7 @@ fun RecipeScreen(
                     )
                 ),
             content = {
-                Column(
-                    modifier = Modifier.padding(vertical = 5.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -295,8 +292,7 @@ fun RecipeScreen(
                             style = MaterialTheme.typography.body1.copy(
                                 fontWeight = FontWeight.Medium
                             ),
-                            modifier = Modifier
-                                .align(Alignment.Center)
+                            modifier = Modifier.align(Alignment.Center)
                         )
 
                         DropdownArrow(
@@ -309,32 +305,23 @@ fun RecipeScreen(
                     }
 
                     if (state.isIngredientsListExpanded) {
-
-                        Spacer(modifier = Modifier.height(5.dp))
-
                         Divider()
 
-                        val ingredients = state.entryData.recipe.ingredients
+                        ForEachSearchList(items = state.ingredientsParams)
 
-                        ingredients.forEach { ingredient ->
-//                            SearchItem(
-//                                weight = ingredient.weight,
-//                                unit = stringResource(id = ingredient.measurementUnit.getStringRes()),
-//                                name = ingredient.productName,
-//                                calories = ingredient.nutritionValues.calories,
-//                                background = Color.Transparent
-//                            )
-                        }
+                        HeightSpacer()
                     }
                 }
             }
         )
 
         if (state.isUserRecipeOwner) {
-            Spacer(modifier = Modifier.height(12.dp))
+            HeightSpacer(12.dp)
 
             CustomButton(
-                modifier = Modifier.padding(horizontal = 15.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
                 leftIcon = IconVector.Edit,
                 text = stringResource(id = R.string.recipe_edit),
                 buttonStyle = ButtonStyle.Secondary
