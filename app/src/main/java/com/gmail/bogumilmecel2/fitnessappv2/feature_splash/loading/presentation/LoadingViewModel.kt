@@ -9,6 +9,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.destinations.SummaryScreenDestinatio
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetUserDiaryAndSaveItLocallyUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_splash.domain.repository.LoadingRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,7 +21,7 @@ class LoadingViewModel @Inject constructor(
 ) : BaseViewModel<Unit, Unit>(state = Unit) {
 
     fun checkIfTokenIsPresent() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             getToken()?.let {
                 authenticateUser()
             } ?: run {

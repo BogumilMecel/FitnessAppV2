@@ -8,11 +8,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.toValidInt
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.DiaryScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.RecipeScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.RecipePrice
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CalculateSelectedServingPriceUseCase
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetRecipePriceFromIngredientsUseCase
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.CreatePieChartData
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.recipe.EditRecipeDiaryEntryUseCase
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.recipe.PostRecipeDiaryEntryUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.recipe.RecipeUseCases
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.domain.model.NutritionData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.update
@@ -22,11 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RecipeViewModel @Inject constructor(
-    private val createPieChartData: CreatePieChartData,
-    private val postRecipeDiaryEntryUseCase: PostRecipeDiaryEntryUseCase,
-    private val getRecipePriceFromIngredientsUseCase: GetRecipePriceFromIngredientsUseCase,
-    private val calculateSelectedServingPriceUseCase: CalculateSelectedServingPriceUseCase,
-    private val editRecipeDiaryEntryUseCase: EditRecipeDiaryEntryUseCase,
+    private val recipeUseCases: RecipeUseCases,
     private val savedStateHandle: SavedStateHandle
 ) : BaseViewModel<RecipeState, RecipeEvent>(
     state = with(RecipeScreenDestination.argsFrom(savedStateHandle = savedStateHandle)) {
@@ -79,7 +71,7 @@ class RecipeViewModel @Inject constructor(
             with(_state.value) {
                 when(entryData) {
                     is RecipeEntryData.Editing -> {
-                        editRecipeDiaryEntryUseCase(
+                        recipeUseCases.editRecipeDiaryEntryUseCase(
                             recipeDiaryEntryId = entryData.recipeDiaryEntryId,
                             newServingsStringValue = servings,
                             originalServingsStringValue = entryData.servings
@@ -88,7 +80,7 @@ class RecipeViewModel @Inject constructor(
                         }
                     }
                     is RecipeEntryData.Adding -> {
-                        postRecipeDiaryEntryUseCase(
+                        recipeUseCases.postRecipeDiaryEntryUseCase(
                             date = RecipeScreenDestination.argsFrom(savedStateHandle).entryData.dateTransferObject.realDate,
                             mealName = _state.value.entryData.mealName,
                             recipeId = _state.value.entryData.recipe.id,
@@ -121,11 +113,22 @@ class RecipeViewModel @Inject constructor(
             _state.update {
                 it.copy(
                     nutritionData = NutritionData(
-                        pieChartData = createPieChartData(nutritionValues = recipeNutritionValues)
+                        pieChartData = recipeUseCases.createPieChartData(nutritionValues = recipeNutritionValues)
                     ),
                 )
             }
             assignNutritionValues()
+        }
+        _state.update {
+            it.copy(
+                ingredientsParams = _state.value.entryData.recipe.ingredients.map { ingredient ->
+                    recipeUseCases.createSearchItemParamsFromIngredientUseCase(
+                        ingredient = ingredient,
+                        onClick = {},
+                        onLongClick = {}
+                    )
+                }
+            )
         }
     }
 
@@ -149,7 +152,7 @@ class RecipeViewModel @Inject constructor(
 
     private fun fetchRecipePrice() {
         viewModelScope.launch {
-            getRecipePriceFromIngredientsUseCase(
+            recipeUseCases.getRecipePriceFromIngredientsUseCase(
                 ingredients = _state.value.entryData.recipe.ingredients
             ).handle(showSnackbar = false) { response ->
                 _state.update {
@@ -172,7 +175,7 @@ class RecipeViewModel @Inject constructor(
             recipePrice?.let { recipePrice ->
                 _state.update {
                     it.copy(
-                        servingPrice = calculateSelectedServingPriceUseCase(
+                        servingPrice = recipeUseCases.calculateSelectedServingPriceUseCase(
                             recipeServings = it.entryData.recipe.servings,
                             selectedServings = servings,
                             totalPrice = recipePrice.totalPrice
