@@ -1,16 +1,21 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search
 
+import android.Manifest
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ExtendedFloatingActionButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -19,9 +24,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.BackHandler
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.ErrorUtils
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.componens.SearchEverythingSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.componens.SearchList
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.componens.SearchProductSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.componens.SearchTopSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.shared.ScannerSection
 import com.gmail.bogumilmecel2.ui.components.base.ButtonParams
@@ -31,12 +36,17 @@ import com.gmail.bogumilmecel2.ui.components.base.IconVector
 import com.gmail.bogumilmecel2.ui.components.complex.SearchButtonParams
 import com.gmail.bogumilmecel2.ui.components.complex.SearchButtonRow
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.PermissionStatus
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 import com.ramcosta.composedestinations.annotation.Destination
 
-@OptIn(ExperimentalFoundationApi::class)
-@Destination(
-    navArgsDelegate = SearchNavArguments::class
+@OptIn(
+    ExperimentalFoundationApi::class,
+    ExperimentalPermissionsApi::class
 )
+@Destination(navArgsDelegate = SearchNavArguments::class)
 @Composable
 fun SearchScreen(
     viewModel: SearchViewModel = hiltViewModel()
@@ -92,10 +102,7 @@ fun SearchScreen(
                 )
             }
         ) { paddingValues ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-            ) {
+            Column(modifier = Modifier.fillMaxSize()) {
                 SearchTopSection(
                     searchBarText = state.searchBarText,
                     mealName = stringResource(id = state.mealName.getDisplayValue()),
@@ -124,15 +131,70 @@ fun SearchScreen(
                             )
                         }
 
-                        SearchTab.PRODUCTS.ordinal -> SearchProductSection(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(paddingValues),
-                            onEvent = { event ->
-                                viewModel.onEvent(event)
-                            },
-                            state = state
-                        )
+                        SearchTab.PRODUCTS.ordinal -> {
+                            val cameraPermissionState = rememberPermissionState(
+                                permission = Manifest.permission.CAMERA
+                            )
+
+                            val cameraPermissionErrorMessage =
+                                stringResource(id = R.string.camera_permission_is_required_to_scan_a_product_barcode)
+
+                            LaunchedEffect(key1 = cameraPermissionState) {
+                                if (cameraPermissionState.status is PermissionStatus.Denied && state.hasPermissionDialogBeenShowed) {
+                                    ErrorUtils.showSnackbarWithMessage(cameraPermissionErrorMessage)
+                                }
+                            }
+
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(
+                                        bottom = paddingValues.calculateBottomPadding(),
+                                        top = 16.dp
+                                    )
+                            ) {
+                                SearchButtonRow(
+                                    buttons = listOf(
+                                        SearchButtonParams(
+                                            buttonParams = ButtonParams(
+                                                text = stringResource(id = R.string.scan_barcode),
+                                                onClick = {
+                                                    if (!cameraPermissionState.status.isGranted) {
+                                                        viewModel.onEvent(SearchEvent.ShowedPermissionDialog)
+                                                        cameraPermissionState.launchPermissionRequest()
+                                                    } else {
+                                                        viewModel.onEvent(SearchEvent.ClickedScanButton)
+                                                    }
+                                                }
+                                            ),
+                                            icon = IconVector.barcode(),
+                                        ),
+                                        SearchButtonParams(
+                                            buttonParams = ButtonParams(
+                                                text = stringResource(id = R.string.create_product),
+                                                onClick = {
+                                                    viewModel.onEvent(SearchEvent.ClickedNewProduct)
+                                                }
+                                            ),
+                                            icon = IconVector.Add
+                                        )
+                                    ),
+                                    buttonsColor = FitnessAppTheme.colors.Tertiary
+                                )
+
+                                HeightSpacer()
+
+                                Box(modifier = Modifier.fillMaxSize()) {
+                                    if (state.isLoading) {
+                                        Row(modifier = Modifier.align(Alignment.Center)) {
+                                            CircularProgressIndicator()
+                                        }
+                                    } else if (state.myProductsSearchItems.isNotEmpty()) {
+                                        SearchList(items = state.myProductsSearchItems)
+                                    }
+                                }
+                            }
+                        }
 
                         SearchTab.RECIPES.ordinal -> {
                             Column(

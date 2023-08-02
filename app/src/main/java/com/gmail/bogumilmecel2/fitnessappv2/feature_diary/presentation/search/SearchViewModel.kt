@@ -9,6 +9,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.destinations.NewRecipeScreenDestinat
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.ProductScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.RecipeScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.SearchScreenDestination
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductDiaryHistoryItem
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
@@ -37,6 +38,7 @@ class SearchViewModel @Inject constructor(
         SearchScreenDestination.argsFrom(savedStateHandle).dateTransferObject
     private var productHistory = emptyList<ProductDiaryHistoryItem>()
     private var userRecipes = emptyList<Recipe>()
+    private var userProducts = emptyList<Product>()
 
     override fun onEvent(event: SearchEvent) {
         when (event) {
@@ -146,6 +148,7 @@ class SearchViewModel @Inject constructor(
 
     fun initializeData() {
         fetchUserRecipes()
+        fetchUserProducts()
     }
 
     private fun fetchUserRecipes() {
@@ -161,6 +164,27 @@ class SearchViewModel @Inject constructor(
                                 onLongClick = {
                                     // TODO: Add on long click action to recipe
                                 }
+                            )
+                        }
+                    )
+                }
+            }
+        }
+    }
+
+    private fun fetchUserProducts() {
+        viewModelScope.launch(Dispatchers.IO) {
+            diaryRepository.getLocalUserProducts().handle { products ->
+                userProducts = products
+                _state.update {
+                    it.copy(
+                        myProductsSearchItems = products.map { product ->
+                            searchDiaryUseCases.createSearchItemParamsFromProductUseCase(
+                                product = product,
+                                onClick = {
+                                    onEvent(SearchEvent.ClickedProduct(product))
+                                },
+                                onLongClick = {}
                             )
                         }
                     )
