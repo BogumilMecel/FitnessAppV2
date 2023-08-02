@@ -32,7 +32,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.Diar
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CalculateSelectedServingPriceUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CalculateServingPrice
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CreateSearchItemParamsFromIngredientUseCase
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CreateSearchItemParamsFromRecipeUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CreateSearchItemParamsFromProductUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GenerateDiaryItemDialogTitleUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetPriceUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetRecipePriceFromIngredientsUseCase
@@ -42,10 +42,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_r
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.*
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.recipe.EditRecipeDiaryEntryUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.recipe.PostRecipeDiaryEntryUseCase
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.SearchDiaryUseCases
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.SearchForProductWithBarcode
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.SearchForProductsUseCase
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.SearchForRecipes
 import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.data.api.UserDataApi
 import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.data.repository.UserDataRepositoryImp
 import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.repository.UserDataRepository
@@ -457,22 +454,13 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideDiarySearchUseCases(
-        diaryRepository: DiaryRepository,
-        searchForProductsUseCase: SearchForProductsUseCase,
-        resourceProvider: ResourceProvider
-    ): SearchDiaryUseCases =
-        SearchDiaryUseCases(
-            searchForProductsUseCase = searchForProductsUseCase,
-            searchForProductWithBarcode = SearchForProductWithBarcode(diaryRepository),
-            searchForRecipes = SearchForRecipes(diaryRepository),
-            createSearchItemParamsFromRecipeUseCase = CreateSearchItemParamsFromRecipeUseCase(resourceProvider)
-        )
+    fun provideCalculateNutritionValuesPercentagesUseCase(): CalculateNutritionValuesPercentages =
+        CalculateNutritionValuesPercentages()
 
     @Singleton
     @Provides
-    fun provideCalculateNutritionValuesPercentagesUseCase(): CalculateNutritionValuesPercentages =
-        CalculateNutritionValuesPercentages()
+    fun provideCreateSearchItemParamsFromProductUseCase(resourceProvider: ResourceProvider): CreateSearchItemParamsFromProductUseCase =
+        CreateSearchItemParamsFromProductUseCase(resourceProvider = resourceProvider)
 
     @Singleton
     @Provides

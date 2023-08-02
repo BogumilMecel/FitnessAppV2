@@ -17,4 +17,7 @@ interface UserDiaryItemsDao {
 
     @Query("SELECT * from recipe")
     fun getUserRecipes(): List<Recipe>
+
+    @Query("SELECT * from product")
+    fun getUserProducts(): List<Product>
 }
