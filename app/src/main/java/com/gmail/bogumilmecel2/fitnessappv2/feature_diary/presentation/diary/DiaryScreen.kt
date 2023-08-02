@@ -22,7 +22,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.diary.com
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.diary.components.DiaryMealSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.diary.components.NutritionBottomSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.shared.ProductItemDialog
-import com.gmail.bogumilmecel2.ui.theme.LocalColor.Grey
+import com.gmail.bogumilmecel2.ui.theme.LocalColor.BackgroundSecondary
 import com.ramcosta.composedestinations.annotation.Destination
 
 @Destination
@@ -46,7 +46,7 @@ fun DiaryScreen(
                 currentNutritionValues = state.currentTotalNutritionValues,
                 wantedNutritionValues = state.wantedTotalNutritionValues,
                 modifier = Modifier
-                    .background(Grey)
+                    .background(BackgroundSecondary)
                     .padding(bottom = 5.dp)
             )
         }

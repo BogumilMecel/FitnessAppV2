@@ -4,9 +4,8 @@ import androidx.compose.material.Snackbar
 import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.gmail.bogumilmecel2.ui.theme.LocalColor.DarkGreyElevation6
+import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 
 @Composable
 fun CustomSnackbar(
@@ -15,8 +14,8 @@ fun CustomSnackbar(
     SnackbarHost(hostState = snackbarHostState, snackbar = { snackbarData ->
         Snackbar(
             snackbarData = snackbarData,
-            backgroundColor = DarkGreyElevation6,
-            contentColor = Color.White,
+            backgroundColor = FitnessAppTheme.colors.White,
+            contentColor = FitnessAppTheme.colors.Black,
             elevation = 4.dp
         )
     })

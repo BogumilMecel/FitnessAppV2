@@ -65,6 +65,6 @@ fun CustomDialog(
             }
         },
         shape = RoundedCornerShape(20.dp),
-        backgroundColor = FitnessAppTheme.colors.BackgroundLight
+        backgroundColor = FitnessAppTheme.colors.BackgroundQuaternary
     )
 }

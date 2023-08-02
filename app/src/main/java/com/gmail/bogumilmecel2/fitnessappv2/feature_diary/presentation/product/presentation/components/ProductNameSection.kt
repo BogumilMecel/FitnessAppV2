@@ -28,7 +28,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.components.DefaultCardBackground
 import com.gmail.bogumilmecel2.ui.components.base.CustomBasicTextField
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 import com.gmail.bogumilmecel2.ui.theme.LocalColor.BlueViolet3
-import com.gmail.bogumilmecel2.ui.theme.LocalColor.DarkGreyElevation
 
 @Composable
 fun ProductNameSection(
@@ -120,7 +119,7 @@ fun ProductNameSection(
                         ),
                         shape = RoundedCornerShape(25),
                         colors = ButtonDefaults.outlinedButtonColors(
-                            backgroundColor = DarkGreyElevation
+                            backgroundColor = FitnessAppTheme.colors.BackgroundTertiary
                         ),
                         modifier = Modifier
                             .testTag(i.toString() + stringResource(id = R.string.WEIGHT_BUTTON))

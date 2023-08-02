@@ -20,6 +20,8 @@ import androidx.compose.ui.unit.dp
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_product.NewProductEvent
 import com.gmail.bogumilmecel2.ui.components.base.CustomBasicTextField
+import com.gmail.bogumilmecel2.ui.components.base.CustomIcon
+import com.gmail.bogumilmecel2.ui.components.base.IconVector
 
 @Composable
 fun BarcodeSection(
@@ -61,11 +63,7 @@ fun BarcodeSection(
                     onEvent(NewProductEvent.ClickedScannerButton)
                 }
             ) {
-//                Icon(
-//                    painter = painterResource(id = R.drawable.barcode_scan),
-//                    contentDescription = stringResource(id = R.string.scan),
-//                    tint = MaterialTheme.colors.primary
-//                )
+                CustomIcon(icon = IconVector.barcode())
             }
         }
     }

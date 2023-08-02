@@ -30,7 +30,7 @@ import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
 import com.gmail.bogumilmecel2.ui.components.base.IconVector
 import com.gmail.bogumilmecel2.ui.components.base.WidthSpacer
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
-import com.gmail.bogumilmecel2.ui.theme.LocalColor.DarkGreyElevation2
+import com.gmail.bogumilmecel2.ui.theme.LocalColor.BackgroundTertiary
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -47,7 +47,7 @@ fun SubmitNewPriceDialog(
     ) {
         Column(
             modifier = Modifier
-                .background(color = DarkGreyElevation2)
+                .background(color = BackgroundTertiary)
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
