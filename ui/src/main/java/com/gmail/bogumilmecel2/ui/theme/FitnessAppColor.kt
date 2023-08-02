@@ -9,9 +9,10 @@ data class FitnessAppColors(
     val Quaternary: Color = LocalColor.Quaternary,
     val Tertiary: Color = LocalColor.Tertiary,
     val Secondary: Color = LocalColor.Secondary,
-    val Background: Color = LocalColor.BackgroundDark,
-    val BackgroundSecondary: Color = LocalColor.Grey,
-    val BackgroundLight: Color = LocalColor.DarkGreyElevation9,
+    val BackgroundPrimary: Color = LocalColor.BackgroundPrimary,
+    val BackgroundSecondary: Color = LocalColor.BackgroundSecondary,
+    val BackgroundTertiary: Color = LocalColor.BackgroundTertiary,
+    val BackgroundQuaternary: Color = LocalColor.BackgroundQuaternary,
     val ContentPrimary: Color = LocalColor.Grey50,
     val ContentSecondary: Color = LocalColor.Grey250,
     val ContentTertiary: Color = LocalColor.Grey400,
@@ -40,15 +41,11 @@ object LocalColor {
     val BlueViolet2 = Color(0xff9fa5fe)
     val BlueViolet3 = Color(0xff8f98fd)
 
-    val BackgroundDark = Color(0xFF121212)
-    val DarkGreyElevation9 = Color(0xFF323232)
-    val DarkGreyElevation6 = Color(0xFF2b2b2b)
-    val DarkGreyElevation3 = Color(0xFF292929)
-    val DarkGreyElevation2 = Color(0xFF272727)
-    val DarkGreyElevation1 = Color(0xFF181818)
-    val Grey = Color(0xFF1e1e1e)
+    val BackgroundPrimary = Color(0xFF121212)
+    val BackgroundQuaternary = Color(0xFF323232)
+    val BackgroundTertiary = Color(0xFF272727)
+    val BackgroundSecondary = Color(0xFF1e1e1e)
     val LightGrey = Color(0xFF383838)
-    val DarkGreyElevation = Color(0xFF242424)
 
     val Grey50 = Color(0xffeeeeee)
     val Grey250 = Color(0xFFbfbfbf)

@@ -45,7 +45,7 @@ fun NavHostGraph(
     val systemUiController = rememberSystemUiController()
     systemUiController.setSystemBarsColor(
         color = if (currentDestination == SearchScreenDestination.route) FitnessAppTheme.colors.BackgroundSecondary
-        else FitnessAppTheme.colors.Background
+        else FitnessAppTheme.colors.BackgroundPrimary
     )
 
     val scaffoldState = rememberScaffoldState()

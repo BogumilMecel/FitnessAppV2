@@ -12,7 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.gmail.bogumilmecel2.ui.theme.LocalColor.DarkGreyElevation9
+import com.gmail.bogumilmecel2.ui.theme.LocalColor.BackgroundQuaternary
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -30,7 +30,7 @@ fun DropdownItem(
         onClick = {
             onArrowClick()
         },
-        backgroundColor = DarkGreyElevation9
+        backgroundColor = BackgroundQuaternary
     ) {
         Box(
             modifier = Modifier
