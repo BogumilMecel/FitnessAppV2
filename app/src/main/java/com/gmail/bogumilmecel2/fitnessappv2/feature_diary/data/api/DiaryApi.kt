@@ -32,7 +32,7 @@ interface DiaryApi {
     @POST("/diaryEntries/product")
     suspend fun insertProductDiaryEntry(
         @Body productDiaryEntryPostRequest: ProductDiaryEntryPostRequest
-    ): Unit
+    )
 
     @POST("/diaryEntries/recipe")
     suspend fun insertRecipeDiaryEntry(
@@ -89,7 +89,9 @@ interface DiaryApi {
     ) : Recipe?
 
     @GET("/diaryEntries/history/product")
-    suspend fun getProductDiaryHistory(): List<ProductDiaryHistoryItem>
+    suspend fun getProductDiaryHistory(
+        @Query("latestEntryTimestamp") latestEntryTimestamp: Long
+    ): List<ProductDiaryHistoryItem>
 
     @GET("/diaryEntries/calories")
     suspend fun getCaloriesSum(
