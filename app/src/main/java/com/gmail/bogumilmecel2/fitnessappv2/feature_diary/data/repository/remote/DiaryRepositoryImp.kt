@@ -188,9 +188,15 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun getOfflineDiaryHistory(limit: Int): Resource<List<ProductDiaryHistoryItem>> {
+    override suspend fun getLocalDiaryHistory(limit: Int): Resource<List<ProductDiaryHistoryItem>> {
         return handleRequest {
             userDiaryItemsDao.getDiaryHistory(limit = limit)
+        }
+    }
+
+    override suspend fun getLocalDiaryHistory(): Resource<List<ProductDiaryHistoryItem>> {
+        return handleRequest {
+            userDiaryItemsDao.getDiaryHistory()
         }
     }
 
