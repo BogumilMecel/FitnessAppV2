@@ -47,7 +47,8 @@ interface DiaryRepository {
 
     suspend fun addNewRecipe(newRecipeRequest: NewRecipeRequest): Resource<Recipe>
     suspend fun getOnlineDiaryHistory(latestEntryTimestampValue: Long): Resource<List<ProductDiaryHistoryItem>>
-    suspend fun getOfflineDiaryHistory(limit: Int): Resource<List<ProductDiaryHistoryItem>>
+    suspend fun getLocalDiaryHistory(limit: Int): Resource<List<ProductDiaryHistoryItem>>
+    suspend fun getLocalDiaryHistory(): Resource<List<ProductDiaryHistoryItem>>
     suspend fun getUserDiaryItems(): Resource<UserDiaryItemsResponse>
     suspend fun insertUserProductsLocally(userProducts: List<Product>): Resource<Unit>
     suspend fun insertUserRecipesLocally(userRecipes: List<Recipe>): Resource<Unit>

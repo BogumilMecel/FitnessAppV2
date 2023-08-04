@@ -5,7 +5,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.Diar
 
 class GetUserDiaryHistoryAndSaveItLocallyUseCase(private val diaryRepository: DiaryRepository) {
     suspend operator fun invoke(): Resource<Unit> {
-        val latestDiaryHistoryItem = diaryRepository.getOfflineDiaryHistory(limit = 1).data?.firstOrNull()
+        val latestDiaryHistoryItem = diaryRepository.getLocalDiaryHistory(limit = 1).data?.firstOrNull()
 
         val diaryHistory = diaryRepository.getOnlineDiaryHistory(
             latestEntryTimestampValue = latestDiaryHistoryItem?.utcTimestamp ?: 0

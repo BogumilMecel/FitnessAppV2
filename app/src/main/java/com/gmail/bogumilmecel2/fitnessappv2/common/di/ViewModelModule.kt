@@ -4,6 +4,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvi
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CalculateSelectedServingPriceUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CalculateServingPrice
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CreateSearchItemParamsFromHistoryItemUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CreateSearchItemParamsFromIngredientUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CreateSearchItemParamsFromProductUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CreateSearchItemParamsFromRecipeUseCase
@@ -145,6 +146,7 @@ object ViewModelModule {
             searchForProductWithBarcode = SearchForProductWithBarcode(diaryRepository),
             searchForRecipes = SearchForRecipes(diaryRepository),
             createSearchItemParamsFromRecipeUseCase = CreateSearchItemParamsFromRecipeUseCase(resourceProvider),
-            createSearchItemParamsFromProductUseCase = createSearchItemParamsFromProductUseCase
+            createSearchItemParamsFromProductUseCase = createSearchItemParamsFromProductUseCase,
+            createSearchItemParamsFromHistoryItemUseCase = CreateSearchItemParamsFromHistoryItemUseCase(resourceProvider)
         )
 }

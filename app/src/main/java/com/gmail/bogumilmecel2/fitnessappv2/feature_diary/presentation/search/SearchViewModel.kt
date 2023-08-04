@@ -149,6 +149,7 @@ class SearchViewModel @Inject constructor(
     fun initializeData() {
         fetchUserRecipes()
         fetchUserProducts()
+        fetchHistory()
     }
 
     private fun fetchUserRecipes() {
@@ -185,6 +186,29 @@ class SearchViewModel @Inject constructor(
                                     onEvent(SearchEvent.ClickedProduct(product))
                                 },
                                 onLongClick = {}
+                            )
+                        }
+                    )
+                }
+            }
+        }
+    }
+
+    private fun fetchHistory() {
+        viewModelScope.launch(Dispatchers.IO) {
+            diaryRepository.getLocalDiaryHistory().handle { productHistoryItems ->
+                productHistory = productHistoryItems
+                _state.update {
+                    it.copy(
+                        everythingSearchItems = productHistoryItems.map { item ->
+                            searchDiaryUseCases.createSearchItemParamsFromHistoryItemUseCase(
+                                productDiaryHistoryItem = item,
+                                onClick = {
+
+                                },
+                                onLongClick = {
+
+                                }
                             )
                         }
                     )
