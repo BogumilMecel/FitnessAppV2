@@ -24,5 +24,8 @@ object MockConstants {
         const val NEGATIVE_RECIPE_SERVINGS = NEGATIVE_PRODUCT_DIARY_ENTRY_WEIGHT
         const val ZERO_RECIPE_SERVINGS = ZERO_PRODUCT_DIARY_ENTRY_WEIGHT
         const val INVALID_WEIGHT_OR_SERVINGS = "abc"
+
+        const val SERVING = "serving"
+        const val SERVINGS = "servings"
     }
 }
