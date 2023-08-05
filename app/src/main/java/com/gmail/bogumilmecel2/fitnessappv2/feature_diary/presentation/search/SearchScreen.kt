@@ -57,7 +57,6 @@ fun SearchScreen(
     }
 
     LaunchedEffect(key1 = true) {
-        viewModel.initializeHistory()
         viewModel.initializeData()
     }
 

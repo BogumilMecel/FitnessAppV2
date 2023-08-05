@@ -55,9 +55,9 @@ class SearchViewModel @Inject constructor(
             }
 
             is SearchEvent.ClickedSearch -> {
-                when (_state.value.selectedTabIndex) {
-                    0 -> searchForProducts()
-                    1 -> searchForRecipes()
+                when(_state.value.selectedTabIndex) {
+                    SearchTab.EVERYTHING.ordinal -> { searchForProducts() }
+                    else -> {}
                 }
             }
 
@@ -67,19 +67,11 @@ class SearchViewModel @Inject constructor(
                         searchBarText = event.text
                     )
                 }
-                clearItemsIfHistoryIsPresent()
+                handleSearchText(event.text)
             }
 
             is SearchEvent.ClickedProduct -> {
-                navigateTo(
-                    ProductScreenDestination(
-                        entryData = ProductEntryData.Adding(
-                            product = event.product,
-                            mealName = _state.value.mealName,
-                            dateTransferObject = dateTransferObject
-                        ),
-                    )
-                )
+                navigateToProductScreen(event.product)
             }
 
             is SearchEvent.ClickedNewProduct -> {
@@ -156,19 +148,7 @@ class SearchViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             diaryRepository.getLocalUserRecipes().handle { recipes ->
                 userRecipes = recipes
-                _state.update {
-                    it.copy(
-                        myRecipesSearchItems = recipes.map { recipe ->
-                            searchDiaryUseCases.createSearchItemParamsFromRecipeUseCase(
-                                recipe = recipe,
-                                onClick = { onEvent(SearchEvent.ClickedRecipe(recipe)) },
-                                onLongClick = {
-                                    // TODO: Add on long click action to recipe
-                                }
-                            )
-                        }
-                    )
-                }
+                createSearchItemParamsFromRecipeUseCase(items = recipes)
             }
         }
     }
@@ -177,19 +157,7 @@ class SearchViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             diaryRepository.getLocalUserProducts().handle { products ->
                 userProducts = products
-                _state.update {
-                    it.copy(
-                        myProductsSearchItems = products.map { product ->
-                            searchDiaryUseCases.createSearchItemParamsFromProductUseCase(
-                                product = product,
-                                onClick = {
-                                    onEvent(SearchEvent.ClickedProduct(product))
-                                },
-                                onLongClick = {}
-                            )
-                        }
-                    )
-                }
+                createMyProductsSearchItemParamsFromProductUseCase(items = products)
             }
         }
     }
@@ -198,74 +166,116 @@ class SearchViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             diaryRepository.getLocalDiaryHistory().handle { productHistoryItems ->
                 productHistory = productHistoryItems
-                _state.update {
-                    it.copy(
-                        everythingSearchItems = productHistoryItems.map { item ->
-                            searchDiaryUseCases.createSearchItemParamsFromHistoryItemUseCase(
-                                productDiaryHistoryItem = item,
-                                onClick = {
-
-                                },
-                                onLongClick = {
-
-                                }
-                            )
-                        }
-                    )
-                }
+                createSearchItemParamsFromHistoryItemUseCase(productHistoryItems)
             }
         }
     }
 
-    fun initializeHistory() {
-        viewModelScope.launch(Dispatchers.IO) {
-//            diaryRepository.getProductDiaryHistory().handle {
-//                productHistory = history
-//                _state.update {
-//                    it.copy(
-//                        productItems = productHistory
-//                    )
-//                }
-//            }
+    private fun handleSearchText(searchText: String) {
+        when(_state.value.selectedTabIndex) {
+            SearchTab.EVERYTHING.ordinal -> {
+                filterEverythingItems(searchText)
+            }
+
+            SearchTab.RECIPES.ordinal -> {
+                filterUserRecipes(searchText)
+            }
+
+            SearchTab.PRODUCTS.ordinal -> {
+                filterUserProducts(searchText)
+            }
+
+            else -> {}
         }
     }
 
-    private fun clearItemsIfHistoryIsPresent() {
-//        with(_state.value) {
-//            when(currentTabIndex) {
-//                0 -> {
-//                    if (productHistory.isNotEmpty()) {
-//                        _state.update {
-//                            it.copy(
-//                                productItems = productHistory.filter { product ->
-//                                    product.name.contains(productSearchBarText)
-//                                }
-//                            )
-//                        }
-//                    }
-//                }
-//                else -> {
-//
-//                }
-//            }
-//        }
+    private fun filterEverythingItems(searchText: String) {
+        createSearchItemParamsFromHistoryItemUseCase(
+            items = productHistory.filter {
+                it.productName.contains(other = searchText, ignoreCase = true)
+            }
+        )
     }
 
-    private fun searchForRecipes() {
-        showOrHideLoader()
-        viewModelScope.launch {
-            searchDiaryUseCases.searchForRecipes(_state.value.searchBarText)
-                .handle(
-                    finally = {
-                        showOrHideLoader(isLoadingVisible = false)
-                    }
-                ) { recipes ->
-//                    _state.update {
-//                        it.copy(
-//                            recipes = recipes
-//                        )
-//                    }
+    private fun filterUserRecipes(searchText: String) {
+        createSearchItemParamsFromRecipeUseCase(
+            items = userRecipes.filter {
+                it.name.contains(other = searchText, ignoreCase = true)
+            }
+        )
+    }
+
+    private fun filterUserProducts(searchText: String) {
+        createMyProductsSearchItemParamsFromProductUseCase(
+            items = userProducts.filter {
+                it.name.contains(other = searchText, ignoreCase = true)
+            }
+        )
+    }
+
+    private fun createSearchItemParamsFromHistoryItemUseCase(items: List<ProductDiaryHistoryItem>) {
+        _state.update {
+            it.copy(
+                everythingSearchItems = items.map { item ->
+                    searchDiaryUseCases.createSearchItemParamsFromHistoryItemUseCase(
+                        productDiaryHistoryItem = item,
+                        onClick = { getProduct(productId = item.productId) },
+                        onLongClick = {}
+                    )
                 }
+            )
+        }
+    }
+
+    private fun createEverythingSearchItemParamsFromProductUseCase(items: List<Product>) {
+        _state.update {
+            it.copy(
+                everythingSearchItems = items.map { product ->
+                    searchDiaryUseCases.createSearchItemParamsFromProductUseCase(
+                        product = product,
+                        onClick = { onEvent(SearchEvent.ClickedProduct(product)) },
+                        onLongClick = {}
+                    )
+                }
+            )
+        }
+    }
+
+    private fun createMyProductsSearchItemParamsFromProductUseCase(items: List<Product>) {
+        _state.update {
+            it.copy(
+                myProductsSearchItems = items.map { product ->
+                    searchDiaryUseCases.createSearchItemParamsFromProductUseCase(
+                        product = product,
+                        onClick = { onEvent(SearchEvent.ClickedProduct(product)) },
+                        onLongClick = {}
+                    )
+                }
+            )
+        }
+    }
+
+    private fun createSearchItemParamsFromRecipeUseCase(items: List<Recipe>) {
+        _state.update {
+            it.copy(
+                myRecipesSearchItems = items.map { recipe ->
+                    searchDiaryUseCases.createSearchItemParamsFromRecipeUseCase(
+                        recipe = recipe,
+                        onClick = { onEvent(SearchEvent.ClickedRecipe(recipe)) },
+                        onLongClick = {}
+                    )
+                }
+            )
+        }
+    }
+
+    private fun getProduct(productId: String) {
+        viewModelScope.launch {
+            diaryRepository.getProduct(productId = productId).handle { product ->
+                product?.let {
+                    navigateToProductScreen(product = it)
+                }
+            }
         }
     }
 
@@ -277,22 +287,18 @@ class SearchViewModel @Inject constructor(
                     showOrHideLoader(isLoadingVisible = false)
                 }
             ) { products ->
-//                _state.update {
-//                    it.copy(
-//                        productItems = products
-//                    )
-//                }
+                createEverythingSearchItemParamsFromProductUseCase(products)
             }
         }
     }
 
     private fun showOrHideLoader(isLoadingVisible: Boolean = true) {
-//        _state.update {
-//            it.copy(
-//                isLoading = isLoadingVisible,
-//                barcode = null
-//            )
-//        }
+        _state.update {
+            it.copy(
+                isLoading = isLoadingVisible,
+                barcode = null
+            )
+        }
     }
 
     private fun onBarcodeScanned(barcode: String) {
@@ -306,12 +312,12 @@ class SearchViewModel @Inject constructor(
             searchDiaryUseCases.searchForProductWithBarcode(barcode).handle(
                 onError = { errorMessage ->
                     if (errorMessage == resourceProvider.getString(R.string.there_is_no_product_with_provided_barcode_do_you_want_to_add_it)) {
-//                        _state.update {
-//                            it.copy(
-//                                barcode = barcode,
-//                                isLoading = false
-//                            )
-//                        }
+                        _state.update {
+                            it.copy(
+                                barcode = barcode,
+                                isLoading = false
+                            )
+                        }
                     } else {
                         showSnackbarError(errorMessage)
                     }
@@ -330,6 +336,18 @@ class SearchViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun navigateToProductScreen(product: Product) {
+        navigateTo(
+            ProductScreenDestination(
+                entryData = ProductEntryData.Adding(
+                    product = product,
+                    mealName = _state.value.mealName,
+                    dateTransferObject = dateTransferObject
+                ),
+            )
+        )
     }
 }
 
