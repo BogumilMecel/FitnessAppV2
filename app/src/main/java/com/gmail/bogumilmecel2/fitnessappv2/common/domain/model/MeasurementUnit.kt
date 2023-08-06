@@ -15,6 +15,6 @@ enum class MeasurementUnit {
 
     fun getStringResWithValue() = when(this) {
         GRAMS -> R.string.measurement_unit_gram_with_value
-        MILLILITERS -> R.string.measurement_unit_gram_with_value
+        MILLILITERS -> R.string.measurement_unit_milliliter_with_value
     }
 }

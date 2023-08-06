@@ -10,10 +10,10 @@ import kotlinx.serialization.Serializable
 @Entity
 @Serializable
 data class ProductDiaryHistoryItem(
-    @PrimaryKey val productId: String,
-    @ColumnInfo(name = "product_name") val productName: String,
-    @ColumnInfo(name = "nutrition_values") val nutritionValues: NutritionValues,
-    @ColumnInfo(name = "weight") val weight: Int,
-    @ColumnInfo(name = "measurement_unit") val measurementUnit: MeasurementUnit,
-    @ColumnInfo(name = "utc_timestamp") val utcTimestamp: Long
+    @PrimaryKey val productId: String = "",
+    @ColumnInfo(name = "product_name") val productName: String = "",
+    @ColumnInfo(name = "nutrition_values") val nutritionValues: NutritionValues = NutritionValues(),
+    @ColumnInfo(name = "weight") val weight: Int = 0,
+    @ColumnInfo(name = "measurement_unit") val measurementUnit: MeasurementUnit = MeasurementUnit.GRAMS,
+    @ColumnInfo(name = "utc_timestamp") val utcTimestamp: Long = 0
 )
