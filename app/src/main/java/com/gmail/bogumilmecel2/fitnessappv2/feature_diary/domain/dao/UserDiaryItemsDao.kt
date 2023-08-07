@@ -33,4 +33,13 @@ interface UserDiaryItemsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertDiaryHistoryItem(productDiaryHistoryItem: ProductDiaryHistoryItem)
+
+    @Query("DELETE FROM product")
+    fun deleteUserProducts()
+
+    @Query("DELETE FROM recipe")
+    fun deleteUserRecipes()
+
+    @Query("DELETE FROM recipe")
+    fun deleteDiaryHistory()
 }

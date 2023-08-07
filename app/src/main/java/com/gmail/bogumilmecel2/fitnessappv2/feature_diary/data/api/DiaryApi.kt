@@ -90,7 +90,8 @@ interface DiaryApi {
 
     @GET("/diaryEntries/history/product")
     suspend fun getProductDiaryHistory(
-        @Query("latestEntryTimestamp") latestEntryTimestamp: Long
+        @Query("page") page: Int,
+        @Query("search_text") searchText: String?,
     ): List<ProductDiaryHistoryItem>
 
     @GET("/diaryEntries/calories")
