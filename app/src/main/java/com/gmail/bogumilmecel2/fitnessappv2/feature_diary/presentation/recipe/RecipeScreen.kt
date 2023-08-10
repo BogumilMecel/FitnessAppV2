@@ -37,7 +37,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.Dropd
 import com.gmail.bogumilmecel2.fitnessappv2.components.DefaultCardBackground
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_recipe.components.RecipePriceSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.presentation.components.ProductNutritionSection
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.componens.ForEachSearchList
+import com.gmail.bogumilmecel2.ui.components.complex.ForEachSearchList
 import com.gmail.bogumilmecel2.ui.components.base.ButtonStyle
 import com.gmail.bogumilmecel2.ui.components.base.CustomBasicTextField
 import com.gmail.bogumilmecel2.ui.components.base.CustomButton

@@ -10,7 +10,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.MockConstants.Diary.mockMeasu
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.MeasurementUnit
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductDiaryHistoryItem
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.componens.SearchItemParams
+import com.gmail.bogumilmecel2.ui.components.complex.SearchItemParams
 import org.junit.Test
 import kotlin.test.assertEquals
 

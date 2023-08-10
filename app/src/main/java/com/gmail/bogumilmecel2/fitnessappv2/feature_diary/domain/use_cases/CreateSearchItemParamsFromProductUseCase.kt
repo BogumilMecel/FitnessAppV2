@@ -3,7 +3,7 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.componens.SearchItemParams
+import com.gmail.bogumilmecel2.ui.components.complex.SearchItemParams
 
 class CreateSearchItemParamsFromProductUseCase(private val resourceProvider: ResourceProvider) {
     operator fun invoke(

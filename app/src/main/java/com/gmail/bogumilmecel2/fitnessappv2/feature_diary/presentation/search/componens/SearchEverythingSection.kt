@@ -19,6 +19,8 @@ import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
 import com.gmail.bogumilmecel2.ui.components.base.IconVector
 import com.gmail.bogumilmecel2.ui.components.complex.SearchButtonParams
 import com.gmail.bogumilmecel2.ui.components.complex.SearchButtonRow
+import com.gmail.bogumilmecel2.ui.components.complex.SearchItemParams
+import com.gmail.bogumilmecel2.ui.components.complex.SearchList
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 
 @Composable
