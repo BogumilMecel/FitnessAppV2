@@ -26,7 +26,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.BackHandler
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.ErrorUtils
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.componens.SearchEverythingSection
-import com.gmail.bogumilmecel2.ui.components.complex.SearchList
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.componens.SearchTopSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.shared.ScannerSection
 import com.gmail.bogumilmecel2.ui.components.base.ButtonParams
@@ -35,6 +34,7 @@ import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
 import com.gmail.bogumilmecel2.ui.components.base.IconVector
 import com.gmail.bogumilmecel2.ui.components.complex.SearchButtonParams
 import com.gmail.bogumilmecel2.ui.components.complex.SearchButtonRow
+import com.gmail.bogumilmecel2.ui.components.complex.SearchList
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionStatus
@@ -121,6 +121,7 @@ fun SearchScreen(
                             SearchEverythingSection(
                                 searchItems = state.everythingSearchItems,
                                 isBarcodeLayoutVisible = state.barcode != null,
+                                isLoading = state.isLoading,
                                 onScanBarcodeClicked = {
                                     viewModel.onEvent(SearchEvent.ClickedScanButton)
                                 },

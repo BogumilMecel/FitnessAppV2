@@ -194,34 +194,9 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun getLocalDiaryHistory(limit: Int): Resource<List<ProductDiaryHistoryItem>> {
-        return handleRequest {
-            userDiaryItemsDao.getDiaryHistory(limit = limit)
-        }
-    }
-
-    override suspend fun getLocalDiaryHistory(): Resource<List<ProductDiaryHistoryItem>> {
-        return handleRequest {
-            userDiaryItemsDao.getDiaryHistory()
-        }
-    }
-
-    override suspend fun insertLocalHistoryItem(productDiaryHistoryItem: ProductDiaryHistoryItem): Resource<Unit> {
-        return handleRequest {
-            userDiaryItemsDao.insertDiaryHistoryItem(productDiaryHistoryItem)
-        }
-    }
-
-    override suspend fun insertLocalHistoryItems(productDiaryHistoryItems: List<ProductDiaryHistoryItem>): Resource<Unit> {
-        return handleRequest {
-            userDiaryItemsDao.insertDiaryHistoryItems(productDiaryHistoryItems)
-        }
-    }
-
     override suspend fun clearLocalData(): Resource<Unit> {
         return handleRequest {
             userDiaryItemsDao.deleteUserProducts()
-            userDiaryItemsDao.deleteDiaryHistory()
             userDiaryItemsDao.deleteUserRecipes()
         }
     }
