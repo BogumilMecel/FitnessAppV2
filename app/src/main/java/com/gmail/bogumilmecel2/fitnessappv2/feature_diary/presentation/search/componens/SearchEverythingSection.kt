@@ -17,6 +17,7 @@ import com.gmail.bogumilmecel2.ui.components.base.ButtonParams
 import com.gmail.bogumilmecel2.ui.components.base.CustomButton
 import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
 import com.gmail.bogumilmecel2.ui.components.base.IconVector
+import com.gmail.bogumilmecel2.ui.components.base.LoaderColumn
 import com.gmail.bogumilmecel2.ui.components.complex.SearchButtonParams
 import com.gmail.bogumilmecel2.ui.components.complex.SearchButtonRow
 import com.gmail.bogumilmecel2.ui.components.complex.SearchItemParams
@@ -28,12 +29,13 @@ fun SearchEverythingSection(
     searchItems: List<SearchItemParams>,
     isBarcodeLayoutVisible: Boolean,
     onScanBarcodeClicked: () -> Unit,
+    isLoading: Boolean,
     onBarcodeAddProductClicked: () -> Unit,
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 16.dp)
+            .padding(top = 16.dp),
     ) {
         SearchButtonRow(
             buttons = listOf(
@@ -84,7 +86,9 @@ fun SearchEverythingSection(
                     )
                 }
             } else if (searchItems.isNotEmpty()) {
-                SearchList(searchItems)
+                LoaderColumn(isLoading = isLoading) {
+                    SearchList(searchItems)
+                }
             }
         }
     }

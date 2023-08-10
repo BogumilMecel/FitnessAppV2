@@ -19,6 +19,8 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.recipe.Re
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator.navigate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -39,6 +41,9 @@ class SearchViewModel @Inject constructor(
     private var productHistory = emptyList<ProductDiaryHistoryItem>()
     private var userRecipes = emptyList<Recipe>()
     private var userProducts = emptyList<Product>()
+    private var everythingPage = 1
+    private var everythingFirstRequest: Boolean = true
+    private var everythingJob: Job? = null
 
     override fun onEvent(event: SearchEvent) {
         when (event) {
@@ -135,6 +140,10 @@ class SearchViewModel @Inject constructor(
                     )
                 )
             }
+
+            is SearchEvent.ReachedListEnd -> {
+
+            }
         }
     }
 
@@ -163,18 +172,43 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun fetchHistory() {
-        viewModelScope.launch(Dispatchers.IO) {
-            diaryRepository.getLocalDiaryHistory().handle { productHistoryItems ->
-                productHistory = productHistoryItems
+        requestHistory(searchText = null)
+    }
+
+    private fun requestHistory(searchText: String?) {
+        everythingJob?.cancel()
+        everythingJob = viewModelScope.launch {
+            setLoader(true)
+            if (!everythingFirstRequest) {
+                delay(1000)
+            }
+            diaryRepository.getOnlineDiaryHistory(
+                page = everythingPage,
+                searchText = searchText
+            ).handle(
+                finally = {
+                    setLoader(false)
+                }
+            ) { productHistoryItems ->
+                if (everythingFirstRequest) {
+                    productHistory = productHistoryItems
+                    everythingFirstRequest = false
+                }
                 createSearchItemParamsFromHistoryItemUseCase(productHistoryItems)
             }
         }
     }
 
+    private fun setLoader(isLoading: Boolean) {
+        _state.update { it.copy(isLoading = isLoading) }
+    }
+
     private fun handleSearchText(searchText: String) {
         when(_state.value.selectedTabIndex) {
             SearchTab.EVERYTHING.ordinal -> {
-                filterEverythingItems(searchText)
+                everythingPage = 1
+                productHistory
+                requestHistory(searchText)
             }
 
             SearchTab.RECIPES.ordinal -> {
@@ -293,31 +327,23 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun showOrHideLoader(isLoadingVisible: Boolean = true) {
+        setLoader(isLoadingVisible)
         _state.update {
             it.copy(
-                isLoading = isLoadingVisible,
                 barcode = null
             )
         }
     }
 
     private fun onBarcodeScanned(barcode: String) {
-        _state.update {
-            it.copy(
-                isScannerVisible = false,
-                isLoading = true
-            )
-        }
+        setLoader(true)
+        _state.update { it.copy(isScannerVisible = false) }
         viewModelScope.launch(Dispatchers.IO) {
             searchDiaryUseCases.searchForProductWithBarcode(barcode).handle(
                 onError = { errorMessage ->
                     if (errorMessage == resourceProvider.getString(R.string.there_is_no_product_with_provided_barcode_do_you_want_to_add_it)) {
-                        _state.update {
-                            it.copy(
-                                barcode = barcode,
-                                isLoading = false
-                            )
-                        }
+                        setLoader(false)
+                        _state.update { it.copy(barcode = barcode) }
                     } else {
                         showSnackbarError(errorMessage)
                     }

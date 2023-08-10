@@ -50,14 +50,10 @@ interface DiaryRepository {
         page: Int,
         searchText: String?
     ): Resource<List<ProductDiaryHistoryItem>>
-    suspend fun getLocalDiaryHistory(limit: Int): Resource<List<ProductDiaryHistoryItem>>
-    suspend fun getLocalDiaryHistory(): Resource<List<ProductDiaryHistoryItem>>
     suspend fun getUserDiaryItems(): Resource<UserDiaryItemsResponse>
     suspend fun insertUserProductsLocally(userProducts: List<Product>): Resource<Unit>
     suspend fun insertUserRecipesLocally(userRecipes: List<Recipe>): Resource<Unit>
     suspend fun getLocalUserRecipes(): Resource<List<Recipe>>
     suspend fun getLocalUserProducts(): Resource<List<Product>>
-    suspend fun insertLocalHistoryItems(productDiaryHistoryItems: List<ProductDiaryHistoryItem>): Resource<Unit>
-    suspend fun insertLocalHistoryItem(productDiaryHistoryItem: ProductDiaryHistoryItem): Resource<Unit>
     suspend fun clearLocalData(): Resource<Unit>
 }

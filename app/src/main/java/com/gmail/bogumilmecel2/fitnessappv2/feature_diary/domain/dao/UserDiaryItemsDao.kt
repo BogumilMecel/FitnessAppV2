@@ -5,7 +5,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductDiaryHistoryItem
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 
 @Dao
@@ -22,24 +21,9 @@ interface UserDiaryItemsDao {
     @Query("SELECT * from product")
     fun getUserProducts(): List<Product>
 
-    @Query("SELECT * FROM ProductDiaryHistoryItem ORDER BY ProductDiaryHistoryItem.utc_timestamp DESC LIMIT :limit")
-    fun getDiaryHistory(limit: Int): List<ProductDiaryHistoryItem>
-
-    @Query("SELECT * FROM ProductDiaryHistoryItem ORDER BY ProductDiaryHistoryItem.utc_timestamp DESC")
-    fun getDiaryHistory(): List<ProductDiaryHistoryItem>
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertDiaryHistoryItems(productDiaryHistoryItems: List<ProductDiaryHistoryItem>)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertDiaryHistoryItem(productDiaryHistoryItem: ProductDiaryHistoryItem)
-
     @Query("DELETE FROM product")
     fun deleteUserProducts()
 
     @Query("DELETE FROM recipe")
     fun deleteUserRecipes()
-
-    @Query("DELETE FROM recipe")
-    fun deleteDiaryHistory()
 }
