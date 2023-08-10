@@ -1,4 +1,4 @@
-package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.componens
+package com.gmail.bogumilmecel2.ui.components.complex
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
