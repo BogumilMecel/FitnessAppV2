@@ -14,11 +14,13 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductDi
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductPrice
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.RecipePriceResponse
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.UserDiaryItemsResponse
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntryPostRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.product.NewPriceRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.product.NewProductRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.NewRecipeRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Recipe
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.RecipePriceRequest
@@ -198,6 +200,46 @@ class DiaryRepositoryImp(
         return handleRequest {
             userDiaryItemsDao.deleteUserProducts()
             userDiaryItemsDao.deleteUserRecipes()
+        }
+    }
+
+    override suspend fun getDiaryEntries(
+        latestProductDiaryEntryTimestamp: Long?,
+        latestRecipeDiaryEntryTimestamp: Long?
+    ): Resource<DiaryEntriesResponse> {
+        return handleRequest {
+            diaryApi.getDiaryEntries(
+                latestProductDiaryEntryTimestamp = latestProductDiaryEntryTimestamp,
+                latestRecipeDiaryEntryTimestamp = latestRecipeDiaryEntryTimestamp
+            )
+        }
+    }
+
+    override suspend fun getLocalDiaryEntries(): Resource<DiaryEntriesResponse> {
+        return handleRequest {
+            DiaryEntriesResponse(
+                productDiaryEntries = userDiaryItemsDao.getProductDiaryEntries(),
+                recipeDiaryEntries = userDiaryItemsDao.getRecipeDiaryEntries()
+            )
+        }
+    }
+
+    override suspend fun insertLocalDiaryEntries(diaryEntriesResponse: DiaryEntriesResponse): Resource<Unit> {
+        return handleRequest {
+            userDiaryItemsDao.insertProductDiaryEntries(diaryEntriesResponse.productDiaryEntries)
+            userDiaryItemsDao.insertRecipeDiaryEntries(diaryEntriesResponse.recipeDiaryEntries)
+        }
+    }
+
+    override suspend fun getLatestProductDiaryEntry(): Resource<ProductDiaryEntry?> {
+        return handleRequest {
+            userDiaryItemsDao.getLatestProductDiaryEntry().firstOrNull()
+        }
+    }
+
+    override suspend fun getLatestRecipeDiaryEntry(): Resource<RecipeDiaryEntry?> {
+        return handleRequest {
+            userDiaryItemsDao.getLatestRecipeDiaryEntry().firstOrNull()
         }
     }
 }
