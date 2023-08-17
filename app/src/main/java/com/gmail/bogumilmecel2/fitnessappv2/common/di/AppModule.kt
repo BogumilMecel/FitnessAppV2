@@ -118,8 +118,13 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideDefaultInterceptor(sharedPreferences: SharedPreferences): DefaultInterceptor =
-        DefaultInterceptor(sharedPreferences = sharedPreferences)
+    fun provideDefaultInterceptor(
+        @ApplicationContext context: Context,
+        sharedPreferences: SharedPreferences
+    ): DefaultInterceptor = DefaultInterceptor(
+        sharedPreferences = sharedPreferences,
+        applicationContext = context
+    )
 
     @Singleton
     @Provides
