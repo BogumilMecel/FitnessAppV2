@@ -29,12 +29,6 @@ interface DiaryApi {
         @Query("date") date: String
     ): DiaryEntriesResponse
 
-    @GET("/diaryEntries/experimental")
-    suspend fun getDiaryEntries(
-        @Query(ApiConstants.Headers.LATEST_PRODUCT_DIARY_ENTRY_UTC_TIMESTAMP) latestProductDiaryEntryTimestamp: Long?,
-        @Query(ApiConstants.Headers.LATEST_RECIPE_DIARY_ENTRY_UTC_TIMESTAMP) latestRecipeDiaryEntryTimestamp: Long?
-    ): DiaryEntriesResponse
-
     @POST("/diaryEntries/product")
     suspend fun insertProductDiaryEntry(
         @Body productDiaryEntryPostRequest: ProductDiaryEntryPostRequest

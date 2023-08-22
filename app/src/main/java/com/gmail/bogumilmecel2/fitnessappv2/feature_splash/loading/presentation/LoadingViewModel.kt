@@ -8,7 +8,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.destinations.LoginScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.SummaryScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetUserDiaryAndSaveItLocallyUseCase
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.GetDiaryEntriesExperimentalUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_splash.domain.repository.LoadingRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -20,8 +19,7 @@ class LoadingViewModel @Inject constructor(
     private val loadingRepository: LoadingRepository,
     private val getToken: GetToken,
     private val getUserDiaryAndSaveItLocallyUseCase: GetUserDiaryAndSaveItLocallyUseCase,
-    private val diaryRepository: DiaryRepository,
-    private val getDiaryEntriesExperimentalUseCase: GetDiaryEntriesExperimentalUseCase
+    private val diaryRepository: DiaryRepository
 ) : BaseViewModel<Unit, Unit>(state = Unit) {
 
     fun checkIfTokenIsPresent() {
@@ -47,7 +45,6 @@ class LoadingViewModel @Inject constructor(
                     cachedValuesProvider.saveUser(user = user)
                     diaryRepository.clearLocalData()
                     getUserDiaryAndSaveItLocallyUseCase()
-                    getDiaryEntriesExperimentalUseCase()
                     navigateWithPopUp(destination = SummaryScreenDestination)
                 }
 
