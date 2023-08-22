@@ -1,15 +1,15 @@
 buildscript {
     ext {
-        camerax_version = "1.3.0-alpha07"
+        camerax_version = "1.3.0-beta02"
     }
 
     ext{
-        daggerVersion = "2.44.2"
+        daggerVersion = "2.46.1"
     }
 
     dependencies{
         classpath("com.google.dagger:hilt-android-gradle-plugin:$daggerVersion")
-        classpath "org.jetbrains.kotlin:kotlin-serialization:1.8.10"
+        classpath "org.jetbrains.kotlin:kotlin-serialization:1.9.0"
     }
 
     repositories{
@@ -21,10 +21,10 @@ buildscript {
 
 
 plugins {
-    id 'com.android.application' version '7.4.0' apply false
-    id 'com.android.library' version '7.4.0' apply false
-    id 'org.jetbrains.kotlin.android' version '1.8.0' apply false
-    id 'org.jetbrains.kotlin.plugin.serialization' version '1.8.10'
+    id 'com.android.application' version '8.1.0' apply false
+    id 'com.android.library' version '8.1.0' apply false
+    id 'org.jetbrains.kotlin.android' version '1.9.0' apply false
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.9.0'
 }
 
 task clean(type: Delete) {
