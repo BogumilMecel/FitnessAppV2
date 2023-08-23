@@ -8,6 +8,7 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Login
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Password
@@ -98,56 +99,60 @@ sealed class IconVector(
         )
     }
 
-    object Heart: IconVector(
+    data object Heart: IconVector(
         imageVector = Icons.Default.FavoriteBorder,
         contentDescriptionId = R.string.favorite
     )
-    object HeartFilled: IconVector(
+    data object HeartFilled: IconVector(
         imageVector = Icons.Filled.Favorite,
         contentDescriptionId = R.string.favorite_filled
     )
-    object Back: IconVector(
+    data object Back: IconVector(
         imageVector = Icons.Default.ArrowBack,
         contentDescriptionId = R.string.back
     )
-    object Search: IconVector(
+    data object Search: IconVector(
         imageVector = Icons.Default.Search,
         contentDescriptionId = R.string.search
     )
-    object Cancel: IconVector(
+    data object Cancel: IconVector(
         imageVector = Icons.Default.Search,
         contentDescriptionId = R.string.cancel
     )
-    object Add: IconVector(
+    data object Add: IconVector(
         imageVector = Icons.Default.Add,
         contentDescriptionId = R.string.add
     )
-    object Logout: IconVector(
+    data object Logout: IconVector(
         imageVector = Icons.Default.Logout,
         contentDescriptionId = R.string.log_out
     )
-    object Save: IconVector(
+    data object Save: IconVector(
         imageVector = Icons.Default.Save,
         contentDescriptionId = R.string.save
     )
-    object Edit: IconVector(
+    data object Edit: IconVector(
         imageVector = Icons.Default.Edit,
         contentDescriptionId = R.string.edit
     )
-    object Email: IconVector(
+    data object Email: IconVector(
         imageVector = Icons.Default.Email,
         contentDescriptionId = R.string.email
     )
-    object Password: IconVector(
+    data object Password: IconVector(
         imageVector = Icons.Default.Password,
         contentDescriptionId = R.string.password
     )
-    object Login: IconVector(
+    data object Login: IconVector(
         imageVector = Icons.Default.Login,
         contentDescriptionId = R.string.login
     )
-    object Account: IconVector(
+    data object Account: IconVector(
         imageVector = Icons.Default.AccountCircle,
         contentDescriptionId = R.string.account
+    )
+    data object Info: IconVector(
+        imageVector = Icons.Default.Info,
+        contentDescriptionId = R.string.info
     )
 }
