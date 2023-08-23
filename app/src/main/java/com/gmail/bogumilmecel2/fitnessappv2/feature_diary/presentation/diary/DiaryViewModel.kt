@@ -169,15 +169,13 @@ class DiaryViewModel @Inject constructor(
     }
 
     private fun calculateMealNutritionValues(mealName: MealName) {
-        if (mealName != null) {
-            val mutableMealNutritionValues = _state.value.mealNutritionValues.toMutableMap()
-            mutableMealNutritionValues[mealName] =
-                calculateNutritionValuesFromDiaryEntriesUseCase(diaryEntries = _state.value.getDiaryEntries(mealName))
-            _state.update {
-                it.copy(
-                    mealNutritionValues = mutableMealNutritionValues
-                )
-            }
+        val mutableMealNutritionValues = _state.value.mealNutritionValues.toMutableMap()
+        mutableMealNutritionValues[mealName] =
+            calculateNutritionValuesFromDiaryEntriesUseCase(diaryEntries = _state.value.getDiaryEntries(mealName))
+        _state.update {
+            it.copy(
+                mealNutritionValues = mutableMealNutritionValues
+            )
         }
     }
 

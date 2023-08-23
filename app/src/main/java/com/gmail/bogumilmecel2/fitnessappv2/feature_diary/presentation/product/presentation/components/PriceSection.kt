@@ -6,16 +6,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,7 +21,11 @@ import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.components.DefaultCardBackground
 import com.gmail.bogumilmecel2.fitnessappv2.components.defaultRoundedCornerShapeValue
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductPrice
+import com.gmail.bogumilmecel2.ui.components.base.CustomIcon
+import com.gmail.bogumilmecel2.ui.components.base.CustomIconButton
 import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
+import com.gmail.bogumilmecel2.ui.components.base.IconButtonParams
+import com.gmail.bogumilmecel2.ui.components.base.IconVector
 import com.gmail.bogumilmecel2.ui.components.base.WidthSpacer
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 import com.gmail.bogumilmecel2.ui.theme.LocalColor.BlueViolet3
@@ -45,40 +42,29 @@ fun PriceSection(
     DefaultCardBackground(
         modifier = modifier,
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-        ) {
+        Column(modifier = Modifier.fillMaxWidth()) {
             Box(modifier = Modifier.fillMaxWidth()) {
                 Text(
                     text = stringResource(id = R.string.prices),
                     style = FitnessAppTheme.typography.HeaderSmall,
                     textAlign = TextAlign.Center,
+                    color = FitnessAppTheme.colors.ContentPrimary,
                     modifier = Modifier
                         .padding(16.dp)
                         .align(Alignment.Center)
                 )
 
-                IconButton(
-                    onClick = {
-                        onInfoButtonClicked()
-                    },
+                CustomIconButton(
+                    params = IconButtonParams(
+                        iconVector = IconVector.Info,
+                        onClick = { onInfoButtonClicked() }
+                    ),
                     modifier = Modifier.align(Alignment.CenterEnd)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Info,
-                        contentDescription = "info",
-                        tint = MaterialTheme.colors.primary
-                    )
-                }
+                )
             }
 
             productPrice?.let {
-                Divider(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(1.dp)
-                )
+                HorizontalDivider()
 
                 Row(
                     modifier = Modifier
@@ -91,7 +77,7 @@ fun PriceSection(
                     ) {
                         PriceItem(
                             priceValue = productPrice.valueFor100Calories,
-                            dividerColor = MaterialTheme.colors.primary,
+                            dividerColor = FitnessAppTheme.colors.Primary,
                             rightTextFirstLine = "100",
                             rightTextSecondLine = stringResource(id = R.string.calories)
                         )
@@ -139,21 +125,16 @@ fun PriceSection(
             } ?: kotlin.run {
                 Text(
                     text = stringResource(id = R.string.product_no_price),
-                    style = MaterialTheme.typography.body2.copy(
-                        color = FitnessAppTheme.colors.ContentSecondary,
-                        textAlign = TextAlign.Center
-                    ),
+                    style = FitnessAppTheme.typography.ParagraphMedium,
+                    color = FitnessAppTheme.colors.ContentSecondary,
+                    textAlign = TextAlign.Center,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 16.dp)
                 )
             }
 
-            Divider(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(1.dp)
-            )
+            HorizontalDivider()
 
             Row(
                 modifier = Modifier
@@ -171,18 +152,14 @@ fun PriceSection(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "add",
-                    tint = MaterialTheme.colors.primary
-                )
+                CustomIcon(icon = IconVector.Add)
 
                 WidthSpacer(width = 8.dp)
 
                 Text(
                     text = stringResource(id = R.string.submit_new_price),
-                    style = MaterialTheme.typography.button,
-                    color = MaterialTheme.colors.primary
+                    style = FitnessAppTheme.typography.Button,
+                    color = FitnessAppTheme.colors.Primary
                 )
             }
         }

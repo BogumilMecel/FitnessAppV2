@@ -15,5 +15,6 @@
     <string name="login">Login icon</string>
     <string name="account">Account icon</string>
     <string name="barcode">Barcode icon</string>
+    <string name="info">Info icon</string>
 <!--    Icon description ↑ ↑ ↑-->
 </resources>

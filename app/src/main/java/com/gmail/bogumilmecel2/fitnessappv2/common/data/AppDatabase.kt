@@ -8,7 +8,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.utils.DiaryConverters
 
-@Database(entities = [Recipe::class, Product::class], version = 1)
+@Database(entities = [Recipe::class, Product::class], version = 1, exportSchema = false)
 @TypeConverters(DiaryConverters::class)
 abstract class AppDatabase : RoomDatabase() {
     companion object {
