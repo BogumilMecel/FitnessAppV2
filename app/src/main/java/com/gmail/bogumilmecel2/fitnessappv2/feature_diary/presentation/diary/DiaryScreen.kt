@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
@@ -93,19 +94,19 @@ fun DiaryScreen(
                     },
                 )
 
-                val mealNames = MealName.values()
-
                 LazyColumn {
-                    items(mealNames.size) {
-                        DiaryMealSection(
-                            mealName = mealNames[it],
-                            diaryEntries = state.getDiaryEntries(mealName = mealNames[it]),
-                            nutritionValues = state.mealNutritionValues[mealNames[it]],
-                            wantedNutritionValues = state.wantedTotalNutritionValues,
-                            onEvent = { event ->
-                                viewModel.onEvent(event)
-                            }
-                        )
+                    items(MealName.values()) { mealName ->
+                        state.diaryEntries[mealName]?.let { meal ->
+                            DiaryMealSection(
+                                mealName = mealName,
+                                diaryEntries = meal.diaryEntries,
+                                nutritionValues = meal.nutritionValues,
+                                wantedNutritionValues = state.wantedTotalNutritionValues,
+                                onEvent = { event ->
+                                    viewModel.onEvent(event)
+                                }
+                            )
+                        }
                     }
                 }
             }

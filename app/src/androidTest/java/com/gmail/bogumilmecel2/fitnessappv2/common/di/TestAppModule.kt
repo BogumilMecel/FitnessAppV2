@@ -5,10 +5,12 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.data.navigation.ComposeCustom
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.CachedValuesProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.Currency
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.UserInformation
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.navigation.Navigator
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.repository.TokenRepository
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.CalculateNutritionValuesPercentages
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.CheckIfWeightIsValidUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.GetToken
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.GetUserCurrencyUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.SaveNutritionValues
@@ -29,14 +31,15 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.data.MockDiaryReposito
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CalculateSelectedServingPriceUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CalculateServingPrice
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CreateSearchItemParamsFromIngredientUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CreateSearchItemParamsFromProductUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CreateSearchItemParamsFromRecipeUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GenerateDiaryItemDialogTitleUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetPriceUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetRecipePriceFromIngredientsUseCase
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.CalculateNutritionValuesFromDiaryEntriesUseCase
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.CalculateNutritionValuesFromNutritionValuesUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.SumNutritionValuesUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.CreateLongClickedDiaryItemParamsUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.DeleteDiaryEntry
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.UpdateDiaryEntriesListAfterDelete
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_recipe.AddNewRecipe
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_recipe.CalculateRecipeNutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_recipe.NewRecipeUseCases
@@ -56,10 +59,13 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.model.In
 import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.repository.UserDataRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.use_cases.SaveIntroductionInformationUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_splash.domain.repository.LoadingRepository
-import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.model.LogEntry
+import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.model.WeightDialogsRequest
+import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.use_case.CheckIfShouldAskForWeightDialogsUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.use_case.GetCaloriesSum
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.use_case.SummaryUseCases
+import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.model.NewWeightEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.model.NewWeightEntryResponse
+import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.model.WeightDialogs
 import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.model.WeightEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.repository.WeightRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.use_case.AddWeightEntryUseCase
@@ -113,10 +119,7 @@ object TestAppModule {
     fun provideEditRecipeDiaryEntryUseCase(
         diaryRepository: DiaryRepository,
         resourceProvider: ResourceProvider
-    ): EditRecipeDiaryEntryUseCase = EditRecipeDiaryEntryUseCase(
-        diaryRepository = diaryRepository,
-        resourceProvider = resourceProvider
-    )
+    ): EditRecipeDiaryEntryUseCase = EditRecipeDiaryEntryUseCase(diaryRepository = diaryRepository)
 
     @Singleton
     @Provides
@@ -184,13 +187,8 @@ object TestAppModule {
 
     @Provides
     @Singleton
-    fun provideCalculateNutritionValuesFromDiaryEntriesUseCase(): CalculateNutritionValuesFromDiaryEntriesUseCase =
-        CalculateNutritionValuesFromDiaryEntriesUseCase()
-
-    @Provides
-    @Singleton
-    fun provideCalculateNutritionValuesFromNutritionValuesUseCase(): CalculateNutritionValuesFromNutritionValuesUseCase =
-        CalculateNutritionValuesFromNutritionValuesUseCase()
+    fun provideCalculateNutritionValuesFromNutritionValuesUseCase(): SumNutritionValuesUseCase =
+        SumNutritionValuesUseCase()
 
     @Provides
     @Singleton
@@ -267,15 +265,39 @@ object TestAppModule {
         ) {
         }
 
-        override suspend fun getLogStreak() = LogEntry()
+        override suspend fun getLogStreak(): Int = 1
 
         override suspend fun getLatestWeightEntry() = null
 
-        override suspend fun getUser() = null
+        override suspend fun getUser(): User = User()
 
         override suspend fun getUserCurrency() = Currency.PLN
 
         override suspend fun saveUser(user: User) {
+        }
+
+        override suspend fun updateWeightDialogs(weightDialogs: WeightDialogs) {
+            TODO("Not yet implemented")
+        }
+
+        override suspend fun updateLocalLastTimeAskedForWeightDialogs(date: String) {
+            TODO("Not yet implemented")
+        }
+
+        override suspend fun getLocalLastTimeAskedForWeightDialogs(): String? {
+            TODO("Not yet implemented")
+        }
+
+        override suspend fun getLocalLastTimeShowedWeightPicker(): String? {
+            TODO("Not yet implemented")
+        }
+
+        override suspend fun setLocalLastTimeShowedWeightPicker(date: String) {
+            TODO("Not yet implemented")
+        }
+
+        override suspend fun updateUserInformation(userInformation: UserInformation) {
+            TODO("Not yet implemented")
         }
     }
 
@@ -340,7 +362,18 @@ object TestAppModule {
     @Singleton
     @Provides
     fun provideWeightRepository(): WeightRepository = object : WeightRepository {
-        override suspend fun addWeightEntry(weightEntry: WeightEntry): Resource<NewWeightEntryResponse> {
+        override suspend fun addWeightEntry(
+            newWeightEntryRequest: NewWeightEntryRequest,
+            timezone: String
+        ): Resource<NewWeightEntryResponse> {
+            TODO("Not yet implemented")
+        }
+
+        override suspend fun checkIfShouldAskForWeightDialogs(): Resource<Unit> {
+            TODO("Not yet implemented")
+        }
+
+        override suspend fun handleWeightDialogsQuestion(weightDialogsRequest: WeightDialogsRequest): Resource<WeightDialogs> {
             TODO("Not yet implemented")
         }
     }
@@ -352,23 +385,17 @@ object TestAppModule {
         weightRepository: WeightRepository,
     ): SummaryUseCases = SummaryUseCases(
         getCaloriesSum = GetCaloriesSum(diaryRepository = diaryRepository),
-        addWeightEntryUseCase = AddWeightEntryUseCase(weightRepository = weightRepository),
+        addWeightEntryUseCase = AddWeightEntryUseCase(
+            weightRepository = weightRepository,
+            checkIfWeightIsValidUseCase = CheckIfWeightIsValidUseCase()
+        ),
+        checkIfShouldAskForWeightDialogsUseCase = CheckIfShouldAskForWeightDialogsUseCase(weightRepository = weightRepository),
     )
 
     @Singleton
     @Provides
-    fun provideUpdateDiaryEntriesListAfterDelete(): UpdateDiaryEntriesListAfterDelete =
-        UpdateDiaryEntriesListAfterDelete()
-
-    @Singleton
-    @Provides
-    fun provideSearchForProductsUseCase(
-        diaryRepository: DiaryRepository,
-        getDiaryHistory: GetDiaryHistory
-    ): SearchForProductsUseCase = SearchForProductsUseCase(
-        diaryRepository = diaryRepository,
-        getDiaryHistory = getDiaryHistory
-    )
+    fun provideSearchForProductsUseCase(diaryRepository: DiaryRepository): SearchForProductsUseCase
+    = SearchForProductsUseCase(diaryRepository = diaryRepository)
 
     @Singleton
     @Provides
@@ -389,16 +416,11 @@ object TestAppModule {
     @Singleton
     @Provides
     fun provideLoadingRepository(): LoadingRepository = object : LoadingRepository {
-        override suspend fun authenticateUser(authenticationRequest: AuthenticationRequest): Resource<User?> {
+        override suspend fun authenticateUser(): Resource<User?> {
             TODO("Not yet implemented")
         }
-    }
 
-    @Singleton
-    @Provides
-    fun provideGetDiaryHistoryUseCase(
-        diaryRepository: DiaryRepository,
-    ): GetDiaryHistory = GetDiaryHistory(repository = diaryRepository)
+    }
 
     @Singleton
     @Provides
@@ -410,14 +432,27 @@ object TestAppModule {
     fun provideDiarySearchUseCases(
         diaryRepository: DiaryRepository,
         searchForProductsUseCase: SearchForProductsUseCase,
-        getDiaryHistory: GetDiaryHistory
     ): SearchDiaryUseCases =
         SearchDiaryUseCases(
             searchForProductsUseCase = searchForProductsUseCase,
-            getDiaryHistory = getDiaryHistory,
             searchForProductWithBarcode = SearchForProductWithBarcode(diaryRepository),
             searchForRecipes = SearchForRecipes(diaryRepository)
         )
+
+    @Singleton
+    @Provides
+    fun provideCreateSearchItemParamsFromProductUseCase(resourceProvider: ResourceProvider): CreateSearchItemParamsFromProductUseCase =
+        CreateSearchItemParamsFromProductUseCase(resourceProvider = resourceProvider)
+
+    @Singleton
+    @Provides
+    fun provideCreateSearchItemParamsFromIngredientUseCase(resourceProvider: ResourceProvider): CreateSearchItemParamsFromIngredientUseCase =
+        CreateSearchItemParamsFromIngredientUseCase(resourceProvider = resourceProvider)
+
+    @Singleton
+    @Provides
+    fun provideCreateSearchItemParamsFromRecipeUseCase(resourceProvider: ResourceProvider): CreateSearchItemParamsFromRecipeUseCase =
+        CreateSearchItemParamsFromRecipeUseCase(resourceProvider = resourceProvider)
 
     @Singleton
     @Provides

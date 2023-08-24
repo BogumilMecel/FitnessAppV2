@@ -4,7 +4,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.DiaryItem
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.MealName
 
 sealed interface DiaryEvent {
-    object ChangedDate : DiaryEvent
     object DismissedDialog : DiaryEvent
     object ClickedEditInDialog : DiaryEvent
     object ClickedDeleteInDialog : DiaryEvent

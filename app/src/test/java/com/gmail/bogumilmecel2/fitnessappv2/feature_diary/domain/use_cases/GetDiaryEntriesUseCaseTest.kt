@@ -4,38 +4,26 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.BaseTest
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.DiaryEntriesResponse
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.GetDiaryEntriesListFromResponseUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.GetDiaryEntriesUseCase
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.SortDiaryEntriesUseCase
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.Mockito
-import java.util.*
+import java.util.Date
 import kotlin.test.assertTrue
 
-@OptIn(ExperimentalCoroutinesApi::class)
 internal class GetDiaryEntriesUseCaseTest: BaseTest() {
 
     @Mock
     private lateinit var mockDiaryRepository: DiaryRepository
 
     private lateinit var getDiaryEntriesUseCase: GetDiaryEntriesUseCase
-    private lateinit var sortDiaryEntriesUseCase: SortDiaryEntriesUseCase
-    private val getDiaryEntriesListFromResponseUseCase = GetDiaryEntriesListFromResponseUseCase()
 
     @Before
     fun setUp() {
         mockDiaryRepository = Mockito.mock(DiaryRepository::class.java)
-        sortDiaryEntriesUseCase = SortDiaryEntriesUseCase()
-        getDiaryEntriesUseCase = GetDiaryEntriesUseCase(
-            diaryRepository = mockDiaryRepository,
-            sortDiaryEntriesUseCase = sortDiaryEntriesUseCase,
-            getDiaryEntriesListFromResponseUseCase = getDiaryEntriesListFromResponseUseCase
-        )
-        resourceProvider = resourceProvider
+        getDiaryEntriesUseCase = GetDiaryEntriesUseCase(diaryRepository = mockDiaryRepository)
     }
 
     @Test
