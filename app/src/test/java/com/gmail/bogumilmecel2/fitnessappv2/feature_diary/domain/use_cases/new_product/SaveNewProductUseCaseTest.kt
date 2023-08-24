@@ -6,8 +6,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.product.NutritionValuesIn
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.SortDiaryEntriesUseCase
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
@@ -16,19 +14,16 @@ import org.mockito.Mockito
 import org.mockito.kotlin.any
 import kotlin.random.Random
 
-@OptIn(ExperimentalCoroutinesApi::class)
 internal class SaveNewProductUseCaseTest: BaseTest() {
 
     @Mock
     private lateinit var mockDiaryRepository: DiaryRepository
 
     private lateinit var saveNewProductUseCase: SaveNewProductUseCase
-    private lateinit var sortDiaryEntriesUseCase: SortDiaryEntriesUseCase
 
     @Before
     fun setUp() = runTest {
         mockDiaryRepository = Mockito.mock(DiaryRepository::class.java)
-        sortDiaryEntriesUseCase = SortDiaryEntriesUseCase()
         Mockito.`when`(mockDiaryRepository.saveNewProduct(any())).thenReturn(
             Resource.Success(
                 data = Product()

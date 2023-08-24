@@ -253,13 +253,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideCalculateNutritionValuesFromDiaryEntriesUseCase(): CalculateNutritionValuesFromDiaryEntriesUseCase =
-        CalculateNutritionValuesFromDiaryEntriesUseCase()
-
-    @Provides
-    @Singleton
-    fun provideCalculateNutritionValuesFromNutritionValuesUseCase(): CalculateNutritionValuesFromNutritionValuesUseCase =
-        CalculateNutritionValuesFromNutritionValuesUseCase()
+    fun provideCalculateNutritionValuesFromNutritionValuesUseCase(): SumNutritionValuesUseCase =
+        SumNutritionValuesUseCase()
 
     @Provides
     @Singleton
@@ -339,11 +334,6 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideCreateSearchItemParamsFromIngredientUseCase(resourceProvider: ResourceProvider): CreateSearchItemParamsFromIngredientUseCase =
-        CreateSearchItemParamsFromIngredientUseCase(resourceProvider = resourceProvider)
-
-    @Singleton
-    @Provides
     fun provideGetPriceUseCase(
         diaryRepository: DiaryRepository,
         getUserCurrencyUseCase: GetUserCurrencyUseCase
@@ -420,11 +410,6 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideUpdateDiaryEntriesListAfterDelete(): UpdateDiaryEntriesListAfterDelete =
-        UpdateDiaryEntriesListAfterDelete()
-
-    @Singleton
-    @Provides
     fun provideSearchForProductsUseCase(diaryRepository: DiaryRepository): SearchForProductsUseCase =
         SearchForProductsUseCase(diaryRepository = diaryRepository)
 
@@ -466,6 +451,11 @@ object AppModule {
     @Provides
     fun provideCreateSearchItemParamsFromProductUseCase(resourceProvider: ResourceProvider): CreateSearchItemParamsFromProductUseCase =
         CreateSearchItemParamsFromProductUseCase(resourceProvider = resourceProvider)
+
+    @Singleton
+    @Provides
+    fun provideCreateSearchItemParamsFromIngredientUseCase(resourceProvider: ResourceProvider): CreateSearchItemParamsFromIngredientUseCase =
+        CreateSearchItemParamsFromIngredientUseCase(resourceProvider = resourceProvider)
 
     @Singleton
     @Provides
