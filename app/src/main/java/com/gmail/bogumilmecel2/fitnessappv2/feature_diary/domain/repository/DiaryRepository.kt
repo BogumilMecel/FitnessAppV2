@@ -21,6 +21,10 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.Recip
 
 interface DiaryRepository {
     suspend fun getDiaryEntries(date: String): Resource<DiaryEntriesResponse>
+    suspend fun getDiaryEntriesExperimental(): Resource<DiaryEntriesResponse>
+    suspend fun getDiaryEntriesComplete(): Resource<DiaryEntriesResponse>
+    suspend fun getOfflineDiaryEntries(date: String): Resource<DiaryEntriesResponse>
+    suspend fun getDiaryEntriesCount(): Resource<Int>
     suspend fun searchForProducts(searchText: String): Resource<List<Product>>
     suspend fun searchForProductWithBarcode(barcode: String): Resource<Product?>
     suspend fun searchForRecipes(searchText: String): Resource<List<Recipe>>

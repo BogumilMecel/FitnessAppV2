@@ -8,9 +8,12 @@ import com.gmail.bogumilmecel2.fitnessappv2.destinations.LoginScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.SummaryScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetUserDiaryAndSaveItLocallyUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetUserDiaryEntriesExperimentalUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_splash.domain.repository.LoadingRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,6 +22,7 @@ class LoadingViewModel @Inject constructor(
     private val loadingRepository: LoadingRepository,
     private val getToken: GetToken,
     private val getUserDiaryAndSaveItLocallyUseCase: GetUserDiaryAndSaveItLocallyUseCase,
+    private val getUserDiaryEntriesExperimentalUseCase: GetUserDiaryEntriesExperimentalUseCase,
     private val diaryRepository: DiaryRepository
 ) : BaseViewModel<Unit, Unit>(state = Unit) {
 
@@ -44,7 +48,17 @@ class LoadingViewModel @Inject constructor(
                 user.nutritionValues != null && user.userInformation != null -> {
                     cachedValuesProvider.saveUser(user = user)
                     diaryRepository.clearLocalData()
-                    getUserDiaryAndSaveItLocallyUseCase()
+
+                    val userItemsJob = viewModelScope.async(Dispatchers.IO) {
+                        getUserDiaryAndSaveItLocallyUseCase()
+                    }
+
+                    val userDiaryJob = viewModelScope.async(Dispatchers.IO) {
+                        getUserDiaryEntriesExperimentalUseCase()
+                    }
+
+                    awaitAll(userItemsJob, userDiaryJob)
+
                     navigateWithPopUp(destination = SummaryScreenDestination)
                 }
 

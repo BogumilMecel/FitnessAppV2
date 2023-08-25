@@ -10,6 +10,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.Creat
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CreateSearchItemParamsFromRecipeUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetRecipePriceFromIngredientsUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetUserDiaryAndSaveItLocallyUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetUserDiaryEntriesExperimentalUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.GetDiaryEntriesUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_product.SaveNewProductUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_recipe.AddNewRecipe
@@ -50,6 +51,12 @@ object ViewModelModule {
         diaryRepository = diaryRepository,
         resourceProvider = resourceProvider
     )
+
+    @ViewModelScoped
+    @Provides
+    fun provideGetUserDiaryEntriesExperimentalUseCase(
+        diaryRepository: DiaryRepository
+    ): GetUserDiaryEntriesExperimentalUseCase = GetUserDiaryEntriesExperimentalUseCase(diaryRepository)
 
     @ViewModelScoped
     @Provides
