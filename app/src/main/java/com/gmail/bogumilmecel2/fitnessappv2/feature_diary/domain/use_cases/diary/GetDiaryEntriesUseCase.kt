@@ -6,7 +6,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.Diar
 
 class GetDiaryEntriesUseCase(private val diaryRepository: DiaryRepository) {
     suspend operator fun invoke(date: String): Resource<List<DiaryItem>> {
-        return when (val resource = diaryRepository.getDiaryEntries(date = date)) {
+        return when (val resource = diaryRepository.getOfflineDiaryEntries(date = date)) {
             is Resource.Success -> {
                 Resource.Success(
                     data = buildList {

@@ -24,6 +24,7 @@ interface DiaryRepository {
     suspend fun getDiaryEntriesExperimental(): Resource<DiaryEntriesResponse>
     suspend fun getDiaryEntriesComplete(): Resource<DiaryEntriesResponse>
     suspend fun getOfflineDiaryEntries(date: String): Resource<DiaryEntriesResponse>
+    suspend fun insertOfflineDiaryEntries(diaryEntriesResponse: DiaryEntriesResponse): Resource<Unit>
     suspend fun getDiaryEntriesCount(): Resource<Int>
     suspend fun searchForProducts(searchText: String): Resource<List<Product>>
     suspend fun searchForProductWithBarcode(barcode: String): Resource<Product?>
