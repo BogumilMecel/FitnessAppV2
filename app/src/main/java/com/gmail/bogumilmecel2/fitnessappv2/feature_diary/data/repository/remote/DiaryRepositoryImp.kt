@@ -227,4 +227,13 @@ class DiaryRepositoryImp(
             diaryApi.getDiaryEntriesComplete()
         }
     }
+
+    override suspend fun insertOfflineDiaryEntries(diaryEntriesResponse: DiaryEntriesResponse): Resource<Unit> {
+        return handleRequest {
+            with(diaryEntriesResponse) {
+                userDiaryItemsDao.insertRecipeDiaryEntries(recipeDiaryEntries)
+                userDiaryItemsDao.insertProductDiaryEntries(productDiaryEntries)
+            }
+        }
+    }
 }

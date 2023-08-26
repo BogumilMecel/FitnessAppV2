@@ -1,21 +1,18 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases
 
-import android.util.Log
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.TAG
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 
 class GetUserDiaryEntriesExperimentalUseCase(private val diaryRepository: DiaryRepository) {
     suspend operator fun invoke(): Resource<Unit> {
         val diaryEntriesCount = diaryRepository.getDiaryEntriesCount().data ?: return Resource.Error()
 
-        if (diaryEntriesCount <= 0) {
-            val diaryEntriesResponse = diaryRepository.getDiaryEntriesComplete()
-            Log.e(TAG, diaryEntriesResponse.toString())
+        val diaryEntriesResponse = if (diaryEntriesCount <= 0) {
+            diaryRepository.getDiaryEntriesComplete()
         } else {
-            val diaryEntriesResponse = diaryRepository.getDiaryEntriesExperimental()
-        }
+            diaryRepository.getDiaryEntriesExperimental()
+        }.data ?: return Resource.Error()
 
-        return Resource.Success(Unit)
+        return diaryRepository.insertOfflineDiaryEntries(diaryEntriesResponse)
     }
 }
