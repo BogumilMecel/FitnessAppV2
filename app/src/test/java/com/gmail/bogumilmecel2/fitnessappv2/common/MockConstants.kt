@@ -11,6 +11,7 @@ object MockConstants {
     object Diary {
         const val PRODUCT_ID_11 = "11"
         const val PRODUCT_DIARY_ENTRY_ID_21 = "21"
+        const val RECIPE_ID_1 = "recipe_id_1"
         const val RECIPE_DIARY_ENTRY_ID_41 = "41"
         const val RECIPE_NAME_1 = "Rice And Chicken"
         const val RECIPE_NAME_2 = "Chicken And Rice"

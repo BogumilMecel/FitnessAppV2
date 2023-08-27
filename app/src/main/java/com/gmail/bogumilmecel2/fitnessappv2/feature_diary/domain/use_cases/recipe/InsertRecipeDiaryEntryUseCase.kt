@@ -21,14 +21,16 @@ class PostRecipeDiaryEntryUseCase(
         val servingsValue = servingsString.toValidInt() ?: return getServingsResourceError()
         if (servingsValue <= 0) return getServingsResourceError()
 
-        return diaryRepository.addRecipeDiaryEntry(
+        val insertedRecipeDiaryEntry = diaryRepository.insertRecipeDiaryEntry(
             recipeDiaryEntryRequest = RecipeDiaryEntryRequest(
                 recipeId = recipeId,
                 servings = servingsValue,
                 date = date,
                 mealName = mealName
             )
-        )
+        ).data ?: return Resource.Error()
+
+        return diaryRepository.insertOfflineDiaryEntry(insertedRecipeDiaryEntry)
     }
 
     private fun getServingsResourceError() = Resource.Error<Unit>(uiText = resourceProvider.getString(R.string.recipe_servings_error))
