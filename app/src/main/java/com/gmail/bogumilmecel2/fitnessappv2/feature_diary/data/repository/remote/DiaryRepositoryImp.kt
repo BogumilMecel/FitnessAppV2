@@ -1,6 +1,7 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.data.repository.remote
 
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.Currency
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.DiaryItem
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseRepository
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.data.api.DiaryApi
@@ -14,11 +15,13 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductDi
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductPrice
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.RecipePriceResponse
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.UserDiaryItemsResponse
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntryPostRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.product.NewPriceRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.product.NewProductRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.NewRecipeRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Recipe
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.RecipePriceRequest
@@ -58,13 +61,13 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun insertProductDiaryEntry(productDiaryEntryPostRequest: ProductDiaryEntryPostRequest): Resource<Unit> {
+    override suspend fun insertProductDiaryEntry(productDiaryEntryPostRequest: ProductDiaryEntryPostRequest): Resource<ProductDiaryEntry> {
         return handleRequest {
             diaryApi.insertProductDiaryEntry(productDiaryEntryPostRequest = productDiaryEntryPostRequest)
         }
     }
 
-    override suspend fun addRecipeDiaryEntry(recipeDiaryEntryRequest: RecipeDiaryEntryRequest): Resource<Unit> {
+    override suspend fun insertRecipeDiaryEntry(recipeDiaryEntryRequest: RecipeDiaryEntryRequest): Resource<RecipeDiaryEntry> {
         return handleRequest {
             diaryApi.insertRecipeDiaryEntry(recipeDiaryEntryRequest = recipeDiaryEntryRequest)
         }
@@ -233,6 +236,20 @@ class DiaryRepositoryImp(
             with(diaryEntriesResponse) {
                 userDiaryItemsDao.insertRecipeDiaryEntries(recipeDiaryEntries)
                 userDiaryItemsDao.insertProductDiaryEntries(productDiaryEntries)
+            }
+        }
+    }
+
+    override suspend fun insertOfflineDiaryEntry(diaryItem: DiaryItem): Resource<Unit> {
+        return handleRequest {
+            when(diaryItem) {
+                is ProductDiaryEntry -> {
+                    userDiaryItemsDao.insertProductDiaryEntry(diaryItem)
+                }
+
+                is RecipeDiaryEntry -> {
+                    userDiaryItemsDao.insertRecipeDiaryEntry(diaryItem)
+                }
             }
         }
     }

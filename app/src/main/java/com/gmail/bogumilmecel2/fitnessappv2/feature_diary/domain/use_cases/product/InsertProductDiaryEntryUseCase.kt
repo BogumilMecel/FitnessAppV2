@@ -22,14 +22,16 @@ class InsertProductDiaryEntryUseCase(
         val weight = weightStringValue.toValidInt() ?: return getWeightErrorResource()
         if (weight <= 0) return getWeightErrorResource()
 
-        return diaryRepository.insertProductDiaryEntry(
+        val insertedProductDiaryEntry = diaryRepository.insertProductDiaryEntry(
             productDiaryEntryPostRequest = ProductDiaryEntryPostRequest(
                 productId = productId,
                 weight = weight,
                 mealName = mealName,
                 date = date,
             )
-        )
+        ).data ?: return Resource.Error()
+
+        return diaryRepository.insertOfflineDiaryEntry(insertedProductDiaryEntry)
     }
 
     private fun getWeightErrorResource() =

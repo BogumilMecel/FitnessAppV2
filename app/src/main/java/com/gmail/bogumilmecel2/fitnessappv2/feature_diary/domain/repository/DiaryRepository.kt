@@ -1,6 +1,7 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository
 
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.Currency
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.DiaryItem
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.DeleteDiaryEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.DiaryEntriesResponse
@@ -11,11 +12,13 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductDi
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductPrice
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.RecipePriceResponse
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.UserDiaryItemsResponse
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntryPostRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.product.NewPriceRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.product.NewProductRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.NewRecipeRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Recipe
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.RecipePriceRequest
 
@@ -29,8 +32,8 @@ interface DiaryRepository {
     suspend fun searchForProducts(searchText: String): Resource<List<Product>>
     suspend fun searchForProductWithBarcode(barcode: String): Resource<Product?>
     suspend fun searchForRecipes(searchText: String): Resource<List<Recipe>>
-    suspend fun insertProductDiaryEntry(productDiaryEntryPostRequest: ProductDiaryEntryPostRequest): Resource<Unit>
-    suspend fun addRecipeDiaryEntry(recipeDiaryEntryRequest: RecipeDiaryEntryRequest): Resource<Unit>
+    suspend fun insertProductDiaryEntry(productDiaryEntryPostRequest: ProductDiaryEntryPostRequest): Resource<ProductDiaryEntry>
+    suspend fun insertRecipeDiaryEntry(recipeDiaryEntryRequest: RecipeDiaryEntryRequest): Resource<RecipeDiaryEntry>
     suspend fun getRecipe(recipeId: String): Resource<Recipe?>
     suspend fun deleteDiaryEntry(deleteDiaryEntryRequest: DeleteDiaryEntryRequest): Resource<Unit>
     suspend fun editProductDiaryEntry(editProductDiaryEntryRequest: EditProductDiaryEntryRequest): Resource<Unit>
@@ -61,4 +64,5 @@ interface DiaryRepository {
     suspend fun getLocalUserRecipes(): Resource<List<Recipe>>
     suspend fun getLocalUserProducts(): Resource<List<Product>>
     suspend fun clearLocalData(): Resource<Unit>
+    suspend fun insertOfflineDiaryEntry(diaryItem: DiaryItem): Resource<Unit>
 }

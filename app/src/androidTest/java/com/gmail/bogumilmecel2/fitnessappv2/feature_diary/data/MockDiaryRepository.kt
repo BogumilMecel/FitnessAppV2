@@ -47,7 +47,7 @@ class MockDiaryRepository: DiaryRepository {
         data = ProductDiaryEntry(id = "")
     )
 
-    override suspend fun addRecipeDiaryEntry(recipeDiaryEntryRequest: RecipeDiaryEntryRequest) = Resource.Success(Unit)
+    override suspend fun insertRecipeDiaryEntry(recipeDiaryEntryRequest: RecipeDiaryEntryRequest) = Resource.Success(Unit)
 
     override suspend fun deleteDiaryEntry(deleteDiaryEntryRequest: DeleteDiaryEntryRequest) = Resource.Success(Unit)
 
