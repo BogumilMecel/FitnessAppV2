@@ -310,7 +310,7 @@ object AppModule {
     @Provides
     fun provideDeleteDiaryEntryUseCase(
         diaryRepository: DiaryRepository
-    ): DeleteDiaryEntry = DeleteDiaryEntry(
+    ): DeleteDiaryEntryUseCase = DeleteDiaryEntryUseCase(
         diaryRepository = diaryRepository
     )
 

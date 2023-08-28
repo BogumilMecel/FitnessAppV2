@@ -52,4 +52,10 @@ interface UserDiaryItemsDao {
 
     @Query("DELETE FROM recipe")
     fun deleteUserRecipes()
+
+    @Query("DELETE FROM productdiaryentry WHERE id = :productDiaryEntryId")
+    fun deleteProductDiaryEntry(productDiaryEntryId: String)
+
+    @Query("DELETE FROM recipediaryentry WHERE id = :recipeDiaryEntryId")
+    fun deleteRecipeDiaryEntry(recipeDiaryEntryId: String)
 }
