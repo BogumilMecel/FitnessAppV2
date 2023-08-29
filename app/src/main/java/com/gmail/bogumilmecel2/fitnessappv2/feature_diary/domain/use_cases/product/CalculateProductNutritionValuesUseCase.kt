@@ -6,19 +6,12 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
 
 class CalculateProductNutritionValuesUseCase {
 
-    operator fun invoke(weight: Int, product: Product): NutritionValues {
-        val nutritionValues = product.nutritionValues
-
-        val newCalories = (nutritionValues.calories.toDouble() / 100.0 * weight).toInt()
-        val newCarbohydrates = (nutritionValues.carbohydrates / 100.0 * weight).round(1)
-        val newProtein = (nutritionValues.protein / 100.0 * weight).round(1)
-        val newFat = (nutritionValues.fat / 100.0 * weight).round(1)
-
+    operator fun invoke(weight: Int, product: Product): NutritionValues = with(product.nutritionValues) {
         return NutritionValues(
-            calories = newCalories,
-            carbohydrates = newCarbohydrates,
-            protein = newProtein,
-            fat = newFat
+            calories = (calories.toDouble() / 100.0 * weight).toInt(),
+            carbohydrates = (carbohydrates / 100.0 * weight).round(2),
+            protein = (protein / 100.0 * weight).round(2),
+            fat = (fat / 100.0 * weight).round(2)
         )
     }
 }
