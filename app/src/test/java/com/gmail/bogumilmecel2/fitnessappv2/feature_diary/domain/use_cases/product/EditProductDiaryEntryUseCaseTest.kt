@@ -2,8 +2,10 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.prod
 
 import com.gmail.bogumilmecel2.fitnessappv2.common.BaseMockkTest
 import com.gmail.bogumilmecel2.fitnessappv2.common.MockConstants
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.EditProductDiaryEntryRequest
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -15,7 +17,11 @@ import kotlin.test.assertIs
 class EditProductDiaryEntryUseCaseTest: BaseMockkTest() {
 
     private val diaryRepository = mockk<DiaryRepository>()
-    private val editProductDiaryEntryUseCase = EditProductDiaryEntryUseCase(diaryRepository = diaryRepository)
+    private val calculateProductNutritionValuesUseCase = mockk<CalculateProductNutritionValuesUseCase>()
+    private val editProductDiaryEntryUseCase = EditProductDiaryEntryUseCase(
+        diaryRepository = diaryRepository,
+        calculateProductNutritionValuesUseCase = calculateProductNutritionValuesUseCase
+    )
 
     @Test
     fun `Check if weight is not valid integer, resource error is returned`() = runTest {
@@ -30,6 +36,12 @@ class EditProductDiaryEntryUseCaseTest: BaseMockkTest() {
     }
 
     @Test
+    fun `Check if weight is the same as original weight, resource error is returned`() = runTest {
+        val resource = callTestedMethod(originalWeight = MockConstants.Diary.CORRECT_PRODUCT_DIARY_ENTRY_WEIGHT_1.toValidIntOrThrow())
+        assertIs<Resource.Error<Unit>>(resource)
+    }
+
+    @Test
     fun `Check if weight is less than 0, resource error is returned`() = runTest {
         val resource = callTestedMethod(weight = MockConstants.Diary.NEGATIVE_RECIPE_SERVINGS)
         assertIs<Resource.Error<Unit>>(resource)
@@ -37,26 +49,46 @@ class EditProductDiaryEntryUseCaseTest: BaseMockkTest() {
 
     @Test
     fun `Check if data is correct and repository returns resource error, resource error is returned`() = runTest {
-        coEvery { diaryRepository.editProductDiaryEntry(editProductDiaryEntryRequest = any()) } returns Resource.Error()
+        coEvery { calculateProductNutritionValuesUseCase(weight = any(), product = any()) } returns NutritionValues()
+        coEvery { diaryRepository.editProductDiaryEntry(productDiaryEntry = any()) } returns Resource.Error()
         assertIs<Resource.Error<Unit>>(callTestedMethod())
     }
 
     @Test
     fun `Check if data is correct and repository returns resource success, resource success is returned`() = runTest {
-        val expectedRequest = EditProductDiaryEntryRequest(
-            productDiaryEntryId = MockConstants.Diary.PRODUCT_DIARY_ENTRY_ID_21,
-            newWeight = MockConstants.Diary.CORRECT_PRODUCT_DIARY_ENTRY_WEIGHT_1.toValidIntOrThrow(),
+        val weight = MockConstants.Diary.CORRECT_PRODUCT_DIARY_ENTRY_WEIGHT_1.toValidIntOrThrow()
+        val expectedNutritionValues = NutritionValues(
+            calories = 215,
+            carbohydrates = 73.1,
+            protein = 78.5,
+            fat = 89.1
         )
-        coEvery { diaryRepository.editProductDiaryEntry(editProductDiaryEntryRequest = expectedRequest) } returns Resource.Success(Unit)
+        val expectedProductDiaryEntry = ProductDiaryEntry(
+            id = MockConstants.Diary.PRODUCT_DIARY_ENTRY_ID_21,
+            weight = weight,
+            nutritionValues = expectedNutritionValues
+        )
+        coEvery {
+            calculateProductNutritionValuesUseCase(
+                weight = weight,
+                product = any()
+            )
+        } returns expectedNutritionValues
+        coEvery { diaryRepository.editProductDiaryEntry(productDiaryEntry = expectedProductDiaryEntry) } returns Resource.Success(Unit)
         assertIs<Resource.Success<Unit>>(callTestedMethod())
-        coVerify(exactly = 1) { diaryRepository.editProductDiaryEntry(editProductDiaryEntryRequest = expectedRequest) }
+        coVerify(exactly = 1) { diaryRepository.editProductDiaryEntry(productDiaryEntry = expectedProductDiaryEntry) }
     }
 
     private suspend fun callTestedMethod(
         productDiaryEntryId: String = MockConstants.Diary.PRODUCT_DIARY_ENTRY_ID_21,
         weight: String = MockConstants.Diary.CORRECT_PRODUCT_DIARY_ENTRY_WEIGHT_1,
+        originalWeight: Int = MockConstants.Diary.CORRECT_PRODUCT_DIARY_ENTRY_WEIGHT_2.toValidIntOrThrow()
     ) = editProductDiaryEntryUseCase(
-        productDiaryEntryId = productDiaryEntryId,
+        productDiaryEntry = ProductDiaryEntry(
+            id = productDiaryEntryId,
+            weight = originalWeight
+        ),
         newWeightStringValue = weight,
+        product = Product(),
     )
 }

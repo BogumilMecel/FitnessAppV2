@@ -2,22 +2,33 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.prod
 
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.toValidInt
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.EditProductDiaryEntryRequest
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 
-class EditProductDiaryEntryUseCase(private val diaryRepository: DiaryRepository) {
+class EditProductDiaryEntryUseCase(
+    private val diaryRepository: DiaryRepository,
+    private val calculateProductNutritionValuesUseCase: CalculateProductNutritionValuesUseCase
+) {
     suspend operator fun invoke(
-        productDiaryEntryId: String,
+        product: Product,
+        productDiaryEntry: ProductDiaryEntry,
         newWeightStringValue: String,
     ): Resource<Unit> {
         val weight = newWeightStringValue.toValidInt() ?: return Resource.Error()
 
         if (weight <= 0) return Resource.Error()
+        if (weight == productDiaryEntry.weight) return Resource.Error()
+
+        val newNutritionValues = calculateProductNutritionValuesUseCase(
+            product = product,
+            weight = weight
+        )
 
         return diaryRepository.editProductDiaryEntry(
-            editProductDiaryEntryRequest = EditProductDiaryEntryRequest(
-                productDiaryEntryId = productDiaryEntryId,
-                newWeight = weight
+            productDiaryEntry = productDiaryEntry.copy(
+                weight = weight,
+                nutritionValues = newNutritionValues
             )
         )
     }

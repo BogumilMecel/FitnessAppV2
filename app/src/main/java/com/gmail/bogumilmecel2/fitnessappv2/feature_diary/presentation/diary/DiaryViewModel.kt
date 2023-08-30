@@ -210,10 +210,9 @@ class DiaryViewModel @Inject constructor(
                             entryData = ProductEntryData.Editing(
                                 mealName = diaryEntry.mealName,
                                 product = product,
-                                productDiaryEntryId = diaryEntry.id,
+                                productDiaryEntry = diaryEntry,
                                 date = diaryEntry.date,
                                 displayedDate = _state.value.displayedDate,
-                                weight = diaryEntry.weight.toString(),
                             )
                         )
                     )
