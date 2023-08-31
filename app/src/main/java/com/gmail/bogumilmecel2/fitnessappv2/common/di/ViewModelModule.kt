@@ -19,6 +19,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_r
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.CalculateProductNutritionValuesUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.CreatePieChartData
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.GetProductUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.recipe.CalculateRecipeNutritionValuesForServingsUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.recipe.EditRecipeDiaryEntryUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.recipe.GetRecipeUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.recipe.PostRecipeDiaryEntryUseCase
@@ -108,7 +109,8 @@ object ViewModelModule {
         diaryRepository: DiaryRepository,
         resourceProvider: ResourceProvider,
         getRecipePriceFromIngredientsUseCase: GetRecipePriceFromIngredientsUseCase,
-        calculateSelectedServingPriceUseCase: CalculateSelectedServingPriceUseCase
+        calculateSelectedServingPriceUseCase: CalculateSelectedServingPriceUseCase,
+        calculateRecipeNutritionValuesForServingsUseCase: CalculateRecipeNutritionValuesForServingsUseCase
     ): RecipeUseCases = RecipeUseCases(
         createPieChartData = createPieChartData,
         postRecipeDiaryEntryUseCase = PostRecipeDiaryEntryUseCase(
@@ -117,7 +119,10 @@ object ViewModelModule {
         ),
         getRecipePriceFromIngredientsUseCase = getRecipePriceFromIngredientsUseCase,
         calculateSelectedServingPriceUseCase = calculateSelectedServingPriceUseCase,
-        editRecipeDiaryEntryUseCase = EditRecipeDiaryEntryUseCase(diaryRepository = diaryRepository),
+        editRecipeDiaryEntryUseCase = EditRecipeDiaryEntryUseCase(
+            diaryRepository = diaryRepository,
+            calculateRecipeNutritionValuesForServingsUseCase = calculateRecipeNutritionValuesForServingsUseCase
+        ),
         createSearchItemParamsFromIngredientUseCase = createSearchItemParamsFromIngredientUseCase
     )
 

@@ -40,7 +40,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_recipe.AddNewRecipe
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_recipe.CalculateRecipeNutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.*
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.recipe.EditRecipeDiaryEntryUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.recipe.CalculateRecipeNutritionValuesForServingsUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.recipe.PostRecipeDiaryEntryUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.SearchForProductsUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.data.api.UserDataApi
@@ -122,9 +122,9 @@ object AppModule {
         sharedPreferences: SharedPreferences,
         @ApplicationContext context: Context
     ): DefaultInterceptor = DefaultInterceptor(
-            sharedPreferences = sharedPreferences,
-            applicationContext = context
-        )
+        sharedPreferences = sharedPreferences,
+        applicationContext = context
+    )
 
     @Singleton
     @Provides
@@ -161,12 +161,12 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideEditRecipeDiaryEntryUseCase(diaryRepository: DiaryRepository): EditRecipeDiaryEntryUseCase =
-        EditRecipeDiaryEntryUseCase(diaryRepository = diaryRepository)
+    fun provideDateProvider(): DateHolder = RealDateHolder()
 
     @Singleton
     @Provides
-    fun provideDateProvider(): DateHolder = RealDateHolder()
+    fun provideCalculateRecipeNutritionValuesForServingsUseCase(): CalculateRecipeNutritionValuesForServingsUseCase =
+        CalculateRecipeNutritionValuesForServingsUseCase()
 
     @Singleton
     @Provides

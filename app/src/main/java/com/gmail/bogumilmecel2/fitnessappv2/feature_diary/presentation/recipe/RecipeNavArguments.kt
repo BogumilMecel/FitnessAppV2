@@ -3,6 +3,7 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.recipe
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.DateTransferObject
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.MealName
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Recipe
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntry
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -38,8 +39,7 @@ sealed class RecipeEntryData(
         override val mealName: MealName,
         val date: String,
         val displayedDate: String,
-        val servings: String,
-        val recipeDiaryEntryId: String
+        val recipeDiaryEntry: RecipeDiaryEntry
     ) : RecipeEntryData(
         mealName = mealName,
         recipe = recipe,
