@@ -91,13 +91,13 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun editProductDiaryEntry(productDiaryEntry: ProductDiaryEntry): Resource<Unit> {
+    override suspend fun editProductDiaryEntry(productDiaryEntry: ProductDiaryEntry): Resource<ProductDiaryEntry> {
         return handleRequest {
             diaryApi.editProductDiaryEntry(productDiaryEntry = productDiaryEntry)
         }
     }
 
-    override suspend fun editRecipeDiaryEntry(recipeDiaryEntry: RecipeDiaryEntry): Resource<Unit> {
+    override suspend fun editRecipeDiaryEntry(recipeDiaryEntry: RecipeDiaryEntry): Resource<RecipeDiaryEntry> {
         return handleRequest {
             diaryApi.editRecipeDiaryEntry(recipeDiaryEntry = recipeDiaryEntry)
         }

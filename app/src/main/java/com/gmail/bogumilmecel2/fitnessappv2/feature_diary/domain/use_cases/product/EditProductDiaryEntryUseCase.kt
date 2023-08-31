@@ -25,11 +25,21 @@ class EditProductDiaryEntryUseCase(
             weight = weight
         )
 
-        return diaryRepository.editProductDiaryEntry(
+        val resource = diaryRepository.editProductDiaryEntry(
             productDiaryEntry = productDiaryEntry.copy(
                 weight = weight,
                 nutritionValues = newNutritionValues
             )
         )
+
+        return when(resource) {
+            is Resource.Error -> {
+                Resource.Error()
+            }
+
+            is Resource.Success -> {
+                diaryRepository.insertOfflineDiaryEntry(diaryItem = resource.data)
+            }
+        }
     }
 }
