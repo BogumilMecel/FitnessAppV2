@@ -72,12 +72,12 @@ interface DiaryApi {
     @PUT("/diaryEntries/product")
     suspend fun editProductDiaryEntry(
         @Body productDiaryEntry: ProductDiaryEntry
-    )
+    ): ProductDiaryEntry
 
     @PUT("/diaryEntries/recipe")
     suspend fun editRecipeDiaryEntry(
         @Body recipeDiaryEntry: RecipeDiaryEntry
-    )
+    ): RecipeDiaryEntry
 
     @POST("/products")
     suspend fun insertProduct(
