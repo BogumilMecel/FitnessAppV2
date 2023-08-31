@@ -25,7 +25,7 @@ class RecipeViewModel @Inject constructor(
     state = with(RecipeScreenDestination.argsFrom(savedStateHandle = savedStateHandle)) {
         RecipeState(
             entryData = entryData,
-            servings = if (entryData is RecipeEntryData.Editing) entryData.servings else "",
+            servings = if (entryData is RecipeEntryData.Editing) entryData.recipeDiaryEntry.servings.toString() else "",
             date = entryData.dateTransferObject.displayedDate
         )
     }
@@ -73,9 +73,9 @@ class RecipeViewModel @Inject constructor(
                 when(entryData) {
                     is RecipeEntryData.Editing -> {
                         recipeUseCases.editRecipeDiaryEntryUseCase(
-                            recipeDiaryEntryId = entryData.recipeDiaryEntryId,
+                            recipeDiaryEntry = entryData.recipeDiaryEntry,
                             newServingsStringValue = servings,
-                            originalServingsStringValue = entryData.servings
+                            recipe = entryData.recipe
                         ).handle {
                             navigateUp()
                         }
