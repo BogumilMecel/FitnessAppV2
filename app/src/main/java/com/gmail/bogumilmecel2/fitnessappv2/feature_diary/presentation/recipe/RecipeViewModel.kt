@@ -84,7 +84,7 @@ class RecipeViewModel @Inject constructor(
                         recipeUseCases.postRecipeDiaryEntryUseCase(
                             date = RecipeScreenDestination.argsFrom(savedStateHandle).entryData.dateTransferObject.realDate,
                             mealName = _state.value.entryData.mealName,
-                            recipeId = _state.value.entryData.recipe.id,
+                            recipe = _state.value.entryData.recipe,
                             servingsString = _state.value.servings
                         ).handle {
                             navigateWithPopUp(

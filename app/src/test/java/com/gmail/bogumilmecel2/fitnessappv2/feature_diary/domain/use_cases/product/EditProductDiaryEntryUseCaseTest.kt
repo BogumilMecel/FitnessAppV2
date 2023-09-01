@@ -74,9 +74,13 @@ class EditProductDiaryEntryUseCaseTest: BaseMockkTest() {
                 product = any()
             )
         } returns expectedNutritionValues
-        coEvery { diaryRepository.editProductDiaryEntry(productDiaryEntry = expectedProductDiaryEntry) } returns Resource.Success(Unit)
+        coEvery { diaryRepository.editProductDiaryEntry(productDiaryEntry = expectedProductDiaryEntry) } returns Resource.Success(expectedProductDiaryEntry)
+        coEvery { diaryRepository.insertOfflineDiaryEntry(expectedProductDiaryEntry) } returns Resource.Success(Unit)
         assertIs<Resource.Success<Unit>>(callTestedMethod())
-        coVerify(exactly = 1) { diaryRepository.editProductDiaryEntry(productDiaryEntry = expectedProductDiaryEntry) }
+        coVerify(exactly = 1) {
+            diaryRepository.editProductDiaryEntry(productDiaryEntry = expectedProductDiaryEntry)
+            diaryRepository.insertOfflineDiaryEntry(expectedProductDiaryEntry)
+        }
     }
 
     private suspend fun callTestedMethod(
