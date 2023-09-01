@@ -5,16 +5,18 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvi
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.toValidInt
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.MealName
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntryPostRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 
 class InsertProductDiaryEntryUseCase(
     private val diaryRepository: DiaryRepository,
     private val resourceProvider: ResourceProvider,
+    private val calculateProductNutritionValuesUseCase: CalculateProductNutritionValuesUseCase
 ) {
 
     suspend operator fun invoke(
-        productId: String,
+        product: Product,
         mealName: MealName,
         date: String,
         weightStringValue: String,
@@ -24,10 +26,14 @@ class InsertProductDiaryEntryUseCase(
 
         val insertedProductDiaryEntry = diaryRepository.insertProductDiaryEntry(
             productDiaryEntryPostRequest = ProductDiaryEntryPostRequest(
-                productId = productId,
+                productId = product.id,
                 weight = weight,
                 mealName = mealName,
                 date = date,
+                nutritionValues = calculateProductNutritionValuesUseCase(
+                    product = product,
+                    weight = weight
+                )
             )
         ).data ?: return Resource.Error()
 

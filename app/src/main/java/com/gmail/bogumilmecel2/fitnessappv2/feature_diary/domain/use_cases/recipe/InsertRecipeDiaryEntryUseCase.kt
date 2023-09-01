@@ -5,28 +5,34 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvi
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.toValidInt
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.MealName
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 
 class PostRecipeDiaryEntryUseCase(
     private val diaryRepository: DiaryRepository,
-    private val resourceProvider: ResourceProvider
+    private val resourceProvider: ResourceProvider,
+    private val calculateRecipeNutritionValuesForServingsUseCase: CalculateRecipeNutritionValuesForServingsUseCase
 ) {
     suspend operator fun invoke(
-        recipeId: String,
+        recipe: Recipe,
         servingsString: String,
         date: String,
         mealName: MealName
     ): Resource<Unit> {
-        val servingsValue = servingsString.toValidInt() ?: return getServingsResourceError()
-        if (servingsValue <= 0) return getServingsResourceError()
+        val servings = servingsString.toValidInt() ?: return getServingsResourceError()
+        if (servings <= 0) return getServingsResourceError()
 
         val insertedRecipeDiaryEntry = diaryRepository.insertRecipeDiaryEntry(
             recipeDiaryEntryRequest = RecipeDiaryEntryRequest(
-                recipeId = recipeId,
-                servings = servingsValue,
+                recipeId = recipe.id,
+                servings = servings,
                 date = date,
-                mealName = mealName
+                mealName = mealName,
+                nutritionValues = calculateRecipeNutritionValuesForServingsUseCase(
+                    recipe = recipe,
+                    servings = servings
+                )
             )
         ).data ?: return Resource.Error()
 

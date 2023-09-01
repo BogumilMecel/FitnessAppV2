@@ -2,6 +2,7 @@ package com.gmail.bogumilmecel2.fitnessappv2.common
 
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.MeasurementUnit
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvider
 import io.mockk.every
 
@@ -37,6 +38,8 @@ object MockConstants {
         const val GRAMS = "g"
         const val MILLILITERS = "ml"
         const val KCAL = "kcal"
+
+        fun getSampleNutritionValues() = NutritionValues(calories = 255, carbohydrates = 31.0, protein = 17.0, fat = 7.0)
 
         fun mockMeasurementUnitString(resourceProvider: ResourceProvider) {
             every { resourceProvider.getString(stringResId = MeasurementUnit.GRAMS.getStringRes()) } returns GRAMS
