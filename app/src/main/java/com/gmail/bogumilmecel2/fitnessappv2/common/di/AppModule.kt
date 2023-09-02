@@ -312,14 +312,6 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideDeleteDiaryEntryUseCase(
-        diaryRepository: DiaryRepository
-    ): DeleteDiaryEntryUseCase = DeleteDiaryEntryUseCase(
-        diaryRepository = diaryRepository
-    )
-
-    @Singleton
-    @Provides
     fun provideAddNewRecipe(
         diaryRepository: DiaryRepository,
         resourceProvider: ResourceProvider
