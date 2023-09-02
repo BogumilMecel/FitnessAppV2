@@ -8,10 +8,16 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.Creat
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CreateSearchItemParamsFromIngredientUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CreateSearchItemParamsFromProductUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CreateSearchItemParamsFromRecipeUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GenerateDiaryItemDialogTitleUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetRecipePriceFromIngredientsUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetUserDiaryAndSaveItLocallyUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetUserDiaryEntriesExperimentalUseCase
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.GetDiaryEntriesUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.CreateLongClickedDiaryItemParamsUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.DeleteDiaryEntryUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.DiaryUseCases
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.GetOfflineDiaryEntriesUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.GetOnlineDiaryEntriesUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.SumNutritionValuesUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_product.SaveNewProductUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_recipe.AddNewRecipe
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_recipe.CalculateRecipeNutritionValues
@@ -40,11 +46,6 @@ object ViewModelModule {
 
     @ViewModelScoped
     @Provides
-    fun provideGetDiaryEntriesUseCase(diaryRepository: DiaryRepository): GetDiaryEntriesUseCase =
-        GetDiaryEntriesUseCase(diaryRepository = diaryRepository)
-
-    @ViewModelScoped
-    @Provides
     fun provideSaveNewProductUseCase(
         diaryRepository: DiaryRepository,
         resourceProvider: ResourceProvider
@@ -57,18 +58,8 @@ object ViewModelModule {
     @Provides
     fun provideGetUserDiaryEntriesExperimentalUseCase(
         diaryRepository: DiaryRepository
-    ): GetUserDiaryEntriesExperimentalUseCase = GetUserDiaryEntriesExperimentalUseCase(diaryRepository)
-
-    @ViewModelScoped
-    @Provides
-    fun provideGetRecipeUseCase(diaryRepository: DiaryRepository): GetRecipeUseCase =
-        GetRecipeUseCase(diaryRepository)
-
-    @ViewModelScoped
-    @Provides
-    fun provideGetProductUseCase(
-        diaryRepository: DiaryRepository
-    ): GetProductUseCase = GetProductUseCase(diaryRepository)
+    ): GetUserDiaryEntriesExperimentalUseCase =
+        GetUserDiaryEntriesExperimentalUseCase(diaryRepository)
 
     @ViewModelScoped
     @Provides
@@ -143,4 +134,23 @@ object ViewModelModule {
             createSearchItemParamsFromProductUseCase = createSearchItemParamsFromProductUseCase,
             createSearchItemParamsFromHistoryItemUseCase = CreateSearchItemParamsFromHistoryItemUseCase(resourceProvider)
         )
+
+    @ViewModelScoped
+    @Provides
+    fun provideDiaryUseCases(
+        diaryRepository: DiaryRepository,
+        resourceProvider: ResourceProvider
+    ): DiaryUseCases = DiaryUseCases(
+        getOfflineDiaryEntriesUseCase = GetOfflineDiaryEntriesUseCase(diaryRepository = diaryRepository),
+        getOnlineDiaryEntriesUseCase = GetOnlineDiaryEntriesUseCase(diaryRepository = diaryRepository),
+        deleteDiaryEntryUseCase = DeleteDiaryEntryUseCase(diaryRepository = diaryRepository),
+        sumNutritionValuesUseCase = SumNutritionValuesUseCase(),
+        createLongClickedDiaryItemParamsUseCase = CreateLongClickedDiaryItemParamsUseCase(
+            generateDiaryItemDialogTitleUseCase = GenerateDiaryItemDialogTitleUseCase(
+                resourceProvider = resourceProvider
+            )
+        ),
+        getProductUseCase = GetProductUseCase(diaryRepository = diaryRepository),
+        getRecipeUseCase = GetRecipeUseCase(diaryRepository = diaryRepository)
+    )
 }

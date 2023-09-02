@@ -91,6 +91,23 @@ class DiaryRepositoryImp(
         }
     }
 
+    override suspend fun deleteOfflineDiaryEntries(
+        date: String,
+        productDiaryEntriesIds: List<String>,
+        recipeDiaryEntriesIds: List<String>
+    ): Resource<Unit> {
+        return handleRequest {
+            userDiaryItemsDao.deleteRecipeDiaryEntries(
+                date = date,
+                diaryEntriesIds = recipeDiaryEntriesIds
+            )
+            userDiaryItemsDao.deleteProductDiaryEntries(
+                date = date,
+                diaryEntriesIds = productDiaryEntriesIds
+            )
+        }
+    }
+
     override suspend fun editProductDiaryEntry(productDiaryEntry: ProductDiaryEntry): Resource<ProductDiaryEntry> {
         return handleRequest {
             diaryApi.editProductDiaryEntry(productDiaryEntry = productDiaryEntry)

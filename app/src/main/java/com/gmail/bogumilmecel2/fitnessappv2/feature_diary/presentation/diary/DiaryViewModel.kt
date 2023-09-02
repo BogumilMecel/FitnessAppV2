@@ -12,12 +12,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Meal
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.MealName
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntry
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.CreateLongClickedDiaryItemParamsUseCase
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.DeleteDiaryEntryUseCase
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.GetDiaryEntriesUseCase
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.SumNutritionValuesUseCase
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.GetProductUseCase
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.recipe.GetRecipeUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.DiaryUseCases
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.presentation.ProductEntryData
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.recipe.RecipeEntryData
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,12 +23,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DiaryViewModel @Inject constructor(
-    private val getDiaryEntriesUseCase: GetDiaryEntriesUseCase,
-    private val deleteDiaryEntryUseCase: DeleteDiaryEntryUseCase,
-    private val sumNutritionValuesUseCase: SumNutritionValuesUseCase,
-    private val createLongClickedDiaryItemParamsUseCase: CreateLongClickedDiaryItemParamsUseCase,
-    private val getProductUseCase: GetProductUseCase,
-    private val getRecipeUseCase: GetRecipeUseCase,
+    private val diaryUseCases: DiaryUseCases,
     private val dateHolder: DateHolder
 ) : BaseViewModel<DiaryState, DiaryEvent>(state = DiaryState()) {
 
@@ -60,7 +50,7 @@ class DiaryViewModel @Inject constructor(
             is DiaryEvent.LongClickedDiaryEntry -> {
                 _state.update {
                     it.copy(
-                        longClickedDiaryItemParams = createLongClickedDiaryItemParamsUseCase(event.diaryItem),
+                        longClickedDiaryItemParams = diaryUseCases.createLongClickedDiaryItemParamsUseCase(event.diaryItem),
                         currentlySelectedMealName = event.mealName
                     )
                 }
@@ -74,9 +64,10 @@ class DiaryViewModel @Inject constructor(
                 viewModelScope.launch(Dispatchers.IO) {
                     with(_state.value) {
                         longClickedDiaryItemParams?.let { diaryItemParams ->
-                            deleteDiaryEntryUseCase(diaryItemParams.longClickedDiaryItem).handle(
-                                finally = { hideDiaryEntryDialog() }
-                            ) { getDiaryEntries() }
+                            diaryUseCases.deleteDiaryEntryUseCase(diaryItemParams.longClickedDiaryItem)
+                                .handle(
+                                    finally = { hideDiaryEntryDialog() }
+                                ) { getDiaryEntries(withOnlineDiaryEntries = false) }
                         }
                     }
                 }
@@ -107,13 +98,13 @@ class DiaryViewModel @Inject constructor(
 
     fun initData() {
         getDate()
-        getDiaryEntries()
+        getDiaryEntries(withOnlineDiaryEntries = true)
         initWantedNutritionValues()
     }
 
     private fun handleDateArrowClick() {
         getDate()
-        getDiaryEntries()
+        getDiaryEntries(withOnlineDiaryEntries = true)
     }
 
     private fun getDate() {
@@ -139,7 +130,7 @@ class DiaryViewModel @Inject constructor(
                             value = groupedDiaryEntries[mealName]?.let { mealDiaryEntries ->
                                 Meal(
                                     diaryEntries = mealDiaryEntries,
-                                    nutritionValues = sumNutritionValuesUseCase(
+                                    nutritionValues = diaryUseCases.sumNutritionValuesUseCase(
                                         nutritionValues = mealDiaryEntries.map { it.nutritionValues }
                                     )
                                 )
@@ -173,7 +164,7 @@ class DiaryViewModel @Inject constructor(
     private fun recalculateTotalNutritionValues() {
         _state.update { state ->
             state.copy(
-                currentTotalNutritionValues = sumNutritionValuesUseCase(
+                currentTotalNutritionValues = diaryUseCases.sumNutritionValuesUseCase(
                     nutritionValues = diaryEntries.map { it.nutritionValues }
                 )
             )
@@ -182,7 +173,7 @@ class DiaryViewModel @Inject constructor(
 
     private fun getRecipeAndNavigateToEditScreen(diaryEntry: RecipeDiaryEntry) {
         viewModelScope.launch {
-            getRecipeUseCase(diaryEntry.recipeId).handle { recipe ->
+            diaryUseCases.getRecipeUseCase(diaryEntry.recipeId).handle { recipe ->
                 if (recipe != null) {
                     navigateTo(
                         destination = RecipeScreenDestination(
@@ -202,7 +193,7 @@ class DiaryViewModel @Inject constructor(
 
     private fun getProductAndNavigateToEditScreen(diaryEntry: ProductDiaryEntry) {
         viewModelScope.launch {
-            getProductUseCase(diaryEntry.productId).handle { product ->
+            diaryUseCases.getProductUseCase(diaryEntry.productId).handle { product ->
                 if (product != null) {
                     navigateTo(
                         ProductScreenDestination(
@@ -236,13 +227,27 @@ class DiaryViewModel @Inject constructor(
         }
     }
 
-    private fun getDiaryEntries() {
+    private fun getDiaryEntries(withOnlineDiaryEntries: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
-            getDiaryEntriesUseCase(date = dateHolder.getLocalDateString()).handle { diaryEntries ->
-                this@DiaryViewModel.diaryEntries = diaryEntries.toMutableList()
-                groupDiaryEntries()
-                recalculateTotalNutritionValues()
-            }
+            diaryUseCases.getOfflineDiaryEntriesUseCase(date = dateHolder.getLocalDateString())
+                .handle { diaryEntries ->
+                    this@DiaryViewModel.diaryEntries = diaryEntries.toMutableList()
+                    groupDiaryEntries()
+                    recalculateTotalNutritionValues()
+
+                    if (withOnlineDiaryEntries) {
+                        getOnlineDiaryEntries()
+                    }
+                }
+        }
+    }
+
+    private fun getOnlineDiaryEntries() {
+        viewModelScope.launch(Dispatchers.IO) {
+            diaryUseCases.getOnlineDiaryEntriesUseCase(date = dateHolder.getLocalDateString())
+                .handle(
+                    showSnackbar = false
+                ) { getDiaryEntries(withOnlineDiaryEntries = false) }
         }
     }
 }
