@@ -11,14 +11,33 @@ import kotlinx.serialization.Serializable
 @Entity
 @Serializable
 data class Product(
-    @PrimaryKey val id: String = "",
-    @ColumnInfo(name = "name") val name: String = "",
-    @ColumnInfo(name = "container_weight") val containerWeight: Int? = null,
-    @ColumnInfo(name = "utc_timestamp") val utcTimestamp: Long = System.currentTimeMillis(),
-    @ColumnInfo(name = "nutrition_values_in") val nutritionValuesIn: NutritionValuesIn = NutritionValuesIn.HUNDRED_GRAMS,
-    @ColumnInfo(name = "measurement_unit") val measurementUnit: MeasurementUnit = MeasurementUnit.GRAMS,
-    @ColumnInfo(name = "nutrition_values") val nutritionValues: NutritionValues = NutritionValues(),
-    @ColumnInfo(name = "barcode") val barcode: String? = "",
-    @ColumnInfo(name = "username") val username: String = "",
-    @ColumnInfo(name = "user_id") val userId: String = ""
+    @PrimaryKey
+    val id: String = "",
+
+    @ColumnInfo(name = "name")
+    val name: String = "",
+
+    @ColumnInfo(name = "container_weight")
+    val containerWeight: Int? = null,
+
+    @ColumnInfo(name = "utc_timestamp")
+    val utcTimestamp: Long = System.currentTimeMillis(),
+
+    @ColumnInfo(name = "nutrition_values_in")
+    val nutritionValuesIn: NutritionValuesIn = NutritionValuesIn.HUNDRED_GRAMS,
+
+    @ColumnInfo(name = "measurement_unit")
+    val measurementUnit: MeasurementUnit = MeasurementUnit.GRAMS,
+
+    @ColumnInfo(name = "nutrition_values")
+    val nutritionValues: NutritionValues = NutritionValues(),
+
+    @ColumnInfo(name = "barcode")
+    val barcode: String? = "",
+
+    @ColumnInfo(name = "username")
+    val username: String = "",
+
+    @ColumnInfo(name = "user_id")
+    val userId: String = ""
 )
