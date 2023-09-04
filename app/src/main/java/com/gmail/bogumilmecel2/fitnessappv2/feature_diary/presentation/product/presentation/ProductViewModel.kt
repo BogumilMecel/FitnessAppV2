@@ -21,19 +21,25 @@ class ProductViewModel @Inject constructor(
     private val productUseCases: ProductUseCases,
     private val editProductDiaryEntryUseCase: EditProductDiaryEntryUseCase,
     savedStateHandle: SavedStateHandle
-) : BaseViewModel<ProductState, ProductEvent>(
-    state = with(ProductScreenDestination.argsFrom(savedStateHandle)) {
-        ProductState(
-            weight = if (entryData is ProductEntryData.Editing) entryData.productDiaryEntry.weight.toString() else "",
-            date = entryData.dateTransferObject.displayedDate
-        )
-    }
+) : BaseViewModel<ProductState, ProductEvent, ProductNavArguments>(
+    state = ProductState(),
+    navArguments = ProductScreenDestination.argsFrom(savedStateHandle)
 ) {
 
-    val entryData = ProductScreenDestination.argsFrom(savedStateHandle).entryData
+    val entryData = navArguments.entryData
 
-    init {
-        initializeProductData()
+    override fun configureOnStart() {
+        _state.update {
+            it.copy(
+                weight = if (entryData is ProductEntryData.Editing) entryData.productDiaryEntry.weight.toString() else "",
+                date = entryData.dateTransferObject.displayedDate,
+                nutritionData = NutritionData(
+                    nutritionValues = entryData.product.nutritionValues,
+                    pieChartData = productUseCases.createPieChartData(nutritionValues = entryData.product.nutritionValues)
+                )
+            )
+        }
+
         getProductPrice()
     }
 
@@ -157,19 +163,6 @@ class ProductViewModel @Inject constructor(
                         isSubmitPriceDialogVisible = true
                     )
                 }
-            }
-        }
-    }
-
-    private fun initializeProductData() {
-        with(entryData.product.nutritionValues) {
-            _state.update {
-                it.copy(
-                    nutritionData = NutritionData(
-                        nutritionValues = this,
-                        pieChartData = productUseCases.createPieChartData(nutritionValues = this)
-                    )
-                )
             }
         }
     }

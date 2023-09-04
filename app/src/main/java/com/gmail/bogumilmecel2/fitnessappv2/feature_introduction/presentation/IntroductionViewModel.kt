@@ -21,7 +21,10 @@ import javax.inject.Inject
 @HiltViewModel
 class IntroductionViewModel @Inject constructor(
     private val saveIntroductionInformationUseCase: SaveIntroductionInformationUseCase,
-) : BaseViewModel<IntroductionState, IntroductionEvent>(state = IntroductionState()) {
+) : BaseViewModel<IntroductionState, IntroductionEvent, Unit>(
+    state = IntroductionState(),
+    navArguments = Unit
+) {
 
     private val _introductionUiEvent = MutableSharedFlow<IntroductionUiEvent>()
     val introductionUiEvent: SharedFlow<IntroductionUiEvent> = _introductionUiEvent

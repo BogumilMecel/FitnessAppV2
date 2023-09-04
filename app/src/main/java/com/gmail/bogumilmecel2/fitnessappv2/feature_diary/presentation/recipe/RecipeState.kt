@@ -5,7 +5,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.d
 import com.gmail.bogumilmecel2.ui.components.complex.SearchItemParams
 
 data class RecipeState(
-    val entryData: RecipeEntryData,
     val servings: String = "1",
     val nutritionData: NutritionData = NutritionData(),
     val isUserRecipeOwner: Boolean = true,
@@ -13,6 +12,12 @@ data class RecipeState(
     val isFavorite: Boolean = false,
     val recipePrice: RecipePrice? = null,
     val servingPrice: Double? = null,
-    val date: String,
-    val ingredientsParams: List<SearchItemParams> = emptyList()
+    val date: String = "",
+    val ingredientsParams: List<SearchItemParams> = emptyList(),
+    val recipeName: String = "",
+    val recipeCaloriesText: String = "",
+    val timeRequiredText: String = "",
+    val difficultyText: String = "",
+    val servingsText: String = "",
+    val saveButtonText: String = ""
 )

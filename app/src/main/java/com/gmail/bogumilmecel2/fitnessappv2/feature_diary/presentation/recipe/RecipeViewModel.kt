@@ -2,6 +2,7 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.recipe
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.multiplyBy
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.toValidInt
@@ -20,19 +21,54 @@ import javax.inject.Inject
 @HiltViewModel
 class RecipeViewModel @Inject constructor(
     private val recipeUseCases: RecipeUseCases,
-    private val savedStateHandle: SavedStateHandle
-) : BaseViewModel<RecipeState, RecipeEvent>(
-    state = with(RecipeScreenDestination.argsFrom(savedStateHandle = savedStateHandle)) {
-        RecipeState(
-            entryData = entryData,
-            servings = if (entryData is RecipeEntryData.Editing) entryData.recipeDiaryEntry.servings.toString() else "",
-            date = entryData.dateTransferObject.displayedDate
-        )
-    }
+    savedStateHandle: SavedStateHandle
+) : BaseViewModel<RecipeState, RecipeEvent, RecipeNavArguments>(
+    state = RecipeState(),
+    navArguments = RecipeScreenDestination.argsFrom(savedStateHandle = savedStateHandle)
 ) {
 
-    init {
-        initializeRecipeData()
+    override fun configureOnStart() {
+        with(navArguments.entryData.recipe) {
+            _state.update {
+                it.copy(
+                    servings = if (navArguments.entryData is RecipeEntryData.Editing) navArguments.entryData.recipeDiaryEntry.servings.toString() else "",
+                    date = navArguments.entryData.dateTransferObject.displayedDate,
+                    difficultyText = resourceProvider.getString(
+                        stringResId = R.string.recipe_difficulty_out_of_5,
+                        difficulty.displayValue
+                    ),
+                    recipeName = name,
+                    recipeCaloriesText = resourceProvider.getString(
+                        stringResId = R.string.kcal_with_value,
+                        nutritionValues.calories
+                    ),
+                    timeRequiredText = timeRequired.displayValue,
+                    servingsText = resourceProvider.getString(
+                        stringResId = R.string.recipe_serves,
+                        servings
+                    ),
+                    saveButtonText = resourceProvider.getString(
+                        stringResId = R.string.recipe_save_to,
+                        resourceProvider.getString(navArguments.entryData.mealName.getDisplayValue())
+                    ),
+                    nutritionData = NutritionData(
+                        pieChartData = recipeUseCases.createPieChartData(
+                            nutritionValues = nutritionValues
+                        ).also {
+                            assignNutritionValues()
+                        }
+                    ),
+                    ingredientsParams = ingredients.map { ingredient ->
+                        recipeUseCases.createSearchItemParamsFromIngredientUseCase(
+                            ingredient = ingredient,
+                            onClick = {},
+                            onLongClick = {}
+                        )
+                    }
+                )
+            }
+        }
+
         fetchRecipePrice()
     }
 
@@ -70,25 +106,27 @@ class RecipeViewModel @Inject constructor(
     private fun handleSaveButtonClicked() {
         viewModelScope.launch(Dispatchers.IO) {
             with(_state.value) {
-                when(entryData) {
+                when (navArguments.entryData) {
                     is RecipeEntryData.Editing -> {
                         recipeUseCases.editRecipeDiaryEntryUseCase(
-                            recipeDiaryEntry = entryData.recipeDiaryEntry,
+                            recipeDiaryEntry = navArguments.entryData.recipeDiaryEntry,
                             newServingsStringValue = servings,
-                            recipe = entryData.recipe
+                            recipe = navArguments.entryData.recipe
                         ).handle {
                             navigateUp()
                         }
                     }
+
                     is RecipeEntryData.Adding -> {
                         recipeUseCases.postRecipeDiaryEntryUseCase(
-                            date = RecipeScreenDestination.argsFrom(savedStateHandle).entryData.dateTransferObject.realDate,
-                            mealName = _state.value.entryData.mealName,
-                            recipe = _state.value.entryData.recipe,
+                            date = navArguments.entryData.dateTransferObject.realDate,
+                            mealName = navArguments.entryData.mealName,
+                            recipe = navArguments.entryData.recipe,
                             servingsString = _state.value.servings
                         ).handle {
                             navigateWithPopUp(
-                                destination = DiaryScreenDestination
+                                destination = DiaryScreenDestination,
+                                popUpTo = DiaryScreenDestination.route
                             )
                         }
                     }
@@ -109,32 +147,8 @@ class RecipeViewModel @Inject constructor(
         assignNutritionValues()
     }
 
-    private fun initializeRecipeData() {
-        _state.value.entryData.recipe.nutritionValues.let { recipeNutritionValues ->
-            _state.update {
-                it.copy(
-                    nutritionData = NutritionData(
-                        pieChartData = recipeUseCases.createPieChartData(nutritionValues = recipeNutritionValues)
-                    ),
-                )
-            }
-            assignNutritionValues()
-        }
-        _state.update {
-            it.copy(
-                ingredientsParams = _state.value.entryData.recipe.ingredients.map { ingredient ->
-                    recipeUseCases.createSearchItemParamsFromIngredientUseCase(
-                        ingredient = ingredient,
-                        onClick = {},
-                        onLongClick = {}
-                    )
-                }
-            )
-        }
-    }
-
     private fun assignNutritionValues() {
-        val recipe = _state.value.entryData.recipe
+        val recipe = navArguments.entryData.recipe
         val recipeServings = if (recipe.servings == 0) 1.0 else recipe.servings.toDouble()
         recipe.nutritionValues.multiplyBy(
             number = _state.value.servings.toDoubleOrNull()?.let { portions ->
@@ -154,7 +168,7 @@ class RecipeViewModel @Inject constructor(
     private fun fetchRecipePrice() {
         viewModelScope.launch {
             recipeUseCases.getRecipePriceFromIngredientsUseCase(
-                ingredients = _state.value.entryData.recipe.ingredients
+                ingredients = navArguments.entryData.recipe.ingredients
             ).handle(showSnackbar = false) { response ->
                 _state.update {
                     it.copy(
@@ -171,13 +185,13 @@ class RecipeViewModel @Inject constructor(
         }
     }
 
-    private fun updateServingPrice() = with(_state.value){
+    private fun updateServingPrice() = with(_state.value) {
         servings.toValidInt()?.let { servings ->
             recipePrice?.let { recipePrice ->
                 _state.update {
                     it.copy(
                         servingPrice = recipeUseCases.calculateSelectedServingPriceUseCase(
-                            recipeServings = it.entryData.recipe.servings,
+                            recipeServings = navArguments.entryData.recipe.servings,
                             selectedServings = servings,
                             totalPrice = recipePrice.totalPrice
                         ),

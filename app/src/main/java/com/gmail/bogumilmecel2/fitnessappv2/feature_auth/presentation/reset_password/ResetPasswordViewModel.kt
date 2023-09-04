@@ -14,7 +14,10 @@ import javax.inject.Inject
 @HiltViewModel
 class ResetPasswordViewModel @Inject constructor(
     private val authUseCases: AuthUseCases,
-) : BaseViewModel<ResetPasswordState, AuthEvent>(state = ResetPasswordState()) {
+) : BaseViewModel<ResetPasswordState, AuthEvent, Unit>(
+    state = ResetPasswordState(),
+    Unit
+) {
 
     override fun onEvent(event: AuthEvent) {
         when (event) {

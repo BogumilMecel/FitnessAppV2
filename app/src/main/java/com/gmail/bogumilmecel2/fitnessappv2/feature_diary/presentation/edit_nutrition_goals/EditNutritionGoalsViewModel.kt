@@ -17,7 +17,14 @@ import javax.inject.Inject
 class EditNutritionGoalsViewModel @Inject constructor(
     private val calculateNutritionValuesPercentages: CalculateNutritionValuesPercentages,
     private val saveNutritionValues: SaveNutritionValues
-) : BaseViewModel<EditNutritionGoalsState, EditNutritionGoalsEvent>(state = EditNutritionGoalsState()) {
+) : BaseViewModel<EditNutritionGoalsState, EditNutritionGoalsEvent, Unit>(
+    state = EditNutritionGoalsState(),
+    navArguments = Unit
+) {
+
+    override fun configureOnStart() {
+        initWantedNutritionValues()
+    }
 
     override fun onEvent(event: EditNutritionGoalsEvent) {
         when (event) {
@@ -75,10 +82,6 @@ class EditNutritionGoalsViewModel @Inject constructor(
                 saveNutritionValues()
             }
         }
-    }
-
-    fun initData() {
-        initWantedNutritionValues()
     }
 
     private fun saveNutritionValues() {

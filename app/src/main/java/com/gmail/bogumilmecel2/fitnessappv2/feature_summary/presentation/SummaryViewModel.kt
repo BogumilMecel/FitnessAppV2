@@ -18,10 +18,22 @@ import javax.inject.Inject
 class SummaryViewModel @Inject constructor(
     private val summaryUseCases: SummaryUseCases,
     private val bottomBarStatusProvider: BottomBarStatusProvider
-) : BaseViewModel<SummaryState, SummaryEvent>(state = SummaryState()) {
+) : BaseViewModel<SummaryState, SummaryEvent, Unit>(
+    state = SummaryState(),
+    navArguments = Unit
+) {
 
     val uiEvent = Channel<SummaryUiEvent>()
     private var handlingWeightDialogsQuestion: Boolean = false
+
+    override fun configureOnStart() {
+        initBottomBarStatusProvider()
+        checkIfShouldAskForWeightDialogs()
+        getLatestLogEntry()
+        getCaloriesSum()
+        initWeightData()
+        initWantedCalories()
+    }
 
     override fun onEvent(event: SummaryEvent) {
         when (event) {
@@ -79,15 +91,6 @@ class SummaryViewModel @Inject constructor(
                 handleWeightDialogsAnswer(accepted = true)
             }
         }
-    }
-
-    fun initializeData() {
-        initBottomBarStatusProvider()
-        checkIfShouldAskForWeightDialogs()
-        getLatestLogEntry()
-        getCaloriesSum()
-        initWeightData()
-        initWantedCalories()
     }
 
     private fun handleWeightDialogsAnswer(accepted: Boolean?) {

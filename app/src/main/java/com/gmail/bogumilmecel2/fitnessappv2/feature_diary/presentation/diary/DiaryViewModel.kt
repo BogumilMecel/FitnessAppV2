@@ -25,9 +25,18 @@ import javax.inject.Inject
 class DiaryViewModel @Inject constructor(
     private val diaryUseCases: DiaryUseCases,
     private val dateHolder: DateHolder
-) : BaseViewModel<DiaryState, DiaryEvent>(state = DiaryState()) {
+) : BaseViewModel<DiaryState, DiaryEvent, Unit>(
+    state = DiaryState(),
+    navArguments = Unit
+) {
 
     private var diaryEntries = mutableListOf<DiaryItem>()
+
+    override fun configureOnStart() {
+        getDate()
+        getDiaryEntries(withOnlineDiaryEntries = true)
+        initWantedNutritionValues()
+    }
 
     override fun onEvent(event: DiaryEvent) {
         when (event) {
@@ -94,12 +103,6 @@ class DiaryViewModel @Inject constructor(
                 handleDateArrowClick()
             }
         }
-    }
-
-    fun initData() {
-        getDate()
-        getDiaryEntries(withOnlineDiaryEntries = true)
-        initWantedNutritionValues()
     }
 
     private fun handleDateArrowClick() {

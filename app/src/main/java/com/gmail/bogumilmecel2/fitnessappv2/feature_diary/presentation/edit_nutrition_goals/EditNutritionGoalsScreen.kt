@@ -15,7 +15,6 @@ import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -25,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.fitnessappv2.R
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.ConfigureViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.components.DefaultCardBackground
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.edit_nutrition_goals.components.MacroElementsSection
 import com.gmail.bogumilmecel2.ui.components.base.CustomBasicTextField
@@ -39,9 +39,7 @@ fun EditNutritionGoalsScreen(
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle().value
 
-    LaunchedEffect(key1 = true) {
-        viewModel.initData()
-    }
+    ConfigureViewModel(viewModel = viewModel)
 
     Column(
         modifier = Modifier

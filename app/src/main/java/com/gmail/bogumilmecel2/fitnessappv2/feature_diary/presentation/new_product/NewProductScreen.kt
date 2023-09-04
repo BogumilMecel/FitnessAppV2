@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.BackHandler
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.ConfigureViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_product.components.BarcodeSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_product.components.ContainerWeightSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_product.components.NutritionSection
@@ -30,14 +31,12 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.shared.Sc
 import com.gmail.bogumilmecel2.ui.components.complex.HeaderRow
 import com.ramcosta.composedestinations.annotation.Destination
 
-@Destination(
-    navArgsDelegate = NewProductNavArguments::class
-)
+@Destination(navArgsDelegate = NewProductNavArguments::class)
 @Composable
-fun NewProductScreen(
-    viewModel: NewProductViewModel = hiltViewModel()
-) {
+fun NewProductScreen(viewModel: NewProductViewModel = hiltViewModel()) {
     val state = viewModel.state.collectAsState().value
+
+    ConfigureViewModel(viewModel = viewModel)
 
     BackHandler(
         enabled = state.isScannerVisible
@@ -111,7 +110,7 @@ fun NewProductScreen(
                 Spacer(modifier = Modifier.height(36.dp))
 
                 Text(
-                    text = "Nutrition values",
+                    text = stringResource(id = R.string.nutrition_values),
                     modifier = Modifier
                         .padding(horizontal = 15.dp),
                     style = MaterialTheme.typography.body1.copy(
@@ -138,6 +137,4 @@ fun NewProductScreen(
             }
         )
     }
-
-
 }

@@ -13,7 +13,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-abstract class BaseViewModel<STATE: Any, EVENT: Any>(state: STATE) : ViewModel() {
+abstract class BaseViewModel<STATE : Any, EVENT : Any, NAV_ARGUMENTS: Any>(
+    state: STATE,
+    val navArguments: NAV_ARGUMENTS
+) : ViewModel() {
 
     protected val _state = MutableStateFlow(state)
     val state: StateFlow<STATE> = _state
@@ -35,6 +38,8 @@ abstract class BaseViewModel<STATE: Any, EVENT: Any>(state: STATE) : ViewModel()
 
     abstract fun onEvent(event: EVENT)
 
+    open fun configureOnStart() {}
+
     protected inline fun <T> Resource<T>.handle(
         showSnackbar: Boolean = true,
         finally: () -> Unit = {},
@@ -52,17 +57,20 @@ abstract class BaseViewModel<STATE: Any, EVENT: Any>(state: STATE) : ViewModel()
         finally()
     }
 
-    protected fun navigateWithPopUp(destination: Direction) {
+    protected fun navigateWithPopUp(destination: Direction, popUpTo: String = "") {
         navigateTo(
             destination = destination,
             navOptions = NavOptions.Builder().setPopUpTo(
-                route = "pop_up",
+                route = popUpTo,
                 inclusive = true
             ).build()
         )
     }
 
-    protected fun navigateTo(destination: Direction, navOptions: NavOptions = NavOptions.Builder().build()) =
+    protected fun navigateTo(
+        destination: Direction,
+        navOptions: NavOptions = NavOptions.Builder().build()
+    ) =
         viewModelScope.launch {
             navigator.navigate(
                 NavigationAction(
