@@ -24,7 +24,10 @@ class LoadingViewModel @Inject constructor(
     private val getUserDiaryAndSaveItLocallyUseCase: GetUserDiaryAndSaveItLocallyUseCase,
     private val getUserDiaryEntriesExperimentalUseCase: GetUserDiaryEntriesExperimentalUseCase,
     private val diaryRepository: DiaryRepository
-) : BaseViewModel<Unit, Unit>(state = Unit) {
+) : BaseViewModel<Unit, Unit, Unit>(
+    state = Unit,
+    navArguments = Unit
+) {
 
     fun checkIfTokenIsPresent() {
         viewModelScope.launch(Dispatchers.IO) {

@@ -15,7 +15,10 @@ import javax.inject.Inject
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
     private val authUseCases: AuthUseCases
-): BaseViewModel<RegisterState, AuthEvent>(state = RegisterState()){
+): BaseViewModel<RegisterState, AuthEvent, Unit>(
+    state = RegisterState(),
+    navArguments = Unit
+){
 
     override fun onEvent(event: AuthEvent){
         when(event){

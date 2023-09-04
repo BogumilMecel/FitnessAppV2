@@ -11,7 +11,7 @@ data class SearchState(
     val hasPermissionDialogBeenShowed: Boolean = false,
     val mealName: MealName = MealName.BREAKFAST,
     val selectedTabIndex: Int = 0,
-    val date: String,
+    val date: String = "",
     val barcode: String? = null,
     val everythingSearchItems: List<SearchItemParams> = emptyList(),
     val myRecipesSearchItems: List<SearchItemParams> = emptyList(),

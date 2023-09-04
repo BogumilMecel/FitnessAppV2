@@ -1,6 +1,5 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_recipe
 
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.MealName
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductPrice
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Ingredient
@@ -21,7 +20,6 @@ data class NewRecipeState(
     val selectedTime: TimeRequired = TimeRequired.LOW,
     val servings: String = "1",
     val name: String = "",
-    val mealName: MealName,
     val ingredientsItemsParams: List<SearchItemParams> = listOf(),
     val prices: MutableMap<Ingredient, ProductPrice> = mutableMapOf(),
     val isSearchSectionVisible: Boolean = false,
@@ -39,5 +37,4 @@ data class NewRecipeState(
     val isIngredientsListExpanded: Boolean = true,
     val longClickedIngredient: Ingredient? = null,
     val isDeleteIngredientDialogVisible: Boolean = false,
-    val date: String
 )

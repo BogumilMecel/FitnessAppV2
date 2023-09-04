@@ -16,7 +16,10 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val authUseCases: AuthUseCases
-) : BaseViewModel<LoginState, AuthEvent>(state = LoginState()) {
+) : BaseViewModel<LoginState, AuthEvent, Unit>(
+    state = LoginState(),
+    navArguments = Unit
+) {
 
     override fun onEvent(event: AuthEvent) {
         when (event) {

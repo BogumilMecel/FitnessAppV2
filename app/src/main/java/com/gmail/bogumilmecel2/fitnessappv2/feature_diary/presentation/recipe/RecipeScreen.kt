@@ -34,10 +34,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.DropdownArrow
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.ConfigureViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.components.DefaultCardBackground
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_recipe.components.RecipePriceSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.presentation.components.ProductNutritionSection
-import com.gmail.bogumilmecel2.ui.components.complex.ForEachSearchList
 import com.gmail.bogumilmecel2.ui.components.base.ButtonStyle
 import com.gmail.bogumilmecel2.ui.components.base.CustomBasicTextField
 import com.gmail.bogumilmecel2.ui.components.base.CustomButton
@@ -45,17 +45,18 @@ import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
 import com.gmail.bogumilmecel2.ui.components.base.IconButtonParams
 import com.gmail.bogumilmecel2.ui.components.base.IconVector
 import com.gmail.bogumilmecel2.ui.components.base.WidthSpacer
+import com.gmail.bogumilmecel2.ui.components.complex.ForEachSearchList
 import com.gmail.bogumilmecel2.ui.components.complex.HeaderRow
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 import com.ramcosta.composedestinations.annotation.Destination
 
 @Destination(navArgsDelegate = RecipeNavArguments::class)
 @Composable
-fun RecipeScreen(
-    viewModel: RecipeViewModel = hiltViewModel()
-) {
+fun RecipeScreen(viewModel: RecipeViewModel = hiltViewModel()) {
     val state = viewModel.state.collectAsStateWithLifecycle().value
     val scrollState = rememberScrollState()
+    
+    ConfigureViewModel(viewModel = viewModel)
 
     Column(
         modifier = Modifier
@@ -63,11 +64,8 @@ fun RecipeScreen(
             .verticalScroll(scrollState)
     ) {
         HeaderRow(
-            middlePrimaryText = state.entryData.recipe.name,
-            middleSecondaryText = stringResource(
-                id = R.string.kcal_with_value,
-                state.entryData.recipe.nutritionValues.calories
-            ),
+            middlePrimaryText = state.recipeName,
+            middleSecondaryText = state.recipeCaloriesText,
             onBackPressed = {
                 viewModel.onEvent(RecipeEvent.ClickedBackArrow)
             },
@@ -113,7 +111,7 @@ fun RecipeScreen(
                             WidthSpacer(width = 8.dp)
 
                             Text(
-                                text = state.entryData.recipe.timeRequired.displayValue,
+                                text = state.timeRequiredText,
                                 style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Medium)
                             )
                         }
@@ -150,7 +148,7 @@ fun RecipeScreen(
                             HeightSpacer(height = 8.dp)
 
                             Text(
-                                text = "${state.entryData.recipe.difficulty.displayValue} / 5",
+                                text = state.difficultyText,
                                 style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Medium)
                             )
                         }
@@ -204,14 +202,10 @@ fun RecipeScreen(
                             HeightSpacer(height = 4.dp)
 
                             Text(
-                                text = stringResource(
-                                    id = R.string.recipe_serves,
-                                    state.entryData.recipe.servings
-                                ),
+                                text = state.servingsText,
                                 style = MaterialTheme.typography.body2.copy(color = FitnessAppTheme.colors.ContentSecondary)
                             )
                         }
-
 
                         CustomBasicTextField(
                             value = state.servings,
@@ -230,10 +224,7 @@ fun RecipeScreen(
                     CustomButton(
                         modifier = Modifier.fillMaxWidth(),
                         leftIcon = IconVector.Save,
-                        text = stringResource(
-                            id = R.string.recipe_save_to,
-                            state.entryData.mealName
-                        )
+                        text = state.saveButtonText
                     ) {
                         viewModel.onEvent(RecipeEvent.ClickedSaveRecipeDiaryEntry)
                     }

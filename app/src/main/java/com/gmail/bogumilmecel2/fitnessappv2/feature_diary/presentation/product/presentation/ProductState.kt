@@ -15,5 +15,5 @@ data class ProductState(
     val productName: String = "",
     val productMeasurementUnit: MeasurementUnit = MeasurementUnit.GRAMS,
     val mealName: MealName = MealName.BREAKFAST,
-    val date: String
+    val date: String = ""
 )

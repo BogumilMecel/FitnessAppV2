@@ -30,11 +30,9 @@ class SearchViewModel @Inject constructor(
     private val searchDiaryUseCases: SearchDiaryUseCases,
     private val diaryRepository: DiaryRepository,
     savedStateHandle: SavedStateHandle,
-) : BaseViewModel<SearchState, SearchEvent>(
-    state = SearchState(
-        mealName = SearchScreenDestination.argsFrom(savedStateHandle).mealName,
-        date = SearchScreenDestination.argsFrom(savedStateHandle).dateTransferObject.displayedDate
-    )
+) : BaseViewModel<SearchState, SearchEvent, SearchNavArguments>(
+    state = SearchState(),
+    navArguments = SearchScreenDestination.argsFrom(savedStateHandle)
 ) {
     private val dateTransferObject =
         SearchScreenDestination.argsFrom(savedStateHandle).dateTransferObject
@@ -46,6 +44,22 @@ class SearchViewModel @Inject constructor(
     private var everythingFirstRequest: Boolean = true
     private var everythingJob: Job? = null
     private var isDataInitialized: Boolean = false
+
+    override fun configureOnStart() {
+        _state.update {
+            it.copy(
+                mealName = navArguments.mealName,
+                date = navArguments.dateTransferObject.displayedDate
+            )
+        }
+
+        if (!isDataInitialized) {
+            fetchUserRecipes()
+            fetchUserProducts()
+            fetchHistory()
+            isDataInitialized = true
+        }
+    }
 
     override fun onEvent(event: SearchEvent) {
         when (event) {
@@ -62,8 +76,11 @@ class SearchViewModel @Inject constructor(
             }
 
             is SearchEvent.ClickedSearch -> {
-                when(_state.value.selectedTabIndex) {
-                    SearchTab.EVERYTHING.ordinal -> { searchForProducts() }
+                when (_state.value.selectedTabIndex) {
+                    SearchTab.EVERYTHING.ordinal -> {
+                        searchForProducts()
+                    }
+
                     else -> {}
                 }
             }
@@ -149,15 +166,6 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    fun initializeData() {
-        if (!isDataInitialized) {
-            fetchUserRecipes()
-            fetchUserProducts()
-            fetchHistory()
-            isDataInitialized = true
-        }
-    }
-
     private fun fetchUserRecipes() {
         viewModelScope.launch(Dispatchers.IO) {
             diaryRepository.getLocalUserRecipes().handle { recipes ->
@@ -208,7 +216,7 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun handleSearchText(searchText: String) {
-        when(_state.value.selectedTabIndex) {
+        when (_state.value.selectedTabIndex) {
             SearchTab.EVERYTHING.ordinal -> {
                 everythingPage = 1
                 if (searchText.isEmpty()) {
@@ -236,7 +244,10 @@ class SearchViewModel @Inject constructor(
     private fun filterUserRecipes(searchText: String) {
         createSearchItemParamsFromRecipeUseCase(
             items = userRecipes.filter {
-                it.name.contains(other = searchText, ignoreCase = true)
+                it.name.contains(
+                    other = searchText,
+                    ignoreCase = true
+                )
             }
         )
     }
@@ -244,7 +255,10 @@ class SearchViewModel @Inject constructor(
     private fun filterUserProducts(searchText: String) {
         createMyProductsSearchItemParamsFromProductUseCase(
             items = userProducts.filter {
-                it.name.contains(other = searchText, ignoreCase = true)
+                it.name.contains(
+                    other = searchText,
+                    ignoreCase = true
+                )
             }
         )
     }

@@ -3,9 +3,9 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_prod
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
+import com.gmail.bogumilmecel2.fitnessappv2.destinations.DiaryScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.NewProductScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.ProductScreenDestination
-import com.gmail.bogumilmecel2.fitnessappv2.destinations.SearchScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.product.NutritionValuesIn
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_product.SaveNewProductUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.presentation.ProductEntryData
@@ -18,14 +18,21 @@ import javax.inject.Inject
 @HiltViewModel
 class NewProductViewModel @Inject constructor(
     private val saveNewProductUseCase: SaveNewProductUseCase,
-    private val savedStateHandle: SavedStateHandle
-) : BaseViewModel<NewProductState, NewProductEvent>(
-    state = NewProductState(
-        mealName = NewProductScreenDestination.argsFrom(savedStateHandle).mealName,
-        barcode = NewProductScreenDestination.argsFrom(savedStateHandle).barcode ?: "",
-        date = NewProductScreenDestination.argsFrom(savedStateHandle).dateTransferObject.displayedDate
-    )
+    savedStateHandle: SavedStateHandle
+) : BaseViewModel<NewProductState, NewProductEvent, NewProductNavArguments>(
+    state = NewProductState(),
+    navArguments = NewProductScreenDestination.argsFrom(savedStateHandle)
 ) {
+
+    override fun configureOnStart() {
+        with(navArguments) {
+            _state.update {
+                it.copy(
+                    barcode = barcode ?: "",
+                )
+            }
+        }
+    }
 
     override fun onEvent(event: NewProductEvent) {
         when (event) {
@@ -127,11 +134,12 @@ class NewProductViewModel @Inject constructor(
                             navigateWithPopUp(
                                 destination = ProductScreenDestination(
                                     entryData = ProductEntryData.Adding(
-                                        mealName = mealName,
+                                        mealName = navArguments.mealName,
                                         product = product,
-                                        dateTransferObject = SearchScreenDestination.argsFrom(savedStateHandle).dateTransferObject
+                                        dateTransferObject = navArguments.dateTransferObject
                                     ),
-                                )
+                                ),
+                                popUpTo = DiaryScreenDestination.route
                             )
                         }
                     }
