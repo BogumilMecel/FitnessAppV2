@@ -46,10 +46,7 @@ fun AccountScreen(
         viewModel.onEvent(AccountEvent.BackPressed)
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
+    Column(modifier = Modifier.fillMaxSize()) {
         Spacer(modifier = Modifier.height(10.dp))
 
         DefaultCardBackground(
@@ -71,7 +68,8 @@ fun AccountScreen(
                 ) {
                     Text(
                         text = stringResource(id = R.string.nutrition_goals),
-                        style = FitnessAppTheme.typography.HeaderSmall
+                        style = FitnessAppTheme.typography.HeaderSmall,
+                        color = FitnessAppTheme.colors.ContentPrimary
                     )
 
                     CustomIconButton(

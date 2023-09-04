@@ -5,4 +5,4 @@ import androidx.compose.ui.unit.dp
 
 fun defaultRoundedCornerShape() = RoundedCornerShape(size = defaultRoundedCornerShapeValue())
 
-fun defaultRoundedCornerShapeValue() = 20.dp
+fun defaultRoundedCornerShapeValue() = 12.dp
