@@ -30,11 +30,11 @@ interface UserDiaryItemsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertRecipeDiaryEntry(recipeDiaryEntry: RecipeDiaryEntry)
 
-    @Query("SELECT * from recipe")
-    fun getUserRecipes(): List<Recipe>
+    @Query("SELECT * from recipe WHERE user_id = :userId")
+    fun getUserRecipes(userId: String): List<Recipe>
 
-    @Query("SELECT * from product")
-    fun getUserProducts(): List<Product>
+    @Query("SELECT * from product WHERE user_id = :userId")
+    fun getUserProducts(userId: String): List<Product>
 
     @Query("SELECT * FROM productdiaryentry WHERE date = :date")
     fun getProductDiaryEntries(date: String): List<ProductDiaryEntry>
