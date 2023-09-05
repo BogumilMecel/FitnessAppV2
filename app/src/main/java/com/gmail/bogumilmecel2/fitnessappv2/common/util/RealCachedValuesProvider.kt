@@ -55,6 +55,8 @@ class RealCachedValuesProvider(
         User::class.java
     ) ?: throw Exception()
 
+    override suspend fun getUserId() = getUser().id
+
     override suspend fun getUserCurrency(): Currency = getItemFromJson(
         key = CURRENCY,
         String::class.java

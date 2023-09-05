@@ -198,15 +198,15 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun getLocalUserRecipes(): Resource<List<Recipe>> {
+    override suspend fun getLocalUserRecipes(userId: String): Resource<List<Recipe>> {
         return handleRequest {
-            userDiaryItemsDao.getUserRecipes()
+            userDiaryItemsDao.getUserRecipes(userId = userId)
         }
     }
 
-    override suspend fun getLocalUserProducts(): Resource<List<Product>> {
+    override suspend fun getLocalUserProducts(userId: String): Resource<List<Product>> {
         return handleRequest {
-            userDiaryItemsDao.getUserProducts()
+            userDiaryItemsDao.getUserProducts(userId = userId)
         }
     }
 
