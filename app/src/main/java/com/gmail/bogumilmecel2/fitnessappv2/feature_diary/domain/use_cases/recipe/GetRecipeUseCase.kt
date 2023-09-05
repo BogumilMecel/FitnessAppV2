@@ -7,6 +7,12 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.Diar
 class GetRecipeUseCase(private val diaryRepository: DiaryRepository) {
 
     suspend operator fun invoke(recipeId: String): Resource<Recipe?> {
+        val cachedRecipe = diaryRepository.getOfflineRecipe(recipeId = recipeId).data
+
+        if (cachedRecipe != null) {
+            return Resource.Success(cachedRecipe)
+        }
+
         return diaryRepository.getRecipe(recipeId)
     }
 }

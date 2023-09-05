@@ -175,7 +175,7 @@ class DiaryViewModel @Inject constructor(
     }
 
     private fun getRecipeAndNavigateToEditScreen(diaryEntry: RecipeDiaryEntry) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             diaryUseCases.getRecipeUseCase(diaryEntry.recipeId).handle { recipe ->
                 if (recipe != null) {
                     navigateTo(
@@ -195,7 +195,7 @@ class DiaryViewModel @Inject constructor(
     }
 
     private fun getProductAndNavigateToEditScreen(diaryEntry: ProductDiaryEntry) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             diaryUseCases.getProductUseCase(diaryEntry.productId).handle { product ->
                 if (product != null) {
                     navigateTo(

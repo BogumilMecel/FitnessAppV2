@@ -36,6 +36,8 @@ class PostRecipeDiaryEntryUseCase(
             )
         ).data ?: return Resource.Error()
 
+        diaryRepository.cacheRecipe(recipe)
+
         return diaryRepository.insertOfflineDiaryEntry(insertedRecipeDiaryEntry)
     }
 

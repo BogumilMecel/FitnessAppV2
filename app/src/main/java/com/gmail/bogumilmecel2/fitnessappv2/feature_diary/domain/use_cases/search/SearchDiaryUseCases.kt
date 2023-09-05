@@ -3,6 +3,8 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.sear
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CreateSearchItemParamsFromHistoryItemUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CreateSearchItemParamsFromProductUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CreateSearchItemParamsFromRecipeUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.GetProductUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.recipe.GetRecipeUseCase
 
 data class SearchDiaryUseCases(
     val searchForProductsUseCase: SearchForProductsUseCase,
@@ -10,5 +12,7 @@ data class SearchDiaryUseCases(
     val searchForRecipes: SearchForRecipes,
     val createSearchItemParamsFromRecipeUseCase: CreateSearchItemParamsFromRecipeUseCase,
     val createSearchItemParamsFromProductUseCase: CreateSearchItemParamsFromProductUseCase,
-    val createSearchItemParamsFromHistoryItemUseCase: CreateSearchItemParamsFromHistoryItemUseCase
+    val createSearchItemParamsFromHistoryItemUseCase: CreateSearchItemParamsFromHistoryItemUseCase,
+    val getRecipeUseCase: GetRecipeUseCase,
+    val getProductUseCase: GetProductUseCase
 )

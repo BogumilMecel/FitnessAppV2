@@ -68,6 +68,10 @@ interface DiaryRepository {
     suspend fun insertUserRecipesLocally(userRecipes: List<Recipe>): Resource<Unit>
     suspend fun getLocalUserRecipes(userId: String): Resource<List<Recipe>>
     suspend fun getLocalUserProducts(userId: String): Resource<List<Product>>
-    suspend fun clearLocalData(): Resource<Unit>
+    suspend fun clearLocalData(userId: String): Resource<Unit>
     suspend fun insertOfflineDiaryEntry(diaryItem: DiaryItem): Resource<Unit>
+    suspend fun cacheProduct(product: Product): Resource<Unit>
+    suspend fun cacheRecipe(recipe: Recipe): Resource<Unit>
+    suspend fun getOfflineProduct(productId: String): Resource<Product?>
+    suspend fun getOfflineRecipe(recipeId: String): Resource<Recipe?>
 }
