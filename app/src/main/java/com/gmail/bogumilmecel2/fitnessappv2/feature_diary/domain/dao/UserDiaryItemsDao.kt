@@ -48,11 +48,11 @@ interface UserDiaryItemsDao {
     @Query("SELECT COUNT(*) FROM productdiaryentry")
     fun getProductDiaryEntryCount(): Int
 
-    @Query("DELETE FROM product")
-    fun deleteUserProducts()
+    @Query("DELETE FROM product WHERE user_id = :userId")
+    fun deleteUserProducts(userId: String)
 
-    @Query("DELETE FROM recipe")
-    fun deleteUserRecipes()
+    @Query("DELETE FROM recipe WHERE user_id = :userId")
+    fun deleteUserRecipes(userId: String)
 
     @Query("DELETE FROM productdiaryentry WHERE id = :productDiaryEntryId")
     fun deleteProductDiaryEntry(productDiaryEntryId: String)
@@ -77,4 +77,16 @@ interface UserDiaryItemsDao {
 
     @Query("SELECT nutrition_values FROM recipediaryentry WHERE date = :date")
     fun getRecipeDiaryEntriesNutritionValues(date: String): List<NutritionValues>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertProduct(product: Product)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertRecipe(recipe: Recipe)
+
+    @Query("SELECT * FROM product WHERE id = :productId LIMIT 1")
+    fun getProduct(productId: String): List<Product>
+
+    @Query("SELECT * FROM recipe WHERE id = :recipeId LIMIT 1")
+    fun getRecipe(recipeId: String): List<Recipe>
 }

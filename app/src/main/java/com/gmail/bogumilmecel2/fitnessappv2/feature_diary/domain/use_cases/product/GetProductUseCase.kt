@@ -6,6 +6,12 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.Diar
 
 class GetProductUseCase(private val diaryRepository: DiaryRepository) {
     suspend operator fun invoke(productId: String): Resource<Product?> {
+        val cachedProduct = diaryRepository.getOfflineProduct(productId = productId).data
+
+        if (cachedProduct != null) {
+            return Resource.Success(cachedProduct)
+        }
+
         return diaryRepository.getProduct(productId)
     }
 }

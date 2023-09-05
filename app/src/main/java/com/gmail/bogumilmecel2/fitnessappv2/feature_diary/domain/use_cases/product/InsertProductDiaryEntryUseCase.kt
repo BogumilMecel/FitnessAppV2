@@ -37,6 +37,8 @@ class InsertProductDiaryEntryUseCase(
             )
         ).data ?: return Resource.Error()
 
+        diaryRepository.cacheProduct(product = product)
+
         return diaryRepository.insertOfflineDiaryEntry(insertedProductDiaryEntry)
     }
 

@@ -46,11 +46,12 @@ class LoadingViewModel @Inject constructor(
             when {
                 user == null -> {
                     navigateToLoginScreen()
+                    return
                 }
 
                 user.nutritionValues != null && user.userInformation != null -> {
                     cachedValuesProvider.saveUser(user = user)
-                    diaryRepository.clearLocalData()
+                    diaryRepository.clearLocalData(user.id)
 
                     val userItemsJob = viewModelScope.async(Dispatchers.IO) {
                         getUserDiaryAndSaveItLocallyUseCase()

@@ -326,7 +326,9 @@ class SearchViewModel @Inject constructor(
     private fun getProduct(productId: String) {
         viewModelScope.launch {
             setLoader(true)
-            diaryRepository.getProduct(productId = productId).handle(
+            searchDiaryUseCases.getProductUseCase(
+                productId = productId
+            ).handle(
                 finally = { setLoader(false) },
                 showSnackbar = false
             ) { product ->
