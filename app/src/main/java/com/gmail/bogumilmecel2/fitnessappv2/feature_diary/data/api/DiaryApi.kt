@@ -18,7 +18,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Re
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.RecipePriceRequest
-import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.model.CaloriesSumResponse
 import retrofit2.http.*
 
 interface DiaryApi {
@@ -92,11 +91,6 @@ interface DiaryApi {
     suspend fun getRecipe(
         @Path("recipeId") recipeId: String
     ) : Recipe?
-
-    @GET("/diaryEntries/calories")
-    suspend fun getCaloriesSum(
-        @Query("date") date: String
-    ): CaloriesSumResponse
 
     @POST("/products/{productId}/price")
     suspend fun addNewPriceForProduct(
