@@ -39,6 +39,9 @@ interface UserDiaryItemsDao {
     @Query("SELECT * FROM productdiaryentry WHERE date = :date")
     fun getProductDiaryEntries(date: String): List<ProductDiaryEntry>
 
+    @Query("SELECT * FROM productdiaryentry WHERE product_name LIKE '%' || :searchText || '%' GROUP BY product_id ORDER BY utc_timestamp DESC LIMIT :limit OFFSET :offset")
+    fun getProductDiaryEntriesForSearch(searchText: String, limit: Int, offset: Int): List<ProductDiaryEntry>
+
     @Query("SELECT * FROM recipediaryentry WHERE date = :date")
     fun getRecipeDiaryEntries(date: String): List<RecipeDiaryEntry>
 

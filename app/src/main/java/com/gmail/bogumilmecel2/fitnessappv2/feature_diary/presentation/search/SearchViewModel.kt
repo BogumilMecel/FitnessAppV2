@@ -10,7 +10,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.destinations.ProductScreenDestinatio
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.RecipeScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.SearchScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductDiaryHistoryItem
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.SearchDiaryUseCases
@@ -19,8 +19,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.recipe.Re
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator.navigate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -36,13 +34,10 @@ class SearchViewModel @Inject constructor(
 ) {
     private val dateTransferObject =
         SearchScreenDestination.argsFrom(savedStateHandle).dateTransferObject
-    private var startingProductHistory = emptyList<ProductDiaryHistoryItem>()
-    private var productHistory = emptyList<ProductDiaryHistoryItem>()
+    private val diaryHistory = mutableListOf<ProductDiaryEntry>()
     private var userRecipes = emptyList<Recipe>()
     private var userProducts = emptyList<Product>()
     private var everythingPage = 1
-    private var everythingFirstRequest: Boolean = true
-    private var everythingJob: Job? = null
     private var isDataInitialized: Boolean = false
 
     override fun configureOnStart() {
@@ -193,24 +188,16 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun requestHistory(searchText: String?) {
-        everythingJob?.cancel()
-        everythingJob = viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             setLoader(true)
-            if (!everythingFirstRequest) {
-                delay(500)
-            }
-            diaryRepository.getOnlineDiaryHistory(
+            searchDiaryUseCases.getDiaryHistoryUseCase(
                 page = everythingPage,
                 searchText = searchText
             ).handle(
                 finally = { setLoader(false) }
-            ) { productHistoryItems ->
-                if (everythingFirstRequest) {
-                    startingProductHistory = productHistoryItems
-                    everythingFirstRequest = false
-                }
-                productHistory = productHistoryItems
-                createSearchItemParamsFromHistoryItemUseCase()
+            ) {
+                diaryHistory.addAll(it)
+                createSearchItemParamsFromHistoryItems()
             }
         }
     }
@@ -222,15 +209,9 @@ class SearchViewModel @Inject constructor(
     private fun handleSearchText(searchText: String) {
         when (_state.value.selectedTabIndex) {
             SearchTab.EVERYTHING.ordinal -> {
+                diaryHistory.clear()
                 everythingPage = 1
-                if (searchText.isEmpty()) {
-                    everythingJob?.cancel()
-                    setLoader(false)
-                    productHistory = startingProductHistory
-                    createSearchItemParamsFromHistoryItemUseCase()
-                } else {
-                    requestHistory(searchText)
-                }
+                requestHistory(searchText)
             }
 
             SearchTab.RECIPES.ordinal -> {
@@ -267,12 +248,12 @@ class SearchViewModel @Inject constructor(
         )
     }
 
-    private fun createSearchItemParamsFromHistoryItemUseCase() {
+    private fun createSearchItemParamsFromHistoryItems() {
         _state.update {
             it.copy(
-                everythingSearchItems = productHistory.map { item ->
-                    searchDiaryUseCases.createSearchItemParamsFromHistoryItemUseCase(
-                        productDiaryHistoryItem = item,
+                everythingSearchItems = diaryHistory.map { item ->
+                    searchDiaryUseCases.createSearchItemParamsFromProductDiaryEntryUseCase(
+                        productDiaryEntry = item,
                         onClick = { getProduct(productId = item.productId) },
                         onLongClick = {}
                     )
@@ -341,6 +322,7 @@ class SearchViewModel @Inject constructor(
 
     private fun searchForProducts() {
         showOrHideLoader()
+        everythingPage = 1
         viewModelScope.launch(Dispatchers.IO) {
             searchDiaryUseCases.searchForProductsUseCase(_state.value.searchBarText).handle(
                 finally = {

@@ -5,7 +5,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.util.ApiConstants
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.DeleteDiaryEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.DiaryEntriesResponse
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductDiaryHistoryItem
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductPrice
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductPriceResponse
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.RecipePriceResponse
@@ -93,12 +92,6 @@ interface DiaryApi {
     suspend fun getRecipe(
         @Path("recipeId") recipeId: String
     ) : Recipe?
-
-    @GET("/diaryEntries/history/product")
-    suspend fun getProductDiaryHistory(
-        @Query("page") page: Int,
-        @Query("search_text") searchText: String?,
-    ): List<ProductDiaryHistoryItem>
 
     @GET("/diaryEntries/calories")
     suspend fun getCaloriesSum(
