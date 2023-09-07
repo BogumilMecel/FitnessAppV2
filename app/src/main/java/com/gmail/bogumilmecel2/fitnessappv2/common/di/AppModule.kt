@@ -41,6 +41,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_r
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_recipe.CalculateRecipeNutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.*
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.recipe.CalculateRecipeNutritionValuesForServingsUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.recipe.GetRecipeUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.recipe.PostRecipeDiaryEntryUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.SearchForProductsUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.data.api.UserDataApi
@@ -427,6 +428,16 @@ object AppModule {
         userDataApi = userDataApi,
         cachedValuesProvider = cachedValuesProvider
     )
+
+    @Singleton
+    @Provides
+    fun provideGetProductUseCase(diaryRepository: DiaryRepository): GetProductUseCase =
+        GetProductUseCase(diaryRepository)
+
+    @Singleton
+    @Provides
+    fun provideGetRecipeUseCase(diaryRepository: DiaryRepository): GetRecipeUseCase =
+        GetRecipeUseCase(diaryRepository)
 
     @Singleton
     @Provides

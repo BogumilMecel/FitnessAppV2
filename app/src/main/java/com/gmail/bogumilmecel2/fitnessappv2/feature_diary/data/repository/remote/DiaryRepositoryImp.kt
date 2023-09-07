@@ -10,7 +10,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.dao.UserDiaryIt
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.DeleteDiaryEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.DiaryEntriesResponse
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductDiaryHistoryItem
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductPrice
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.RecipePriceResponse
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.UserDiaryItemsResponse
@@ -105,6 +104,16 @@ class DiaryRepositoryImp(
             userDiaryItemsDao.deleteProductDiaryEntries(
                 date = date,
                 diaryEntriesIds = productDiaryEntriesIds
+            )
+        }
+    }
+
+    override suspend fun getOfflineDiaryEntries(limit: Int, offset: Int, searchText: String): Resource<List<ProductDiaryEntry>> {
+        return handleRequest {
+            userDiaryItemsDao.getProductDiaryEntriesForSearch(
+                limit = limit,
+                offset = offset,
+                searchText = searchText
             )
         }
     }
@@ -207,18 +216,6 @@ class DiaryRepositoryImp(
     override suspend fun getLocalUserProducts(userId: String): Resource<List<Product>> {
         return handleRequest {
             userDiaryItemsDao.getUserProducts(userId = userId)
-        }
-    }
-
-    override suspend fun getOnlineDiaryHistory(
-        page: Int,
-        searchText: String?
-    ): Resource<List<ProductDiaryHistoryItem>> {
-        return handleRequest {
-            diaryApi.getProductDiaryHistory(
-                page = page,
-                searchText = searchText
-            )
         }
     }
 

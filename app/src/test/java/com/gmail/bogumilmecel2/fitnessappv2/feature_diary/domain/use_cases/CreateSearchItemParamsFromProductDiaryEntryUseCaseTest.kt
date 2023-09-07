@@ -9,14 +9,14 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.MockConstants.Diary.mockKcalW
 import com.gmail.bogumilmecel2.fitnessappv2.common.MockConstants.Diary.mockMeasurementUnitWithValueString
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.MeasurementUnit
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductDiaryHistoryItem
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
 import com.gmail.bogumilmecel2.ui.components.complex.SearchItemParams
 import org.junit.Test
 import kotlin.test.assertEquals
 
-class CreateSearchItemParamsFromHistoryItemUseCaseTest: BaseMockkTest() {
+class CreateSearchItemParamsFromProductDiaryEntryUseCaseTest: BaseMockkTest() {
 
-    private val createSearchItemParamsFromHistoryItemUseCase = CreateSearchItemParamsFromHistoryItemUseCase(resourceProvider)
+    private val createSearchItemParamsFromProductDiaryEntryUseCase = CreateSearchItemParamsFromProductDiaryEntryUseCase(resourceProvider)
 
     @Test
     fun `Check if params are correct`() {
@@ -55,30 +55,30 @@ class CreateSearchItemParamsFromHistoryItemUseCaseTest: BaseMockkTest() {
             resourceProvider = resourceProvider
         )
 
-        val productDiaryHistoryItem = ProductDiaryHistoryItem(
+        val productDiaryEntry = ProductDiaryEntry(
             productName = productName,
             nutritionValues = nutritionValues,
-            measurementUnit = measurementUnit,
+            productMeasurementUnit = measurementUnit,
             weight = weight
         )
 
         val onClick = {}
         val onLongClick = {}
-        val weightText = when(productDiaryHistoryItem.measurementUnit) {
+        val weightText = when(productDiaryEntry.productMeasurementUnit) {
             MeasurementUnit.MILLILITERS -> "$weight${MockConstants.Diary.MILLILITERS}"
             MeasurementUnit.GRAMS -> "$weight${MockConstants.Diary.GRAMS}"
         }
 
         assertEquals(
-            actual = createSearchItemParamsFromHistoryItemUseCase(
-                productDiaryHistoryItem = productDiaryHistoryItem,
+            actual = createSearchItemParamsFromProductDiaryEntryUseCase(
+                productDiaryEntry = productDiaryEntry,
                 onClick = onClick,
                 onLongClick = onLongClick
             ),
             expected = SearchItemParams(
                 name = productName,
                 textBelowName = weightText,
-                endText = "${productDiaryHistoryItem.nutritionValues.calories} $KCAL",
+                endText = "${productDiaryEntry.nutritionValues.calories} $KCAL",
                 onItemClick = onClick,
                 onItemLongClick = onLongClick
             )
