@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -19,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -26,13 +28,14 @@ import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.BackHandler
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.ConfigureViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.ErrorUtils
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.componens.SearchEverythingSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.componens.SearchTopSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.shared.ScannerSection
 import com.gmail.bogumilmecel2.ui.components.base.ButtonParams
+import com.gmail.bogumilmecel2.ui.components.base.CustomButton
 import com.gmail.bogumilmecel2.ui.components.base.CustomIcon
 import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
 import com.gmail.bogumilmecel2.ui.components.base.IconVector
+import com.gmail.bogumilmecel2.ui.components.base.LoaderColumn
 import com.gmail.bogumilmecel2.ui.components.complex.SearchButtonParams
 import com.gmail.bogumilmecel2.ui.components.complex.SearchButtonRow
 import com.gmail.bogumilmecel2.ui.components.complex.SearchList
@@ -117,17 +120,69 @@ fun SearchScreen(
                 ) { pagerScope ->
                     when (pagerScope) {
                         SearchTab.EVERYTHING.ordinal -> {
-                            SearchEverythingSection(
-                                searchItems = state.everythingSearchItems,
-                                isBarcodeLayoutVisible = state.barcode != null,
-                                isLoading = state.isLoading,
-                                onScanBarcodeClicked = {
-                                    viewModel.onEvent(SearchEvent.ClickedScanButton)
-                                },
-                                onBarcodeAddProductClicked = {
-                                    viewModel.onEvent(SearchEvent.ClickedNewProduct)
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(top = 16.dp),
+                            ) {
+                                SearchButtonRow(
+                                    buttons = listOf(
+                                        SearchButtonParams(
+                                            buttonParams = ButtonParams(
+                                                text = stringResource(id = R.string.search_quick_add),
+                                                onClick = {
+
+                                                }
+                                            ),
+                                            icon = IconVector.Add
+                                        ),
+                                        SearchButtonParams(
+                                            buttonParams = ButtonParams(
+                                                text = stringResource(id = R.string.scan_barcode),
+                                                onClick = { viewModel.onEvent(SearchEvent.ClickedScanButton) }
+                                            ),
+                                            icon = IconVector.barcode(),
+                                        )
+                                    ),
+                                    buttonsColor = FitnessAppTheme.colors.Secondary
+                                )
+
+                                HeightSpacer()
+
+                                Box {
+                                    if (state.barcode != null) {
+                                        Column(
+                                            modifier = Modifier
+                                                .align(Alignment.Center)
+                                                .fillMaxWidth(),
+                                            horizontalAlignment = Alignment.CenterHorizontally
+                                        ) {
+                                            Text(
+                                                text = stringResource(id = R.string.there_is_no_product_with_provided_barcode_do_you_want_to_add_it),
+                                                modifier = Modifier.padding(horizontal = 16.dp),
+                                                style = FitnessAppTheme.typography.HeaderLarge,
+                                                textAlign = TextAlign.Center
+                                            )
+
+                                            HeightSpacer()
+
+                                            CustomButton(
+                                                onClick = { viewModel.onEvent(SearchEvent.ClickedNewProduct) },
+                                                text = stringResource(id = R.string.add)
+                                            )
+                                        }
+                                    } else if (state.everythingSearchItems.isNotEmpty()) {
+                                        LoaderColumn(isLoading = state.isLoading) {
+                                            SearchList(
+                                                items = state.everythingSearchItems,
+                                                onScrollToEnd = {
+                                                    viewModel.onEvent(SearchEvent.ReachedListEnd)
+                                                }
+                                            )
+                                        }
+                                    }
                                 }
-                            )
+                            }
                         }
 
                         SearchTab.PRODUCTS.ordinal -> {
