@@ -4,6 +4,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.Creat
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CreateSearchItemParamsFromProductUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CreateSearchItemParamsFromRecipeUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetDiaryHistoryUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.ShouldDisplayNextPageUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.GetProductUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.recipe.GetRecipeUseCase
 
@@ -16,5 +17,6 @@ data class SearchDiaryUseCases(
     val createSearchItemParamsFromProductDiaryEntryUseCase: CreateSearchItemParamsFromProductDiaryEntryUseCase,
     val getRecipeUseCase: GetRecipeUseCase,
     val getProductUseCase: GetProductUseCase,
-    val getDiaryHistoryUseCase: GetDiaryHistoryUseCase
+    val getDiaryHistoryUseCase: GetDiaryHistoryUseCase,
+    val shouldDisplayNextPageUseCase: ShouldDisplayNextPageUseCase
 )

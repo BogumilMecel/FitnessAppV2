@@ -3,6 +3,7 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.gmail.bogumilmecel2.fitnessappv2.R
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.ApiConstants
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.NewProductScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.NewRecipeScreenDestination
@@ -32,13 +33,14 @@ class SearchViewModel @Inject constructor(
     state = SearchState(),
     navArguments = SearchScreenDestination.argsFrom(savedStateHandle)
 ) {
-    private val dateTransferObject =
-        SearchScreenDestination.argsFrom(savedStateHandle).dateTransferObject
     private val diaryHistory = mutableListOf<ProductDiaryEntry>()
     private var userRecipes = emptyList<Recipe>()
     private var userProducts = emptyList<Product>()
     private var everythingPage = 1
     private var isDataInitialized: Boolean = false
+    private var isDisplayingHistory = true
+    private var currentTabIndex = SearchTab.EVERYTHING.ordinal
+    private var searchText: String? = null
 
     override fun configureOnStart() {
         _state.update {
@@ -51,7 +53,7 @@ class SearchViewModel @Inject constructor(
         if (!isDataInitialized) {
             fetchUserRecipes()
             fetchUserProducts()
-            fetchHistory()
+            requestHistory()
             isDataInitialized = true
         }
     }
@@ -71,8 +73,9 @@ class SearchViewModel @Inject constructor(
             }
 
             is SearchEvent.ClickedSearch -> {
-                when (_state.value.selectedTabIndex) {
+                when (currentTabIndex) {
                     SearchTab.EVERYTHING.ordinal -> {
+                        isDisplayingHistory = false
                         searchForProducts()
                     }
 
@@ -81,12 +84,13 @@ class SearchViewModel @Inject constructor(
             }
 
             is SearchEvent.EnteredSearchText -> {
+                searchText = event.text
                 _state.update {
                     it.copy(
                         searchBarText = event.text
                     )
                 }
-                handleSearchText(event.text)
+                handleSearchTextChange()
             }
 
             is SearchEvent.ClickedProduct -> {
@@ -98,7 +102,7 @@ class SearchViewModel @Inject constructor(
                     NewProductScreenDestination(
                         mealName = _state.value.mealName,
                         barcode = _state.value.barcode,
-                        dateTransferObject = dateTransferObject
+                        dateTransferObject = navArguments.dateTransferObject
                     )
                 )
             }
@@ -125,17 +129,16 @@ class SearchViewModel @Inject constructor(
             }
 
             is SearchEvent.ClickedCreateNewRecipe -> {
-                with(_state.value) {
-                    navigateTo(
-                        NewRecipeScreenDestination(
-                            mealName = mealName,
-                            dateTransferObject = dateTransferObject
-                        )
+                navigateTo(
+                    NewRecipeScreenDestination(
+                        mealName = navArguments.mealName,
+                        dateTransferObject = navArguments.dateTransferObject
                     )
-                }
+                )
             }
 
             is SearchEvent.SelectedTab -> {
+                currentTabIndex = event.index
                 _state.update {
                     it.copy(
                         selectedTabIndex = event.index
@@ -148,14 +151,43 @@ class SearchViewModel @Inject constructor(
                     RecipeScreenDestination(
                         entryData = RecipeEntryData.Adding(
                             recipe = event.recipe,
-                            mealName = _state.value.mealName,
-                            dateTransferObject = dateTransferObject
+                            mealName = navArguments.mealName,
+                            dateTransferObject = navArguments.dateTransferObject
                         )
                     )
                 )
             }
 
             is SearchEvent.ReachedListEnd -> {
+                handleEndOfListReached()
+            }
+        }
+    }
+
+    private fun handleEndOfListReached() {
+        when (currentTabIndex) {
+            SearchTab.EVERYTHING.ordinal -> {
+                if (isDisplayingHistory) {
+                    if (
+                        searchDiaryUseCases.shouldDisplayNextPageUseCase(
+                            size = diaryHistory.size,
+                            perPage = ApiConstants.DEFAULT_OFFLINE_PAGE_SIZE,
+                            currentPage = everythingPage
+                        )
+                    ) {
+                        everythingPage++
+                        requestHistory()
+                    }
+                } else {
+                    // TODO: implement getting pages for products
+                }
+            }
+
+            SearchTab.PRODUCTS.ordinal -> {
+
+            }
+
+            SearchTab.RECIPES.ordinal -> {
 
             }
         }
@@ -183,11 +215,7 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    private fun fetchHistory() {
-        requestHistory(searchText = null)
-    }
-
-    private fun requestHistory(searchText: String?) {
+    private fun requestHistory() {
         viewModelScope.launch(Dispatchers.IO) {
             setLoader(true)
             searchDiaryUseCases.getDiaryHistoryUseCase(
@@ -206,42 +234,31 @@ class SearchViewModel @Inject constructor(
         _state.update { it.copy(isLoading = isLoading) }
     }
 
-    private fun handleSearchText(searchText: String) {
-        when (_state.value.selectedTabIndex) {
-            SearchTab.EVERYTHING.ordinal -> {
-                diaryHistory.clear()
-                everythingPage = 1
-                requestHistory(searchText)
-            }
-
-            SearchTab.RECIPES.ordinal -> {
-                filterUserRecipes(searchText)
-            }
-
-            SearchTab.PRODUCTS.ordinal -> {
-                filterUserProducts(searchText)
-            }
-
-            else -> {}
-        }
+    private fun handleSearchTextChange() {
+        isDisplayingHistory = true
+        diaryHistory.clear()
+        everythingPage = 1
+        requestHistory()
+        filterUserRecipes()
+        filterUserProducts()
     }
 
-    private fun filterUserRecipes(searchText: String) {
+    private fun filterUserRecipes() {
         createSearchItemParamsFromRecipeUseCase(
             items = userRecipes.filter {
                 it.name.contains(
-                    other = searchText,
+                    other = searchText.orEmpty(),
                     ignoreCase = true
                 )
             }
         )
     }
 
-    private fun filterUserProducts(searchText: String) {
+    private fun filterUserProducts() {
         createMyProductsSearchItemParamsFromProductUseCase(
             items = userProducts.filter {
                 it.name.contains(
-                    other = searchText,
+                    other = searchText.orEmpty(),
                     ignoreCase = true
                 )
             }
@@ -363,7 +380,7 @@ class SearchViewModel @Inject constructor(
                             entryData = ProductEntryData.Adding(
                                 product = product,
                                 mealName = _state.value.mealName,
-                                dateTransferObject = dateTransferObject
+                                dateTransferObject = navArguments.dateTransferObject
                             ),
                         )
                     )
@@ -378,7 +395,7 @@ class SearchViewModel @Inject constructor(
                 entryData = ProductEntryData.Adding(
                     product = product,
                     mealName = _state.value.mealName,
-                    dateTransferObject = dateTransferObject
+                    dateTransferObject = navArguments.dateTransferObject
                 ),
             )
         )

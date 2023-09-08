@@ -10,7 +10,7 @@ data class SearchState(
     val isScannerVisible: Boolean = false,
     val hasPermissionDialogBeenShowed: Boolean = false,
     val mealName: MealName = MealName.BREAKFAST,
-    val selectedTabIndex: Int = 0,
+    val selectedTabIndex: Int = SearchTab.EVERYTHING.ordinal,
     val date: String = "",
     val barcode: String? = null,
     val everythingSearchItems: List<SearchItemParams> = emptyList(),
