@@ -153,8 +153,7 @@ dependencies {
     implementation "androidx.camera:camera-lifecycle:$camerax_version"
     implementation "androidx.camera:camera-view:$camerax_version"
     implementation "com.google.mlkit:barcode-scanning:17.2.0"
-
-
+    
     //permissions
     implementation "com.google.accompanist:accompanist-permissions:0.26.0-alpha"
 
