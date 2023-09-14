@@ -4,10 +4,13 @@ import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.MeasurementUnit
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvider
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
 import io.mockk.every
 
 object MockConstants {
     const val MOCK_DATE_2021 = "2021-12-12"
+    const val TIMESTAMP = 123456789L
+    const val USER_ID = "user_id"
 
     object Diary {
         const val PRODUCT_ID_11 = "11"
@@ -38,6 +41,14 @@ object MockConstants {
         const val GRAMS = "g"
         const val MILLILITERS = "ml"
         const val KCAL = "kcal"
+
+        fun getSampleProduct() = Product(
+            id = PRODUCT_ID_11,
+            name = PRODUCT_NAME_1,
+            utcTimestamp = TIMESTAMP,
+            nutritionValues = getSampleNutritionValues(),
+            userId = USER_ID
+        )
 
         fun getSampleNutritionValues() = NutritionValues(calories = 255, carbohydrates = 31.0, protein = 17.0, fat = 7.0)
 
