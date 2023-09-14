@@ -3,10 +3,12 @@ package com.gmail.bogumilmecel2.fitnessappv2.common
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.CachedValuesProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.CustomDateUtils
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.toValidInt
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
+import kotlin.test.assertIs
 
 open class BaseMockkTest {
 
@@ -26,4 +28,12 @@ open class BaseMockkTest {
     }
 
     fun String.toValidIntOrThrow() = this.toValidInt() ?: throw Exception()
+
+    fun <T> Resource<T>.assertIsError() {
+        assertIs<Resource.Error<T>>(this)
+    }
+
+    fun <T> Resource<T>.assertIsSuccess() {
+        assertIs<Resource.Success<T>>(this)
+    }
 }
