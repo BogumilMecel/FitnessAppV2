@@ -30,7 +30,10 @@ open class BaseRepository {
         }
 
         return Resource.Error(
-            uiText = exception.message ?: "unknown error",
+            uiText = when (exception) {
+                is HttpException -> exception.response()?.errorBody()?.string() ?: "unknown error"
+                else -> exception.message ?: "unknown error"
+            },
             data = data
         )
     }
