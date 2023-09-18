@@ -1,5 +1,6 @@
 package com.gmail.bogumilmecel2.fitnessappv2.common.presentation.navigation
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
@@ -29,10 +30,17 @@ import com.gmail.bogumilmecel2.fitnessappv2.destinations.SearchScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.SplashScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.SummaryScreenDestination
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
+import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.ramcosta.composedestinations.DestinationsNavHost
+import com.ramcosta.composedestinations.animations.defaults.RootNavGraphDefaultAnimations
+import com.ramcosta.composedestinations.animations.rememberAnimatedNavHostEngine
 import kotlinx.coroutines.flow.receiveAsFlow
 
+@OptIn(
+    ExperimentalMaterialNavigationApi::class,
+    ExperimentalAnimationApi::class
+)
 @Composable
 fun NavHostGraph(
     navController: NavHostController = rememberNavController(),
@@ -126,7 +134,10 @@ fun NavHostGraph(
             DestinationsNavHost(
                 navGraph = NavGraphs.root,
                 navController = navController,
-                startRoute = startDestination
+                startRoute = startDestination,
+                engine = rememberAnimatedNavHostEngine(
+                    rootDefaultAnimations = RootNavGraphDefaultAnimations.ACCOMPANIST_FADING
+                )
             )
         }
     }
