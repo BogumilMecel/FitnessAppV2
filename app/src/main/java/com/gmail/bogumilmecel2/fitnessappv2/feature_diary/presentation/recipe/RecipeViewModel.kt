@@ -52,7 +52,7 @@ class RecipeViewModel @Inject constructor(
                         resourceProvider.getString(navArguments.entryData.mealName.getDisplayValue())
                     ),
                     nutritionData = NutritionData(
-                        pieChartData = recipeUseCases.createPieChartData(
+                        pieChartData = recipeUseCases.createPieChartDataUseCase(
                             nutritionValues = nutritionValues
                         ).also {
                             assignNutritionValues()

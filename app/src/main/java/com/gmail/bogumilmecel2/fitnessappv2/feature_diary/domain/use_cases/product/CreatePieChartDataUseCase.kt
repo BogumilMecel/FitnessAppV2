@@ -9,7 +9,7 @@ import com.gmail.bogumilmecel2.ui.theme.LocalColor.BackgroundTertiary
 import com.gmail.bogumilmecel2.ui.theme.LocalColor.LightGreen3
 import com.gmail.bogumilmecel2.ui.theme.LocalColor.OrangeYellow3
 
-class CreatePieChartData(
+class CreatePieChartDataUseCase(
     private val calculateNutritionValuesPercentages: CalculateNutritionValuesPercentages
 ) {
     operator fun invoke(nutritionValues: NutritionValues): PieChartData {

@@ -2,12 +2,11 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.edit_nut
 
 import androidx.lifecycle.viewModelScope
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValue
-import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.CalculateNutritionValuesPercentages
-import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.SaveNutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.round
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.AccountScreenDestination
+import com.gmail.bogumilmecel2.fitnessappv2.feature_account.domain.use_case.EditNutritionGoalUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -15,8 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class EditNutritionGoalsViewModel @Inject constructor(
-    private val calculateNutritionValuesPercentages: CalculateNutritionValuesPercentages,
-    private val saveNutritionValues: SaveNutritionValues
+    private val useCases: EditNutritionGoalUseCases,
 ) : BaseViewModel<EditNutritionGoalsState, EditNutritionGoalsEvent, Unit>(
     state = EditNutritionGoalsState(),
     navArguments = Unit
@@ -86,7 +84,7 @@ class EditNutritionGoalsViewModel @Inject constructor(
 
     private fun saveNutritionValues() {
         viewModelScope.launch {
-            when (val resource = saveNutritionValues(_state.value.nutritionValues)) {
+            when (val resource = useCases.saveNutritionValues(_state.value.nutritionValues)) {
                 is Resource.Error -> {
                     showSnackbarError(resource.uiText)
                 }
@@ -154,7 +152,7 @@ class EditNutritionGoalsViewModel @Inject constructor(
     }
 
     private fun calculatePercentages() {
-        val percentages = calculateNutritionValuesPercentages(_state.value.nutritionValues)
+        val percentages = useCases.calculateNutritionValuesPercentages(_state.value.nutritionValues)
         _state.update {
             it.copy(
                 carbohydratesPercentageValue = percentages[NutritionValue.CARBOHYDRATES] ?: 0F,
