@@ -60,9 +60,19 @@ fun CustomButton(
                     onClick()
                 },
                 colors = ButtonDefaults.buttonColors(
-                    backgroundColor = backgroundColor
+                    backgroundColor = backgroundColor,
                 ),
-                shape = shape
+                shape = shape,
+                elevation = when(buttonStyle) {
+                    is ButtonStyle.Transparent -> ButtonDefaults.elevation(
+                        defaultElevation = 0.dp,
+                        pressedElevation = 0.dp,
+                        disabledElevation = 0.dp,
+                        hoveredElevation = 0.dp,
+                        focusedElevation = 0.dp
+                    )
+                    else -> ButtonDefaults.elevation()
+                }
             ) {
                 ButtonContent(
                     leftIcon = leftIcon,
@@ -81,8 +91,7 @@ private fun ButtonContent(
     contentColor: Color
 ) {
     Row(
-        modifier = Modifier
-            .width(IntrinsicSize.Max),
+        modifier = Modifier.width(IntrinsicSize.Max),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
@@ -91,9 +100,9 @@ private fun ButtonContent(
                 icon = content,
                 iconColor = contentColor,
             )
-        }
 
-        WidthSpacer(8.dp)
+            WidthSpacer(8.dp)
+        }
 
         text?.let {
             Text(
@@ -113,21 +122,22 @@ enum class ButtonType {
 sealed class ButtonStyle(
     val buttonType: ButtonType = ButtonType.Button
 ) {
-    object Primary : ButtonStyle()
-    object OutlinedPrimary : ButtonStyle(buttonType = ButtonType.OutlinedButton)
-    object Secondary : ButtonStyle()
+    data object Primary : ButtonStyle()
+    data object OutlinedPrimary : ButtonStyle(buttonType = ButtonType.OutlinedButton)
+    data object Secondary : ButtonStyle()
+    data object Transparent : ButtonStyle()
 
     @Composable
     fun getBackgroundColor() = when (this) {
         is Primary -> FitnessAppTheme.colors.Primary
         is Secondary -> FitnessAppTheme.colors.Secondary
-        is OutlinedPrimary -> FitnessAppTheme.colors.Transparent
+        is OutlinedPrimary, Transparent -> FitnessAppTheme.colors.Transparent
     }
 
     @Composable
     fun getContentColor() = when (this) {
         is Primary, Secondary -> FitnessAppTheme.colors.Black
-        is OutlinedPrimary -> FitnessAppTheme.colors.Primary
+        is OutlinedPrimary, Transparent -> FitnessAppTheme.colors.Primary
     }
 }
 

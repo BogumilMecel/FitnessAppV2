@@ -18,6 +18,7 @@ data class FitnessAppTypography(
     val ParagraphSmall: TextStyle = paragraph(fontSize = 12.sp),
     val ImportantTextMedium: TextStyle = importantText(fontSize = 14.sp),
     val HeaderLarge: TextStyle = header(fontSize = 20.sp),
+    val HeaderMedium: TextStyle = header(fontSize = 18.sp),
     val HeaderSmall: TextStyle = header(fontSize = 16.sp),
     val HeaderExtraSmall: TextStyle = header(fontSize = 14.sp)
 ) {

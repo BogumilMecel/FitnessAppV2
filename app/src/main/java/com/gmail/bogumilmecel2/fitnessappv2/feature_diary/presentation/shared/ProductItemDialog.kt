@@ -13,19 +13,19 @@ fun ProductItemDialog(
     onEditButtonClicked: () -> Unit,
     onDismissRequest: () -> Unit
 ) {
-        CustomDialog(
-            title = title,
-            secondaryText = stringResource(id = R.string.what_would_you_like_to_do),
-            primaryButtonParams = ButtonParams(
-                text = stringResource(id = R.string.delete),
-                onClick = onDeleteButtonClicked
-            ),
-            secondaryButtonParams = ButtonParams(
-                text = stringResource(id = R.string.edit),
-                onClick = onEditButtonClicked
-            ),
-            onDismissRequest = {
-                onDismissRequest()
-            },
-        )
+    CustomDialog(
+        title = title,
+        secondaryText = stringResource(id = R.string.what_would_you_like_to_do),
+        endButtonParams = ButtonParams(
+            text = stringResource(id = R.string.delete),
+            onClick = onDeleteButtonClicked
+        ),
+        secondaryButtonParams = ButtonParams(
+            text = stringResource(id = R.string.edit),
+            onClick = onEditButtonClicked
+        ),
+        onDismissRequest = {
+            onDismissRequest()
+        },
+    )
 }
