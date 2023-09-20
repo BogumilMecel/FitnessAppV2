@@ -1,5 +1,6 @@
 package com.gmail.bogumilmecel2.ui.components.base
 
+import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
@@ -14,7 +15,6 @@ import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Password
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color

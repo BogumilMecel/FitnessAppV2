@@ -127,7 +127,7 @@
     <string name="price_for_100g_of_fat">100 Grams of fat</string>
     <string name="price_for_100g_of_carbohydrates">100 Grams of carbs</string>
     <string name="price_for_100_kcal">100 Calories</string>
-    <string name="price_how_much_paid">How much did you paid for %s</string>
+    <string name="price_how_much_pay">How much did you pay for %s</string>
     <string name="submit_new_price">Submit New Price</string>
     <string name="submit">Submit</string>
     <string name="paid">Paid</string>
