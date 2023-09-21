@@ -1,16 +1,14 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_summary.presentation
 
 import android.app.Activity
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ModalBottomSheetValue
-import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -23,145 +21,112 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.presentation.compone
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.presentation.components.LogStreakSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.presentation.components.WeightSection
 import com.gmail.bogumilmecel2.ui.components.base.ButtonParams
+import com.gmail.bogumilmecel2.ui.components.base.CustomDialog
 import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
-import com.gmail.bogumilmecel2.ui.components.base.SheetLayout
 import com.gmail.bogumilmecel2.ui.components.complex.DoubleNumberPicker
-import com.gmail.bogumilmecel2.ui.components.complex.SimpleSheetLayoutContent
 import com.ramcosta.composedestinations.annotation.Destination
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.receiveAsFlow
 
-@OptIn(ExperimentalMaterialApi::class)
 @Destination
 @Composable
 fun SummaryScreen(viewModel: SummaryViewModel = hiltViewModel()) {
     ConfigureViewModel(viewModel = viewModel)
     val state = viewModel.state.collectAsState().value
     val activity = (LocalContext.current as? Activity)
-    val sheetState = rememberModalBottomSheetState(
-        initialValue = ModalBottomSheetValue.Hidden,
-        skipHalfExpanded = true
-    )
 
     BackHandler {
-        if (sheetState.currentValue == ModalBottomSheetValue.Expanded) {
-            viewModel.onEvent(SummaryEvent.ClickedBackInWeightPickerDialog)
+        if (state.weightPickerDialogVisible) {
+            viewModel.onEvent(SummaryEvent.DismissedWeightPickerDialog)
+        } else if (state.isAskForWeightPermissionDialogVisible) {
+            viewModel.onEvent(SummaryEvent.DismissedWeightDialogsQuestionDialog)
         } else {
             activity?.finish()
         }
     }
 
-    LaunchedEffect(key1 = true) {
-        viewModel.uiEvent.receiveAsFlow().collectLatest {
-            when (it) {
-                is SummaryUiEvent.ShowBottomSheet -> {
-                    sheetState.show()
-                }
+    if (state.weightPickerDialogVisible) {
+        CustomDialog(
+            title = stringResource(id = R.string.summary_weight_dialog_title),
+            content = {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    val startingValue = state.latestWeightEntry?.value ?: 80.0
 
-                is SummaryUiEvent.HideBottomSheet -> {
-                    sheetState.hide()
+                    DoubleNumberPicker(
+                        modifier = Modifier,
+                        value = state.weightPickerCurrentValue,
+                        minValue = startingValue - 50.0,
+                        maxValue = startingValue + 50.0,
+                        onValueChange = {
+                            viewModel.onEvent(SummaryEvent.WeightPickerValueChanged(it))
+                        }
+                    )
                 }
-            }
-        }
+            },
+            endButtonParams = ButtonParams(
+                text = stringResource(id = R.string.save),
+                onClick = { viewModel.onEvent(SummaryEvent.SavedWeightPickerValue) }
+            ),
+            secondaryButtonParams = ButtonParams(
+                text = stringResource(id = R.string.cancel),
+                onClick = { viewModel.onEvent(SummaryEvent.DismissedWeightPickerDialog) }
+            ),
+            onDismissRequest = { viewModel.onEvent(SummaryEvent.DismissedWeightPickerDialog) }
+        )
+    } else if (state.isAskForWeightPermissionDialogVisible) {
+        CustomDialog(
+            title = stringResource(id = R.string.summary_ask_for_weight_dialogs_title),
+            secondaryText = stringResource(id = R.string.summary_ask_for_weight_dialogs_description),
+            endButtonParams = ButtonParams(
+                text = stringResource(id = R.string.accept),
+                onClick = { viewModel.onEvent(SummaryEvent.ClickedAcceptInWeightDialogsQuestion) }
+            ),
+            secondaryButtonParams = ButtonParams(
+                text = stringResource(id = R.string.decline),
+                onClick = { viewModel.onEvent(SummaryEvent.ClickedDeclineInWeightDialogsQuestion) }
+            ),
+            extraButtonParams = ButtonParams(
+                text = stringResource(id = R.string.ask_me_later),
+                onClick = { viewModel.onEvent(SummaryEvent.ClickedNotNowInWeightDialogsQuestion) }
+            ),
+            onDismissRequest = { viewModel.onEvent(SummaryEvent.DismissedWeightDialogsQuestionDialog) }
+        )
     }
 
-    SheetLayout(
-        sheetState = sheetState,
-        bottomSheetContent = {
-            when (state.bottomSheetContent) {
-                is SummaryBottomSheetContent.WeightPicker -> {
-                    SimpleSheetLayoutContent(
-                        title = stringResource(id = R.string.summary_weight_dialog_title),
-                        content = {
-                            val startingValue = state.latestWeightEntry?.value ?: 80.0
-
-                            DoubleNumberPicker(
-                                modifier = Modifier,
-                                value = state.weightPickerCurrentValue,
-                                minValue = startingValue - 50.0,
-                                maxValue = startingValue + 50.0,
-                                onValueChange = {
-                                    viewModel.onEvent(SummaryEvent.WeightPickerValueChanged(it))
-                                }
-                            )
-                        },
-                        firstButtonParams = ButtonParams(
-                            text = stringResource(id = R.string.save),
-                            onClick = {
-                                viewModel.onEvent(SummaryEvent.SavedWeightPickerValue)
-                            }
-                        ),
-                        secondButtonParams = ButtonParams(
-                            text = stringResource(id = R.string.cancel),
-                            onClick = {
-                                viewModel.onEvent(SummaryEvent.ClickedBackInWeightPickerDialog)
-                            },
-                        )
-                    )
-                }
-
-                is SummaryBottomSheetContent.AskForDailyWeightDialogs -> {
-                    SimpleSheetLayoutContent(
-                        title = stringResource(id = R.string.summary_ask_for_weight_dialogs_title),
-                        description = stringResource(id = R.string.summary_ask_for_weight_dialogs_description),
-                        firstButtonParams = ButtonParams(
-                            text = stringResource(id = R.string.accept),
-                            onClick = {
-                                viewModel.onEvent(SummaryEvent.ClickedAcceptInWeightDialogsQuestion)
-                            }
-                        ),
-                        secondButtonParams = ButtonParams(
-                            text = stringResource(id = R.string.decline),
-                            onClick = {
-                                viewModel.onEvent(SummaryEvent.ClickedDeclineInWeightDialogsQuestion)
-                            }
-                        ),
-                        bottomTextButtonParams = ButtonParams(
-                            text = stringResource(id = R.string.ask_me_later),
-                            onClick = {
-                                viewModel.onEvent(SummaryEvent.ClickedNotNowInWeightDialogsQuestion)
-                            }
-                        ),
-                    )
-                }
-            }
-        },
-        onBottomSheetDismissed = {
-            viewModel.onEvent(SummaryEvent.DismissedWeightPickerDialog)
-        }
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp)
     ) {
-        Column(
+        LogStreakSection(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 16.dp)
-        ) {
-            LogStreakSection(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 12.dp),
-                streak = state.logStreak ?: 1
-            )
+                .fillMaxWidth()
+                .padding(top = 12.dp),
+            streak = state.logStreak ?: 1
+        )
 
-            HeightSpacer(12.dp)
+        HeightSpacer(12.dp)
 
-            CaloriesSumSection(
-                currentCalories = state.caloriesSum ?: 0,
-                wantedCalories = state.wantedCalories,
-                modifier = Modifier.fillMaxWidth()
-            )
+        CaloriesSumSection(
+            currentCalories = state.caloriesSum ?: 0,
+            wantedCalories = state.wantedCalories,
+            modifier = Modifier.fillMaxWidth()
+        )
 
-            HeightSpacer(12.dp)
+        HeightSpacer(12.dp)
 
-            WeightSection(
-                modifier = Modifier.fillMaxWidth(),
-                lastWeightEntry = state.latestWeightEntry?.value,
-                weightProgress = state.weightProgress,
-                onEvent = {
-                    viewModel.onEvent(it)
-                }
-            )
+        WeightSection(
+            modifier = Modifier.fillMaxWidth(),
+            lastWeightEntry = state.latestWeightEntry?.value,
+            weightProgress = state.weightProgress,
+            onEvent = {
+                viewModel.onEvent(it)
+            }
+        )
 
-            HeightSpacer(12.dp)
-        }
+        HeightSpacer(12.dp)
     }
 }

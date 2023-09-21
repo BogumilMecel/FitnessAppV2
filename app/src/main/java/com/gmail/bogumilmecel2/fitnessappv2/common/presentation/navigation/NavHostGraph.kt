@@ -19,7 +19,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.navigation.NavigationA
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.navigation.Navigator
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.BottomBar
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.CustomSnackbar
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.BottomBarStatusProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.ErrorUtils
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.AccountScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.Destination
@@ -45,7 +44,6 @@ fun NavHostGraph(
     navController: NavHostController = rememberNavController(),
     navigator: Navigator,
     startDestination: Destination = SplashScreenDestination,
-    bottomBarStatusProvider: BottomBarStatusProvider
 ) {
     val currentDestination = navController.currentBackStackEntryAsState().value?.destination?.route
 
@@ -113,10 +111,7 @@ fun NavHostGraph(
     Scaffold(
         bottomBar = {
             if (bottomBarScreens.contains(currentDestination)) {
-                BottomBar(
-                    navController = navController,
-                    bottomBarStatusProvider = bottomBarStatusProvider
-                )
+                BottomBar(navController = navController)
             }
         },
         scaffoldState = scaffoldState,

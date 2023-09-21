@@ -2,13 +2,10 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_summary.presentation
 
 import androidx.lifecycle.viewModelScope
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.BottomBarEvent
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.BottomBarStatusProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.CustomDateUtils
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.use_case.SummaryUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -16,18 +13,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SummaryViewModel @Inject constructor(
-    private val summaryUseCases: SummaryUseCases,
-    private val bottomBarStatusProvider: BottomBarStatusProvider
+    private val summaryUseCases: SummaryUseCases
 ) : BaseViewModel<SummaryState, SummaryEvent, Unit>(
     state = SummaryState(),
     navArguments = Unit
 ) {
-
-    val uiEvent = Channel<SummaryUiEvent>()
-    private var handlingWeightDialogsQuestion: Boolean = false
-
     override fun configureOnStart() {
-        initBottomBarStatusProvider()
         checkIfShouldAskForWeightDialogs()
         getLatestLogEntry()
         getCaloriesSum()
@@ -38,18 +29,10 @@ class SummaryViewModel @Inject constructor(
     override fun onEvent(event: SummaryEvent) {
         when (event) {
             is SummaryEvent.DismissedWeightPickerDialog -> {
-                viewModelScope.launch {
-                    bottomBarStatusProvider.bottomBarEvent.send(BottomBarEvent.Show)
-                    if (_state.value.bottomSheetContent is SummaryBottomSheetContent.AskForDailyWeightDialogs && !handlingWeightDialogsQuestion) {
-                        handleWeightDialogsAnswer(accepted = null)
-                        setBottomSheetContent(SummaryBottomSheetContent.WeightPicker)
-                    }
-                }
-            }
-
-            is SummaryEvent.ClickedBackInWeightPickerDialog -> {
-                viewModelScope.launch {
-                    uiEvent.send(SummaryUiEvent.HideBottomSheet)
+                _state.update {
+                    it.copy(
+                        weightPickerDialogVisible = false
+                    )
                 }
             }
 
@@ -65,9 +48,10 @@ class SummaryViewModel @Inject constructor(
             }
 
             is SummaryEvent.ClickedAddWeightEntryButton -> {
-                viewModelScope.launch {
-                    setBottomSheetContent(SummaryBottomSheetContent.WeightPicker)
-                    showBottomBarSheet()
+                _state.update {
+                    it.copy(
+                        weightPickerDialogVisible = true
+                    )
                 }
             }
 
@@ -90,19 +74,27 @@ class SummaryViewModel @Inject constructor(
             is SummaryEvent.ClickedAcceptInWeightDialogsQuestion -> {
                 handleWeightDialogsAnswer(accepted = true)
             }
+            is SummaryEvent.DismissedWeightDialogsQuestionDialog -> {
+                _state.update {
+                    it.copy(isAskForWeightPermissionDialogVisible = false)
+                }
+            }
         }
     }
 
     private fun handleWeightDialogsAnswer(accepted: Boolean?) {
-        handlingWeightDialogsQuestion = true
         viewModelScope.launch {
             summaryUseCases.handleWeightDialogsQuestionUseCase(accepted = accepted).handle(
                 onError = {
-                    uiEvent.send(SummaryUiEvent.HideBottomSheet)
+                    _state.update {
+                        it.copy(isAskForWeightPermissionDialogVisible = false)
+                    }
                 }
             ) {
+                _state.update {
+                    it.copy(isAskForWeightPermissionDialogVisible = false)
+                }
                 delay(1000)
-                handlingWeightDialogsQuestion = false
                 checkIfShouldShowWeightPicker()
             }
         }
@@ -113,19 +105,10 @@ class SummaryViewModel @Inject constructor(
             summaryUseCases.checkIfShouldShowWeightPickerUseCase().handle(
                 showSnackbar = false
             ) {
-                if (_state.value.bottomSheetContent !is SummaryBottomSheetContent.WeightPicker) {
-                    setBottomSheetContent(SummaryBottomSheetContent.WeightPicker)
+                _state.update {
+                    it.copy(weightPickerDialogVisible = true)
                 }
-                showBottomBarSheet()
             }
-        }
-    }
-
-    private fun setBottomSheetContent(bottomSheetContent: SummaryBottomSheetContent) {
-        _state.update {
-            it.copy(
-                bottomSheetContent = bottomSheetContent
-            )
         }
     }
 
@@ -139,24 +122,10 @@ class SummaryViewModel @Inject constructor(
                     checkIfShouldShowWeightPicker()
                 }
             ) {
-                if (_state.value.bottomSheetContent !is SummaryBottomSheetContent.AskForDailyWeightDialogs) {
-                    setBottomSheetContent(SummaryBottomSheetContent.AskForDailyWeightDialogs)
+                _state.update {
+                    it.copy(isAskForWeightPermissionDialogVisible = true)
                 }
-                showBottomBarSheet()
             }
-        }
-    }
-
-    private fun showBottomBarSheet() {
-        viewModelScope.launch {
-            bottomBarStatusProvider.bottomBarEvent.send(BottomBarEvent.Hide)
-            uiEvent.send(SummaryUiEvent.ShowBottomSheet)
-        }
-    }
-
-    private fun initBottomBarStatusProvider() {
-        bottomBarStatusProvider.onBottomBarClicked = {
-            onEvent(SummaryEvent.ClickedBackInWeightPickerDialog)
         }
     }
 
@@ -166,7 +135,8 @@ class SummaryViewModel @Inject constructor(
                 finally = {
                     _state.update {
                         it.copy(
-                            isWeightPickerLoading = false
+                            isWeightPickerLoading = false,
+                            weightPickerDialogVisible = false
                         )
                     }
                 }
@@ -177,8 +147,6 @@ class SummaryViewModel @Inject constructor(
                         latestWeightEntry = it.latestWeightEntry,
                     )
                 }
-
-                uiEvent.send(SummaryUiEvent.HideBottomSheet)
             }
         }
     }

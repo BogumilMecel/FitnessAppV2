@@ -14,7 +14,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.repository.TokenReposi
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.CalculateNutritionValuesPercentages
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.GetUserCurrencyUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.SaveToken
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.BottomBarStatusProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.RealDateHolder
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.RealResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
@@ -365,10 +364,6 @@ object TestAppModule {
             TODO("Not yet implemented")
         }
     }
-
-    @Singleton
-    @Provides
-    fun provideBottomBarStatusProvider(): BottomBarStatusProvider = BottomBarStatusProvider()
 
     @Singleton
     @Provides

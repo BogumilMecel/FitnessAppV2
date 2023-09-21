@@ -26,25 +26,27 @@ fun RowScope.AddItem(
     bottomBarScreen: BottomBarScreen,
     screensNumber: Int,
     isSelected: Boolean,
-    isActive: Boolean,
     onItemClicked: () -> Unit
 ) {
-    val animationSpec = tween<Color>(durationMillis = 200, easing = LinearEasing)
+    val animationSpec = tween<Color>(
+        durationMillis = 200,
+        easing = LinearEasing
+    )
 
     val selectedColor by animateColorAsState(
-        targetValue = if (isActive) FitnessAppTheme.colors.ContentPrimary else FitnessAppTheme.colors.ContentTertiary,
+        targetValue = FitnessAppTheme.colors.ContentPrimary,
         label = "selected bottom navigation item color",
         animationSpec = animationSpec
     )
 
     val dividerColor by animateColorAsState(
-        targetValue = if (isActive && isSelected) FitnessAppTheme.colors.ContentPrimary else Color.Transparent,
+        targetValue = if (isSelected) FitnessAppTheme.colors.ContentPrimary else Color.Transparent,
         label = "bottom navigation divider color",
         animationSpec = animationSpec
     )
 
     val notSelectedColor by animateColorAsState(
-        targetValue = if (isActive) FitnessAppTheme.colors.ContentTertiary else FitnessAppTheme.colors.ContentQuaternary,
+        targetValue = FitnessAppTheme.colors.ContentTertiary,
         label = "not selected bottom navigation item color",
         animationSpec = animationSpec
     )
@@ -55,7 +57,7 @@ fun RowScope.AddItem(
     ) {
         Divider(
             modifier = Modifier
-                .width(LocalConfiguration.current.screenWidthDp.dp/screensNumber),
+                .width(LocalConfiguration.current.screenWidthDp.dp / screensNumber),
             color = dividerColor
         )
 
