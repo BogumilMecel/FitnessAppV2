@@ -35,7 +35,7 @@ import com.gmail.bogumilmecel2.ui.theme.LocalColor.OrangeYellow1
 @Composable
 fun DiaryMealSection(
     mealName: MealName,
-    diaryEntries: List<DiaryItem>,
+    diaryEntries: List<DiaryItem>?,
     nutritionValues: NutritionValues? = null,
     onEvent: (DiaryEvent) -> Unit,
     wantedNutritionValues: NutritionValues
@@ -88,7 +88,7 @@ fun DiaryMealSection(
                 }
             }
 
-            diaryEntries.forEach {
+            diaryEntries?.forEach {
                 DiaryEntryItem(
                     diaryItem = it,
                     onItemClicked = {
