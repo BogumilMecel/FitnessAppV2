@@ -15,6 +15,6 @@ data class User(
     val userInformation: UserInformation? = null,
     val logStreak: Int = 1,
     val latestWeightEntry: WeightEntry? = null,
-    val weightProgress: String? = null,
+    val weightProgress: Double? = null,
     val weightDialogs: WeightDialogs? = null
 )

@@ -11,9 +11,9 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.model.WeightEn
 class MockCachedValuesProvider : CachedValuesProvider {
     override suspend fun getWantedNutritionValues() = NutritionValues()
     override suspend fun saveWantedNutritionValues(nutritionValues: NutritionValues) {}
-    override suspend fun getWeightProgress() = ""
+    override suspend fun getWeightProgress() = null
     override suspend fun updateWeightInfo(
-        weightProgress: String?,
+        weightProgress: Double?,
         latestWeightEntry: WeightEntry?
     ) {}
     override suspend fun getLogStreak() = 1
