@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.Switch
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -88,10 +89,13 @@ fun AccountScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                 ) {
-                    
+
                     PieChartWithMiddleText(
                         pieChartData = state.nutritionData.pieChartData,
-                        middleText = stringResource(id = R.string.kcal_with_value, state.nutritionData.nutritionValues.calories),
+                        middleText = stringResource(
+                            id = R.string.kcal_with_value,
+                            state.nutritionData.nutritionValues.calories
+                        ),
                         modifier = Modifier.size(128.dp),
                     )
 
@@ -143,6 +147,33 @@ fun AccountScreen(
 
                     Spacer(modifier = Modifier.width(16.dp))
                 }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        DefaultCardBackground(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 10.dp)
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = stringResource(id = R.string.account_ask_for_weight_daily),
+                    style = FitnessAppTheme.typography.ParagraphLarge,
+                    modifier = Modifier.weight(1f)
+                )
+
+                Switch(
+                    checked = true,
+                    onCheckedChange = {},
+                )
             }
         }
 

@@ -1,7 +1,6 @@
 package com.gmail.bogumilmecel2.fitnessappv2.components
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
+import androidx.compose.material.Card
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -13,12 +12,10 @@ fun DefaultCardBackground(
     background: Color = BackgroundTertiary,
     content: @Composable () -> Unit,
 ) {
-    Box(
+    Card(
+        backgroundColor = background,
+        shape = defaultRoundedCornerShape(),
         modifier = modifier
-            .background(
-                color = background,
-                shape = defaultRoundedCornerShape()
-            )
     ) {
         content()
     }

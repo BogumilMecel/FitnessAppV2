@@ -187,6 +187,7 @@
 
     <string name="edit">edit</string>
     <string name="log_out">Log out</string>
+    <string name="account_ask_for_weight_daily">Ask for weight daily</string>
     <string name="create_product">Create Product</string>
     <string name="add_product">Add product</string>
     <string name="you_have_logged_for">You have logged for</string>

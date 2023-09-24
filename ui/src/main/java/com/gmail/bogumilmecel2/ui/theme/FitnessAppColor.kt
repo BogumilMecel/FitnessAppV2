@@ -13,7 +13,7 @@ data class FitnessAppColors(
     val BackgroundSecondary: Color = LocalColor.BackgroundSecondary,
     val BackgroundTertiary: Color = LocalColor.BackgroundTertiary,
     val BackgroundQuaternary: Color = LocalColor.BackgroundQuaternary,
-    val ContentPrimary: Color = LocalColor.Grey50,
+    val ContentPrimary: Color = Color.White,
     val ContentSecondary: Color = LocalColor.Grey250,
     val ContentTertiary: Color = LocalColor.Grey400,
     val ContentQuaternary: Color = LocalColor.Grey600,
