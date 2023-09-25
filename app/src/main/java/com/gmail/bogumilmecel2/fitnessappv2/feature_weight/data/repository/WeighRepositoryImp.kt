@@ -27,12 +27,6 @@ class WeighRepositoryImp(
         }
     }
 
-    override suspend fun checkIfShouldAskForWeightDialogs(): Resource<Unit> {
-        return handleRequest {
-            weightApi.checkIfShouldAskForWeightDialogs()
-        }
-    }
-
     override suspend fun handleWeightDialogsQuestion(weightDialogsRequest: WeightDialogsRequest): Resource<Unit> {
         return handleRequest {
             weightApi.handleWeightDialogAnswer(weightDialogsRequest = weightDialogsRequest)

@@ -4,7 +4,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.model.WeightD
 import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.model.NewWeightEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.model.NewWeightEntryResponse
 import retrofit2.http.Body
-import retrofit2.http.GET
 import retrofit2.http.POST
 
 interface WeightApi {
@@ -12,9 +11,6 @@ interface WeightApi {
     suspend fun addWeightEntry(
         @Body newWeightEntryRequest: NewWeightEntryRequest
     ): NewWeightEntryResponse
-
-    @GET("/weightEntries/dialogs")
-    suspend fun checkIfShouldAskForWeightDialogs()
 
     @POST("/weightEntries/dialogs")
     suspend fun handleWeightDialogAnswer(@Body weightDialogsRequest: WeightDialogsRequest)
