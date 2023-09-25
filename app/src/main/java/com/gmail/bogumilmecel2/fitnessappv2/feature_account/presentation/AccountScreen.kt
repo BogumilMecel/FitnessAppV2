@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Switch
+import androidx.compose.material.SwitchDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -58,8 +59,8 @@ fun AccountScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 10.dp)
-                    .padding(bottom = 10.dp),
+                    .padding(horizontal = 16.dp)
+                    .padding(bottom = 16.dp),
             ) {
                 Row(
                     modifier = Modifier
@@ -171,8 +172,13 @@ fun AccountScreen(
                 )
 
                 Switch(
-                    checked = true,
-                    onCheckedChange = {},
+                    checked = state.askForWeightDaily,
+                    colors = SwitchDefaults.colors(
+                        uncheckedThumbColor = FitnessAppTheme.colors.ContentSecondary
+                    ),
+                    onCheckedChange = {
+                        viewModel.onEvent(AccountEvent.AskForWeightDailyClicked(it))
+                    },
                 )
             }
         }

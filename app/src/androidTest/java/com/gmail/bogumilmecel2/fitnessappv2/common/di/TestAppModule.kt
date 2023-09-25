@@ -58,7 +58,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_splash.domain.repository.Loa
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.model.WeightDialogsRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.model.NewWeightEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.model.NewWeightEntryResponse
-import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.model.WeightDialogs
 import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.repository.WeightRepository
 import com.google.gson.Gson
 import dagger.Module
@@ -360,7 +359,7 @@ object TestAppModule {
             TODO("Not yet implemented")
         }
 
-        override suspend fun handleWeightDialogsQuestion(weightDialogsRequest: WeightDialogsRequest): Resource<WeightDialogs> {
+        override suspend fun handleWeightDialogsQuestion(weightDialogsRequest: WeightDialogsRequest): Resource<Unit> {
             TODO("Not yet implemented")
         }
     }

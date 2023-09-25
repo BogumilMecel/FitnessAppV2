@@ -1,60 +1,74 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.use_case
 
 import com.gmail.bogumilmecel2.fitnessappv2.common.BaseMockkTest
+import com.gmail.bogumilmecel2.fitnessappv2.common.MockConstants
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
-import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.model.WeightDialogs
-import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.repository.WeightRepository
+import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.model.WeightDialogsQuestion
 import io.mockk.coEvery
 import io.mockk.coVerify
-import io.mockk.mockk
+import io.mockk.mockkClass
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
-import kotlin.test.assertIs
 
-class HandleWeightDialogsQuestionUseCaseTest: BaseMockkTest() {
+class HandleWeightDialogsQuestionUseCaseTest : BaseMockkTest() {
 
-    private val weightRepository = mockk<WeightRepository>()
-    val handleWeightDialogsQuestionUseCase = HandleWeightDialogsQuestionUseCase(
-        weightRepository = weightRepository,
-        cachedValuesProvider = cachedValuesProvider
+    private val saveAskForWeightDailyUseCase = mockkClass(SaveAskForWeightDailyUseCase::class)
+    private val handleWeightDialogsQuestionUseCase = HandleWeightDialogsQuestionUseCase(
+        cachedValuesProvider = cachedValuesProvider,
+        saveAskForWeightDaily = saveAskForWeightDailyUseCase
     )
 
     @Test
-    fun `Check if repository return resource error, resource error is returned`() = runTest {
+    fun `Check if save return resource error, resource error is returned`() = runTest {
         mockData(responseResource = Resource.Error())
-        assertIs<Resource.Error<Unit>>(handleWeightDialogsQuestionUseCase(accepted = true))
-        verifyLastTimeAskedForWeightDialogsCaching()
+        handleWeightDialogsQuestionUseCase(accepted = true).assertIsError()
     }
 
     @Test
-    fun `Check if repository return resource success, resource success is returned and weight dialogs are cached`() = runTest {
-        mockData()
-        assertIs<Resource.Success<Unit>>(handleWeightDialogsQuestionUseCase(accepted = true))
-        coVerify(exactly = 1) {
-            cachedValuesProvider.updateWeightDialogs(any())
-        }
-    }
-
-    private fun verifyLastTimeAskedForWeightDialogsCaching() {
-        coVerify(exactly = 1) {
-            cachedValuesProvider.updateLocalLastTimeAskedForWeightDialogs(
-                date = mockedDate
+    fun `Check if accepted is null last time asked is updated and resource error is returned`() =
+        runTest {
+            val weightDialogsQuestion = WeightDialogsQuestion(
+                lastTimeAsked = MockConstants.MOCK_DATE_2021,
+                askedCount = 1
             )
+            mockData(savedWeightDialogsQuestion = weightDialogsQuestion)
+            handleWeightDialogsQuestionUseCase(accepted = null).assertIsError()
+            coVerify(exactly = 1) { cachedValuesProvider.getLocalWeightDialogsQuestion() }
+            coVerify(exactly = 1) {
+                cachedValuesProvider.updateLocalWeightDialogsQuestion(
+                    weightDialogsQuestion = weightDialogsQuestion.copy(
+                        lastTimeAsked = mockedDate,
+                        askedCount = weightDialogsQuestion.askedCount.plus(1)
+                    )
+                )
+            }
         }
-    }
+
+    @Test
+    fun `Check if repository return resource success, resource success is returned and weight dialogs are cached`() =
+        runTest {
+            mockData()
+            handleWeightDialogsQuestionUseCase(accepted = true).assertIsSuccess()
+        }
 
     private fun mockData(
-        responseResource: Resource<WeightDialogs> = Resource.Success(data = mockWeightDialogs())
+        responseResource: Resource<Unit> = Resource.Success(Unit),
+        savedWeightDialogsQuestion: WeightDialogsQuestion? = null
     ) {
         mockDateString(mockedDate)
-        coEvery { cachedValuesProvider.updateLocalLastTimeAskedForWeightDialogs(mockedDate) } returns Unit
-        coEvery { cachedValuesProvider.updateWeightDialogs(any()) } returns Unit
-        coEvery { weightRepository.handleWeightDialogsQuestion(any()) } returns responseResource
+        coEvery {
+            cachedValuesProvider.getLocalWeightDialogsQuestion()
+        } returns savedWeightDialogsQuestion
+        coEvery {
+            cachedValuesProvider.updateLocalWeightDialogsQuestion(
+                weightDialogsQuestion = any()
+            )
+        } returns Unit
+        coEvery {
+            saveAskForWeightDailyUseCase(
+                accepted = any(),
+                cachedValuesProvider = cachedValuesProvider
+            )
+        } returns responseResource
     }
-
-    private fun mockWeightDialogs() = WeightDialogs(
-        accepted = true,
-        lastTimeAsked = mockedDate2,
-        askedCount = 1
-    )
 }

@@ -90,7 +90,8 @@ class SummaryViewModel @Inject constructor(
                     _state.update {
                         it.copy(isAskForWeightPermissionDialogVisible = false)
                     }
-                }
+                },
+                showSnackbar = false
             ) {
                 _state.update {
                     it.copy(isAskForWeightPermissionDialogVisible = false)

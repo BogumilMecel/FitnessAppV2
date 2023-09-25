@@ -56,6 +56,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.use_case.Chec
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.use_case.CheckIfShouldShowWeightPickerUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.use_case.GetCaloriesSum
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.use_case.HandleWeightDialogsQuestionUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.use_case.SaveAskForWeightDailyUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.use_case.SummaryUseCases
 import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.repository.WeightRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.use_case.AddWeightEntryUseCase
@@ -222,10 +223,12 @@ object ViewModelModule {
     @Provides
     fun provideAccountUseCases(
         tokenRepository: TokenRepository,
-        createPieChartDataUseCase: CreatePieChartDataUseCase
+        createPieChartDataUseCase: CreatePieChartDataUseCase,
+        saveAskForWeightDailyUseCase: SaveAskForWeightDailyUseCase
     ): AccountUseCases = AccountUseCases(
         deleteTokenUseCase = DeleteTokenUseCase(tokenRepository = tokenRepository),
-        createPieChartDataUseCase = createPieChartDataUseCase
+        createPieChartDataUseCase = createPieChartDataUseCase,
+        saveAskForWeightDailyUseCase = saveAskForWeightDailyUseCase
     )
 
     @ViewModelScoped
@@ -257,17 +260,18 @@ object ViewModelModule {
     fun provideSummaryUseCases(
         diaryRepository: DiaryRepository,
         weightRepository: WeightRepository,
-        cachedValuesProvider: CachedValuesProvider
+        cachedValuesProvider: CachedValuesProvider,
+        saveAskForWeightDailyUseCase: SaveAskForWeightDailyUseCase
     ): SummaryUseCases = SummaryUseCases(
         getCaloriesSum = GetCaloriesSum(diaryRepository = diaryRepository),
         addWeightEntryUseCase = AddWeightEntryUseCase(
             weightRepository = weightRepository,
             checkIfWeightIsValidUseCase = CheckIfWeightIsValidUseCase(),
         ),
-        checkIfShouldAskForWeightDialogsUseCase = CheckIfShouldAskForWeightDialogsUseCase(weightRepository),
+        checkIfShouldAskForWeightDialogsUseCase = CheckIfShouldAskForWeightDialogsUseCase(),
         handleWeightDialogsQuestionUseCase = HandleWeightDialogsQuestionUseCase(
-            weightRepository = weightRepository,
-            cachedValuesProvider = cachedValuesProvider
+            cachedValuesProvider = cachedValuesProvider,
+            saveAskForWeightDaily = saveAskForWeightDailyUseCase
         ),
         checkIfShouldShowWeightPickerUseCase = CheckIfShouldShowWeightPickerUseCase(cachedValuesProvider)
     )

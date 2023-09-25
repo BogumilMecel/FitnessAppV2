@@ -322,4 +322,12 @@ object AppModule {
     fun provideCreatePieChartData(
         calculateNutritionValuesPercentages: CalculateNutritionValuesPercentages
     ): CreatePieChartDataUseCase = CreatePieChartDataUseCase(calculateNutritionValuesPercentages)
+
+    @Singleton
+    @Provides
+    fun provideSaveAskForWeightDailyUseCase(
+        weightRepository: WeightRepository
+    ): SaveAskForWeightDailyUseCase = SaveAskForWeightDailyUseCase(
+        weightRepository = weightRepository
+    )
 }
