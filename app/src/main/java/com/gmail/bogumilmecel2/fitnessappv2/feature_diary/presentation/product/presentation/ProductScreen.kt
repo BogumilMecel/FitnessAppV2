@@ -30,11 +30,15 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.p
 import com.gmail.bogumilmecel2.ui.components.complex.HeaderRow
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Destination(navArgsDelegate = ProductNavArguments::class)
 @Composable
-fun ProductScreen(viewModel: ProductViewModel = hiltViewModel()) {
-    viewModel.ConfigureViewModel()
+fun ProductScreen(
+    viewModel: ProductViewModel = hiltViewModel(),
+    navigator: DestinationsNavigator
+) {
+    viewModel.ConfigureViewModel(navigator)
     val state = viewModel.state.collectAsStateWithLifecycle().value
 
     Scaffold(

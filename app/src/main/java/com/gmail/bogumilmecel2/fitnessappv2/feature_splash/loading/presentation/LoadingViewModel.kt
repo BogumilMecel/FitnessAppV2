@@ -29,7 +29,11 @@ class LoadingViewModel @Inject constructor(
     navArguments = Unit
 ) {
 
-    fun checkIfTokenIsPresent() {
+    override fun configureOnStart() {
+        checkIfTokenIsPresent()
+    }
+
+    private fun checkIfTokenIsPresent() {
         viewModelScope.launch(Dispatchers.IO) {
             getToken()?.let {
                 authenticateUser()

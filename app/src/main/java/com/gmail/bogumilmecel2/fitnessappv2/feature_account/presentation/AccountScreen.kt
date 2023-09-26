@@ -34,15 +34,17 @@ import com.gmail.bogumilmecel2.ui.theme.LocalColor.BlueViolet3
 import com.gmail.bogumilmecel2.ui.theme.LocalColor.LightGreen3
 import com.gmail.bogumilmecel2.ui.theme.LocalColor.OrangeYellow3
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Destination
 @Composable
 fun AccountScreen(
-    viewModel: AccountViewModel = hiltViewModel()
+    viewModel: AccountViewModel = hiltViewModel(),
+    navigator: DestinationsNavigator
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle().value
 
-    viewModel.ConfigureViewModel()
+    viewModel.ConfigureViewModel(navigator = navigator)
 
     BackHandler {
         viewModel.onEvent(AccountEvent.BackPressed)

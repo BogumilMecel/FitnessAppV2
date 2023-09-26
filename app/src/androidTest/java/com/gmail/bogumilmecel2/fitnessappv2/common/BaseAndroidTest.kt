@@ -8,7 +8,6 @@ import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.testing.TestNavHostController
-import com.gmail.bogumilmecel2.fitnessappv2.common.domain.navigation.Navigator
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.MainActivity
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.navigation.NavHostGraph
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.Destination
@@ -17,7 +16,6 @@ import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before
 import org.junit.Rule
-import javax.inject.Inject
 
 @HiltAndroidTest
 open class BaseAndroidTest {
@@ -32,9 +30,6 @@ open class BaseAndroidTest {
         hiltRule.inject()
     }
 
-    @Inject
-    lateinit var composeNavigator: Navigator
-
     private lateinit var navController: TestNavHostController
 
     fun setContent(destination: Destination) {
@@ -43,7 +38,6 @@ open class BaseAndroidTest {
             navController.navigatorProvider.addNavigator(ComposeNavigator())
             FitnessAppTheme {
                 NavHostGraph(
-                    navigator = composeNavigator,
                     startDestination = destination,
                     navController = navController
                 )

@@ -49,14 +49,18 @@ import com.gmail.bogumilmecel2.ui.components.complex.ForEachSearchList
 import com.gmail.bogumilmecel2.ui.components.complex.HeaderRow
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Destination(navArgsDelegate = RecipeNavArguments::class)
 @Composable
-fun RecipeScreen(viewModel: RecipeViewModel = hiltViewModel()) {
+fun RecipeScreen(
+    viewModel: RecipeViewModel = hiltViewModel(),
+    navigator: DestinationsNavigator
+) {
     val state = viewModel.state.collectAsStateWithLifecycle().value
     val scrollState = rememberScrollState()
 
-    viewModel.ConfigureViewModel()
+    viewModel.ConfigureViewModel(navigator = navigator)
 
     Column(
         modifier = Modifier

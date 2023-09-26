@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.fitnessappv2.R
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.ConfigureViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.model.QuestionName
 import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.model.QuestionType
 import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.presentation.components.BottomButton
@@ -33,6 +34,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.presentation.co
 import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.presentation.components.TextQuestion
 import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.presentation.components.TilesQuestion
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(
@@ -42,8 +44,10 @@ import kotlinx.coroutines.flow.collectLatest
 @Destination
 @Composable
 fun IntroductionScreen(
-    viewModel: IntroductionViewModel = hiltViewModel()
+    viewModel: IntroductionViewModel = hiltViewModel(),
+    navigator: DestinationsNavigator
 ) {
+    viewModel.ConfigureViewModel(navigator = navigator)
     val state = viewModel.state.collectAsStateWithLifecycle().value
     val questionSize = QuestionName.values().size
 

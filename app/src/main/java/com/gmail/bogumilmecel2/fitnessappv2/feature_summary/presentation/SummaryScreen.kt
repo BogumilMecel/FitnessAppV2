@@ -7,13 +7,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.BackHandler
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.ConfigureViewModel
@@ -25,12 +25,16 @@ import com.gmail.bogumilmecel2.ui.components.base.CustomDialog
 import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
 import com.gmail.bogumilmecel2.ui.components.complex.DoubleNumberPicker
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Destination
 @Composable
-fun SummaryScreen(viewModel: SummaryViewModel = hiltViewModel()) {
-    viewModel.ConfigureViewModel()
-    val state = viewModel.state.collectAsState().value
+fun SummaryScreen(
+    viewModel: SummaryViewModel = hiltViewModel(),
+    navigator: DestinationsNavigator
+) {
+    viewModel.ConfigureViewModel(navigator = navigator)
+    val state = viewModel.state.collectAsStateWithLifecycle().value
     val activity = (LocalContext.current as? Activity)
 
     BackHandler {
