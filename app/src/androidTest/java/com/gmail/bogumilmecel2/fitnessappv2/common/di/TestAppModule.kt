@@ -56,6 +56,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.model.In
 import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.repository.UserDataRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_splash.domain.repository.LoadingRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.model.WeightDialogsRequest
+import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.use_case.SaveAskForWeightDailyUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.model.NewWeightEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.model.NewWeightEntryResponse
 import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.repository.WeightRepository
@@ -355,10 +356,6 @@ object TestAppModule {
             TODO("Not yet implemented")
         }
 
-        override suspend fun checkIfShouldAskForWeightDialogs(): Resource<Unit> {
-            TODO("Not yet implemented")
-        }
-
         override suspend fun handleWeightDialogsQuestion(weightDialogsRequest: WeightDialogsRequest): Resource<Unit> {
             TODO("Not yet implemented")
         }
@@ -424,4 +421,12 @@ object TestAppModule {
         calculateNutritionValuesPercentages: CalculateNutritionValuesPercentages
     ): CreatePieChartDataUseCase =
         CreatePieChartDataUseCase(calculateNutritionValuesPercentages)
+
+    @Singleton
+    @Provides
+    fun provideSaveAskForWeightDailyUseCase(
+        weightRepository: WeightRepository
+    ): SaveAskForWeightDailyUseCase = SaveAskForWeightDailyUseCase(
+        weightRepository = weightRepository
+    )
 }
