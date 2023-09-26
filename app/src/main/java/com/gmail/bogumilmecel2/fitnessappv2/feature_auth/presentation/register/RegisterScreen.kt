@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -37,29 +36,25 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Composable
 @Destination
-fun RegisterScreen(
-    viewModel: RegisterViewModel = hiltViewModel(),
-    navigator: DestinationsNavigator
-) {
-    viewModel.ConfigureViewModel(navigator = navigator)
-    val state = viewModel.state.collectAsStateWithLifecycle().value
+fun RegisterScreen(navigator: DestinationsNavigator) {
+    hiltViewModel<RegisterViewModel>().ConfigureViewModel(navigator = navigator) { viewModel ->
+        val state = viewModel.state.collectAsStateWithLifecycle().value
 
-    Scaffold(
-        topBar = {
-            Toolbar(
-                title = stringResource(id = R.string.register),
-                isBackArrowVisible = true
-            ) {
-                viewModel.onEvent(AuthEvent.RegisterLoginButtonClicked)
+        Scaffold(
+            topBar = {
+                Toolbar(
+                    title = stringResource(id = R.string.register),
+                    isBackArrowVisible = true
+                ) {
+                    viewModel.onEvent(AuthEvent.RegisterLoginButtonClicked)
+                }
             }
-        }
-    ) { paddingValues ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues.calculateTopPadding())
-        ) {
-            if (!state.isLoading) {
+        ) { paddingValues ->
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues.calculateTopPadding())
+            ) {
                 Column(
                     modifier = Modifier
                         .align(Alignment.Center)
@@ -171,10 +166,6 @@ fun RegisterScreen(
                         }
                         .align(Alignment.BottomCenter)
                         .padding(10.dp)
-                )
-            } else {
-                CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.Center)
                 )
             }
         }

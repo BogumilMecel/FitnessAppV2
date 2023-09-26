@@ -35,93 +35,88 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Destination
 @Composable
-fun EditNutritionGoalsScreen(
-    viewModel: EditNutritionGoalsViewModel = hiltViewModel(),
-    navigator: DestinationsNavigator
-) {
-    val state = viewModel.state.collectAsStateWithLifecycle().value
+fun EditNutritionGoalsScreen(navigator: DestinationsNavigator) {
+    hiltViewModel<EditNutritionGoalsViewModel>().ConfigureViewModel(navigator = navigator) { viewModel ->
+        val state = viewModel.state.collectAsStateWithLifecycle().value
 
-    viewModel.ConfigureViewModel(navigator = navigator)
+        viewModel.ConfigureViewModel(navigator = navigator)
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        HeaderRow(
-            middlePrimaryText = stringResource(id = R.string.nutrition_goals),
-            onBackPressed = {
-                viewModel.onEvent(EditNutritionGoalsEvent.BackArrowPressed)
-            }
-        )
+        Column(modifier = Modifier.fillMaxSize()) {
+            HeaderRow(
+                middlePrimaryText = stringResource(id = R.string.nutrition_goals),
+                onBackPressed = {
+                    viewModel.onEvent(EditNutritionGoalsEvent.BackArrowPressed)
+                }
+            )
 
-        Spacer(modifier = Modifier.height(6.dp))
+            Spacer(modifier = Modifier.height(6.dp))
 
-        DefaultCardBackground(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 10.dp)
-        ) {
-            Row(
+            DefaultCardBackground(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(10.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                    .padding(horizontal = 10.dp)
             ) {
-                Text(
-                    text = stringResource(id = R.string.calories),
-                    style = MaterialTheme.typography.h3
-                )
-
                 Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(10.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    CustomBasicTextField(
-                        value = state.calories,
-                        onValueChange = {
-                            viewModel.onEvent(EditNutritionGoalsEvent.EnteredCalories(it))
-                        },
-                        modifier = Modifier.width(80.dp),
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                        singleLine = true,
-                        textAlign = TextAlign.Center
-                    )
-
-                    Spacer(modifier = Modifier.width(12.dp))
-
                     Text(
-                        text = stringResource(id = R.string.kcal),
-                        style = MaterialTheme.typography.body2.copy(
-                            color = FitnessAppTheme.colors.ContentSecondary
-                        )
+                        text = stringResource(id = R.string.calories),
+                        style = MaterialTheme.typography.h3
                     )
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        CustomBasicTextField(
+                            value = state.calories,
+                            onValueChange = {
+                                viewModel.onEvent(EditNutritionGoalsEvent.EnteredCalories(it))
+                            },
+                            modifier = Modifier.width(80.dp),
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                            singleLine = true,
+                            textAlign = TextAlign.Center
+                        )
+
+                        Spacer(modifier = Modifier.width(12.dp))
+
+                        Text(
+                            text = stringResource(id = R.string.kcal),
+                            style = MaterialTheme.typography.body2.copy(
+                                color = FitnessAppTheme.colors.ContentSecondary
+                            )
+                        )
+                    }
                 }
             }
-        }
 
-        Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
-        MacroElementsSection(
-            modifier = Modifier.padding(horizontal = 10.dp),
-            state = state,
-            onEvent = {
-                viewModel.onEvent(it)
+            MacroElementsSection(
+                modifier = Modifier.padding(horizontal = 10.dp),
+                state = state,
+                onEvent = {
+                    viewModel.onEvent(it)
+                }
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Button(
+                onClick = {
+                    viewModel.onEvent(EditNutritionGoalsEvent.SaveButtonClicked)
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 10.dp),
+                shape = RoundedCornerShape(10.dp)
+            ) {
+                Text(text = stringResource(id = R.string.save).uppercase())
             }
-        )
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        Button(
-            onClick = {
-                viewModel.onEvent(EditNutritionGoalsEvent.SaveButtonClicked)
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 10.dp),
-            shape = RoundedCornerShape(10.dp)
-        ) {
-            Text(text = stringResource(id = R.string.save).uppercase())
         }
-
     }
 }

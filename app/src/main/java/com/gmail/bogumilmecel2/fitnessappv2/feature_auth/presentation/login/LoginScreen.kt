@@ -34,98 +34,94 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Composable
 @Destination
-fun LoginScreen(
-    viewModel: LoginViewModel = hiltViewModel(),
-    navigator: DestinationsNavigator
-) {
-    viewModel.ConfigureViewModel(navigator = navigator)
-    val state = viewModel.state.collectAsStateWithLifecycle().value
+fun LoginScreen(navigator: DestinationsNavigator) {
+    hiltViewModel<LoginViewModel>().ConfigureViewModel(navigator = navigator) { viewModel ->
+        val state = viewModel.state.collectAsStateWithLifecycle().value
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        HeaderRow(middlePrimaryText = stringResource(id = R.string.login))
+        Box(modifier = Modifier.fillMaxSize()) {
+            HeaderRow(middlePrimaryText = stringResource(id = R.string.login))
 
-        Column(modifier = Modifier.align(Alignment.Center)) {
-            CustomBasicTextField(
-                value = state.email,
-                placeholder = stringResource(id = R.string.email_address),
-                onValueChange = {
-                    viewModel.onEvent(LoginEvent.EnteredEmail(email = it))
-                },
-                keyboardOptions = KeyboardOptions().copy(
-                    keyboardType = KeyboardType.Email
-                ),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 10.dp),
-                leadingIcon = IconVector.Email,
-                testTag = TestTags.General.EMAIL
-            )
+            Column(modifier = Modifier.align(Alignment.Center)) {
+                CustomBasicTextField(
+                    value = state.email,
+                    placeholder = stringResource(id = R.string.email_address),
+                    onValueChange = {
+                        viewModel.onEvent(LoginEvent.EnteredEmail(email = it))
+                    },
+                    keyboardOptions = KeyboardOptions().copy(
+                        keyboardType = KeyboardType.Email
+                    ),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 10.dp),
+                    leadingIcon = IconVector.Email,
+                    testTag = TestTags.General.EMAIL
+                )
 
-            HeightSpacer(16.dp)
+                HeightSpacer(16.dp)
 
-            CustomBasicTextField(
-                value = state.password,
-                placeholder = stringResource(id = R.string.password),
-                onValueChange = {
-                    viewModel.onEvent(
-                        LoginEvent.EnteredPassword(password = it)
-                    )
-                },
-                keyboardOptions = KeyboardOptions().copy(
-                    keyboardType = KeyboardType.Password,
-                ),
-                visualTransformation = PasswordVisualTransformation(),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 10.dp),
-                leadingIcon = IconVector.Password,
-                testTag = TestTags.General.PASSWORD
-            )
+                CustomBasicTextField(
+                    value = state.password,
+                    placeholder = stringResource(id = R.string.password),
+                    onValueChange = {
+                        viewModel.onEvent(
+                            LoginEvent.EnteredPassword(password = it)
+                        )
+                    },
+                    keyboardOptions = KeyboardOptions().copy(
+                        keyboardType = KeyboardType.Password,
+                    ),
+                    visualTransformation = PasswordVisualTransformation(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 10.dp),
+                    leadingIcon = IconVector.Password,
+                    testTag = TestTags.General.PASSWORD
+                )
 
-            HeightSpacer(32.dp)
+                HeightSpacer(32.dp)
 
-            CustomButton(
-                onClick = {
-                    viewModel.onEvent(LoginEvent.LoginButtonClicked)
-                },
-                modifier = Modifier
-                    .padding(horizontal = 10.dp)
-                    .fillMaxWidth()
-                    .testTag(TestTags.General.PRIMARY_BUTTON),
-                leftIcon = IconVector.Login,
-                text = stringResource(id = R.string.sign_in)
-            )
+                CustomButton(
+                    onClick = {
+                        viewModel.onEvent(LoginEvent.LoginButtonClicked)
+                    },
+                    modifier = Modifier
+                        .padding(horizontal = 10.dp)
+                        .fillMaxWidth()
+                        .testTag(TestTags.General.PRIMARY_BUTTON),
+                    leftIcon = IconVector.Login,
+                    text = stringResource(id = R.string.sign_in)
+                )
 
-            HeightSpacer(16.dp)
+                HeightSpacer(16.dp)
+
+                Text(
+                    text = stringResource(id = R.string.forgot_password),
+                    style = MaterialTheme.typography.body2,
+                    modifier = Modifier
+                        .testTag(TestTags.Login.FORGOT_PASSWORD)
+                        .clip(defaultRoundedCornerShape())
+                        .clickable { viewModel.onEvent(LoginEvent.ForgotButtonClicked) }
+                        .padding(
+                            horizontal = 16.dp,
+                            vertical = 8.dp
+                        )
+                )
+            }
 
             Text(
-                text = stringResource(id = R.string.forgot_password),
+                text = stringResource(id = R.string.i_don_t_have_an_account_register),
                 style = MaterialTheme.typography.body2,
                 modifier = Modifier
-                    .testTag(TestTags.Login.FORGOT_PASSWORD)
+                    .padding(bottom = 50.dp)
                     .clip(defaultRoundedCornerShape())
-                    .clickable { viewModel.onEvent(LoginEvent.ForgotButtonClicked) }
+                    .clickable { viewModel.onEvent(LoginEvent.RegisterLoginButtonClicked) }
                     .padding(
                         horizontal = 16.dp,
                         vertical = 8.dp
                     )
+                    .align(Alignment.BottomCenter)
             )
         }
-
-//                GoogleSignInButton()
-
-        Text(
-            text = stringResource(id = R.string.i_don_t_have_an_account_register),
-            style = MaterialTheme.typography.body2,
-            modifier = Modifier
-                .padding(bottom = 50.dp)
-                .clip(defaultRoundedCornerShape())
-                .clickable { viewModel.onEvent(LoginEvent.RegisterLoginButtonClicked) }
-                .padding(
-                    horizontal = 16.dp,
-                    vertical = 8.dp
-                )
-                .align(Alignment.BottomCenter)
-        )
     }
 }

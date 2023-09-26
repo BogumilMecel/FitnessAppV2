@@ -30,6 +30,7 @@ class LoadingViewModel @Inject constructor(
 ) {
 
     override fun configureOnStart() {
+        loaderVisible = true
         checkIfTokenIsPresent()
     }
 

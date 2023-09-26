@@ -53,275 +53,272 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Destination(navArgsDelegate = RecipeNavArguments::class)
 @Composable
-fun RecipeScreen(
-    viewModel: RecipeViewModel = hiltViewModel(),
-    navigator: DestinationsNavigator
-) {
-    val state = viewModel.state.collectAsStateWithLifecycle().value
-    val scrollState = rememberScrollState()
+fun RecipeScreen(navigator: DestinationsNavigator) {
+    hiltViewModel<RecipeViewModel>().ConfigureViewModel(navigator = navigator) { viewModel ->
+        val state = viewModel.state.collectAsStateWithLifecycle().value
+        val scrollState = rememberScrollState()
 
-    viewModel.ConfigureViewModel(navigator = navigator)
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(scrollState)
-    ) {
-        HeaderRow(
-            middlePrimaryText = state.recipeName,
-            middleSecondaryText = state.recipeCaloriesText,
-            onBackPressed = {
-                viewModel.onEvent(RecipeEvent.ClickedBackArrow)
-            },
-            endIconButtonParams = IconButtonParams(
-                iconVector = if (!state.isFavorite) {
-                    IconVector.Heart
-                } else {
-                    IconVector.HeartFilled
-                },
-                onClick = {
-                    viewModel.onEvent(RecipeEvent.ClickedFavorite)
-                }
-            )
-        )
-
-        HeightSpacer()
-
-        Row(
+        Column(
             modifier = Modifier
-                .padding(horizontal = 15.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+                .fillMaxSize()
+                .verticalScroll(scrollState)
         ) {
-            DefaultCardBackground(
-                modifier = Modifier.weight(1F),
-                content = {
-                    Column(
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .fillMaxWidth(),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.AccessTime,
-                                contentDescription = null
-                            )
-
-                            WidthSpacer(width = 8.dp)
-
-                            Text(
-                                text = state.timeRequiredText,
-                                style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Medium)
-                            )
-                        }
-
-                        HeightSpacer(height = 4.dp)
-
-                        Text(
-                            text = stringResource(id = R.string.recipe_time_required),
-                            style = MaterialTheme.typography.body2.copy(color = FitnessAppTheme.colors.ContentSecondary)
-                        )
+            HeaderRow(
+                middlePrimaryText = state.recipeName,
+                middleSecondaryText = state.recipeCaloriesText,
+                onBackPressed = {
+                    viewModel.onEvent(RecipeEvent.ClickedBackArrow)
+                },
+                endIconButtonParams = IconButtonParams(
+                    iconVector = if (!state.isFavorite) {
+                        IconVector.Heart
+                    } else {
+                        IconVector.HeartFilled
+                    },
+                    onClick = {
+                        viewModel.onEvent(RecipeEvent.ClickedFavorite)
                     }
-                }
+                )
             )
 
-            WidthSpacer(width = 12.dp)
+            HeightSpacer()
 
-            DefaultCardBackground(
-                modifier = Modifier.weight(1F),
-                content = {
-                    Column(
-                        modifier = Modifier
-                            .padding(15.dp)
-                            .fillMaxWidth(),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Equalizer,
-                                contentDescription = null
-                            )
-
-                            HeightSpacer(height = 8.dp)
-
-                            Text(
-                                text = state.difficultyText,
-                                style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Medium)
-                            )
-                        }
-
-                        HeightSpacer(height = 4.dp)
-
-                        Text(
-                            text = stringResource(id = R.string.recipe_difficulty),
-                            style = MaterialTheme.typography.body2.copy(color = FitnessAppTheme.colors.ContentSecondary)
-                        )
-                    }
-                }
-            )
-        }
-
-        HeightSpacer()
-
-        DefaultCardBackground(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            content = {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                ) {
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
+            Row(
+                modifier = Modifier
+                    .padding(horizontal = 15.dp)
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                DefaultCardBackground(
+                    modifier = Modifier.weight(1F),
+                    content = {
                         Column(
-                            modifier = Modifier.weight(0.75F)
+                            modifier = Modifier
+                                .padding(16.dp)
+                                .fillMaxWidth(),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
                         ) {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Icon(
-                                    imageVector = Icons.Default.SupervisorAccount,
+                                    imageVector = Icons.Default.AccessTime,
                                     contentDescription = null
                                 )
 
-                                Spacer(modifier = Modifier.width(4.dp))
+                                WidthSpacer(width = 8.dp)
 
                                 Text(
-                                    text = stringResource(id = R.string.servings),
-                                    style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Medium),
+                                    text = state.timeRequiredText,
+                                    style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Medium)
                                 )
                             }
 
                             HeightSpacer(height = 4.dp)
 
                             Text(
-                                text = state.servingsText,
+                                text = stringResource(id = R.string.recipe_time_required),
                                 style = MaterialTheme.typography.body2.copy(color = FitnessAppTheme.colors.ContentSecondary)
                             )
                         }
-
-                        CustomBasicTextField(
-                            value = state.servings,
-                            onValueChange = {
-                                viewModel.onEvent(RecipeEvent.EnteredServings(it))
-                            },
-                            keyboardOptions = KeyboardOptions.Default.copy(
-                                keyboardType = KeyboardType.Number
-                            ),
-                            modifier = Modifier.weight(0.25F)
-                        )
                     }
+                )
 
-                    HeightSpacer(height = 12.dp)
+                WidthSpacer(width = 12.dp)
 
-                    CustomButton(
-                        modifier = Modifier.fillMaxWidth(),
-                        leftIcon = IconVector.Save,
-                        text = state.saveButtonText
-                    ) {
-                        viewModel.onEvent(RecipeEvent.ClickedSaveRecipeDiaryEntry)
+                DefaultCardBackground(
+                    modifier = Modifier.weight(1F),
+                    content = {
+                        Column(
+                            modifier = Modifier
+                                .padding(15.dp)
+                                .fillMaxWidth(),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Equalizer,
+                                    contentDescription = null
+                                )
+
+                                HeightSpacer(height = 8.dp)
+
+                                Text(
+                                    text = state.difficultyText,
+                                    style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Medium)
+                                )
+                            }
+
+                            HeightSpacer(height = 4.dp)
+
+                            Text(
+                                text = stringResource(id = R.string.recipe_difficulty),
+                                style = MaterialTheme.typography.body2.copy(color = FitnessAppTheme.colors.ContentSecondary)
+                            )
+                        }
                     }
-                }
+                )
             }
-        )
 
-        HeightSpacer()
-
-        ProductNutritionSection(
-            nutritionData = state.nutritionData,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 13.dp)
-        )
-
-        if (state.recipePrice != null && state.servingPrice != null) {
             HeightSpacer()
 
-            RecipePriceSection(
+            DefaultCardBackground(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
-                totalPrice = state.recipePrice.totalPrice,
-                servingPrice = state.servingPrice,
-                shouldShowPriceWarning = state.recipePrice.shouldShowPriceWarning,
-                isNewRecipe = false,
-                onInfoClicked = {
-
-                }
-            )
-        }
-
-        HeightSpacer()
-
-        DefaultCardBackground(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .animateContentSize(
-                    animationSpec = tween(
-                        durationMillis = 400,
-                        easing = LinearOutSlowInEasing
-                    )
-                ),
-            content = {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Box(
+                content = {
+                    Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
+                            .padding(16.dp)
                     ) {
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Column(
+                                modifier = Modifier.weight(0.75F)
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.SupervisorAccount,
+                                        contentDescription = null
+                                    )
 
-                        Text(
-                            text = stringResource(id = R.string.recipe_ingredients),
-                            style = MaterialTheme.typography.body1.copy(
-                                fontWeight = FontWeight.Medium
-                            ),
-                            modifier = Modifier.align(Alignment.Center)
-                        )
+                                    Spacer(modifier = Modifier.width(4.dp))
 
-                        DropdownArrow(
-                            isArrowPointedDownwards = state.isIngredientsListExpanded,
-                            modifier = Modifier.align(Alignment.CenterEnd),
-                            onArrowClicked = {
-                                viewModel.onEvent(RecipeEvent.ClickedExpandIngredientsList)
+                                    Text(
+                                        text = stringResource(id = R.string.servings),
+                                        style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Medium),
+                                    )
+                                }
+
+                                HeightSpacer(height = 4.dp)
+
+                                Text(
+                                    text = state.servingsText,
+                                    style = MaterialTheme.typography.body2.copy(color = FitnessAppTheme.colors.ContentSecondary)
+                                )
                             }
-                        )
-                    }
 
-                    if (state.isIngredientsListExpanded) {
-                        Divider()
+                            CustomBasicTextField(
+                                value = state.servings,
+                                onValueChange = {
+                                    viewModel.onEvent(RecipeEvent.EnteredServings(it))
+                                },
+                                keyboardOptions = KeyboardOptions.Default.copy(
+                                    keyboardType = KeyboardType.Number
+                                ),
+                                modifier = Modifier.weight(0.25F)
+                            )
+                        }
 
-                        ForEachSearchList(items = state.ingredientsParams)
+                        HeightSpacer(height = 12.dp)
 
-                        HeightSpacer()
+                        CustomButton(
+                            modifier = Modifier.fillMaxWidth(),
+                            leftIcon = IconVector.Save,
+                            text = state.saveButtonText
+                        ) {
+                            viewModel.onEvent(RecipeEvent.ClickedSaveRecipeDiaryEntry)
+                        }
                     }
                 }
-            }
-        )
+            )
 
-        if (state.isUserRecipeOwner) {
-            HeightSpacer(12.dp)
+            HeightSpacer()
 
-            CustomButton(
+            ProductNutritionSection(
+                nutritionData = state.nutritionData,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                leftIcon = IconVector.Edit,
-                text = stringResource(id = R.string.recipe_edit),
-                buttonStyle = ButtonStyle.Secondary
-            ) {
+                    .padding(horizontal = 13.dp)
+            )
 
+            if (state.recipePrice != null && state.servingPrice != null) {
+                HeightSpacer()
+
+                RecipePriceSection(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    totalPrice = state.recipePrice.totalPrice,
+                    servingPrice = state.servingPrice,
+                    shouldShowPriceWarning = state.recipePrice.shouldShowPriceWarning,
+                    isNewRecipe = false,
+                    onInfoClicked = {
+
+                    }
+                )
+            }
+
+            HeightSpacer()
+
+            DefaultCardBackground(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .animateContentSize(
+                        animationSpec = tween(
+                            durationMillis = 400,
+                            easing = LinearOutSlowInEasing
+                        )
+                    ),
+                content = {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp)
+                        ) {
+
+                            Text(
+                                text = stringResource(id = R.string.recipe_ingredients),
+                                style = MaterialTheme.typography.body1.copy(
+                                    fontWeight = FontWeight.Medium
+                                ),
+                                modifier = Modifier.align(Alignment.Center)
+                            )
+
+                            DropdownArrow(
+                                isArrowPointedDownwards = state.isIngredientsListExpanded,
+                                modifier = Modifier.align(Alignment.CenterEnd),
+                                onArrowClicked = {
+                                    viewModel.onEvent(RecipeEvent.ClickedExpandIngredientsList)
+                                }
+                            )
+                        }
+
+                        if (state.isIngredientsListExpanded) {
+                            Divider()
+
+                            ForEachSearchList(items = state.ingredientsParams)
+
+                            HeightSpacer()
+                        }
+                    }
+                }
+            )
+
+            if (state.isUserRecipeOwner) {
+                HeightSpacer(12.dp)
+
+                CustomButton(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    leftIcon = IconVector.Edit,
+                    text = stringResource(id = R.string.recipe_edit),
+                    buttonStyle = ButtonStyle.Secondary
+                ) {
+
+                }
             }
         }
     }
