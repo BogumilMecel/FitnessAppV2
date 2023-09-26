@@ -34,7 +34,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 @Destination(navArgsDelegate = ProductNavArguments::class)
 @Composable
 fun ProductScreen(viewModel: ProductViewModel = hiltViewModel()) {
-    ConfigureViewModel(viewModel = viewModel)
+    viewModel.ConfigureViewModel()
     val state = viewModel.state.collectAsStateWithLifecycle().value
 
     Scaffold(

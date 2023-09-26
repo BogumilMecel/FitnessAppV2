@@ -42,7 +42,7 @@ fun AccountScreen(
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle().value
 
-    ConfigureViewModel(viewModel = viewModel)
+    viewModel.ConfigureViewModel()
 
     BackHandler {
         viewModel.onEvent(AccountEvent.BackPressed)

@@ -39,7 +39,7 @@ fun EditNutritionGoalsScreen(
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle().value
 
-    ConfigureViewModel(viewModel = viewModel)
+    viewModel.ConfigureViewModel()
 
     Column(
         modifier = Modifier
