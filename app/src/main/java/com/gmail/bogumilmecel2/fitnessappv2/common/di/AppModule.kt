@@ -13,7 +13,9 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.DateHolder
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.repository.TokenRepository
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.*
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.BarcodeScanner
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.DefaultInterceptor
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.RealBarcodeScanner
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.RealCachedValuesProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.RealDateHolder
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.RealResourceProvider
@@ -57,6 +59,11 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+
+    @Provides
+    @Singleton
+    fun provideScanner(@ApplicationContext context: Context): BarcodeScanner =
+        RealBarcodeScanner(context)
 
     @Provides
     @Singleton

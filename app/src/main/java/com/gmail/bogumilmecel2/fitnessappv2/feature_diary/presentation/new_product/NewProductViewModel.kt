@@ -2,6 +2,7 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_prod
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.BarcodeScanner
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.DiaryScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.NewProductScreenDestination
@@ -18,6 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class NewProductViewModel @Inject constructor(
     private val saveNewProductUseCase: SaveNewProductUseCase,
+    private val barcodeScanner: BarcodeScanner,
     savedStateHandle: SavedStateHandle
 ) : BaseViewModel<NewProductState, NewProductEvent, NewProductNavArguments>(
     state = NewProductState(),
@@ -25,12 +27,10 @@ class NewProductViewModel @Inject constructor(
 ) {
 
     override fun configureOnStart() {
-        with(navArguments) {
-            _state.update {
-                it.copy(
-                    barcode = barcode ?: "",
-                )
-            }
+        _state.update {
+            it.copy(
+                barcode = navArguments.barcode ?: "",
+            )
         }
     }
 
@@ -145,27 +145,20 @@ class NewProductViewModel @Inject constructor(
             }
 
             is NewProductEvent.EnteredBarcode -> {
-                _state.update {
-                    it.copy(
-                        barcode = event.barcode,
-                        isScannerVisible = false
-                    )
-                }
+                _state.update { it.copy(barcode = event.barcode) }
             }
 
             is NewProductEvent.ClickedScannerButton -> {
-                _state.update {
-                    it.copy(
-                        isScannerVisible = true,
-                    )
-                }
-            }
-
-            is NewProductEvent.ClosedScanner -> {
-                _state.update {
-                    it.copy(
-                        isScannerVisible = false
-                    )
+                viewModelScope.launch {
+                    barcodeScanner.startScan { barcode ->
+                        barcode?.let {
+                            _state.update {
+                                it.copy(
+                                    barcode = barcode
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }
