@@ -35,7 +35,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.DropdownArrow
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.ConfigureViewModel
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.ViewModelLayout
 import com.gmail.bogumilmecel2.fitnessappv2.components.DefaultCardBackground
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_recipe.components.RecipeNutritionSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_recipe.components.RecipePriceSection
@@ -55,7 +55,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Destination(navArgsDelegate = NewRecipeNavArguments::class)
 @Composable
 fun NewRecipeScreen(navigator: DestinationsNavigator) {
-    hiltViewModel<NewRecipeViewModel>().ConfigureViewModel(navigator = navigator) { viewModel ->
+    hiltViewModel<NewRecipeViewModel>().ViewModelLayout(navigator = navigator) { viewModel ->
         val state = viewModel.state.collectAsStateWithLifecycle().value
 
         Scaffold(

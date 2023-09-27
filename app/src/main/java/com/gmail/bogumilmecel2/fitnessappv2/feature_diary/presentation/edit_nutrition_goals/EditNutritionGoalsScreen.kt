@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.fitnessappv2.R
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.ConfigureViewModel
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.ViewModelLayout
 import com.gmail.bogumilmecel2.fitnessappv2.components.DefaultCardBackground
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.edit_nutrition_goals.components.MacroElementsSection
 import com.gmail.bogumilmecel2.ui.components.base.CustomBasicTextField
@@ -36,10 +36,8 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Destination
 @Composable
 fun EditNutritionGoalsScreen(navigator: DestinationsNavigator) {
-    hiltViewModel<EditNutritionGoalsViewModel>().ConfigureViewModel(navigator = navigator) { viewModel ->
+    hiltViewModel<EditNutritionGoalsViewModel>().ViewModelLayout(navigator = navigator) { viewModel ->
         val state = viewModel.state.collectAsStateWithLifecycle().value
-
-        viewModel.ConfigureViewModel(navigator = navigator)
 
         Column(modifier = Modifier.fillMaxSize()) {
             HeaderRow(

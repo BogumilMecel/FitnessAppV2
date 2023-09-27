@@ -2,7 +2,7 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_splash.loading.presentation
 
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.ConfigureViewModel
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.ViewModelLayout
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -11,5 +11,5 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Destination
 @Composable
 fun SplashScreen(navigator: DestinationsNavigator) {
-    hiltViewModel<LoadingViewModel>().ConfigureViewModel(navigator = navigator)
+    hiltViewModel<LoadingViewModel>().ViewModelLayout(navigator = navigator)
 }

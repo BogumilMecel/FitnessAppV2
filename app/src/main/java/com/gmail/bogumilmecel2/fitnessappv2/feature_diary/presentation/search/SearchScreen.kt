@@ -26,8 +26,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.BackHandler
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.ConfigureViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.ErrorUtils
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.ViewModelLayout
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.componens.SearchTopSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.shared.ScannerSection
 import com.gmail.bogumilmecel2.ui.components.base.ButtonParams
@@ -54,7 +54,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Destination(navArgsDelegate = SearchNavArguments::class)
 @Composable
 fun SearchScreen(navigator: DestinationsNavigator) {
-    hiltViewModel<SearchViewModel>().ConfigureViewModel(navigator = navigator) { viewModel ->
+    hiltViewModel<SearchViewModel>().ViewModelLayout(navigator = navigator) { viewModel ->
         val state = viewModel.state.collectAsStateWithLifecycle().value
         val pagerState = rememberPagerState(initialPage = SearchTab.EVERYTHING.ordinal) {
             SearchTab.values().size
