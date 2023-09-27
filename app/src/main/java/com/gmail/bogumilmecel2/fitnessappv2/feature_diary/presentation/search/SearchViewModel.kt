@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.ApiConstants
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.BarcodeScanner
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.NewProductScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.NewRecipeScreenDestination
@@ -28,6 +29,7 @@ import javax.inject.Inject
 class SearchViewModel @Inject constructor(
     private val searchDiaryUseCases: SearchDiaryUseCases,
     private val diaryRepository: DiaryRepository,
+    private val barcodeScanner: BarcodeScanner,
     savedStateHandle: SavedStateHandle,
 ) : BaseViewModel<SearchState, SearchEvent, SearchNavArguments>(
     state = SearchState(),
@@ -60,14 +62,6 @@ class SearchViewModel @Inject constructor(
 
     override fun onEvent(event: SearchEvent) {
         when (event) {
-            is SearchEvent.ClosedScanner -> {
-                _state.update {
-                    it.copy(
-                        isScannerVisible = false
-                    )
-                }
-            }
-
             is SearchEvent.ClickedBackArrow -> {
                 navigateUp()
             }
@@ -108,11 +102,16 @@ class SearchViewModel @Inject constructor(
             }
 
             is SearchEvent.ClickedScanButton -> {
-                _state.update {
-                    it.copy(
-                        isScannerVisible = true,
-                        barcode = null
-                    )
+                viewModelScope.launch {
+                    barcodeScanner.startScan { barcode ->
+                        barcode?.let {
+                            _state.update {
+                                it.copy(
+                                    barcode = barcode
+                                )
+                            }
+                        }
+                    }
                 }
             }
 
@@ -363,7 +362,6 @@ class SearchViewModel @Inject constructor(
 
     private fun onBarcodeScanned(barcode: String) {
         setLoader(true)
-        _state.update { it.copy(isScannerVisible = false) }
         viewModelScope.launch(Dispatchers.IO) {
             searchDiaryUseCases.searchForProductWithBarcode(barcode).handle(
                 onError = { errorMessage ->

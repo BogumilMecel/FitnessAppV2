@@ -16,7 +16,6 @@ data class NewProductState(
     val nutritionValuesInTabs: List<NutritionValuesIn> = NutritionValuesIn.values().toList(),
     val nutritionValuesInSelectedTabIndex: Int = 0,
     val barcode: String = "",
-    val isScannerVisible: Boolean = false,
 )
 
 

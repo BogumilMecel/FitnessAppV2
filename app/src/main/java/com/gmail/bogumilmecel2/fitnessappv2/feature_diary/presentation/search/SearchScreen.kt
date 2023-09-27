@@ -32,7 +32,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.BackH
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.ErrorUtils
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.ViewModelLayout
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.componens.SearchTopSection
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.shared.ScannerSection
 import com.gmail.bogumilmecel2.ui.components.base.ButtonParams
 import com.gmail.bogumilmecel2.ui.components.base.CustomButton
 import com.gmail.bogumilmecel2.ui.components.base.CustomIcon
@@ -71,242 +70,230 @@ fun SearchScreen(navigator: DestinationsNavigator) {
         )
 
         BackHandler(
-            enabled = state.isScannerVisible || state.selectedTabIndex != SearchTab.EVERYTHING.ordinal
+            enabled = state.selectedTabIndex != SearchTab.EVERYTHING.ordinal
         ) {
-            if (state.isScannerVisible) {
-                viewModel.onEvent(SearchEvent.ClosedScanner)
-            } else if (state.selectedTabIndex != SearchTab.EVERYTHING.ordinal) {
+            if (state.selectedTabIndex != SearchTab.EVERYTHING.ordinal) {
                 viewModel.onEvent(SearchEvent.SelectedTab(SearchTab.EVERYTHING.ordinal))
             }
         }
 
-        if (!state.isScannerVisible) {
-            Scaffold(
-                floatingActionButton = {
-                    AnimatedVisibility(
-                        visible = state.searchButtonVisible,
-                        enter = fadeIn(),
-                        exit = fadeOut()
-                    ) {
-                        ExtendedFloatingActionButton(
-                            onClick = { viewModel.onEvent(SearchEvent.ClickedSearch) },
-                            backgroundColor = FitnessAppTheme.colors.Primary,
-                            modifier = Modifier.testTag(stringResource(id = R.string.SEARCH_BUTTON)),
-                            text = {
-                                Text(
-                                    text = stringResource(id = R.string.search).uppercase(),
-                                    color = FitnessAppTheme.colors.Black
-                                )
-                            },
-                            icon = {
-                                CustomIcon(
-                                    icon = IconVector.Search,
-                                    iconColor = FitnessAppTheme.colors.Black
-                                )
-                            }
-                        )
-                    }
-                }
-            ) { paddingValues ->
-                Column(modifier = Modifier.fillMaxSize()) {
-                    SearchTopSection(
-                        searchBarText = state.searchBarText,
-                        mealName = stringResource(id = state.mealName.getDisplayValue()),
-                        date = state.date,
-                        onEvent = { searchEvent ->
-                            viewModel.onEvent(searchEvent)
+        Scaffold(
+            floatingActionButton = {
+                AnimatedVisibility(
+                    visible = state.searchButtonVisible,
+                    enter = fadeIn(),
+                    exit = fadeOut()
+                ) {
+                    ExtendedFloatingActionButton(
+                        onClick = { viewModel.onEvent(SearchEvent.ClickedSearch) },
+                        backgroundColor = FitnessAppTheme.colors.Primary,
+                        modifier = Modifier.testTag(stringResource(id = R.string.SEARCH_BUTTON)),
+                        text = {
+                            Text(
+                                text = stringResource(id = R.string.search).uppercase(),
+                                color = FitnessAppTheme.colors.Black
+                            )
                         },
-                        selectedTabIndex = state.selectedTabIndex
+                        icon = {
+                            CustomIcon(
+                                icon = IconVector.Search,
+                                iconColor = FitnessAppTheme.colors.Black
+                            )
+                        }
                     )
+                }
+            }
+        ) { paddingValues ->
+            Column(modifier = Modifier.fillMaxSize()) {
+                SearchTopSection(
+                    searchBarText = state.searchBarText,
+                    mealName = stringResource(id = state.mealName.getDisplayValue()),
+                    date = state.date,
+                    onEvent = { searchEvent ->
+                        viewModel.onEvent(searchEvent)
+                    },
+                    selectedTabIndex = state.selectedTabIndex
+                )
 
-                    HorizontalPager(
-                        state = pagerState,
-                        userScrollEnabled = false
-                    ) { pagerScope ->
-                        when (pagerScope) {
-                            SearchTab.EVERYTHING.ordinal -> {
-                                Column(
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .padding(top = 16.dp),
-                                ) {
-                                    SearchButtonRow(
-                                        buttons = listOf(
-                                            SearchButtonParams(
-                                                buttonParams = ButtonParams(
-                                                    text = stringResource(id = R.string.search_quick_add),
-                                                    onClick = {
+                HorizontalPager(
+                    state = pagerState,
+                    userScrollEnabled = false
+                ) { pagerScope ->
+                    when (pagerScope) {
+                        SearchTab.EVERYTHING.ordinal -> {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(top = 16.dp),
+                            ) {
+                                SearchButtonRow(
+                                    buttons = listOf(
+                                        SearchButtonParams(
+                                            buttonParams = ButtonParams(
+                                                text = stringResource(id = R.string.search_quick_add),
+                                                onClick = {
 
-                                                    }
-                                                ),
-                                                icon = IconVector.Add
+                                                }
                                             ),
-                                            SearchButtonParams(
-                                                buttonParams = ButtonParams(
-                                                    text = stringResource(id = R.string.scan_barcode),
-                                                    onClick = { viewModel.onEvent(SearchEvent.ClickedScanButton) }
-                                                ),
-                                                icon = IconVector.barcode(),
-                                            )
+                                            icon = IconVector.Add
                                         ),
-                                        buttonsColor = FitnessAppTheme.colors.Secondary
-                                    )
-
-                                    HeightSpacer()
-
-                                    Box {
-                                        if (state.barcode != null) {
-                                            Column(
-                                                modifier = Modifier
-                                                    .align(Alignment.Center)
-                                                    .fillMaxWidth(),
-                                                horizontalAlignment = Alignment.CenterHorizontally
-                                            ) {
-                                                Text(
-                                                    text = stringResource(id = R.string.there_is_no_product_with_provided_barcode_do_you_want_to_add_it),
-                                                    modifier = Modifier.padding(horizontal = 16.dp),
-                                                    style = FitnessAppTheme.typography.HeaderLarge,
-                                                    textAlign = TextAlign.Center
-                                                )
-
-                                                HeightSpacer()
-
-                                                CustomButton(
-                                                    onClick = { viewModel.onEvent(SearchEvent.ClickedNewProduct) },
-                                                    text = stringResource(id = R.string.add)
-                                                )
-                                            }
-                                        } else if (state.everythingSearchItems.isNotEmpty()) {
-                                            LoaderColumn(isLoading = state.isLoading) {
-                                                SearchList(
-                                                    items = state.everythingSearchItems,
-                                                    onScrollToEnd = {
-                                                        viewModel.onEvent(SearchEvent.ReachedListEnd)
-                                                    }
-                                                )
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                            SearchTab.PRODUCTS.ordinal -> {
-                                val cameraPermissionState = rememberPermissionState(
-                                    permission = Manifest.permission.CAMERA
+                                        SearchButtonParams(
+                                            buttonParams = ButtonParams(
+                                                text = stringResource(id = R.string.scan_barcode),
+                                                onClick = { viewModel.onEvent(SearchEvent.ClickedScanButton) }
+                                            ),
+                                            icon = IconVector.barcode(),
+                                        )
+                                    ),
+                                    buttonsColor = FitnessAppTheme.colors.Secondary
                                 )
 
-                                val cameraPermissionErrorMessage =
-                                    stringResource(id = R.string.camera_permission_is_required_to_scan_a_product_barcode)
+                                HeightSpacer()
 
-                                LaunchedEffect(key1 = cameraPermissionState) {
-                                    if (cameraPermissionState.status is PermissionStatus.Denied && state.hasPermissionDialogBeenShowed) {
-                                        ErrorUtils.showSnackbarWithMessage(cameraPermissionErrorMessage)
-                                    }
-                                }
-
-                                Column(
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .padding(
-                                            bottom = paddingValues.calculateBottomPadding(),
-                                            top = 16.dp
-                                        )
-                                ) {
-                                    SearchButtonRow(
-                                        buttons = listOf(
-                                            SearchButtonParams(
-                                                buttonParams = ButtonParams(
-                                                    text = stringResource(id = R.string.scan_barcode),
-                                                    onClick = {
-                                                        if (!cameraPermissionState.status.isGranted) {
-                                                            viewModel.onEvent(SearchEvent.ShowedPermissionDialog)
-                                                            cameraPermissionState.launchPermissionRequest()
-                                                        } else {
-                                                            viewModel.onEvent(SearchEvent.ClickedScanButton)
-                                                        }
-                                                    }
-                                                ),
-                                                icon = IconVector.barcode(),
-                                            ),
-                                            SearchButtonParams(
-                                                buttonParams = ButtonParams(
-                                                    text = stringResource(id = R.string.create_product),
-                                                    onClick = {
-                                                        viewModel.onEvent(SearchEvent.ClickedNewProduct)
-                                                    }
-                                                ),
-                                                icon = IconVector.Add
+                                Box {
+                                    if (state.barcode != null) {
+                                        Column(
+                                            modifier = Modifier
+                                                .align(Alignment.Center)
+                                                .fillMaxWidth(),
+                                            horizontalAlignment = Alignment.CenterHorizontally
+                                        ) {
+                                            Text(
+                                                text = stringResource(id = R.string.there_is_no_product_with_provided_barcode_do_you_want_to_add_it),
+                                                modifier = Modifier.padding(horizontal = 16.dp),
+                                                style = FitnessAppTheme.typography.HeaderLarge,
+                                                textAlign = TextAlign.Center
                                             )
-                                        ),
-                                        buttonsColor = FitnessAppTheme.colors.Tertiary
-                                    )
 
-                                    HeightSpacer()
+                                            HeightSpacer()
 
-                                    Box(modifier = Modifier.fillMaxSize()) {
-                                        if (state.isLoading) {
-                                            Row(modifier = Modifier.align(Alignment.Center)) {
-                                                CircularProgressIndicator()
-                                            }
-                                        } else if (state.myProductsSearchItems.isNotEmpty()) {
-                                            SearchList(items = state.myProductsSearchItems)
+                                            CustomButton(
+                                                onClick = { viewModel.onEvent(SearchEvent.ClickedNewProduct) },
+                                                text = stringResource(id = R.string.add)
+                                            )
+                                        }
+                                    } else if (state.everythingSearchItems.isNotEmpty()) {
+                                        LoaderColumn(isLoading = state.isLoading) {
+                                            SearchList(
+                                                items = state.everythingSearchItems,
+                                                onScrollToEnd = {
+                                                    viewModel.onEvent(SearchEvent.ReachedListEnd)
+                                                }
+                                            )
                                         }
                                     }
                                 }
                             }
+                        }
 
-                            SearchTab.RECIPES.ordinal -> {
-                                Column(
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .padding(
-                                            top = 16.dp,
-                                            bottom = paddingValues.calculateBottomPadding()
-                                        )
-                                ) {
-                                    SearchButtonRow(
-                                        buttons = listOf(
-                                            SearchButtonParams(
-                                                buttonParams = ButtonParams(
-                                                    text = stringResource(id = R.string.search_browse_recipes),
-                                                    onClick = {
+                        SearchTab.PRODUCTS.ordinal -> {
+                            val cameraPermissionState = rememberPermissionState(
+                                permission = Manifest.permission.CAMERA
+                            )
 
-                                                    }
-                                                ),
-                                                icon = IconVector.Search,
-                                            ),
-                                            SearchButtonParams(
-                                                buttonParams = ButtonParams(
-                                                    text = stringResource(id = R.string.add_recipe),
-                                                    onClick = {
-                                                        viewModel.onEvent(SearchEvent.ClickedCreateNewRecipe)
-                                                    }
-                                                ),
-                                                icon = IconVector.Add
-                                            )
-                                        ),
-                                        buttonsColor = FitnessAppTheme.colors.Quaternary
+                            val cameraPermissionErrorMessage =
+                                stringResource(id = R.string.camera_permission_is_required_to_scan_a_product_barcode)
+
+                            LaunchedEffect(key1 = cameraPermissionState) {
+                                if (cameraPermissionState.status is PermissionStatus.Denied && state.hasPermissionDialogBeenShowed) {
+                                    ErrorUtils.showSnackbarWithMessage(cameraPermissionErrorMessage)
+                                }
+                            }
+
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(
+                                        bottom = paddingValues.calculateBottomPadding(),
+                                        top = 16.dp
                                     )
+                            ) {
+                                SearchButtonRow(
+                                    buttons = listOf(
+                                        SearchButtonParams(
+                                            buttonParams = ButtonParams(
+                                                text = stringResource(id = R.string.scan_barcode),
+                                                onClick = {
+                                                    if (!cameraPermissionState.status.isGranted) {
+                                                        viewModel.onEvent(SearchEvent.ShowedPermissionDialog)
+                                                        cameraPermissionState.launchPermissionRequest()
+                                                    } else {
+                                                        viewModel.onEvent(SearchEvent.ClickedScanButton)
+                                                    }
+                                                }
+                                            ),
+                                            icon = IconVector.barcode(),
+                                        ),
+                                        SearchButtonParams(
+                                            buttonParams = ButtonParams(
+                                                text = stringResource(id = R.string.create_product),
+                                                onClick = {
+                                                    viewModel.onEvent(SearchEvent.ClickedNewProduct)
+                                                }
+                                            ),
+                                            icon = IconVector.Add
+                                        )
+                                    ),
+                                    buttonsColor = FitnessAppTheme.colors.Tertiary
+                                )
 
-                                    HeightSpacer()
+                                HeightSpacer()
 
-                                    if (state.myRecipesSearchItems.isNotEmpty()) {
-                                        SearchList(state.myRecipesSearchItems)
+                                Box(modifier = Modifier.fillMaxSize()) {
+                                    if (state.isLoading) {
+                                        Row(modifier = Modifier.align(Alignment.Center)) {
+                                            CircularProgressIndicator()
+                                        }
+                                    } else if (state.myProductsSearchItems.isNotEmpty()) {
+                                        SearchList(items = state.myProductsSearchItems)
                                     }
+                                }
+                            }
+                        }
+
+                        SearchTab.RECIPES.ordinal -> {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(
+                                        top = 16.dp,
+                                        bottom = paddingValues.calculateBottomPadding()
+                                    )
+                            ) {
+                                SearchButtonRow(
+                                    buttons = listOf(
+                                        SearchButtonParams(
+                                            buttonParams = ButtonParams(
+                                                text = stringResource(id = R.string.search_browse_recipes),
+                                                onClick = {
+
+                                                }
+                                            ),
+                                            icon = IconVector.Search,
+                                        ),
+                                        SearchButtonParams(
+                                            buttonParams = ButtonParams(
+                                                text = stringResource(id = R.string.add_recipe),
+                                                onClick = {
+                                                    viewModel.onEvent(SearchEvent.ClickedCreateNewRecipe)
+                                                }
+                                            ),
+                                            icon = IconVector.Add
+                                        )
+                                    ),
+                                    buttonsColor = FitnessAppTheme.colors.Quaternary
+                                )
+
+                                HeightSpacer()
+
+                                if (state.myRecipesSearchItems.isNotEmpty()) {
+                                    SearchList(state.myRecipesSearchItems)
                                 }
                             }
                         }
                     }
                 }
             }
-        } else {
-            ScannerSection(
-                onBarcodeScanned = { scannedBarcode ->
-                    scannedBarcode?.let { barcode ->
-                        viewModel.onEvent(SearchEvent.ScannedBarcode(barcode))
-                    } ?: viewModel.onEvent(SearchEvent.ClosedScanner)
-                }
-            )
         }
     }
 }
