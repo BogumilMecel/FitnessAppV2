@@ -15,5 +15,6 @@ data class SearchState(
     val barcode: String? = null,
     val everythingSearchItems: List<SearchItemParams> = emptyList(),
     val myRecipesSearchItems: List<SearchItemParams> = emptyList(),
-    val myProductsSearchItems: List<SearchItemParams> = emptyList()
+    val myProductsSearchItems: List<SearchItemParams> = emptyList(),
+    val searchButtonVisible: Boolean = true
 )

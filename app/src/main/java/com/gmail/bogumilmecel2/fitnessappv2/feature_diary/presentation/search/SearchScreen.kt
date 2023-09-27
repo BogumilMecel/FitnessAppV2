@@ -1,6 +1,9 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search
 
 import android.Manifest
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -80,25 +83,29 @@ fun SearchScreen(navigator: DestinationsNavigator) {
         if (!state.isScannerVisible) {
             Scaffold(
                 floatingActionButton = {
-                    ExtendedFloatingActionButton(
-                        onClick = {
-                            viewModel.onEvent(SearchEvent.ClickedSearch)
-                        },
-                        backgroundColor = FitnessAppTheme.colors.Primary,
-                        modifier = Modifier.testTag(stringResource(id = R.string.SEARCH_BUTTON)),
-                        text = {
-                            Text(
-                                text = stringResource(id = R.string.search).uppercase(),
-                                color = FitnessAppTheme.colors.Black
-                            )
-                        },
-                        icon = {
-                            CustomIcon(
-                                icon = IconVector.Search,
-                                iconColor = FitnessAppTheme.colors.Black
-                            )
-                        }
-                    )
+                    AnimatedVisibility(
+                        visible = state.searchButtonVisible,
+                        enter = fadeIn(),
+                        exit = fadeOut()
+                    ) {
+                        ExtendedFloatingActionButton(
+                            onClick = { viewModel.onEvent(SearchEvent.ClickedSearch) },
+                            backgroundColor = FitnessAppTheme.colors.Primary,
+                            modifier = Modifier.testTag(stringResource(id = R.string.SEARCH_BUTTON)),
+                            text = {
+                                Text(
+                                    text = stringResource(id = R.string.search).uppercase(),
+                                    color = FitnessAppTheme.colors.Black
+                                )
+                            },
+                            icon = {
+                                CustomIcon(
+                                    icon = IconVector.Search,
+                                    iconColor = FitnessAppTheme.colors.Black
+                                )
+                            }
+                        )
+                    }
                 }
             ) { paddingValues ->
                 Column(modifier = Modifier.fillMaxSize()) {
