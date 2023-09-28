@@ -4,7 +4,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 
 sealed interface SearchEvent {
-    data object ShowedPermissionDialog : SearchEvent
     data object ClickedBackArrow : SearchEvent
     data object ClickedScanButton : SearchEvent
     data object ClickedNewProduct : SearchEvent
