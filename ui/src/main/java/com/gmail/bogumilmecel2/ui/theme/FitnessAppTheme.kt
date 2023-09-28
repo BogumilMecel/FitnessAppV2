@@ -1,6 +1,7 @@
 package com.gmail.bogumilmecel2.ui.theme
 
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Shapes
 import androidx.compose.material.Typography
 import androidx.compose.material.darkColors
 import androidx.compose.runtime.Composable
@@ -10,7 +11,9 @@ import androidx.compose.runtime.staticCompositionLocalOf
 
 val LocalTypography = staticCompositionLocalOf { FitnessAppTypography() }
 val LocalColors = staticCompositionLocalOf { FitnessAppColors() }
-val LocalFitnessAppTheme = staticCompositionLocalOf <FitnessAppThemeModel> { error("Theme provided") }
+val LocalShapes = staticCompositionLocalOf { FitnessAppShapes() }
+val LocalFitnessAppTheme =
+    staticCompositionLocalOf<FitnessAppThemeModel> { error("Theme provided") }
 
 object FitnessAppTheme {
     val typography: FitnessAppTypography
@@ -20,6 +23,10 @@ object FitnessAppTheme {
     val colors: FitnessAppColors
         @ReadOnlyComposable
         @Composable get() = LocalColors.current
+
+    val shapes: FitnessAppShapes
+        @ReadOnlyComposable
+        @Composable get() = LocalShapes.current
 }
 
 @Composable
@@ -64,6 +71,13 @@ fun FitnessAppTheme(
                     button = Button,
                     caption = ParagraphSmall,
                     overline = ParagraphSmall
+                )
+            },
+            shapes = with(LocalShapes.current) {
+                Shapes(
+                    small = Small,
+                    medium = Medium,
+                    large = Large
                 )
             }
         ) {
