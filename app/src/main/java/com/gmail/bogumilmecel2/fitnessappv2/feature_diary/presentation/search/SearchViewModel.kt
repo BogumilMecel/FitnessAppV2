@@ -119,14 +119,6 @@ class SearchViewModel @Inject constructor(
                 onBarcodeScanned(event.code)
             }
 
-            is SearchEvent.ShowedPermissionDialog -> {
-                _state.update {
-                    it.copy(
-                        hasPermissionDialogBeenShowed = true
-                    )
-                }
-            }
-
             is SearchEvent.ClickedCreateNewRecipe -> {
                 navigateTo(
                     NewRecipeScreenDestination(

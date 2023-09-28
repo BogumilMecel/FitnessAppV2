@@ -187,19 +187,6 @@ fun SearchScreen(navigator: DestinationsNavigator) {
                         }
 
                         SearchTab.PRODUCTS.ordinal -> {
-                            val cameraPermissionState = rememberPermissionState(
-                                permission = Manifest.permission.CAMERA
-                            )
-
-                            val cameraPermissionErrorMessage =
-                                stringResource(id = R.string.camera_permission_is_required_to_scan_a_product_barcode)
-
-                            LaunchedEffect(key1 = cameraPermissionState) {
-                                if (cameraPermissionState.status is PermissionStatus.Denied && state.hasPermissionDialogBeenShowed) {
-                                    ErrorUtils.showSnackbarWithMessage(cameraPermissionErrorMessage)
-                                }
-                            }
-
                             Column(
                                 modifier = Modifier
                                     .fillMaxSize()
@@ -214,12 +201,7 @@ fun SearchScreen(navigator: DestinationsNavigator) {
                                             buttonParams = ButtonParams(
                                                 text = stringResource(id = R.string.scan_barcode),
                                                 onClick = {
-                                                    if (!cameraPermissionState.status.isGranted) {
-                                                        viewModel.onEvent(SearchEvent.ShowedPermissionDialog)
-                                                        cameraPermissionState.launchPermissionRequest()
-                                                    } else {
-                                                        viewModel.onEvent(SearchEvent.ClickedScanButton)
-                                                    }
+                                                    viewModel.onEvent(SearchEvent.ClickedScanButton)
                                                 }
                                             ),
                                             icon = IconVector.barcode(),

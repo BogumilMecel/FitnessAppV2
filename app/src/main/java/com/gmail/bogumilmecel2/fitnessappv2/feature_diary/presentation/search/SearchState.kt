@@ -7,7 +7,6 @@ data class SearchState(
     val isLoading: Boolean = false,
     val searchBarText: String = "",
     val searchBarPlaceholderText: String = "",
-    val hasPermissionDialogBeenShowed: Boolean = false,
     val mealName: MealName = MealName.BREAKFAST,
     val selectedTabIndex: Int = SearchTab.EVERYTHING.ordinal,
     val date: String = "",
