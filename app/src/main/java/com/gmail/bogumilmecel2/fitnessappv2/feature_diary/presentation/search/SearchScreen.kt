@@ -1,58 +1,42 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search
 
-import android.Manifest
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ExtendedFloatingActionButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.BackHandler
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.ErrorUtils
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.ViewModelLayout
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.componens.SearchTopSection
 import com.gmail.bogumilmecel2.ui.components.base.ButtonParams
-import com.gmail.bogumilmecel2.ui.components.base.CustomButton
+import com.gmail.bogumilmecel2.ui.components.base.CustomDialog
 import com.gmail.bogumilmecel2.ui.components.base.CustomIcon
 import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
 import com.gmail.bogumilmecel2.ui.components.base.IconVector
-import com.gmail.bogumilmecel2.ui.components.base.LoaderColumn
 import com.gmail.bogumilmecel2.ui.components.complex.SearchButtonParams
 import com.gmail.bogumilmecel2.ui.components.complex.SearchButtonRow
 import com.gmail.bogumilmecel2.ui.components.complex.SearchList
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.PermissionStatus
-import com.google.accompanist.permissions.isGranted
-import com.google.accompanist.permissions.rememberPermissionState
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
-@OptIn(
-    ExperimentalFoundationApi::class,
-    ExperimentalPermissionsApi::class
-)
+@OptIn(ExperimentalFoundationApi::class)
 @Destination(navArgsDelegate = SearchNavArguments::class)
 @Composable
 fun SearchScreen(navigator: DestinationsNavigator) {
@@ -75,6 +59,28 @@ fun SearchScreen(navigator: DestinationsNavigator) {
             if (state.selectedTabIndex != SearchTab.EVERYTHING.ordinal) {
                 viewModel.onEvent(SearchEvent.SelectedTab(SearchTab.EVERYTHING.ordinal))
             }
+        }
+
+        if (state.noProductFoundVisible) {
+            CustomDialog(
+                title = stringResource(id = R.string.there_is_no_product_with_provided_barcode_do_you_want_to_add_it),
+                secondaryText = stringResource(id = R.string.search_add_it_now),
+                endButtonParams = ButtonParams(
+                    text = stringResource(id = R.string.add),
+                    onClick = {
+                        viewModel.onEvent(SearchEvent.ClickedNewProduct)
+                    }
+                ),
+                secondaryButtonParams = ButtonParams(
+                    text = stringResource(id = R.string.cancel),
+                    onClick = {
+                        viewModel.onEvent(SearchEvent.DismissedNoProductFoundDialog)
+                    }
+                ),
+                onDismissRequest = {
+                    viewModel.onEvent(SearchEvent.DismissedNoProductFoundDialog)
+                }
+            )
         }
 
         Scaffold(
@@ -150,38 +156,13 @@ fun SearchScreen(navigator: DestinationsNavigator) {
 
                                 HeightSpacer()
 
-                                Box {
-                                    if (state.barcode != null) {
-                                        Column(
-                                            modifier = Modifier
-                                                .align(Alignment.Center)
-                                                .fillMaxWidth(),
-                                            horizontalAlignment = Alignment.CenterHorizontally
-                                        ) {
-                                            Text(
-                                                text = stringResource(id = R.string.there_is_no_product_with_provided_barcode_do_you_want_to_add_it),
-                                                modifier = Modifier.padding(horizontal = 16.dp),
-                                                style = FitnessAppTheme.typography.HeaderLarge,
-                                                textAlign = TextAlign.Center
-                                            )
-
-                                            HeightSpacer()
-
-                                            CustomButton(
-                                                onClick = { viewModel.onEvent(SearchEvent.ClickedNewProduct) },
-                                                text = stringResource(id = R.string.add)
-                                            )
+                                if (state.everythingSearchItems.isNotEmpty()) {
+                                    SearchList(
+                                        items = state.everythingSearchItems,
+                                        onScrollToEnd = {
+                                            viewModel.onEvent(SearchEvent.ReachedListEnd)
                                         }
-                                    } else if (state.everythingSearchItems.isNotEmpty()) {
-                                        LoaderColumn(isLoading = state.isLoading) {
-                                            SearchList(
-                                                items = state.everythingSearchItems,
-                                                onScrollToEnd = {
-                                                    viewModel.onEvent(SearchEvent.ReachedListEnd)
-                                                }
-                                            )
-                                        }
-                                    }
+                                    )
                                 }
                             }
                         }
@@ -221,14 +202,8 @@ fun SearchScreen(navigator: DestinationsNavigator) {
 
                                 HeightSpacer()
 
-                                Box(modifier = Modifier.fillMaxSize()) {
-                                    if (state.isLoading) {
-                                        Row(modifier = Modifier.align(Alignment.Center)) {
-                                            CircularProgressIndicator()
-                                        }
-                                    } else if (state.myProductsSearchItems.isNotEmpty()) {
-                                        SearchList(items = state.myProductsSearchItems)
-                                    }
+                                if (state.myProductsSearchItems.isNotEmpty()) {
+                                    SearchList(items = state.myProductsSearchItems)
                                 }
                             }
                         }

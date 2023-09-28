@@ -8,6 +8,10 @@ object ApiConstants {
         const val DEVICE_ID = "device_id"
     }
 
+    object HttpStatusCodes {
+        const val NOT_FOUND = 404
+    }
+
     const val DEFAULT_PAGE_SIZE = 20
     const val DEFAULT_OFFLINE_PAGE_SIZE = 100
 }

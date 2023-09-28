@@ -15,4 +15,5 @@ sealed interface SearchEvent {
     data class SelectedTab(val index: Int) : SearchEvent
     data object ClickedCreateNewRecipe : SearchEvent
     data object ReachedListEnd : SearchEvent
+    data object DismissedNoProductFoundDialog : SearchEvent
 }

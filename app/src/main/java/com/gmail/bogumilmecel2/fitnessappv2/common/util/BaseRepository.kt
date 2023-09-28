@@ -19,7 +19,7 @@ open class BaseRepository {
         exception: Exception,
         data: T? = null,
         shouldHandleException: Boolean
-    ): Resource<T> {
+    ): Resource.Error<T> {
         if (shouldHandleException) {
             exception.printStackTrace()
             if (exception is HttpException) {
@@ -34,7 +34,8 @@ open class BaseRepository {
                 is HttpException -> exception.response()?.errorBody()?.string() ?: exception.message ?: "unknown error"
                 else -> exception.message ?: "unknown error"
             },
-            data = data
+            data = data,
+            httpCode = if (exception is HttpException) exception.code() else null
         )
     }
 }

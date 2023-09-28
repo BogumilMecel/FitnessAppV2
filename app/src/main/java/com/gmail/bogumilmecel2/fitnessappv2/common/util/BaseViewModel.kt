@@ -52,11 +52,24 @@ abstract class BaseViewModel<STATE : Any, EVENT : Any, NAV_ARGUMENTS : Any>(
     ) {
         if (this is Resource.Error) {
             if (showSnackbar) {
-                showSnackbarError(message = this.uiText)
+                showSnackbarError(message = uiText)
             }
-            onError(this.uiText)
+            onError(uiText)
         } else if (this is Resource.Success) {
             block(this@handle.data)
+        }
+        finally()
+    }
+
+    protected inline fun <T> Resource<T>.handleWithHttpCode(
+        finally: () -> Unit = {},
+        onError: (String, Int?) -> Unit = { _, _ -> },
+        block: (T) -> Unit
+    ) {
+        if (this is Resource.Error) {
+            onError(uiText, httpCode)
+        } else if (this is Resource.Success) {
+            block(this@handleWithHttpCode.data)
         }
         finally()
     }
