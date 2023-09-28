@@ -35,12 +35,6 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun getDiaryEntriesExperimental(): Resource<DiaryEntriesResponse> {
-        return handleRequest {
-            diaryApi.getDiaryEntriesExperimental()
-        }
-    }
-
     override suspend fun searchForProducts(searchText: String): Resource<List<Product>> {
         return handleRequest {
             diaryApi.searchForProducts(searchText = searchText)
