@@ -6,7 +6,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.IntroductionScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.LoginScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.SummaryScreenDestination
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetUserDiaryAndSaveItLocallyUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetUserDiaryEntriesExperimentalUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_splash.domain.repository.LoadingRepository
@@ -23,7 +22,6 @@ class LoadingViewModel @Inject constructor(
     private val getToken: GetToken,
     private val getUserDiaryAndSaveItLocallyUseCase: GetUserDiaryAndSaveItLocallyUseCase,
     private val getUserDiaryEntriesExperimentalUseCase: GetUserDiaryEntriesExperimentalUseCase,
-    private val diaryRepository: DiaryRepository
 ) : BaseViewModel<Unit, Unit, Unit>(
     state = Unit,
     navArguments = Unit
@@ -56,7 +54,6 @@ class LoadingViewModel @Inject constructor(
 
                 user.nutritionValues != null && user.userInformation != null -> {
                     cachedValuesProvider.saveUser(user = user)
-                    diaryRepository.clearLocalData(user.id)
 
                     val userItemsJob = viewModelScope.async(Dispatchers.IO) {
                         getUserDiaryAndSaveItLocallyUseCase()

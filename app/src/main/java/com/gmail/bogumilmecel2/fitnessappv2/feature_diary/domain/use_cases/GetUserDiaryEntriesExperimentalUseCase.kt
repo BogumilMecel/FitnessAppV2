@@ -7,12 +7,12 @@ class GetUserDiaryEntriesExperimentalUseCase(private val diaryRepository: DiaryR
     suspend operator fun invoke(): Resource<Unit> {
         val diaryEntriesCount = diaryRepository.getDiaryEntriesCount().data ?: return Resource.Error()
 
-        val diaryEntriesResponse = if (diaryEntriesCount <= 0) {
-            diaryRepository.getDiaryEntriesComplete()
-        } else {
-            diaryRepository.getDiaryEntriesExperimental()
-        }.data ?: return Resource.Error()
+        if (diaryEntriesCount <= 0) {
+            diaryRepository.getDiaryEntriesComplete().data?.let {
+                diaryRepository.insertOfflineDiaryEntries(diaryEntriesResponse = it)
+            }
+        }
 
-        return diaryRepository.insertOfflineDiaryEntries(diaryEntriesResponse)
+        return Resource.Success(Unit)
     }
 }
