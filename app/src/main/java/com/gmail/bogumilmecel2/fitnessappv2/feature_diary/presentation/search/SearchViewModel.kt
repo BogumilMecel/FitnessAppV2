@@ -43,6 +43,7 @@ class SearchViewModel @Inject constructor(
     private var isDisplayingHistory = true
     private var currentTabIndex = SearchTab.EVERYTHING.ordinal
     private var searchText: String? = null
+    private var barcode: String? = null
 
     override fun configureOnStart() {
         _state.update {
@@ -92,24 +93,25 @@ class SearchViewModel @Inject constructor(
             }
 
             is SearchEvent.ClickedNewProduct -> {
+                _state.update {
+                    it.copy(noProductFoundVisible = false)
+                }
                 navigateTo(
                     NewProductScreenDestination(
                         mealName = _state.value.mealName,
-                        barcode = _state.value.barcode,
+                        barcode = barcode,
                         dateTransferObject = navArguments.dateTransferObject
                     )
                 )
+                barcode = null
             }
 
             is SearchEvent.ClickedScanButton -> {
                 viewModelScope.launch {
                     barcodeScanner.startScan { barcode ->
                         barcode?.let {
-                            _state.update {
-                                it.copy(
-                                    barcode = barcode
-                                )
-                            }
+                            this@SearchViewModel.barcode = barcode
+                            onBarcodeScanned(barcode)
                         }
                     }
                 }
@@ -152,6 +154,15 @@ class SearchViewModel @Inject constructor(
 
             is SearchEvent.ReachedListEnd -> {
                 handleEndOfListReached()
+            }
+
+            is SearchEvent.DismissedNoProductFoundDialog -> {
+                barcode = null
+                _state.update {
+                    it.copy(
+                        noProductFoundVisible = false
+                    )
+                }
             }
         }
     }
@@ -209,21 +220,17 @@ class SearchViewModel @Inject constructor(
 
     private fun requestHistory() {
         viewModelScope.launch(Dispatchers.IO) {
-            setLoader(true)
+            loaderVisible = true
             searchDiaryUseCases.getDiaryHistoryUseCase(
                 page = everythingPage,
                 searchText = searchText
             ).handle(
-                finally = { setLoader(false) }
+                finally = { loaderVisible = false }
             ) {
                 diaryHistory.addAll(it)
                 createSearchItemParamsFromHistoryItems()
             }
         }
-    }
-
-    private fun setLoader(isLoading: Boolean) {
-        _state.update { it.copy(isLoading = isLoading) }
     }
 
     private fun handleSearchTextChange() {
@@ -315,11 +322,11 @@ class SearchViewModel @Inject constructor(
 
     private fun getProduct(productId: String) {
         viewModelScope.launch {
-            setLoader(true)
+            loaderVisible = true
             searchDiaryUseCases.getProductUseCase(
                 productId = productId
             ).handle(
-                finally = { setLoader(false) },
+                finally = { loaderVisible = false },
                 showSnackbar = false
             ) { product ->
                 product?.let {
@@ -330,38 +337,25 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun searchForProducts() {
-        showOrHideLoader()
+        loaderVisible = true
         everythingPage = 1
         viewModelScope.launch(Dispatchers.IO) {
             searchDiaryUseCases.searchForProductsUseCase(_state.value.searchBarText).handle(
-                finally = {
-                    showOrHideLoader(isLoadingVisible = false)
-                }
+                finally = { loaderVisible = false }
             ) { products ->
                 createEverythingSearchItemParamsFromProductUseCase(products)
             }
         }
     }
 
-    private fun showOrHideLoader(isLoadingVisible: Boolean = true) {
-        setLoader(isLoadingVisible)
-        _state.update {
-            it.copy(
-                barcode = null
-            )
-        }
-    }
-
     private fun onBarcodeScanned(barcode: String) {
-        setLoader(true)
         viewModelScope.launch(Dispatchers.IO) {
-            searchDiaryUseCases.searchForProductWithBarcode(barcode).handle(
-                onError = { errorMessage ->
-                    if (errorMessage == resourceProvider.getString(R.string.there_is_no_product_with_provided_barcode_do_you_want_to_add_it)) {
-                        setLoader(false)
-                        _state.update { it.copy(barcode = barcode) }
-                    } else {
-                        showSnackbarError(errorMessage)
+            loaderVisible = true
+            searchDiaryUseCases.searchForProductWithBarcode(barcode).handleWithHttpCode(
+                finally = { loaderVisible = false },
+                onError = { _, code ->
+                    if (code == ApiConstants.HttpStatusCodes.NOT_FOUND) {
+                        _state.update { it.copy(noProductFoundVisible = true) }
                     }
                 }
             ) { product ->
