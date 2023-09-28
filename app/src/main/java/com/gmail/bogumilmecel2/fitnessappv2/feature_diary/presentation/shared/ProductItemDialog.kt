@@ -16,7 +16,7 @@ fun ProductItemDialog(
     CustomDialog(
         title = title,
         secondaryText = stringResource(id = R.string.what_would_you_like_to_do),
-        endButtonParams = ButtonParams(
+        primaryButtonParams = ButtonParams(
             text = stringResource(id = R.string.delete),
             onClick = onDeleteButtonClicked
         ),

@@ -22,9 +22,9 @@ import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 fun CustomDialog(
     title: String,
     secondaryText: String,
-    endButtonParams: ButtonParams,
+    primaryButtonParams: ButtonParams,
     secondaryButtonParams: ButtonParams? = null,
-    extraButtonParams: ButtonParams? = null,
+    extraTextParams: ButtonParams? = null,
     onDismissRequest: () -> Unit,
 ) {
     CustomDialog(
@@ -37,9 +37,9 @@ fun CustomDialog(
                 modifier = Modifier.padding(horizontal = 24.dp)
             )
         },
-        endButtonParams = endButtonParams,
+        primaryButtonParams = primaryButtonParams,
         secondaryButtonParams = secondaryButtonParams,
-        extraButtonParams = extraButtonParams,
+        extraTextParams = extraTextParams,
         onDismissRequest = onDismissRequest
     )
 }
@@ -48,9 +48,9 @@ fun CustomDialog(
 fun CustomDialog(
     title: String,
     content: @Composable () -> Unit,
-    endButtonParams: ButtonParams,
+    primaryButtonParams: ButtonParams,
     secondaryButtonParams: ButtonParams? = null,
-    extraButtonParams: ButtonParams? = null,
+    extraTextParams: ButtonParams? = null,
     onDismissRequest: () -> Unit,
 ) {
     Dialog(
@@ -88,9 +88,9 @@ fun CustomDialog(
                     .padding(horizontal = 24.dp)
 
                 CustomButton(
-                    text = endButtonParams.text,
+                    text = primaryButtonParams.text,
                     buttonStyle = ButtonStyle.Primary,
-                    onClick = endButtonParams.onClick,
+                    onClick = primaryButtonParams.onClick,
                     modifier = buttonModifier
                 )
 
@@ -105,7 +105,7 @@ fun CustomDialog(
                     )
                 }
 
-                extraButtonParams?.let {
+                extraTextParams?.let {
                     HeightSpacer(12.dp)
 
                     Box(
@@ -113,8 +113,8 @@ fun CustomDialog(
                         contentAlignment = Alignment.Center
                     ) {
                         ClickableText(
-                            text = extraButtonParams.text,
-                            onClick = extraButtonParams.onClick,
+                            text = extraTextParams.text,
+                            onClick = extraTextParams.onClick,
                         )
                     }
                 }

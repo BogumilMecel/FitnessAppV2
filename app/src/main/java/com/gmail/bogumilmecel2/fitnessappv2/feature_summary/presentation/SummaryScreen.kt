@@ -67,7 +67,7 @@ fun SummaryScreen(navigator: DestinationsNavigator) {
                         )
                     }
                 },
-                endButtonParams = ButtonParams(
+                primaryButtonParams = ButtonParams(
                     text = stringResource(id = R.string.save),
                     onClick = { viewModel.onEvent(SummaryEvent.SavedWeightPickerValue) }
                 ),
@@ -81,7 +81,7 @@ fun SummaryScreen(navigator: DestinationsNavigator) {
             CustomDialog(
                 title = stringResource(id = R.string.summary_ask_for_weight_dialogs_title),
                 secondaryText = stringResource(id = R.string.summary_ask_for_weight_dialogs_description),
-                endButtonParams = ButtonParams(
+                primaryButtonParams = ButtonParams(
                     text = stringResource(id = R.string.accept),
                     onClick = { viewModel.onEvent(SummaryEvent.ClickedAcceptInWeightDialogsQuestion) }
                 ),
@@ -89,7 +89,7 @@ fun SummaryScreen(navigator: DestinationsNavigator) {
                     text = stringResource(id = R.string.decline),
                     onClick = { viewModel.onEvent(SummaryEvent.ClickedDeclineInWeightDialogsQuestion) }
                 ),
-                extraButtonParams = ButtonParams(
+                extraTextParams = ButtonParams(
                     text = stringResource(id = R.string.ask_me_later),
                     onClick = { viewModel.onEvent(SummaryEvent.ClickedNotNowInWeightDialogsQuestion) }
                 ),

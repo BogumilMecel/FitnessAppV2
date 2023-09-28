@@ -123,7 +123,7 @@ fun SubmitNewPriceDialog(
                 }
             }
         },
-        endButtonParams = ButtonParams(
+        primaryButtonParams = ButtonParams(
             text = stringResource(id = R.string.submit),
             onClick = { onEvent(ProductEvent.SubmitNewPrice) }
         ),
