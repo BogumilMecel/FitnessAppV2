@@ -45,7 +45,7 @@ import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
 import com.gmail.bogumilmecel2.ui.components.base.IconButtonParams
 import com.gmail.bogumilmecel2.ui.components.base.IconVector
 import com.gmail.bogumilmecel2.ui.components.base.WidthSpacer
-import com.gmail.bogumilmecel2.ui.components.complex.ForEachSearchList
+import com.gmail.bogumilmecel2.ui.components.complex.ForEachDiaryList
 import com.gmail.bogumilmecel2.ui.components.complex.HeaderRow
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 import com.ramcosta.composedestinations.annotation.Destination
@@ -298,7 +298,7 @@ fun RecipeScreen(navigator: DestinationsNavigator) {
                         if (state.isIngredientsListExpanded) {
                             Divider()
 
-                            ForEachSearchList(items = state.ingredientsParams)
+                            ForEachDiaryList(items = state.ingredientsParams)
 
                             HeightSpacer()
                         }

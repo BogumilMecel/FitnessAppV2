@@ -17,21 +17,18 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.BackHandler
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.ViewModelLayout
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.componens.SearchButtonParams
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.componens.SearchSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.componens.SearchTopSection
 import com.gmail.bogumilmecel2.ui.components.base.ButtonParams
 import com.gmail.bogumilmecel2.ui.components.base.CustomDialog
 import com.gmail.bogumilmecel2.ui.components.base.CustomIcon
-import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
 import com.gmail.bogumilmecel2.ui.components.base.IconVector
-import com.gmail.bogumilmecel2.ui.components.complex.SearchButtonParams
-import com.gmail.bogumilmecel2.ui.components.complex.SearchButtonRow
-import com.gmail.bogumilmecel2.ui.components.complex.SearchList
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -110,7 +107,11 @@ fun SearchScreen(navigator: DestinationsNavigator) {
                 }
             }
         ) { paddingValues ->
-            Column(modifier = Modifier.fillMaxSize()) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(bottom = paddingValues.calculateBottomPadding())
+            ) {
                 SearchTopSection(
                     searchBarText = state.searchBarText,
                     mealName = stringResource(id = state.mealName.getDisplayValue()),
@@ -125,132 +126,89 @@ fun SearchScreen(navigator: DestinationsNavigator) {
                     state = pagerState,
                     userScrollEnabled = false
                 ) { pagerScope ->
-                    when (pagerScope) {
-                        SearchTab.EVERYTHING.ordinal -> {
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(top = 16.dp),
-                            ) {
-                                SearchButtonRow(
-                                    buttons = listOf(
-                                        SearchButtonParams(
-                                            buttonParams = ButtonParams(
-                                                text = stringResource(id = R.string.search_quick_add),
-                                                onClick = {
+                    val currentTab = SearchTab.values()[pagerScope]
 
-                                                }
-                                            ),
-                                            icon = IconVector.Add
-                                        ),
-                                        SearchButtonParams(
-                                            buttonParams = ButtonParams(
-                                                text = stringResource(id = R.string.scan_barcode),
-                                                onClick = { viewModel.onEvent(SearchEvent.ClickedScanButton) }
-                                            ),
-                                            icon = IconVector.barcode(),
-                                        )
-                                    ),
-                                    buttonsColor = FitnessAppTheme.colors.Secondary
-                                )
-
-                                HeightSpacer()
-
-                                if (state.everythingSearchItems.isNotEmpty()) {
-                                    SearchList(
-                                        items = state.everythingSearchItems,
-                                        onScrollToEnd = {
-                                            viewModel.onEvent(SearchEvent.ReachedListEnd)
-                                        }
-                                    )
-                                }
-                            }
+                    SearchSection(
+                        modifier = Modifier,
+                        contentColor = currentTab.getTabColor(),
+                        buttonParams = currentTab.getButtonParams(
+                            onEvent = { viewModel.onEvent(it) }
+                        ),
+                        searchItems = currentTab.getItems(state = state),
+                        onListEndReached = {
+                            viewModel.onEvent(SearchEvent.ReachedListEnd)
                         }
-
-                        SearchTab.PRODUCTS.ordinal -> {
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(
-                                        bottom = paddingValues.calculateBottomPadding(),
-                                        top = 16.dp
-                                    )
-                            ) {
-                                SearchButtonRow(
-                                    buttons = listOf(
-                                        SearchButtonParams(
-                                            buttonParams = ButtonParams(
-                                                text = stringResource(id = R.string.scan_barcode),
-                                                onClick = {
-                                                    viewModel.onEvent(SearchEvent.ClickedScanButton)
-                                                }
-                                            ),
-                                            icon = IconVector.barcode(),
-                                        ),
-                                        SearchButtonParams(
-                                            buttonParams = ButtonParams(
-                                                text = stringResource(id = R.string.create_product),
-                                                onClick = {
-                                                    viewModel.onEvent(SearchEvent.ClickedNewProduct)
-                                                }
-                                            ),
-                                            icon = IconVector.Add
-                                        )
-                                    ),
-                                    buttonsColor = FitnessAppTheme.colors.Tertiary
-                                )
-
-                                HeightSpacer()
-
-                                if (state.myProductsSearchItems.isNotEmpty()) {
-                                    SearchList(items = state.myProductsSearchItems)
-                                }
-                            }
-                        }
-
-                        SearchTab.RECIPES.ordinal -> {
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(
-                                        top = 16.dp,
-                                        bottom = paddingValues.calculateBottomPadding()
-                                    )
-                            ) {
-                                SearchButtonRow(
-                                    buttons = listOf(
-                                        SearchButtonParams(
-                                            buttonParams = ButtonParams(
-                                                text = stringResource(id = R.string.search_browse_recipes),
-                                                onClick = {
-
-                                                }
-                                            ),
-                                            icon = IconVector.Search,
-                                        ),
-                                        SearchButtonParams(
-                                            buttonParams = ButtonParams(
-                                                text = stringResource(id = R.string.add_recipe),
-                                                onClick = {
-                                                    viewModel.onEvent(SearchEvent.ClickedCreateNewRecipe)
-                                                }
-                                            ),
-                                            icon = IconVector.Add
-                                        )
-                                    ),
-                                    buttonsColor = FitnessAppTheme.colors.Quaternary
-                                )
-
-                                HeightSpacer()
-
-                                if (state.myRecipesSearchItems.isNotEmpty()) {
-                                    SearchList(state.myRecipesSearchItems)
-                                }
-                            }
-                        }
-                    }
+                    )
                 }
             }
         }
     }
+}
+
+@Composable
+private fun SearchTab.getTabColor() = when (this) {
+    SearchTab.EVERYTHING -> FitnessAppTheme.colors.Secondary
+    SearchTab.RECIPES -> FitnessAppTheme.colors.Tertiary
+    SearchTab.PRODUCTS -> FitnessAppTheme.colors.Quaternary
+}
+
+@Composable
+private fun SearchTab.getItems(state: SearchState) = when (this) {
+    SearchTab.EVERYTHING -> state.everythingSearchItems
+    SearchTab.RECIPES -> state.myRecipesSearchItems
+    SearchTab.PRODUCTS -> state.myProductsSearchItems
+}
+
+@Composable
+private fun SearchTab.getButtonParams(onEvent: (SearchEvent) -> Unit) = when (this) {
+    SearchTab.EVERYTHING -> listOf(
+        SearchButtonParams(
+            buttonParams = ButtonParams(
+                text = stringResource(id = R.string.search_quick_add),
+                onClick = {}
+            ),
+            icon = IconVector.Add
+        ),
+        SearchButtonParams(
+            buttonParams = ButtonParams(
+                text = stringResource(id = R.string.scan_barcode),
+                onClick = { onEvent(SearchEvent.ClickedScanButton) }
+            ),
+            icon = IconVector.barcode(),
+        )
+    )
+
+    SearchTab.RECIPES -> listOf(
+        SearchButtonParams(
+            buttonParams = ButtonParams(
+                text = stringResource(id = R.string.search_browse_recipes),
+                onClick = {}
+            ),
+            icon = IconVector.Search,
+        ),
+        SearchButtonParams(
+            buttonParams = ButtonParams(
+                text = stringResource(id = R.string.add_recipe),
+                onClick = { onEvent(SearchEvent.ClickedCreateNewRecipe) }
+            ),
+            icon = IconVector.Add
+        )
+    )
+
+    SearchTab.PRODUCTS -> listOf(
+        SearchButtonParams(
+            buttonParams = ButtonParams(
+                text = stringResource(id = R.string.scan_barcode),
+                onClick = { onEvent(SearchEvent.ClickedScanButton) }
+            ),
+            icon = IconVector.barcode(),
+        ),
+        SearchButtonParams(
+            buttonParams = ButtonParams(
+                text = stringResource(id = R.string.create_product),
+                onClick = { onEvent(SearchEvent.ClickedNewProduct) }
+            ),
+            icon = IconVector.Add
+        )
+    )
 }
