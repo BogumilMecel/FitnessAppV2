@@ -65,7 +65,7 @@ fun SearchScreen(navigator: DestinationsNavigator) {
             CustomDialog(
                 title = stringResource(id = R.string.there_is_no_product_with_provided_barcode_do_you_want_to_add_it),
                 secondaryText = stringResource(id = R.string.search_add_it_now),
-                endButtonParams = ButtonParams(
+                primaryButtonParams = ButtonParams(
                     text = stringResource(id = R.string.add),
                     onClick = {
                         viewModel.onEvent(SearchEvent.ClickedNewProduct)
