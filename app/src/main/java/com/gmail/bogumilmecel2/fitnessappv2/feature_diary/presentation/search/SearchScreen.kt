@@ -131,13 +131,9 @@ fun SearchScreen(navigator: DestinationsNavigator) {
                     SearchSection(
                         modifier = Modifier,
                         contentColor = currentTab.getTabColor(),
-                        buttonParams = currentTab.getButtonParams(
-                            onEvent = { viewModel.onEvent(it) }
-                        ),
+                        buttonParams = currentTab.getButtonParams(onEvent = { viewModel.onEvent(it) }),
                         searchItems = currentTab.getItems(state = state),
-                        onListEndReached = {
-                            viewModel.onEvent(SearchEvent.ReachedListEnd)
-                        }
+                        onListEndReached = { viewModel.onEvent(SearchEvent.ReachedListEnd) }
                     )
                 }
             }
