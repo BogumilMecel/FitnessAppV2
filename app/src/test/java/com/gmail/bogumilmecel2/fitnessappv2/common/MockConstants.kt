@@ -12,6 +12,7 @@ object MockConstants {
     const val MOCK_DATE_2021 = "2021-12-12"
     const val TIMESTAMP = 123456789L
     const val USER_ID = "user_id"
+    const val CORRECT_PAGE = 1
 
     object Diary {
         const val PRODUCT_ID_11 = "11"

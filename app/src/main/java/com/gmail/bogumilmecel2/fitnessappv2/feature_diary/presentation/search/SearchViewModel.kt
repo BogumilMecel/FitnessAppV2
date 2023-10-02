@@ -33,6 +33,8 @@ class SearchViewModel @Inject constructor(
     state = SearchState(),
     navArguments = SearchScreenDestination.argsFrom(savedStateHandle)
 ) {
+
+    private val everythingProducts = mutableListOf<Product>()
     private val diaryHistory = mutableListOf<ProductDiaryEntry>()
     private var userRecipes = mutableListOf<Recipe>()
     private var userProducts = mutableListOf<Product>()
@@ -70,8 +72,9 @@ class SearchViewModel @Inject constructor(
             is SearchEvent.ClickedSearch -> {
                 when (currentTabIndex) {
                     SearchTab.EVERYTHING.ordinal -> {
+                        everythingPage = 1
                         isDisplayingHistory = false
-                        searchForProducts()
+                        fetchProducts()
                     }
 
                     else -> {}
@@ -182,7 +185,16 @@ class SearchViewModel @Inject constructor(
                         requestHistory()
                     }
                 } else {
-                    // TODO: implement getting pages for products
+                    if (
+                        searchDiaryUseCases.shouldDisplayNextPageUseCase(
+                            size = everythingProducts.size,
+                            perPage = ApiConstants.DEFAULT_PAGE_SIZE,
+                            currentPage = everythingPage
+                        )
+                    ) {
+                        everythingPage++
+                        fetchProducts()
+                    }
                 }
             }
 
@@ -250,9 +262,7 @@ class SearchViewModel @Inject constructor(
             searchDiaryUseCases.getDiaryHistoryUseCase(
                 page = everythingPage,
                 searchText = searchText
-            ).handle(
-                finally = { loaderVisible = false }
-            ) {
+            ).handle(finally = { loaderVisible = false }) {
                 diaryHistory.addAll(it)
                 createSearchItemParamsFromHistoryItems()
             }
@@ -260,6 +270,7 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun handleSearchTextChange() {
+        everythingProducts.clear()
         userProducts.clear()
         userRecipes.clear()
         diaryHistory.clear()
@@ -286,10 +297,10 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    private fun createEverythingSearchItemParamsFromProductUseCase(items: List<Product>) {
+    private fun createEverythingSearchItemParamsFromProductUseCase() {
         _state.update {
             it.copy(
-                everythingSearchItems = items.map { product ->
+                everythingSearchItems = everythingProducts.map { product ->
                     searchDiaryUseCases.createSearchItemParamsFromProductUseCase(
                         product = product,
                         onClick = { onEvent(SearchEvent.ClickedProduct(product)) },
@@ -344,14 +355,17 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    private fun searchForProducts() {
+    private fun fetchProducts() {
         loaderVisible = true
-        everythingPage = 1
         viewModelScope.launch(Dispatchers.IO) {
-            searchDiaryUseCases.searchForProductsUseCase(_state.value.searchBarText).handle(
+            searchDiaryUseCases.searchForProductsUseCase(
+                searchText = searchText,
+                page = everythingPage
+            ).handle(
                 finally = { loaderVisible = false }
             ) { products ->
-                createEverythingSearchItemParamsFromProductUseCase(products)
+                everythingProducts.addAll(products)
+                createEverythingSearchItemParamsFromProductUseCase()
             }
         }
     }

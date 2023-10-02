@@ -8,6 +8,11 @@ object ApiConstants {
         const val DEVICE_ID = "device_id"
     }
 
+    object Query {
+        const val SEARCH_TEXT = "search_text"
+        const val PAGE = "page"
+    }
+
     object HttpStatusCodes {
         const val NOT_FOUND = 404
     }
