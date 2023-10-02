@@ -35,9 +35,15 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun searchForProducts(searchText: String): Resource<List<Product>> {
+    override suspend fun searchForProducts(
+        searchText: String,
+        page: Int
+    ): Resource<List<Product>> {
         return handleRequest {
-            diaryApi.searchForProducts(searchText = searchText)
+            diaryApi.searchForProducts(
+                searchText = searchText,
+                page = page
+            )
         }
     }
 

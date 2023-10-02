@@ -363,7 +363,8 @@ class NewRecipeViewModel @Inject constructor(
     private fun getProducts() {
         viewModelScope.launch {
             newRecipeUseCases.searchForProductsUseCase(
-                searchText = _state.value.searchText
+                searchText = _state.value.searchText,
+                page = 1
             ).handle { products ->
                 _state.update {
                     it.copy(
