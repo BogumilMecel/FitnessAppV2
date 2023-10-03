@@ -1,19 +1,20 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_recipe
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.TAG
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseResultViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.toValidInt
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.NewRecipeScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.RecipeScreenDestination
+import com.gmail.bogumilmecel2.fitnessappv2.destinations.SearchScreenDestination
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductResult
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Ingredient
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.RecipePrice
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_recipe.NewRecipeUseCases
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.CalculateProductNutritionValuesUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_recipe.util.SelectedNutritionType
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.recipe.RecipeEntryData
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.SearchEntryData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.update
@@ -25,7 +26,7 @@ class NewRecipeViewModel @Inject constructor(
     private val newRecipeUseCases: NewRecipeUseCases,
     savedStateHandle: SavedStateHandle,
     private val calculateProductNutritionValuesUseCase: CalculateProductNutritionValuesUseCase
-) : BaseViewModel<NewRecipeState, NewRecipeEvent, NewRecipeNavArguments>(
+) : BaseResultViewModel<NewRecipeState, NewRecipeEvent, NewRecipeNavArguments, ProductResult>(
     state = NewRecipeState(),
     navArguments = NewRecipeScreenDestination.argsFrom(savedStateHandle)
 ) {
@@ -58,9 +59,7 @@ class NewRecipeViewModel @Inject constructor(
             }
 
             is NewRecipeEvent.ClickedBackArrow -> {
-                if (_state.value.isSearchSectionVisible) changeState(isRecipeSectionVisible = true)
-                else if (_state.value.isProductSectionVisible) changeState(isSearchSectionVisible = true)
-                else if (_state.value.isRecipeSectionVisible) navigateUp()
+                navigateUp()
             }
 
             is NewRecipeEvent.SelectedDifficulty -> {
@@ -100,44 +99,13 @@ class NewRecipeViewModel @Inject constructor(
             }
 
             is NewRecipeEvent.ClickedAddNewIngredient -> {
-                changeState(
-                    isSearchSectionVisible = true
+                navigateTo(
+                    destination = SearchScreenDestination(
+                        entryData = SearchEntryData.NewRecipeArguments(
+                            recipeName = _state.value.name
+                        )
+                    )
                 )
-            }
-
-            is NewRecipeEvent.ClickedProduct -> {
-                _state.update {
-                    it.copy(
-                        selectedProduct = event.product
-                    )
-                }
-                changeState(isProductSectionVisible = true)
-                initPieChartData()
-            }
-
-            is NewRecipeEvent.EnteredSearchText -> {
-                _state.update {
-                    it.copy(
-                        searchText = event.value
-                    )
-                }
-            }
-
-            is NewRecipeEvent.ClickedSearchButton -> {
-                getProducts()
-            }
-
-            is NewRecipeEvent.EnteredProductWeight -> {
-                _state.update {
-                    it.copy(
-                        productWeight = event.value
-                    )
-                }
-                updateProductNutritionData()
-            }
-
-            is NewRecipeEvent.ClickedSaveProduct -> {
-                addProductToRecipe()
             }
 
             is NewRecipeEvent.ChangedSelectedNutritionType -> {
@@ -198,6 +166,10 @@ class NewRecipeViewModel @Inject constructor(
                     fetchPrices()
                 }
             }
+
+            is NewRecipeEvent.ReceivedProductResult -> {
+                addProductToRecipe(event.productResult)
+            }
         }
     }
 
@@ -244,30 +216,26 @@ class NewRecipeViewModel @Inject constructor(
         }
     }
 
-    private fun addProductToRecipe() {
+    private fun addProductToRecipe(productResult: ProductResult) {
         viewModelScope.launch(Dispatchers.Default) {
-            with(_state.value) {
-                selectedProduct?.let { product ->
-                    productWeight.toIntOrNull()?.let { weight ->
-                        val newIngredient = Ingredient(
-                            weight = weight,
-                            productName = product.name,
-                            measurementUnit = product.measurementUnit,
-                            nutritionValues = calculateProductNutritionValuesUseCase(
-                                product = product,
-                                weight = weight
-                            ),
-                            productId = product.id
-                        )
+            with(productResult) {
+                val newIngredient = Ingredient(
+                    weight = weight,
+                    productName = product.name,
+                    measurementUnit = product.measurementUnit,
+                    nutritionValues = calculateProductNutritionValuesUseCase(
+                        product = product,
+                        weight = weight
+                    ),
+                    productId = product.id
+                )
 
-                        ingredients.removeIf { it.productId == newIngredient.productId }
-                        ingredients.add(newIngredient)
+                ingredients.removeIf { it.productId == newIngredient.productId }
+                ingredients.add(newIngredient)
 
-                        createRecipeIngredientsParams()
-                        fetchPrices()
-                        changeState(isRecipeSectionVisible = true)
-                    }
-                }
+                createRecipeIngredientsParams()
+                fetchPrices()
+
                 calculateRecipeInformation()
             }
         }
@@ -343,75 +311,6 @@ class NewRecipeViewModel @Inject constructor(
                     )
                 )
             )
-        }
-    }
-
-    private fun changeState(
-        isRecipeSectionVisible: Boolean = false,
-        isProductSectionVisible: Boolean = false,
-        isSearchSectionVisible: Boolean = false
-    ) {
-        _state.update {
-            it.copy(
-                isRecipeSectionVisible = isRecipeSectionVisible,
-                isProductSectionVisible = isProductSectionVisible,
-                isSearchSectionVisible = isSearchSectionVisible
-            )
-        }
-    }
-
-    private fun getProducts() {
-        viewModelScope.launch {
-            newRecipeUseCases.searchForProductsUseCase(
-                searchText = _state.value.searchText,
-                page = 1
-            ).handle { products ->
-                _state.update {
-                    it.copy(
-                        searchItems = products.map { product ->
-                            newRecipeUseCases.createSearchItemParamsFromProductUseCase(
-                                product = product,
-                                onClick = {
-                                    onEvent(NewRecipeEvent.ClickedProduct(product))
-                                },
-                                onLongClick = {
-                                    // TODO: Add on long click for product
-                                }
-                            )
-                        }
-                    )
-                }
-                Log.e(TAG, _state.value.searchItems.toString())
-            }
-        }
-    }
-
-    private fun initPieChartData() {
-        _state.value.selectedProduct?.let { product ->
-            _state.update {
-                it.copy(
-                    nutritionData = it.nutritionData.copy(
-                        pieChartData = newRecipeUseCases.createPieChartDataUseCase(nutritionValues = product.nutritionValues)
-                    )
-                )
-            }
-        }
-    }
-
-    private fun updateProductNutritionData() {
-        state.value.productWeight.toIntOrNull()?.let { weight ->
-            _state.value.selectedProduct?.let { product ->
-                _state.update {
-                    it.copy(
-                        nutritionData = it.nutritionData.copy(
-                            nutritionValues = newRecipeUseCases.calculateProductNutritionValuesUseCase(
-                                weight = weight,
-                                product = product
-                            ),
-                        )
-                    )
-                }
-            }
         }
     }
 }

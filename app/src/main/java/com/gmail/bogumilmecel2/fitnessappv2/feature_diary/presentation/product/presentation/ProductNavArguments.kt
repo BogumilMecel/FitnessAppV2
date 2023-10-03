@@ -11,42 +11,31 @@ import kotlinx.serialization.Serializable
 data class ProductNavArguments(val entryData: ProductEntryData)
 
 @Serializable
-sealed class ProductEntryData(
-    open val product: Product,
-    open val mealName: MealName,
-    open val dateTransferObject: DateTransferObject
-) {
+sealed class ProductEntryData(open val product: Product) {
     @Serializable
     data class Adding(
-        @SerialName("meal_name")
-        override val mealName: MealName,
         @SerialName("product_data")
         override val product: Product,
-        @SerialName("display_date")
-        override val dateTransferObject: DateTransferObject
-    ) : ProductEntryData(
-        mealName = mealName,
-        product = product,
-        dateTransferObject = dateTransferObject
-    )
+        val mealName: MealName,
+        val dateTransferObject: DateTransferObject
+    ) : ProductEntryData(product = product)
 
     @Serializable
     data class Editing(
-        @SerialName("meal_name")
-        override val mealName: MealName,
         @SerialName("product_data")
         override val product: Product,
+        val mealName: MealName,
         val productDiaryEntry: ProductDiaryEntry,
         val date: String,
         val displayedDate: String,
-    ) : ProductEntryData(
-        mealName = mealName,
-        product = product,
-        dateTransferObject = DateTransferObject(
-            displayedDate = displayedDate,
-            realDate = date
-        )
-    )
+    ) : ProductEntryData(product = product)
+
+    @Serializable
+    data class NewRecipe(
+        @SerialName("product_data")
+        override val product: Product,
+        val recipeName: String
+    ) : ProductEntryData(product = product)
 
     companion object {
         val serializer = PolymorphicSerializer(ProductEntryData::class)

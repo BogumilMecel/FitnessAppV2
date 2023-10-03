@@ -15,6 +15,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Re
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.DiaryUseCases
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.presentation.ProductEntryData
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.recipe.RecipeEntryData
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.SearchEntryData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.update
@@ -43,10 +44,12 @@ class DiaryViewModel @Inject constructor(
             is DiaryEvent.ClickedAddProduct -> {
                 navigateTo(
                     SearchScreenDestination(
-                        mealName = event.mealName,
-                        dateTransferObject = DateTransferObject(
-                            displayedDate = _state.value.displayedDate,
-                            realDate = dateHolder.getLocalDateString()
+                        entryData = SearchEntryData.DiaryArguments(
+                            mealName = event.mealName,
+                            dateTransferObject = DateTransferObject(
+                                displayedDate = _state.value.displayedDate,
+                                realDate = dateHolder.getLocalDateString()
+                            )
                         )
                     )
                 )
