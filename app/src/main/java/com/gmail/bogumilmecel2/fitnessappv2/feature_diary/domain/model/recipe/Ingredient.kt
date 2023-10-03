@@ -11,4 +11,4 @@ data class Ingredient(
     val nutritionValues: NutritionValues,
     val productId: String,
     val measurementUnit: MeasurementUnit,
-)
+): java.io.Serializable

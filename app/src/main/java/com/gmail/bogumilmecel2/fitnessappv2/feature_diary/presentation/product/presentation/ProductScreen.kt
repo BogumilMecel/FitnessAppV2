@@ -24,6 +24,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.Currency
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.ViewModelLayout
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductResult
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.presentation.components.PriceSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.presentation.components.ProductMainSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.presentation.components.SubmitNewPriceDialog
@@ -31,11 +32,18 @@ import com.gmail.bogumilmecel2.ui.components.complex.HeaderRow
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.result.ResultBackNavigator
 
 @Destination(navArgsDelegate = ProductNavArguments::class)
 @Composable
-fun ProductScreen(navigator: DestinationsNavigator) {
-    hiltViewModel<ProductViewModel>().ViewModelLayout(navigator = navigator) { viewModel ->
+fun ProductScreen(
+    navigator: DestinationsNavigator,
+    resultBackNavigator: ResultBackNavigator<ProductResult>
+) {
+    hiltViewModel<ProductViewModel>().ViewModelLayout(
+        navigator = navigator,
+        resultBackNavigator = resultBackNavigator
+    ) { viewModel ->
         val state = viewModel.state.collectAsStateWithLifecycle().value
 
         Scaffold(

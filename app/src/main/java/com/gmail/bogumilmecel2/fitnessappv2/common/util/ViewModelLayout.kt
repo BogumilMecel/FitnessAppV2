@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import com.gmail.bogumilmecel2.ui.components.base.Loader
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.result.ResultBackNavigator
 import kotlinx.coroutines.flow.receiveAsFlow
 
 @Composable
@@ -34,4 +35,25 @@ inline fun <STATE : Any, EVENT : Any, NAV_ARGUMENTS : Any> BaseViewModel<STATE, 
 
     content(this)
     Loader(visible = loaderVisible)
+}
+
+@Composable
+inline fun <STATE : Any, EVENT : Any, NAV_ARGUMENTS : Any, RESULT_BACK : Any> BaseResultViewModel<STATE, EVENT, NAV_ARGUMENTS, RESULT_BACK>.ViewModelLayout(
+    navigator: DestinationsNavigator,
+    resultBackNavigator: ResultBackNavigator<RESULT_BACK>,
+    content: @Composable (BaseViewModel<STATE, EVENT, NAV_ARGUMENTS>) -> Unit = {}
+) {
+    LaunchedEffect(
+        key1 = true,
+        block = {
+            resultBack.receiveAsFlow().collect {
+                resultBackNavigator.navigateBack(result = it)
+            }
+        }
+    )
+
+    ViewModelLayout(
+        navigator = navigator,
+        content = content
+    )
 }

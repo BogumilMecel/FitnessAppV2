@@ -115,6 +115,7 @@
     <string name="search">Search</string>
     <string name="search_browse_recipes">Browse recipes</string>
     <string name="search_quick_add">Quick add</string>
+    <string name="search_add_ingredient">Add ingredient</string>
 
     <!--    summary-->
     <string name="days">%s days in a row</string>
