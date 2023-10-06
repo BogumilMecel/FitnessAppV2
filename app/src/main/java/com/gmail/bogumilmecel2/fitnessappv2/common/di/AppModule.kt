@@ -30,6 +30,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.Diar
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CalculateSkipUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CreateSearchItemParamsFromIngredientUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CreateSearchItemParamsFromProductUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GenerateNewRecipeSearchTitleUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetRecipePriceFromIngredientsUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.*
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.*
@@ -337,4 +338,10 @@ object AppModule {
     @Singleton
     @Provides
     fun provideCalculateSkipUseCase() = CalculateSkipUseCase()
+
+    @Singleton
+    @Provides
+    fun provideGenerateNewRecipeSearchTitleUseCase(
+        resourceProvider: ResourceProvider
+    ) = GenerateNewRecipeSearchTitleUseCase(resourceProvider = resourceProvider)
 }
