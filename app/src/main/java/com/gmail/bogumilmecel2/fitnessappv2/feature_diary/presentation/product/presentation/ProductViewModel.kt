@@ -25,7 +25,8 @@ class ProductViewModel @Inject constructor(
     navArguments = ProductScreenDestination.argsFrom(savedStateHandle)
 ) {
 
-    val entryData = navArguments.entryData
+    private val entryData = navArguments.entryData
+    private var weight: String = ""
 
     override fun configureOnStart() {
         when (entryData) {
@@ -51,8 +52,9 @@ class ProductViewModel @Inject constructor(
             is ProductEntryData.NewRecipe -> {
                 _state.update {
                     it.copy(
-                        headerPrimaryText = entryData.recipeName
-                            .ifEmpty { resourceProvider.getString(stringResId = R.string.search_add_ingredient) }
+                        headerPrimaryText = productUseCases.generateNewRecipeSearchTitleUseCase(
+                            recipeName = entryData.recipeName
+                        )
                     )
                 }
             }
@@ -74,7 +76,8 @@ class ProductViewModel @Inject constructor(
         when (event) {
             is ProductEvent.EnteredWeight -> {
                 viewModelScope.launch(Dispatchers.Default) {
-                    event.value.toValidInt()?.let { newWeight ->
+                    weight = event.value
+                    weight.toValidInt()?.let { newWeight ->
                         _state.update {
                             it.copy(
                                 nutritionData = it.nutritionData.copy(
@@ -88,7 +91,7 @@ class ProductViewModel @Inject constructor(
                     }
                     _state.update {
                         it.copy(
-                            weight = event.value,
+                            weight = weight,
                         )
                     }
                 }
@@ -122,12 +125,14 @@ class ProductViewModel @Inject constructor(
                             }
 
                             is ProductEntryData.NewRecipe -> {
-                                resultBack.send(
-                                    element = ProductResult(
-                                        product = entryData.product,
-                                        weight = weight
+                                weight.toValidInt()?.let {
+                                    resultBack.send(
+                                        element = ProductResult(
+                                            product = entryData.product,
+                                            weight = it
+                                        )
                                     )
-                                )
+                                }
                             }
                         }
                     }

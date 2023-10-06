@@ -92,8 +92,8 @@ fun ProductScreen(
                     .padding(paddingValues.calculateBottomPadding())
             ) {
                 HeaderRow(
-                    middlePrimaryText = stringResource(id = state.mealName.getDisplayValue()),
-                    middleSecondaryText = state.date,
+                    middlePrimaryText = state.headerPrimaryText,
+                    middleSecondaryText = state.headerSecondaryText,
                     onBackPressed = {
                         viewModel.onEvent(ProductEvent.ClickedBackArrow)
                     }

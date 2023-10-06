@@ -51,7 +51,7 @@ class SearchViewModel @Inject constructor(
 
     override fun configureOnStart() {
         with(entryData) {
-            when(this) {
+            when (this) {
                 is SearchEntryData.DiaryArguments -> {
                     _state.update {
                         it.copy(
@@ -64,7 +64,9 @@ class SearchViewModel @Inject constructor(
                 is SearchEntryData.NewRecipeArguments -> {
                     _state.update { state ->
                         state.copy(
-                            headerPrimaryText = recipeName.ifEmpty { resourceProvider.getString(R.string.search_add_ingredient) },
+                            headerPrimaryText = searchDiaryUseCases.generateNewRecipeSearchTitleUseCase(
+                                recipeName = recipeName
+                            ),
                             recipeTabVisible = false
                         )
                     }
@@ -113,6 +115,7 @@ class SearchViewModel @Inject constructor(
             }
 
             is SearchEvent.ClickedNewProduct -> {
+                // TODO: Handle new recipe
                 if (entryData is SearchEntryData.DiaryArguments) {
                     _state.update {
                         it.copy(noProductFoundVisible = false)
@@ -144,6 +147,7 @@ class SearchViewModel @Inject constructor(
             }
 
             is SearchEvent.ClickedCreateNewRecipe -> {
+                // TODO: Handle new recipe
                 if (entryData is SearchEntryData.DiaryArguments) {
                     navigateTo(
                         NewRecipeScreenDestination(
@@ -193,7 +197,7 @@ class SearchViewModel @Inject constructor(
 
             is SearchEvent.ReceivedProductResult -> {
                 viewModelScope.launch {
-                    resultBack.send(event.product)
+                    resultBack.send(event.productResult)
                 }
             }
         }
@@ -378,13 +382,7 @@ class SearchViewModel @Inject constructor(
                 showSnackbar = false
             ) { product ->
                 product?.let {
-                    resultBack.send(
-                        ProductResult(
-                            product = product,
-                            weight = 200
-                        )
-                    )
-//                    navigateToProductScreen(product = it)
+                    navigateToProductScreen(product = product)
                 }
             }
         }
@@ -434,17 +432,26 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun navigateToProductScreen(product: Product) {
-        if (entryData is SearchEntryData.DiaryArguments) {
-            navigateTo(
-                ProductScreenDestination(
-                    entryData = ProductEntryData.Adding(
-                        product = product,
-                        mealName = entryData.mealName,
-                        dateTransferObject = entryData.dateTransferObject
-                    ),
-                )
+        navigateTo(
+            ProductScreenDestination(
+                entryData = when (entryData) {
+                    is SearchEntryData.DiaryArguments -> {
+                        ProductEntryData.Adding(
+                            product = product,
+                            mealName = entryData.mealName,
+                            dateTransferObject = entryData.dateTransferObject
+                        )
+                    }
+
+                    is SearchEntryData.NewRecipeArguments -> {
+                        ProductEntryData.NewRecipe(
+                            product = product,
+                            recipeName = entryData.recipeName
+                        )
+                    }
+                }
             )
-        }
+        )
     }
 }
 
