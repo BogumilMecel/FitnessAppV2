@@ -59,7 +59,7 @@ fun SearchScreen(
         val state = viewModel.state.collectAsStateWithLifecycle().value
 
         val pagerState = rememberPagerState(initialPage = SearchTab.EVERYTHING.ordinal) {
-            SearchTab.values().size
+            SearchTab.entries.size
         }
 
         val noRecipeTabPagerState = rememberPagerState(initialPage = SearchTab.EVERYTHING.ordinal) {
@@ -187,7 +187,7 @@ fun SearchScreen(
                     CustomTabRow(
                         selectedTabIndex = state.selectedTabIndex,
                         tabs = if (state.recipeTabVisible) {
-                            SearchTab.values().map {
+                            SearchTab.entries.map {
                                 stringResource(id = it.textResId)
                             }
                         } else buildList {
@@ -205,7 +205,7 @@ fun SearchScreen(
                     state = if (state.recipeTabVisible) pagerState else noRecipeTabPagerState,
                     userScrollEnabled = false
                 ) { pagerScope ->
-                    val currentTab = SearchTab.values()[pagerScope]
+                    val currentTab = SearchTab.entries[pagerScope]
 
                     SearchSection(
                         modifier = Modifier,
