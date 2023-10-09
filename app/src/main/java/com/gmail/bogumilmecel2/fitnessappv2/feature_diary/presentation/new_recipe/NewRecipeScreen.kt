@@ -29,7 +29,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.DropdownArrow
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.ViewModelLayout
@@ -54,8 +53,7 @@ fun NewRecipeScreen(
     navigator: DestinationsNavigator,
     resultRecipient: ResultRecipient<SearchScreenDestination, ProductResult>
 ) {
-    hiltViewModel<NewRecipeViewModel>().ViewModelLayout(navigator = navigator) { viewModel ->
-        val state = viewModel.state.collectAsStateWithLifecycle().value
+    hiltViewModel<NewRecipeViewModel>().ViewModelLayout(navigator = navigator) { viewModel, state ->
         val scrollState = rememberScrollState()
 
         resultRecipient.onNavResult { result ->

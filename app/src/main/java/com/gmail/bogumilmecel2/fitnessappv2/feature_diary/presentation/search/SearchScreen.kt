@@ -21,7 +21,6 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.BackHandler
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.ViewModelLayout
@@ -55,9 +54,7 @@ fun SearchScreen(
     hiltViewModel<SearchViewModel>().ViewModelLayout(
         navigator = navigator,
         resultBackNavigator = resultBackNavigator
-    ) { viewModel ->
-        val state = viewModel.state.collectAsStateWithLifecycle().value
-
+    ) { viewModel, state ->
         val pagerState = rememberPagerState(initialPage = SearchTab.EVERYTHING.ordinal) {
             SearchTab.entries.size
         }

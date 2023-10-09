@@ -13,7 +13,6 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -33,9 +32,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Destination(navArgsDelegate = NewProductNavArguments::class)
 @Composable
 fun NewProductScreen(navigator: DestinationsNavigator) {
-    hiltViewModel<NewProductViewModel>().ViewModelLayout(navigator = navigator) { viewModel ->
-        val state = viewModel.state.collectAsState().value
-
+    hiltViewModel<NewProductViewModel>().ViewModelLayout(navigator = navigator) { viewModel, state ->
         Scaffold(
             floatingActionButton = {
                 FloatingActionButton(
