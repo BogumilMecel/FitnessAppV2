@@ -13,6 +13,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Re
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_recipe.NewRecipeUseCases
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.CalculateProductNutritionValuesUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_recipe.util.SelectedNutritionType
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.domain.model.NutritionData
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.recipe.RecipeEntryData
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.SearchEntryData
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -235,7 +236,6 @@ class NewRecipeViewModel @Inject constructor(
 
                 createRecipeIngredientsParams()
                 fetchPrices()
-
                 calculateRecipeInformation()
             }
         }
@@ -302,12 +302,16 @@ class NewRecipeViewModel @Inject constructor(
     }
 
     private fun updateRecipeNutritionData(servings: Int) {
+        val nutritionValues = newRecipeUseCases.calculateRecipeNutritionValues(
+            servings = servings,
+            ingredients = ingredients
+        )
         _state.update {
             it.copy(
-                nutritionData = it.nutritionData.copy(
-                    nutritionValues = newRecipeUseCases.calculateRecipeNutritionValues(
-                        servings = servings,
-                        ingredients = ingredients
+                nutritionData = NutritionData(
+                    nutritionValues = nutritionValues,
+                    pieChartData = newRecipeUseCases.createPieChartDataUseCase(
+                        nutritionValues = nutritionValues
                     )
                 )
             )

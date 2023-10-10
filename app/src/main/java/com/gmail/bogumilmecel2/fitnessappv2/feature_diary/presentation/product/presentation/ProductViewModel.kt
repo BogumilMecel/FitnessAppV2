@@ -54,7 +54,8 @@ class ProductViewModel @Inject constructor(
                     it.copy(
                         headerPrimaryText = productUseCases.generateNewRecipeSearchTitleUseCase(
                             recipeName = entryData.recipeName
-                        )
+                        ),
+                        submitPriceButtonVisible = false
                     )
                 }
             }
