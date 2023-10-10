@@ -68,12 +68,4 @@ class SaveNewProductUseCase(
             )
         }
     }
-
-    private fun validateContainerWeight(
-        nutritionValuesIn: NutritionValuesIn,
-        containerWeight: Int?
-    ) = when (nutritionValuesIn) {
-        NutritionValuesIn.HUNDRED_GRAMS -> true
-        else -> !(containerWeight == null || containerWeight <= 0)
-    }
 }

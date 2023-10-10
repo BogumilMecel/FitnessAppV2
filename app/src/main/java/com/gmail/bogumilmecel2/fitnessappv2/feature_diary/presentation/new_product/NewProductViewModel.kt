@@ -3,10 +3,11 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_prod
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BarcodeScanner
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseResultViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.DiaryScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.NewProductScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.ProductScreenDestination
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductResult
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.product.NutritionValuesIn
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_product.SaveNewProductUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.presentation.ProductEntryData
@@ -21,10 +22,12 @@ class NewProductViewModel @Inject constructor(
     private val saveNewProductUseCase: SaveNewProductUseCase,
     private val barcodeScanner: BarcodeScanner,
     savedStateHandle: SavedStateHandle
-) : BaseViewModel<NewProductState, NewProductEvent, NewProductNavArguments>(
+) : BaseResultViewModel<NewProductState, NewProductEvent, NewProductNavArguments, ProductResult>(
     state = NewProductState(),
     navArguments = NewProductScreenDestination.argsFrom(savedStateHandle)
 ) {
+
+    private val entryData = navArguments.entryData
 
     override fun configureOnStart() {
         _state.update {
@@ -128,16 +131,33 @@ class NewProductViewModel @Inject constructor(
                             protein = protein,
                             fat = fat
                         ).handle { product ->
-                            navigateWithPopUp(
-                                destination = ProductScreenDestination(
-                                    entryData = ProductEntryData.Adding(
-                                        mealName = navArguments.mealName,
-                                        product = product,
-                                        dateTransferObject = navArguments.dateTransferObject
-                                    ),
-                                ),
-                                popUpTo = DiaryScreenDestination.route
-                            )
+                            when(entryData) {
+                                is NewProductEntryData.SearchArguments -> {
+                                    navigateWithPopUp(
+                                        destination = ProductScreenDestination(
+                                            entryData = ProductEntryData.Adding(
+                                                mealName = entryData.mealName,
+                                                product = product,
+                                                dateTransferObject = entryData.dateTransferObject
+                                            ),
+                                        ),
+                                        popUpTo = DiaryScreenDestination.route
+                                    )
+                                }
+
+                                is NewProductEntryData.NewRecipeArguments -> {
+                                    navigateWithPopUp(
+                                        destination = ProductScreenDestination(
+                                            entryData = ProductEntryData.NewRecipe(
+                                                recipeName = entryData.recipeName,
+                                                product = product,
+                                            ),
+                                        ),
+                                        popUpTo = NewProductScreenDestination.route
+                                    )
+                                }
+                            }
+
                         }
                     }
                     loaderVisible = false
