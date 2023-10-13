@@ -4,7 +4,6 @@ import androidx.lifecycle.viewModelScope
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.LoginScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.SplashScreenDestination
-import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.use_case.AuthUseCases
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.presentation.util.AuthEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -14,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
-    private val authUseCases: AuthUseCases
+    private val useCases: RegisterUseCases
 ): BaseViewModel<RegisterState, AuthEvent, Unit>(
     state = RegisterState(),
     navArguments = Unit
@@ -54,13 +53,13 @@ class RegisterViewModel @Inject constructor(
                 viewModelScope.launch(Dispatchers.IO) {
                     loaderVisible = true
                     with(_state.value) {
-                        authUseCases.registerUser(
+                        useCases.registerUserUseCase(
                             email = email,
                             password = password,
                             confirmPassword = confirmPassword,
                             username = username
                         ).handle {
-                            authUseCases.logInUserUseCase(
+                            useCases.logInUserUseCase(
                                 email = email,
                                 password = password
                             ).handle {

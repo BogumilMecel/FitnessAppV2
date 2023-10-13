@@ -36,7 +36,10 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Composable
 @Destination
 fun RegisterScreen(navigator: DestinationsNavigator) {
-    hiltViewModel<RegisterViewModel>().ViewModelLayout(navigator = navigator) { viewModel, state ->
+    hiltViewModel<RegisterViewModel>().ViewModelLayout(
+        navigator = navigator,
+        screenTestTag = TestTags.RegisterScreen.REGISTER_SCREEN
+    ) { viewModel, state ->
         Scaffold(
             topBar = {
                 Toolbar(

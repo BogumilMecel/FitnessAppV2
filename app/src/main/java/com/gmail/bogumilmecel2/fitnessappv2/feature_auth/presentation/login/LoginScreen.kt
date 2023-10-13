@@ -34,7 +34,10 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Composable
 @Destination
 fun LoginScreen(navigator: DestinationsNavigator) {
-    hiltViewModel<LoginViewModel>().ViewModelLayout(navigator = navigator) { viewModel, state ->
+    hiltViewModel<LoginViewModel>().ViewModelLayout(
+        navigator = navigator,
+        screenTestTag = TestTags.Login.LOGIN_SCREEN
+    ) { viewModel, state ->
         Box(modifier = Modifier.fillMaxSize()) {
             HeaderRow(middlePrimaryText = stringResource(id = R.string.login))
 
@@ -118,6 +121,7 @@ fun LoginScreen(navigator: DestinationsNavigator) {
                         vertical = 8.dp
                     )
                     .align(Alignment.BottomCenter)
+                    .testTag(TestTags.Login.REGISTER_BUTTON)
             )
         }
     }

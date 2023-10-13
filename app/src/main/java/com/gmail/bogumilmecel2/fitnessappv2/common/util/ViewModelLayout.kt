@@ -1,7 +1,10 @@
 package com.gmail.bogumilmecel2.fitnessappv2.common.util
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.ui.components.base.Loader
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -11,34 +14,41 @@ import kotlinx.coroutines.flow.receiveAsFlow
 @Composable
 inline fun <STATE : Any, EVENT : Any, NAV_ARGUMENTS : Any> BaseViewModel<STATE, EVENT, NAV_ARGUMENTS>.ViewModelLayout(
     navigator: DestinationsNavigator,
+    screenTestTag: String? = null,
     content: @Composable (BaseViewModel<STATE, EVENT, NAV_ARGUMENTS>, STATE) -> Unit = { _, _ -> }
 ) {
-    LaunchedEffect(
-        key1 = true,
-        block = { configureOnStart() }
-    )
+    Box(
+        modifier = screenTestTag?.let { tag ->
+            Modifier.testTag(tag)
+        } ?: Modifier
+    ) {
+        LaunchedEffect(
+            key1 = true,
+            block = { configureOnStart() }
+        )
 
-    LaunchedEffect(
-        key1 = true,
-        block = {
-            navigationDestination.receiveAsFlow().collect {
-                if (it.direction.route == "navigate_up") {
-                    navigator.navigateUp()
-                } else {
-                    navigator.navigate(
-                        direction = it.direction,
-                        navOptions = it.navOptions
-                    )
+        LaunchedEffect(
+            key1 = true,
+            block = {
+                navigationDestination.receiveAsFlow().collect {
+                    if (it.direction.route == "navigate_up") {
+                        navigator.navigateUp()
+                    } else {
+                        navigator.navigate(
+                            direction = it.direction,
+                            navOptions = it.navOptions
+                        )
+                    }
                 }
             }
-        }
-    )
+        )
 
-    content(
-        this,
-        this.state.collectAsStateWithLifecycle().value
-    )
-    Loader(visible = loaderVisible)
+        content(
+            this@ViewModelLayout,
+            this@ViewModelLayout.state.collectAsStateWithLifecycle().value
+        )
+        Loader(visible = loaderVisible)
+    }
 }
 
 @Composable

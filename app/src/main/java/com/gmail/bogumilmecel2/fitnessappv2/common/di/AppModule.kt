@@ -12,7 +12,9 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.CachedValuesP
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.DateHolder
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.repository.TokenRepository
-import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.*
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.CalculateNutritionValuesPercentages
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.GetUserCurrencyUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.SaveToken
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BarcodeScanner
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.DefaultInterceptor
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.RealBarcodeScanner
@@ -22,7 +24,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.util.RealResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.data.api.AuthApi
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.data.repository.AuthRepositoryImp
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.repository.AuthRepository
-import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.use_case.*
+import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.use_case.LogInUserUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.data.api.DiaryApi
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.data.repository.remote.DiaryRepositoryImp
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.dao.UserDiaryItemsDao
@@ -32,8 +34,9 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.Creat
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CreateSearchItemParamsFromProductUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GenerateNewRecipeSearchTitleUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetRecipePriceFromIngredientsUseCase
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.*
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.*
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.CalculateProductNutritionValuesUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.CreatePieChartDataUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.GetProductUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.recipe.CalculateRecipeNutritionValuesForServingsUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.recipe.GetRecipeUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.SearchForProductsUseCase
@@ -43,7 +46,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.reposito
 import com.gmail.bogumilmecel2.fitnessappv2.feature_splash.data.api.LoadingApi
 import com.gmail.bogumilmecel2.fitnessappv2.feature_splash.data.repository.LoadingRepositoryImp
 import com.gmail.bogumilmecel2.fitnessappv2.feature_splash.domain.repository.LoadingRepository
-import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.use_case.*
+import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.use_case.SaveAskForWeightDailyUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.data.api.WeightApi
 import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.data.repository.WeighRepositoryImp
 import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.repository.WeightRepository
@@ -198,28 +201,6 @@ object AppModule {
         tokenRepository = tokenRepository
     )
 
-    @Provides
-    @Singleton
-    fun provideAuthUseCases(
-        authRepository: AuthRepository,
-        resourceProvider: ResourceProvider,
-        saveToken: SaveToken
-    ): AuthUseCases = AuthUseCases(
-        logInUserUseCase = LogInUserUseCase(
-            repository = authRepository,
-            resourceProvider = resourceProvider,
-            saveToken = saveToken
-        ),
-        registerUser = RegisterUser(
-            repository = authRepository,
-            resourceProvider = resourceProvider,
-        ),
-        resetPasswordWithEmail = ResetPasswordWithEmail(
-            repository = authRepository,
-            resourceProvider = resourceProvider
-        ),
-    )
-
     @Singleton
     @Provides
     fun provideDiaryRepository(
@@ -344,4 +325,16 @@ object AppModule {
     fun provideGenerateNewRecipeSearchTitleUseCase(
         resourceProvider: ResourceProvider
     ) = GenerateNewRecipeSearchTitleUseCase(resourceProvider = resourceProvider)
+
+    @Singleton
+    @Provides
+    fun provideLogInUserUseCase(
+        authRepository: AuthRepository,
+        resourceProvider: ResourceProvider,
+        saveToken: SaveToken
+    ): LogInUserUseCase = LogInUserUseCase(
+        repository = authRepository,
+        resourceProvider = resourceProvider,
+        saveToken = saveToken
+    )
 }

@@ -21,10 +21,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.model.RegisterRe
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.model.TokenResponse
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.model.User
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.repository.AuthRepository
-import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.use_case.AuthUseCases
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.use_case.LogInUserUseCase
-import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.use_case.RegisterUser
-import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.use_case.ResetPasswordWithEmail
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.DeleteDiaryEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.DiaryEntriesResponse
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
@@ -40,8 +37,10 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Re
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CalculateSkipUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CreateSearchItemParamsFromIngredientUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CreateSearchItemParamsFromProductUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GenerateNewRecipeSearchTitleUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetRecipePriceFromIngredientsUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.RecipePriceRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.CalculateProductNutritionValuesUseCase
@@ -64,6 +63,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
+import kotlinx.coroutines.delay
 import javax.inject.Singleton
 
 @Module
@@ -118,7 +118,8 @@ object TestAppModule {
     @Singleton
     fun provideAuthRepository(): AuthRepository = object : AuthRepository {
         override suspend fun logInUser(loginRequest: LoginRequest): Resource<TokenResponse> {
-            TODO("Not yet implemented")
+            delay(1000)
+            return Resource.Error()
         }
 
         override suspend fun registerUser(registerRequest: RegisterRequest): Resource<Boolean> {
@@ -139,28 +140,6 @@ object TestAppModule {
         tokenRepository = tokenRepository
     )
 
-    @Provides
-    @Singleton
-    fun provideAuthUseCases(
-        authRepository: AuthRepository,
-        resourceProvider: ResourceProvider,
-        saveToken: SaveToken
-    ): AuthUseCases = AuthUseCases(
-        logInUserUseCase = LogInUserUseCase(
-            repository = authRepository,
-            resourceProvider = resourceProvider,
-            saveToken = saveToken
-        ),
-        registerUser = RegisterUser(
-            repository = authRepository,
-            resourceProvider = resourceProvider,
-        ),
-        resetPasswordWithEmail = ResetPasswordWithEmail(
-            repository = authRepository,
-            resourceProvider = resourceProvider
-        ),
-    )
-
     @Singleton
     @Provides
     fun provideDiaryRepository(): DiaryRepository = object : DiaryRepository {
@@ -168,7 +147,28 @@ object TestAppModule {
             TODO("Not yet implemented")
         }
 
-        override suspend fun getDiaryEntriesExperimental(): Resource<DiaryEntriesResponse> {
+        override suspend fun searchForProducts(
+            searchText: String,
+            page: Int
+        ): Resource<List<Product>> {
+            TODO("Not yet implemented")
+        }
+
+        override suspend fun getLocalUserRecipes(
+            userId: String,
+            searchText: String?,
+            limit: Int,
+            skip: Int
+        ): Resource<List<Recipe>> {
+            TODO("Not yet implemented")
+        }
+
+        override suspend fun getLocalUserProducts(
+            userId: String,
+            searchText: String?,
+            limit: Int,
+            skip: Int
+        ): Resource<List<Product>> {
             TODO("Not yet implemented")
         }
 
@@ -185,10 +185,6 @@ object TestAppModule {
         }
 
         override suspend fun getDiaryEntriesCount(): Resource<Int> {
-            TODO("Not yet implemented")
-        }
-
-        override suspend fun searchForProducts(searchText: String): Resource<List<Product>> {
             TODO("Not yet implemented")
         }
 
@@ -294,13 +290,6 @@ object TestAppModule {
             TODO("Not yet implemented")
         }
 
-        override suspend fun getLocalUserRecipes(userId: String): Resource<List<Recipe>> {
-            TODO("Not yet implemented")
-        }
-
-        override suspend fun getLocalUserProducts(userId: String): Resource<List<Product>> {
-            TODO("Not yet implemented")
-        }
 
         override suspend fun clearLocalData(userId: String): Resource<Unit> {
             TODO("Not yet implemented")
@@ -432,5 +421,27 @@ object TestAppModule {
         weightRepository: WeightRepository
     ): SaveAskForWeightDailyUseCase = SaveAskForWeightDailyUseCase(
         weightRepository = weightRepository
+    )
+
+    @Singleton
+    @Provides
+    fun provideCalculateSkipUseCase() = CalculateSkipUseCase()
+
+    @Singleton
+    @Provides
+    fun provideGenerateNewRecipeSearchTitleUseCase(
+        resourceProvider: ResourceProvider
+    ) = GenerateNewRecipeSearchTitleUseCase(resourceProvider = resourceProvider)
+
+    @Singleton
+    @Provides
+    fun provideLogInUserUseCase(
+        authRepository: AuthRepository,
+        resourceProvider: ResourceProvider,
+        saveToken: SaveToken
+    ): LogInUserUseCase = LogInUserUseCase(
+        repository = authRepository,
+        resourceProvider = resourceProvider,
+        saveToken = saveToken
     )
 }

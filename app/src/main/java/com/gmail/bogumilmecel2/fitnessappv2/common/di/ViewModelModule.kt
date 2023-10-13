@@ -11,6 +11,11 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.SaveNutrition
 import com.gmail.bogumilmecel2.fitnessappv2.feature_account.domain.use_case.AccountUseCases
 import com.gmail.bogumilmecel2.fitnessappv2.feature_account.domain.use_case.DeleteTokenUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_account.domain.use_case.EditNutritionGoalUseCases
+import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.repository.AuthRepository
+import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.use_case.LogInUserUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.use_case.RegisterUserUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.use_case.ResetPasswordWithEmail
+import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.presentation.register.RegisterUseCases
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CalculateSelectedServingPriceUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CalculateServingPrice
@@ -294,5 +299,29 @@ object ViewModelModule {
             saveAskForWeightDaily = saveAskForWeightDailyUseCase
         ),
         checkIfShouldShowWeightPickerUseCase = CheckIfShouldShowWeightPickerUseCase(cachedValuesProvider)
+    )
+
+    @ViewModelScoped
+    @Provides
+    fun provideRegisterUseCases(
+        authRepository: AuthRepository,
+        resourceProvider: ResourceProvider,
+        logInUserUseCase: LogInUserUseCase
+    ): RegisterUseCases = RegisterUseCases(
+        registerUserUseCase = RegisterUserUseCase(
+            repository = authRepository,
+            resourceProvider = resourceProvider
+        ),
+        logInUserUseCase = logInUserUseCase
+    )
+
+    @ViewModelScoped
+    @Provides
+    fun provideResetPasswordWithEmailUseCase(
+        authRepository: AuthRepository,
+        resourceProvider: ResourceProvider
+    ): ResetPasswordWithEmail = ResetPasswordWithEmail(
+        repository = authRepository,
+        resourceProvider = resourceProvider
     )
 }

@@ -3,7 +3,7 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_auth.presentation.reset_pas
 import androidx.lifecycle.viewModelScope
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.LoginScreenDestination
-import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.use_case.AuthUseCases
+import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.use_case.ResetPasswordWithEmail
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.presentation.util.AuthEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ResetPasswordViewModel @Inject constructor(
-    private val authUseCases: AuthUseCases,
+    private val resetPasswordWithEmail: ResetPasswordWithEmail,
 ) : BaseViewModel<ResetPasswordState, AuthEvent, Unit>(
     state = ResetPasswordState(),
     Unit
@@ -36,7 +36,7 @@ class ResetPasswordViewModel @Inject constructor(
             else -> {
                 viewModelScope.launch(Dispatchers.IO) {
                     loaderVisible = true
-                    authUseCases.resetPasswordWithEmail(
+                    resetPasswordWithEmail(
                         email = _state.value.email
                     ).handle {
                         showSnackbarError("Successfully sent an email")

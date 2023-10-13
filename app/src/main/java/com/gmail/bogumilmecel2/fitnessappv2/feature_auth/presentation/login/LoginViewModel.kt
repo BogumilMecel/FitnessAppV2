@@ -5,7 +5,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.RegisterScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.ResetPasswordScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.SplashScreenDestination
-import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.use_case.AuthUseCases
+import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.use_case.LogInUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.update
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val authUseCases: AuthUseCases
+    private val logInUserUseCase: LogInUserUseCase,
 ) : BaseViewModel<LoginState, LoginEvent, Unit>(
     state = LoginState(),
     navArguments = Unit
@@ -50,7 +50,7 @@ class LoginViewModel @Inject constructor(
                 viewModelScope.launch(Dispatchers.IO) {
                     loaderVisible = true
                     with(_state.value) {
-                        authUseCases.logInUserUseCase(
+                        logInUserUseCase(
                             email = email,
                             password = password
                         ).handle {
