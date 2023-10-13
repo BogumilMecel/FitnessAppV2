@@ -60,17 +60,25 @@ open class BaseAndroidTest {
         }
     }
 
-    fun performTextInputAndAssertIsDisplayed(
+    fun performTextInputAndAssertHasText(
         testTag: String,
         text: String,
         expectedTest: String? = null
     ) {
-        composeRule.onNodeWithTag(testTag).run {
-            assertIsDisplayed()
-            performTextInput(text)
-            assertHasText(expectedTest ?: text)
-        }
+        performTextInput(
+            testTag = testTag,
+            text = text
+        ).assertHasText(expectedTest ?: text)
     }
+
+    fun performTextInput(
+        testTag: String,
+        text: String
+    ): SemanticsNodeInteraction = composeRule.onNodeWithTag(testTag).apply {
+        assertIsDisplayed()
+        performTextInput(text)
+    }
+
 
     fun performButtonClickAndAssertSnackbarDisplayed(
         buttonTestTag: String,
@@ -78,11 +86,21 @@ open class BaseAndroidTest {
     ) {
         composeRule.run {
             onNodeWithTag(buttonTestTag).performClick()
-            onNodeWithTag(TestTags.General.SNACKBAR).assertIsDisplayed()
+            onNodeWithTag(TestTags.SNACKBAR).assertIsDisplayed()
 
             snackbarText?.let {
                 onNodeWithText(it).assertIsDisplayed()
             }
+        }
+    }
+
+    fun performButtonClickAndAssertNewScreenIsOpened(
+        buttonTestTag: String,
+        newScreenTestTag: String
+    ) {
+        composeRule.run {
+            onNodeWithTag(buttonTestTag).performClick()
+            onNodeWithTag(newScreenTestTag).assertIsDisplayed()
         }
     }
 

@@ -33,7 +33,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 fun ResetPasswordScreen(navigator: DestinationsNavigator) {
     hiltViewModel<ResetPasswordViewModel>().ViewModelLayout(
         navigator = navigator,
-        screenTestTag = TestTags.ResetPassword.RESET_PASSWORD_SCREEN
+        screenTestTag = TestTags.RESET_PASSWORD_SCREEN
     ) { viewModel, state ->
         Scaffold(
             topBar = {
@@ -67,7 +67,7 @@ fun ResetPasswordScreen(navigator: DestinationsNavigator) {
                             .fillMaxWidth()
                             .padding(horizontal = 20.dp),
                         leadingIcon = IconVector.Email,
-                        testTag = TestTags.General.EMAIL
+                        testTag = TestTags.EMAIL
                     )
 
                     Spacer(modifier = Modifier.height(40.dp))
@@ -79,7 +79,7 @@ fun ResetPasswordScreen(navigator: DestinationsNavigator) {
                         modifier = Modifier
                             .padding(horizontal = 20.dp)
                             .fillMaxWidth()
-                            .testTag(TestTags.General.PRIMARY_BUTTON),
+                            .testTag(TestTags.PRIMARY_BUTTON),
                         text = stringResource(id = R.string.reset_my_password)
                     )
                 }
