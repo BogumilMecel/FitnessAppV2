@@ -13,9 +13,9 @@ class MockAuthRepository : AuthRepository {
         return Resource.Success(TokenResponse("token"))
     }
 
-    override suspend fun registerUser(registerRequest: RegisterRequest): Resource<Boolean> {
+    override suspend fun registerUser(registerRequest: RegisterRequest): Resource<Unit> {
         delay(1000)
-        return Resource.Success(true)
+        return Resource.Success(Unit)
     }
 
     override suspend fun sendPasswordResetEmail(email: String): Resource<Boolean> {

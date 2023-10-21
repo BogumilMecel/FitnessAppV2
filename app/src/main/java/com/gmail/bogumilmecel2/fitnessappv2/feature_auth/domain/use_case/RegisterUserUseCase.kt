@@ -18,7 +18,7 @@ class RegisterUserUseCase(
         password: String,
         confirmPassword: String,
         username: String
-    ): Resource<Boolean> {
+    ): Resource<Unit> {
         if (confirmPassword != password) return Resource.Error(resourceProvider.getString(R.string.please_make_sure_both_passwords_are_the_same))
 
         validateRegisterDataUseCase(
@@ -26,6 +26,7 @@ class RegisterUserUseCase(
             email = email,
             password = password
         ).run {
+            println(this)
             return when (this) {
                 ValidateRegisterDataUseCase.Result.EmailLengthInvalid ->
                     Resource.Error(resourceProvider.getString(R.string.register_email_length_invalid))

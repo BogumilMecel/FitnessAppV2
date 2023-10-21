@@ -58,6 +58,7 @@ fun RegisterScreen(navigator: DestinationsNavigator) {
                         .fillMaxWidth()
                         .padding(horizontal = 20.dp),
                     leadingIcon = IconVector.Email,
+                    maxLines = 2,
                     testTag = TestTags.EMAIL
                 )
 
@@ -75,6 +76,7 @@ fun RegisterScreen(navigator: DestinationsNavigator) {
                         .fillMaxWidth()
                         .padding(horizontal = 20.dp),
                     leadingIcon = IconVector.Account,
+                    maxLines = 2,
                     testTag = TestTags.USERNAME
                 )
 
@@ -96,6 +98,7 @@ fun RegisterScreen(navigator: DestinationsNavigator) {
                         .fillMaxWidth()
                         .padding(horizontal = 20.dp),
                     leadingIcon = IconVector.Password,
+                    maxLines = 2,
                     testTag = TestTags.PASSWORD
                 )
 
@@ -117,6 +120,7 @@ fun RegisterScreen(navigator: DestinationsNavigator) {
                         .fillMaxWidth()
                         .padding(horizontal = 20.dp),
                     leadingIcon = IconVector.Password,
+                    maxLines = 2,
                     testTag = TestTags.CONFIRM_PASSWORD
                 )
 

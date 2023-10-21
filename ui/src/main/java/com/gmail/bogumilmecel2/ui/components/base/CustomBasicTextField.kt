@@ -41,7 +41,8 @@ fun CustomBasicTextField(
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     textAlign: TextAlign = TextAlign.Start,
     visualTransformation: VisualTransformation = VisualTransformation.None,
-    leadingIcon: Icon? = null
+    leadingIcon: Icon? = null,
+    maxLines: Int = Int.MAX_VALUE
 ) {
     val textPadding = PaddingValues(
         start = 12.dp,
@@ -88,6 +89,7 @@ fun CustomBasicTextField(
             ),
             cursorBrush = SolidColor(Color.White),
             singleLine = singleLine,
+            maxLines = if (singleLine) 1 else maxLines,
             keyboardOptions = keyboardOptions,
             visualTransformation = visualTransformation,
         )
