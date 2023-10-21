@@ -1,6 +1,5 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases
 
-import com.gmail.bogumilmecel2.fitnessappv2.common.BaseTest
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.DiaryEntriesResponse
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
@@ -13,7 +12,7 @@ import org.mockito.Mockito
 import java.util.Date
 import kotlin.test.assertTrue
 
-internal class GetOfflineDiaryEntriesUseCaseTest: BaseTest() {
+internal class GetOfflineDiaryEntriesUseCaseTest {
 
     @Mock
     private lateinit var mockDiaryRepository: DiaryRepository

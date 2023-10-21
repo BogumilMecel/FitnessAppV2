@@ -24,13 +24,8 @@ class GenerateNewRecipeSearchTitleUseCaseTest: BaseMockkTest() {
 
     @Test
     fun `Check if title is correctly generated if recipe name is empty`() {
-        val addIngredientText = "Add Ingredient Text"
-        mockString(
-            resId = R.string.search_add_ingredient,
-            value = addIngredientText
-        )
         assertEquals(
-            expected = addIngredientText,
+            expected = resourceProvider.getString(R.string.search_add_ingredient),
             actual = generateNewRecipeSearchTitleUseCase(
                 recipeName = ""
             )

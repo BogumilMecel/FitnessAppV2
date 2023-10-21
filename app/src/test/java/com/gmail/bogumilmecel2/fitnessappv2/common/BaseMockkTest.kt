@@ -5,9 +5,12 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvi
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.CustomDateUtils
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.toValidInt
+import com.gmail.bogumilmecel2.fitnessappv2.util.MockResourceProvider
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
+import io.mockk.spyk
+import kotlin.test.assertEquals
 import kotlin.test.assertIs
 
 open class BaseMockkTest {
@@ -15,7 +18,7 @@ open class BaseMockkTest {
     val mockedDate = "2023-12-12"
     val mockedDate2 = "2022-12-12"
 
-    val resourceProvider = mockk<ResourceProvider>()
+    val resourceProvider: ResourceProvider = spyk<MockResourceProvider>()
     val cachedValuesProvider = mockk<CachedValuesProvider>()
 
     fun mockDateString(value: String) {
@@ -23,14 +26,16 @@ open class BaseMockkTest {
         every { CustomDateUtils.getCurrentDateString() } returns value
     }
 
-    fun mockString(resId: Int, value: String) {
-        every { resourceProvider.getString(resId) } returns value
-    }
-
     fun String.toValidIntOrThrow() = this.toValidInt() ?: throw Exception()
 
-    fun <T> Resource<T>.assertIsError() {
+    fun <T> Resource<T>.assertIsError(text: String? = null) {
         assertIs<Resource.Error<T>>(this)
+        text?.let {
+            assertEquals(
+                expected = text,
+                actual = this.uiText
+            )
+        }
     }
 
     fun <T> Resource<T>.assertIsSuccess() {
