@@ -1,6 +1,6 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.use_case
 
-import com.gmail.bogumilmecel2.fitnessappv2.common.BaseMockkTest
+import com.gmail.bogumilmecel2.fitnessappv2.common.BaseTest
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.repository.WeightRepository
 import io.mockk.coEvery
@@ -9,7 +9,7 @@ import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
-class SaveAskForWeightDailyUseCaseTest : BaseMockkTest() {
+class SaveAskForWeightDailyUseCaseTest : BaseTest() {
 
     private val weightRepository = mockk<WeightRepository>()
     private val saveAskForWeightDailyUseCase = SaveAskForWeightDailyUseCase(

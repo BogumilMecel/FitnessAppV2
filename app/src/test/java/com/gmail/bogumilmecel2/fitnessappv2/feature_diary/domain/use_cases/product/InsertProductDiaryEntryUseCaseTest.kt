@@ -1,7 +1,7 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product
 
 import com.gmail.bogumilmecel2.fitnessappv2.R
-import com.gmail.bogumilmecel2.fitnessappv2.common.BaseMockkTest
+import com.gmail.bogumilmecel2.fitnessappv2.common.BaseTest
 import com.gmail.bogumilmecel2.fitnessappv2.common.MockConstants
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
@@ -17,7 +17,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import kotlin.test.assertIs
 
-class InsertProductDiaryEntryUseCaseTest: BaseMockkTest() {
+class InsertProductDiaryEntryUseCaseTest: BaseTest() {
 
     private val diaryRepository = mockk<DiaryRepository>()
     private val calculateProductNutritionValuesUseCase = mockk<CalculateProductNutritionValuesUseCase>()

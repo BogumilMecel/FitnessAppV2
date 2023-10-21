@@ -1,6 +1,6 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.use_case
 
-import com.gmail.bogumilmecel2.fitnessappv2.common.BaseMockkTest
+import com.gmail.bogumilmecel2.fitnessappv2.common.BaseTest
 import com.gmail.bogumilmecel2.fitnessappv2.common.MockConstants
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.model.WeightDialogsQuestion
@@ -10,7 +10,7 @@ import io.mockk.mockkClass
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
-class HandleWeightDialogsQuestionUseCaseTest : BaseMockkTest() {
+class HandleWeightDialogsQuestionUseCaseTest : BaseTest() {
 
     private val saveAskForWeightDailyUseCase = mockkClass(SaveAskForWeightDailyUseCase::class)
     private val handleWeightDialogsQuestionUseCase = HandleWeightDialogsQuestionUseCase(

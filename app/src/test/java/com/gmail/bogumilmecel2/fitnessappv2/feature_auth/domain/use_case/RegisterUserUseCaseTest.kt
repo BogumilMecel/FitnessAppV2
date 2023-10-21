@@ -6,7 +6,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.repository.AuthR
 import io.mockk.mockk
 import io.mockk.mockkClass
 
-internal class RegisterUserUseCaseTest: BaseMockkTest() {
+internal class RegisterUserUseCaseTest : BaseTest() {
 
     private val authRepository = mockk<AuthRepository>()
     private val validateRegisterDataUseCase = mockkClass(ValidateRegisterDataUseCase::class)

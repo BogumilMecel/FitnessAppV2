@@ -1,6 +1,6 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases
 
-import com.gmail.bogumilmecel2.fitnessappv2.common.BaseMockkTest
+import com.gmail.bogumilmecel2.fitnessappv2.common.BaseTest
 import com.gmail.bogumilmecel2.fitnessappv2.common.MockConstants.Diary.KCAL
 import com.gmail.bogumilmecel2.fitnessappv2.common.MockConstants.Diary.RECIPE_NAME_1
 import com.gmail.bogumilmecel2.fitnessappv2.common.MockConstants.Diary.RECIPE_NAME_2
@@ -14,7 +14,7 @@ import com.gmail.bogumilmecel2.ui.components.complex.SearchItemParams
 import org.junit.Test
 import kotlin.test.assertEquals
 
-class CreateSearchItemParamsFromRecipeUseCaseTest : BaseMockkTest() {
+class CreateSearchItemParamsFromRecipeUseCaseTest : BaseTest() {
 
     private val createSearchItemParamsFromRecipeUseCase =
         CreateSearchItemParamsFromRecipeUseCase(resourceProvider = resourceProvider)

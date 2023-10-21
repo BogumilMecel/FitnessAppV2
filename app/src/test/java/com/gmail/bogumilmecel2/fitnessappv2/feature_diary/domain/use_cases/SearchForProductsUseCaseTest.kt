@@ -1,6 +1,6 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases
 
-import com.gmail.bogumilmecel2.fitnessappv2.common.BaseMockkTest
+import com.gmail.bogumilmecel2.fitnessappv2.common.BaseTest
 import com.gmail.bogumilmecel2.fitnessappv2.common.MockConstants.CORRECT_PAGE
 import com.gmail.bogumilmecel2.fitnessappv2.common.MockConstants.Diary.PRODUCT_NAME_1
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
@@ -13,7 +13,7 @@ import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
-internal class SearchForProductsUseCaseTest : BaseMockkTest() {
+internal class SearchForProductsUseCaseTest : BaseTest() {
 
     private val diaryRepository = mockk<DiaryRepository>()
     private val searchForProductsUseCase =
