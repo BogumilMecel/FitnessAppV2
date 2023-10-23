@@ -37,7 +37,7 @@ class AddNewRecipe(
                     isPublic = isRecipePublic
                 )
                 diaryRepository.addNewRecipe(newRecipeRequest = newRecipeRequest)
-            } ?: Resource.Error(resourceProvider.getString(R.string.please_make_sure_all_fields_are_filled_in_correctly))
+            } ?: Resource.Error(resourceProvider.getString(R.string.empty_fields_error))
         }
     }
 }

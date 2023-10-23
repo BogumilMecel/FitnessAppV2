@@ -1,6 +1,7 @@
 package com.gmail.bogumilmecel2.fitnessappv2.common.di
 
 import android.app.Application
+import com.gmail.bogumilmecel2.auth.ValidateAuthDataUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.common.MockCachedValuesProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.Currency
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.DiaryItem
@@ -409,13 +410,19 @@ object TestAppModule {
 
     @Singleton
     @Provides
+    fun provideValidateAuthDataUseCase(): ValidateAuthDataUseCase = ValidateAuthDataUseCase()
+
+    @Singleton
+    @Provides
     fun provideLogInUserUseCase(
         authRepository: AuthRepository,
         resourceProvider: ResourceProvider,
-        tokenRepository: TokenRepository
+        tokenRepository: TokenRepository,
+        validateAuthDataUseCase: ValidateAuthDataUseCase
     ): LogInUserUseCase = LogInUserUseCase(
         authRepository = authRepository,
         resourceProvider = resourceProvider,
-        tokenRepository = tokenRepository
+        tokenRepository = tokenRepository,
+        validateAuthDataUseCase = validateAuthDataUseCase
     )
 }

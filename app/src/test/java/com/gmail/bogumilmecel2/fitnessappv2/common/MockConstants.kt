@@ -19,6 +19,7 @@ object MockConstants {
         const val CORRECT_PASSWORD = "123456"
         const val CORRECT_PASSWORD_2 = "654321"
         const val CORRECT_USERNAME = "username"
+        const val TOKEN = "123456789"
     }
 
     object Diary {

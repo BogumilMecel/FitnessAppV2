@@ -70,5 +70,5 @@ class SaveIntroductionInformationUseCase(
     }
 
     private fun getFieldErrorResource() =
-        Resource.Error<Unit>(uiText = resourceProvider.getString(R.string.please_make_sure_all_fields_are_filled_in_correctly))
+        Resource.Error<Unit>(uiText = resourceProvider.getString(R.string.empty_fields_error))
 }

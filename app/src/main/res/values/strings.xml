@@ -27,13 +27,13 @@
     <string name="sign_up">Sign Up</string>
     <string name="confirm_your_password">Confirm Your Password</string>
     <string name="i_don_t_have_an_account_register">I Don\'t Have An Account! Register</string>
-    <string name="please_make_sure_all_fields_are_filled_in_correctly">Please Make Sure All Fields Are Filled In Correctly.</string>
+    <string name="empty_fields_error">Please Make Sure All Fields Are Filled In Correctly.</string>
     <string name="please_make_sure_both_passwords_are_the_same">Please Make Sure Both Passwords Are The Same.</string>
     <string name="i_have_an_account_login">I Have An Account! Login</string>
     <string name="please_enter_your_email_in_order_to_reset_your_password">Please Enter Your Email In Order To Reset Your Password.</string>
     <string name="reset_your_password">Reset your password</string>
     <string name="reset_my_password">SEND EMAIL</string>
-    <string name="please_make_sure_your_password_is_at_least_6_characters_and_is_not_longer_than_24_characters">please make sure your password is at least 6 characters and is not longer than 24 characters</string>
+    <string name="register_password_length_invalid">please make sure your password is at least 6 characters and is not longer than 24 characters</string>
     <string name="register_email_length_invalid">Please make sure you have entered correct email</string>
     <string name="register_username_length_invalid">Please make sure you have entered correct username</string>
     <string name="please_make_sure_you_have_entered_correct_email">Please make sure you have entered the correct email</string>

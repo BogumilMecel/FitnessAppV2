@@ -89,7 +89,7 @@ internal class RegisterScreenTest: BaseAndroidTest() {
 
         performButtonClickAndAssertSnackbarDisplayed(
             buttonTestTag = TestTags.PRIMARY_BUTTON,
-            snackbarText = getString(R.string.please_make_sure_your_password_is_at_least_6_characters_and_is_not_longer_than_24_characters)
+            snackbarText = getString(R.string.register_password_length_invalid)
         )
     }
 
@@ -102,7 +102,7 @@ internal class RegisterScreenTest: BaseAndroidTest() {
 
         performButtonClickAndAssertSnackbarDisplayed(
             buttonTestTag = TestTags.PRIMARY_BUTTON,
-            snackbarText = getString(R.string.please_make_sure_your_password_is_at_least_6_characters_and_is_not_longer_than_24_characters)
+            snackbarText = getString(R.string.register_password_length_invalid)
         )
     }
 
