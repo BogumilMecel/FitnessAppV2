@@ -109,10 +109,10 @@ class NewRecipeViewModel @Inject constructor(
                 )
             }
 
-            is NewRecipeEvent.ChangedSelectedNutritionType -> {
+            is NewRecipeEvent.CheckedNutritionType -> {
                 _state.update {
                     it.copy(
-                        selectedNutritionType = event.value
+                        selectedNutritionType = if (event.checked) SelectedNutritionType.Recipe else SelectedNutritionType.Serving
                     )
                 }
                 calculateRecipeInformation()

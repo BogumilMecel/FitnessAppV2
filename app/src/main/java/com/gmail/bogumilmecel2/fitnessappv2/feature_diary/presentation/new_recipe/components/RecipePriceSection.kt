@@ -33,9 +33,7 @@ fun RecipePriceSection(
     isNewRecipe: Boolean,
     onInfoClicked: () -> Unit
 ) {
-    DefaultCardBackground(
-        modifier = modifier
-    ) {
+    DefaultCardBackground(modifier = modifier) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
