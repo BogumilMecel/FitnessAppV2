@@ -5,7 +5,6 @@ import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -54,6 +53,7 @@ import com.gmail.bogumilmecel2.ui.components.base.CustomBasicTextField
 import com.gmail.bogumilmecel2.ui.components.base.CustomButton
 import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
 import com.gmail.bogumilmecel2.ui.components.base.IconVector
+import com.gmail.bogumilmecel2.ui.components.base.WidthDivider
 import com.gmail.bogumilmecel2.ui.components.base.WidthSpacer
 import com.gmail.bogumilmecel2.ui.components.base.listing.ListingSwitch
 import com.gmail.bogumilmecel2.ui.components.complex.ForEachDiaryList
@@ -227,7 +227,7 @@ fun NewRecipeScreen(
                             value = state.servings,
                             onValueChange = { viewModel.onEvent(NewRecipeEvent.EnteredServing(it)) },
                             modifier = Modifier
-                                .width(80.dp)
+                                .width(96.dp)
                                 .height(48.dp),
                             singleLine = true,
                             textAlign = TextAlign.Center
@@ -269,29 +269,33 @@ fun NewRecipeScreen(
                     ),
             ) {
                 Column(modifier = Modifier.fillMaxWidth()) {
-                    Box(modifier = Modifier.fillMaxWidth()) {
-                        Text(
-                            text = stringResource(id = R.string.recipe_ingredients),
-                            style = MaterialTheme.typography.h3.copy(
-                                textAlign = TextAlign.Center
-                            ),
-                            modifier = Modifier.align(Alignment.Center)
-                        )
-
-                        DropdownArrow(
-                            isArrowPointedDownwards = state.isIngredientsListExpanded,
-                            modifier = Modifier.align(Alignment.CenterEnd),
-                            onArrowClicked = {
-                                viewModel.onEvent(NewRecipeEvent.ClickedIngredientsListArrow)
-                            }
-                        )
-                    }
-
-                    Divider(
+                    Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(1.dp)
-                    )
+                            .height(48.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        if (state.ingredientsItemsParams.isNotEmpty()) {
+                            WidthSpacer(48.dp)
+                        }
+
+                        Text(
+                            text = stringResource(id = R.string.recipe_ingredients),
+                            style = FitnessAppTheme.typography.HeaderSmall,
+                            textAlign = TextAlign.Center,
+                            maxLines = 1,
+                            modifier = Modifier.weight(1f)
+                        )
+
+                        if (state.ingredientsItemsParams.isNotEmpty()) {
+                            DropdownArrow(
+                                isArrowPointedDownwards = state.isIngredientsListExpanded,
+                                onArrowClicked = { viewModel.onEvent(NewRecipeEvent.ClickedIngredientsListArrow) }
+                            )
+                        }
+                    }
+
+                    WidthDivider()
 
                     if (state.isIngredientsListExpanded) {
                         ForEachDiaryList(items = state.ingredientsItemsParams)

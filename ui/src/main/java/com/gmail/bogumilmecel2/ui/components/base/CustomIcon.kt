@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Login
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Password
@@ -154,5 +155,9 @@ sealed class IconVector(
     data object Info: IconVector(
         imageVector = Icons.Default.Info,
         contentDescriptionId = R.string.info
+    )
+    data object ArrowDown: IconVector(
+        imageVector = Icons.Default.KeyboardArrowDown,
+        contentDescriptionId = R.string.arrow_down
     )
 }
