@@ -226,6 +226,8 @@
     <string name="introduction_gain">Gain</string>
     <string name="introduction_keep">Keep</string>
 
+    <string name="training_start_workout">Start New Workout</string>
+    <string name="training_copy_workout">Copy Previous Workout</string>
 
 <!--    Test tags-->
     <string name="NEXT">NEXT</string>

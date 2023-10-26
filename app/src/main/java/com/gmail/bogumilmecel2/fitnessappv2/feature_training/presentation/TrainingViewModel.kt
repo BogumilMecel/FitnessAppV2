@@ -1,5 +1,6 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_training.presentation
 
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.FormatLocalDateUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.CustomDateUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -11,7 +12,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TrainingViewModel @Inject constructor(
-
+    private val formatLocalDateUseCase: FormatLocalDateUseCase
 ): BaseViewModel<TrainingState, TrainingEvent, Unit>(
     state = TrainingState(),
     navArguments = Unit
@@ -34,12 +35,20 @@ class TrainingViewModel @Inject constructor(
                 currentDate = currentDate.minus(1, DateTimeUnit.DAY)
                 assignCurrentDate()
             }
+
+            is TrainingEvent.ClickedAddButton -> {
+
+            }
+
+            is TrainingEvent.ClickedCopyButton -> {
+
+            }
         }
     }
 
     private fun assignCurrentDate() {
         _state.update {
-            it.copy(currentDate = currentDate.toString())
+            it.copy(currentDate = formatLocalDateUseCase(localDate = currentDate))
         }
     }
 }

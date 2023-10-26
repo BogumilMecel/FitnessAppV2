@@ -1,5 +1,6 @@
 package com.gmail.bogumilmecel2.ui.components.base
 
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -14,6 +15,11 @@ import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 @Composable
 fun HeightSpacer(height: Dp = 16.dp) {
     Spacer(modifier = Modifier.height(height))
+}
+
+@Composable
+fun ColumnScope.FullHeightSpacer() {
+    Spacer(modifier = Modifier.weight(1f))
 }
 
 @Composable
