@@ -1,4 +1,4 @@
-package com.gmail.bogumilmecel2.fitnessappv2.feature_training.presentation
+package com.gmail.bogumilmecel2.fitnessappv2.feature_training.presentation.training
 
 sealed interface TrainingEvent {
     data object ClickedCalendarArrowForward: TrainingEvent

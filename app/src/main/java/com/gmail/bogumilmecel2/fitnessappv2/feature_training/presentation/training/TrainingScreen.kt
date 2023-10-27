@@ -1,4 +1,4 @@
-package com.gmail.bogumilmecel2.fitnessappv2.feature_training.presentation
+package com.gmail.bogumilmecel2.fitnessappv2.feature_training.presentation.training
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -54,7 +54,7 @@ fun TrainingScreen(navigator: DestinationsNavigator) {
                 TextWithTopIcon(
                     modifier = Modifier
                         .clip(FitnessAppTheme.shapes.Medium)
-                        .clickable { }
+                        .clickable { viewModel.onEvent(TrainingEvent.ClickedAddButton) }
                         .padding(12.dp),
                     iconModifier = Modifier.size(32.dp),
                     icon = IconVector.Add,

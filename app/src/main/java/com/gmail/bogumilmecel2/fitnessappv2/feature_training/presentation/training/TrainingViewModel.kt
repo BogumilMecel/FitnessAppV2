@@ -1,8 +1,9 @@
-package com.gmail.bogumilmecel2.fitnessappv2.feature_training.presentation
+package com.gmail.bogumilmecel2.fitnessappv2.feature_training.presentation.training
 
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.FormatLocalDateUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.CustomDateUtils
+import com.gmail.bogumilmecel2.fitnessappv2.destinations.SelectExerciseScreenDestination
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.update
 import kotlinx.datetime.DateTimeUnit
@@ -37,11 +38,10 @@ class TrainingViewModel @Inject constructor(
             }
 
             is TrainingEvent.ClickedAddButton -> {
-
+                navigateTo(destination = SelectExerciseScreenDestination)
             }
 
             is TrainingEvent.ClickedCopyButton -> {
-
             }
         }
     }
