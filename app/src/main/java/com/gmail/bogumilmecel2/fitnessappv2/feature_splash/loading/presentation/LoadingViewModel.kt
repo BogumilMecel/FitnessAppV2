@@ -14,6 +14,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
+import java.net.ConnectException
+import java.net.SocketTimeoutException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -43,8 +45,14 @@ class LoadingViewModel @Inject constructor(
     }
 
     private suspend fun authenticateUser() {
-        loadingRepository.authenticateUser().handle(
-            onError = { navigateToLoginScreen() }
+        loadingRepository.authenticateUser().handleWithException(
+            onError = { exception ->
+                if (exception is SocketTimeoutException || exception is ConnectException) {
+                    navigateWithPopUp(destination = SummaryScreenDestination)
+                } else {
+                    navigateToLoginScreen()
+                }
+            }
         ) { user ->
             when {
                 user == null -> {
