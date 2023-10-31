@@ -3,6 +3,7 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.diary
 import androidx.lifecycle.viewModelScope
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.DateTransferObject
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.DiaryItem
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.CachedValuesProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.DateHolder
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.ProductScreenDestination
@@ -25,7 +26,8 @@ import javax.inject.Inject
 @HiltViewModel
 class DiaryViewModel @Inject constructor(
     private val diaryUseCases: DiaryUseCases,
-    private val dateHolder: DateHolder
+    private val dateHolder: DateHolder,
+    private val cachedValuesProvider: CachedValuesProvider
 ) : BaseViewModel<DiaryState, DiaryEvent, Unit>(
     state = DiaryState(),
     navArguments = Unit
@@ -130,7 +132,7 @@ class DiaryViewModel @Inject constructor(
         _state.update { state ->
             state.copy(
                 diaryEntries = buildMap {
-                    MealName.values().forEach { mealName ->
+                    MealName.entries.forEach { mealName ->
                         put(
                             key = mealName,
                             value = groupedDiaryEntries[mealName]?.let { mealDiaryEntries ->

@@ -23,39 +23,37 @@ class RealCachedValuesProvider(
     }
 
     override suspend fun getWantedNutritionValues() =
-        getUser().nutritionValues?: NutritionValues()
+        getUser()?.nutritionValues ?: NutritionValues()
 
     override suspend fun saveWantedNutritionValues(nutritionValues: NutritionValues) {
-        saveUser(
-            user = getUser().copy(
-                nutritionValues = nutritionValues
-            )
-        )
+        getUser()?.let { saveUser(user = it.copy(nutritionValues = nutritionValues)) }
     }
 
-    override suspend fun getWeightProgress() = getUser().weightProgress
+    override suspend fun getWeightProgress() = getUser()?.weightProgress
 
     override suspend fun updateWeightInfo(
         weightProgress: Double?,
         latestWeightEntry: WeightEntry?
     ) {
-        saveUser(
-            user = getUser().copy(
-                latestWeightEntry = latestWeightEntry,
-                weightProgress = weightProgress
+        getUser()?.let {
+            saveUser(
+                user = it.copy(
+                    latestWeightEntry = latestWeightEntry,
+                    weightProgress = weightProgress
+                )
             )
-        )
+        }
     }
 
-    override suspend fun getLogStreak() = getUser().logStreak
-    override suspend fun getLatestWeightEntry() = getUser().latestWeightEntry
+    override suspend fun getLogStreak() = getUser()?.logStreak ?: 1
+    override suspend fun getLatestWeightEntry() = getUser()?.latestWeightEntry
 
     override suspend fun getUser() = getItemFromJson(
         USER_KEY,
         User::class.java
-    ) ?: throw Exception()
+    )
 
-    override suspend fun getUserId() = getUser().id
+    override suspend fun getUserId() = getUser()?.id ?: ""
 
     override suspend fun getUserCurrency(): Currency = getItemFromJson(
         key = CURRENCY,
@@ -72,11 +70,9 @@ class RealCachedValuesProvider(
     }
 
     override suspend fun updateAskForWeightDaily(accepted: Boolean) {
-        saveUser(
-            user = getUser().copy(
-                askForWeightDaily = accepted
-            )
-        )
+        getUser()?.let {
+            saveUser(user = it.copy(askForWeightDaily = accepted))
+        }
     }
 
     override suspend fun updateLocalWeightDialogsQuestion(weightDialogsQuestion: WeightDialogsQuestion) {
@@ -104,11 +100,7 @@ class RealCachedValuesProvider(
     }
 
     override suspend fun updateUserInformation(userInformation: UserInformation) {
-        saveUser(
-            user = getUser().copy(
-                userInformation = userInformation
-            )
-        )
+        getUser()?.let { saveUser(user = it.copy(userInformation = userInformation)) }
     }
 
     private fun <T> getItemFromJson(key: String, clazz: Class<T>): T? {

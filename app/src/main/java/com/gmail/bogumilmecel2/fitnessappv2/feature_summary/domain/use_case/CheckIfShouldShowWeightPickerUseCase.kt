@@ -11,7 +11,7 @@ class CheckIfShouldShowWeightPickerUseCase(private val cachedValuesProvider: Cac
 
         if (lastTimeWeightDialogsShown == currentDate) return Resource.Error()
 
-        val user = cachedValuesProvider.getUser()
+        val user = cachedValuesProvider.getUser() ?: return Resource.Error()
 
         if (user.askForWeightDaily != true) return Resource.Error()
 
