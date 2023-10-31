@@ -17,7 +17,7 @@ interface CachedValuesProvider {
     )
     suspend fun getLogStreak(): Int
     suspend fun getLatestWeightEntry(): WeightEntry?
-    suspend fun getUser(): User
+    suspend fun getUser(): User?
     suspend fun getUserCurrency(): Currency
     suspend fun saveUser(user: User)
     suspend fun getUserId(): String

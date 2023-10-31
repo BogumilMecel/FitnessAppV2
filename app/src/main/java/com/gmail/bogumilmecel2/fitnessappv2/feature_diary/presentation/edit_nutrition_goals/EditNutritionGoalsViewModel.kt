@@ -2,6 +2,7 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.edit_nut
 
 import androidx.lifecycle.viewModelScope
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValue
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.CachedValuesProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.round
@@ -15,6 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class EditNutritionGoalsViewModel @Inject constructor(
     private val useCases: EditNutritionGoalUseCases,
+    private val cachedValuesProvider: CachedValuesProvider
 ) : BaseViewModel<EditNutritionGoalsState, EditNutritionGoalsEvent, Unit>(
     state = EditNutritionGoalsState(),
     navArguments = Unit

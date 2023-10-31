@@ -1,29 +1,19 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_splash.loading.presentation
 
 import androidx.lifecycle.viewModelScope
-import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.GetToken
+import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.util.BottomBarScreen
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.IntroductionScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.LoginScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.SummaryScreenDestination
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetUserDiaryAndSaveItLocallyUseCase
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetUserDiaryEntriesExperimentalUseCase
-import com.gmail.bogumilmecel2.fitnessappv2.feature_splash.domain.repository.LoadingRepository
+import com.gmail.bogumilmecel2.fitnessappv2.feature_splash.domain.use_cases.AuthenticateUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
-import java.net.ConnectException
-import java.net.SocketTimeoutException
 import javax.inject.Inject
 
 @HiltViewModel
 class LoadingViewModel @Inject constructor(
-    private val loadingRepository: LoadingRepository,
-    private val getToken: GetToken,
-    private val getUserDiaryAndSaveItLocallyUseCase: GetUserDiaryAndSaveItLocallyUseCase,
-    private val getUserDiaryEntriesExperimentalUseCase: GetUserDiaryEntriesExperimentalUseCase,
+    private val authenticateUserUseCase: AuthenticateUserUseCase
 ) : BaseViewModel<Unit, Unit, Unit>(
     state = Unit,
     navArguments = Unit
@@ -31,61 +21,24 @@ class LoadingViewModel @Inject constructor(
 
     override fun configureOnStart() {
         loaderVisible = true
-        checkIfTokenIsPresent()
+        authenticateUser()
     }
 
-    private fun checkIfTokenIsPresent() {
-        viewModelScope.launch(Dispatchers.IO) {
-            getToken()?.let {
-                authenticateUser()
-            } ?: run {
-                navigateToLoginScreen()
-            }
-        }
-    }
-
-    private suspend fun authenticateUser() {
-        loadingRepository.authenticateUser().handleWithException(
-            onError = { exception ->
-                if (exception is SocketTimeoutException || exception is ConnectException) {
-                    navigateWithPopUp(destination = SummaryScreenDestination)
-                } else {
-                    navigateToLoginScreen()
-                }
-            }
-        ) { user ->
-            when {
-                user == null -> {
-                    navigateToLoginScreen()
-                    return
-                }
-
-                user.nutritionValues != null && user.userInformation != null -> {
-                    cachedValuesProvider.saveUser(user = user)
-
-                    val userItemsJob = viewModelScope.async(Dispatchers.IO) {
-                        getUserDiaryAndSaveItLocallyUseCase()
+    private fun authenticateUser() {
+        viewModelScope.launch {
+            when(val result = authenticateUserUseCase()) {
+                is AuthenticateUserUseCase.Result.NavigateToIntroduction -> navigateWithPopUp(IntroductionScreenDestination)
+                is AuthenticateUserUseCase.Result.NavigateToLogin -> navigateWithPopUp(LoginScreenDestination)
+                is AuthenticateUserUseCase.Result.NavigateToMainScreen -> {
+                    when(result.bottomBarScreen) {
+                        BottomBarScreen.Summary -> navigateWithPopUp(SummaryScreenDestination)
+                        else -> {
+                            // TODO: Implement it when setting default starting screen is implemented
+                        }
                     }
-
-                    val userDiaryJob = viewModelScope.async(Dispatchers.IO) {
-                        getUserDiaryEntriesExperimentalUseCase()
-                    }
-
-                    awaitAll(userItemsJob, userDiaryJob)
-
-                    navigateWithPopUp(destination = SummaryScreenDestination)
-                }
-
-                else -> {
-                    cachedValuesProvider.saveUser(user = user)
-                    navigateWithPopUp(destination = IntroductionScreenDestination)
                 }
             }
         }
-    }
-
-    private fun navigateToLoginScreen() {
-        navigateWithPopUp(destination = LoginScreenDestination)
     }
 
     override fun onEvent(event: Unit) {}
