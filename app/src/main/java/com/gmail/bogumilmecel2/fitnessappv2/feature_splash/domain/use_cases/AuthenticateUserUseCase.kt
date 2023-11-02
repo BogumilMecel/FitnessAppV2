@@ -29,10 +29,10 @@ class AuthenticateUserUseCase(
             ConnectException::class
         )
 
-        val cachedUser = cachedValuesProvider.getUser()
-
         when (resource) {
             is Resource.Error -> {
+                val cachedUser = cachedValuesProvider.getUser()
+
                 return if (resource is Resource.ComplexError
                     && (resource.exception::class in offlineModeExceptions)
                     && cachedUser != null
