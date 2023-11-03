@@ -2,6 +2,7 @@ package com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider
 
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.Currency
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.OfflineMode
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.UserInformation
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.model.User
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.model.WeightDialogsQuestion
@@ -27,4 +28,6 @@ interface CachedValuesProvider {
     suspend fun getLocalLastTimeShowedWeightPicker(): String?
     suspend fun setLocalLastTimeShowedWeightPicker(date: String)
     suspend fun updateUserInformation(userInformation: UserInformation)
+    suspend fun setOfflineMode(offlineMode: OfflineMode)
+    suspend fun getOfflineMode(): OfflineMode
 }
