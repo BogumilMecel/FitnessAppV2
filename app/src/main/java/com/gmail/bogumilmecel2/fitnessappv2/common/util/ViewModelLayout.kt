@@ -29,6 +29,11 @@ inline fun <STATE : Any, EVENT : Any, NAV_ARGUMENTS : Any> BaseViewModel<STATE, 
 
         LaunchedEffect(
             key1 = true,
+            block = { observeNetworkConnection() }
+        )
+
+        LaunchedEffect(
+            key1 = true,
             block = {
                 navigationDestination.receiveAsFlow().collect {
                     if (it.direction.route == "navigate_up") {

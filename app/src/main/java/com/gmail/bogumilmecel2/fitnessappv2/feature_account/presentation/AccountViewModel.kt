@@ -1,7 +1,6 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_account.presentation
 
 import androidx.lifecycle.viewModelScope
-import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.CachedValuesProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.EditNutritionGoalsScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.LoginScreenDestination
@@ -15,7 +14,6 @@ import javax.inject.Inject
 @HiltViewModel
 class AccountViewModel @Inject constructor(
     private val useCases: AccountUseCases,
-    private val cachedValuesProvider: CachedValuesProvider
 ) : BaseViewModel<AccountState, AccountEvent, Unit>(
     state = AccountState(),
     navArguments = Unit

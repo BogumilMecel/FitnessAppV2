@@ -6,12 +6,17 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavOptions
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.connectivity.ConnectivityObserver
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.ConnectionState
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.OfflineMode
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.navigation.NavigationAction
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.CachedValuesProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvider
 import com.ramcosta.composedestinations.spec.Direction
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -30,6 +35,12 @@ abstract class BaseViewModel<STATE : Any, EVENT : Any, NAV_ARGUMENTS : Any>(
     @Inject
     lateinit var resourceProvider: ResourceProvider
 
+    @Inject
+    lateinit var cachedValuesProvider: CachedValuesProvider
+
+    @Inject
+    lateinit var connectivityObserver: ConnectivityObserver
+
     protected fun showSnackbarError(message: String) {
         viewModelScope.launch {
             ErrorUtils.showSnackbarWithMessage(message = message)
@@ -39,6 +50,19 @@ abstract class BaseViewModel<STATE : Any, EVENT : Any, NAV_ARGUMENTS : Any>(
     abstract fun onEvent(event: EVENT)
 
     open fun configureOnStart() {}
+
+    fun observeNetworkConnection() {
+        viewModelScope.launch {
+            connectivityObserver.observe().collectLatest {
+                cachedValuesProvider.setOfflineMode(
+                    offlineMode = when(it) {
+                        ConnectionState.Unavailable -> OfflineMode.Offline
+                        ConnectionState.Available -> OfflineMode.Online
+                    }
+                )
+            }
+        }
+    }
 
     protected inline fun <T> Resource<T>.handle(
         showSnackbar: Boolean = true,

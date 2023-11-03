@@ -8,7 +8,9 @@ import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import com.gmail.bogumilmecel2.auth.ValidateAuthDataUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.common.data.AppDatabase
+import com.gmail.bogumilmecel2.fitnessappv2.common.data.connectivity.ConnectivityObserverService
 import com.gmail.bogumilmecel2.fitnessappv2.common.data.navigation.repository.TokenRepositoryImp
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.connectivity.ConnectivityObserver
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.CachedValuesProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.DateHolder
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvider
@@ -129,6 +131,12 @@ object AppModule {
         val client = OkHttpClient.Builder().addInterceptor(defaultInterceptor)
         return client.build()
     }
+
+    @Singleton
+    @Provides
+    fun provideConnectivityObserver(
+        @ApplicationContext context: Context
+    ): ConnectivityObserver = ConnectivityObserverService(context)
 
     @Singleton
     @Provides

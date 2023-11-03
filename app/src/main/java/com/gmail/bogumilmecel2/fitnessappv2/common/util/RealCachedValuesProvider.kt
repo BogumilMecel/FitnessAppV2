@@ -3,6 +3,7 @@ package com.gmail.bogumilmecel2.fitnessappv2.common.util
 import android.content.SharedPreferences
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.Currency
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.OfflineMode
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.UserInformation
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.CachedValuesProvider
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.model.User
@@ -20,6 +21,7 @@ class RealCachedValuesProvider(
         const val CURRENCY = "currency"
         const val WEIGHT_DIALOGS = "weight_dialogs"
         const val WEIGHT_PICKER = "weight_picker"
+        const val OFFLINE_MODE = "offline_mode"
     }
 
     override suspend fun getWantedNutritionValues() =
@@ -102,6 +104,18 @@ class RealCachedValuesProvider(
     override suspend fun updateUserInformation(userInformation: UserInformation) {
         getUser()?.let { saveUser(user = it.copy(userInformation = userInformation)) }
     }
+
+    override suspend fun setOfflineMode(offlineMode: OfflineMode) {
+        saveItemToJson(
+            item = offlineMode,
+            key = OFFLINE_MODE
+        )
+    }
+
+    override suspend fun getOfflineMode(): OfflineMode = getItemFromJson(
+        key = OFFLINE_MODE,
+        clazz = OfflineMode::class.java
+    ) ?: OfflineMode.Offline
 
     private fun <T> getItemFromJson(key: String, clazz: Class<T>): T? {
         return try {
