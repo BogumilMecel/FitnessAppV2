@@ -1,6 +1,6 @@
 package com.gmail.bogumilmecel2.fitnessappv2.common.util
 
-object ApiConstants {
+object Constants {
     object Headers {
         const val COUNTRY = "country"
         const val CURRENCY = "currency"
@@ -19,4 +19,8 @@ object ApiConstants {
 
     const val DEFAULT_PAGE_SIZE = 20
     const val DEFAULT_OFFLINE_PAGE_SIZE = 50
+
+    const val WEIGHT_PICKER_MIN_VALUE = 30.0
+    const val WEIGHT_PICKER_MAX_VALUE = 250.0
+    const val WEIGHT_PICKER_DEFAULT_VALUE = 80.0
 }

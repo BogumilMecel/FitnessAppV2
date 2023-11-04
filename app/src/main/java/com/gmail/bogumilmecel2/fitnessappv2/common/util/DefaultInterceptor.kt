@@ -20,15 +20,15 @@ class DefaultInterceptor(
             request.addHeader("Authorization", "Bearer $it")
         }
         request.addHeader(
-            name = ApiConstants.Headers.COUNTRY,
+            name = Constants.Headers.COUNTRY,
             value = Country.POLAND.shortName
         )
         request.addHeader(
-            name = ApiConstants.Headers.TIMEZONE,
+            name = Constants.Headers.TIMEZONE,
             value = TimeZone.currentSystemDefault().id
         )
         request.addHeader(
-            name = ApiConstants.Headers.DEVICE_ID,
+            name = Constants.Headers.DEVICE_ID,
             value = Settings.Secure.getString(
                 applicationContext.contentResolver,
                 Settings.Secure.ANDROID_ID
