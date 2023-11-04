@@ -1,6 +1,6 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases
 
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.ApiConstants.DEFAULT_PAGE_SIZE
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.Constants.DEFAULT_PAGE_SIZE
 import org.junit.Test
 import kotlin.test.assertEquals
 

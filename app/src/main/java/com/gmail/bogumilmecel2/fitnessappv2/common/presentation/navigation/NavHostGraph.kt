@@ -25,6 +25,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.destinations.SearchScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.SplashScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.SummaryScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.TrainingScreenDestination
+import com.gmail.bogumilmecel2.fitnessappv2.destinations.WeightDialogScreenDestination
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -70,7 +71,8 @@ fun NavHostGraph(
         AccountScreenDestination.route,
         SummaryScreenDestination.route,
         DiaryScreenDestination.route,
-        TrainingScreenDestination.route
+        TrainingScreenDestination.route,
+        WeightDialogScreenDestination.route
     )
 
     LaunchedEffect(key1 = true) {
