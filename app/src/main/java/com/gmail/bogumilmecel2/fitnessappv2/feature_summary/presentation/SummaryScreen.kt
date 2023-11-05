@@ -1,13 +1,11 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_summary.presentation
 
 import android.app.Activity
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -22,7 +20,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.presentation.compone
 import com.gmail.bogumilmecel2.ui.components.base.ButtonParams
 import com.gmail.bogumilmecel2.ui.components.base.CustomDialog
 import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
-import com.gmail.bogumilmecel2.ui.components.complex.DoubleNumberPicker
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
@@ -33,49 +30,14 @@ fun SummaryScreen(navigator: DestinationsNavigator) {
         val activity = (LocalContext.current as? Activity)
 
         BackHandler {
-            if (state.weightPickerDialogVisible) {
-                viewModel.onEvent(SummaryEvent.DismissedWeightPickerDialog)
-            } else if (state.isAskForWeightPermissionDialogVisible) {
+            if (state.isAskForWeightPermissionDialogVisible) {
                 viewModel.onEvent(SummaryEvent.DismissedWeightDialogsQuestionDialog)
             } else {
                 activity?.finish()
             }
         }
 
-        if (state.weightPickerDialogVisible) {
-            CustomDialog(
-                title = stringResource(id = R.string.summary_weight_dialog_title),
-                content = {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 24.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        val startingValue = state.latestWeightEntry?.value ?: 80.0
-
-                        DoubleNumberPicker(
-                            modifier = Modifier,
-                            value = state.weightPickerCurrentValue,
-                            minValue = startingValue - 50.0,
-                            maxValue = startingValue + 50.0,
-                            onValueChange = {
-                                viewModel.onEvent(SummaryEvent.WeightPickerValueChanged(it))
-                            }
-                        )
-                    }
-                },
-                primaryButtonParams = ButtonParams(
-                    text = stringResource(id = R.string.save),
-                    onClick = { viewModel.onEvent(SummaryEvent.SavedWeightPickerValue) }
-                ),
-                secondaryButtonParams = ButtonParams(
-                    text = stringResource(id = R.string.cancel),
-                    onClick = { viewModel.onEvent(SummaryEvent.DismissedWeightPickerDialog) }
-                ),
-                onDismissRequest = { viewModel.onEvent(SummaryEvent.DismissedWeightPickerDialog) }
-            )
-        } else if (state.isAskForWeightPermissionDialogVisible) {
+        if (state.isAskForWeightPermissionDialogVisible) {
             CustomDialog(
                 title = stringResource(id = R.string.summary_ask_for_weight_dialogs_title),
                 secondaryText = stringResource(id = R.string.summary_ask_for_weight_dialogs_description),
