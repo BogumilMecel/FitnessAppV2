@@ -239,13 +239,7 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideWeightRepository(
-        weightApi: WeightApi,
-        cachedValuesProvider: CachedValuesProvider
-    ): WeightRepository = WeighRepositoryImp(
-        weightApi = weightApi,
-        cachedValuesProvider = cachedValuesProvider
-    )
+    fun provideWeightRepository(weightApi: WeightApi): WeightRepository = WeighRepositoryImp(weightApi = weightApi)
 
     @Singleton
     @Provides
