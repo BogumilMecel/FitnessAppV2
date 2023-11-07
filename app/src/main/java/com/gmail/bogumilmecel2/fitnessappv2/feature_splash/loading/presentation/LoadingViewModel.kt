@@ -1,6 +1,7 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_splash.loading.presentation
 
 import androidx.lifecycle.viewModelScope
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.OfflineMode
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.util.BottomBarScreen
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.IntroductionScreenDestination
@@ -21,20 +22,30 @@ class LoadingViewModel @Inject constructor(
 
     override fun configureOnStart() {
         loaderVisible = true
-        authenticateUser()
+        checkForOfflineMode()
     }
 
-    private fun authenticateUser() {
+    private fun checkForOfflineMode() {
         viewModelScope.launch {
-            when(val result = authenticateUserUseCase()) {
-                is AuthenticateUserUseCase.Result.NavigateToIntroduction -> navigateWithPopUp(IntroductionScreenDestination)
-                is AuthenticateUserUseCase.Result.NavigateToLogin -> navigateWithPopUp(LoginScreenDestination)
-                is AuthenticateUserUseCase.Result.NavigateToMainScreen -> {
-                    when(result.bottomBarScreen) {
-                        BottomBarScreen.Summary -> navigateWithPopUp(SummaryScreenDestination)
-                        else -> {
-                            // TODO: Implement it when setting default starting screen is implemented
-                        }
+            cachedValuesProvider.setOfflineMode(
+                offlineMode = when(connectivityObserver.isOnline()) {
+                    true -> OfflineMode.Online
+                    false -> OfflineMode.Offline
+                }
+            )
+            authenticateUser()
+        }
+    }
+
+    private suspend fun authenticateUser() {
+        when (val result = authenticateUserUseCase()) {
+            is AuthenticateUserUseCase.Result.NavigateToIntroduction -> navigateWithPopUp(IntroductionScreenDestination)
+            is AuthenticateUserUseCase.Result.NavigateToLogin -> navigateWithPopUp(LoginScreenDestination)
+            is AuthenticateUserUseCase.Result.NavigateToMainScreen -> {
+                when (result.bottomBarScreen) {
+                    BottomBarScreen.Summary -> navigateWithPopUp(SummaryScreenDestination)
+                    else -> {
+                        // TODO: Implement it when setting default starting screen is implemented
                     }
                 }
             }
