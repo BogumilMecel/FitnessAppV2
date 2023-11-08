@@ -8,17 +8,21 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavOptions
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.connectivity.ConnectivityObserver
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.ConnectionState
-import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.OfflineMode
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.navigation.NavigationAction
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.CachedValuesProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvider
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.CheckConnectionStateUseCase
 import com.ramcosta.composedestinations.spec.Direction
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.net.ConnectException
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 import javax.inject.Inject
+import javax.net.ssl.SSLHandshakeException
 
 abstract class BaseViewModel<STATE : Any, EVENT : Any, NAV_ARGUMENTS : Any>(
     state: STATE,
@@ -41,6 +45,9 @@ abstract class BaseViewModel<STATE : Any, EVENT : Any, NAV_ARGUMENTS : Any>(
     @Inject
     lateinit var connectivityObserver: ConnectivityObserver
 
+    @Inject
+    lateinit var checkConnectionStateUseCase: CheckConnectionStateUseCase
+
     protected fun showSnackbarError(message: String) {
         viewModelScope.launch {
             ErrorUtils.showSnackbarWithMessage(message = message)
@@ -54,12 +61,12 @@ abstract class BaseViewModel<STATE : Any, EVENT : Any, NAV_ARGUMENTS : Any>(
     fun observeNetworkConnection() {
         viewModelScope.launch {
             connectivityObserver.observe().collectLatest {
-                cachedValuesProvider.setOfflineMode(
-                    offlineMode = when(it) {
-                        ConnectionState.Unavailable -> OfflineMode.Offline
-                        ConnectionState.Available -> OfflineMode.Online
-                    }
-                )
+                val offlineMode = cachedValuesProvider.getOfflineMode()
+                if ((it == ConnectionState.Available && offlineMode.isOffline())
+                    || (it == ConnectionState.Unavailable && offlineMode.isOnline())
+                ) {
+                    checkConnectionStateUseCase()
+                }
             }
         }
     }
@@ -70,20 +77,38 @@ abstract class BaseViewModel<STATE : Any, EVENT : Any, NAV_ARGUMENTS : Any>(
         onError: (Exception) -> Unit = {},
         block: (T) -> Unit
     ) {
-        if (this is Resource.Error) {
-            if (showSnackbar) {
-                showSnackbarError(message = uiText)
+        when (this) {
+            is Resource.ComplexError -> {
+                onError(exception)
+
+                when (exception) {
+                    is SocketTimeoutException,
+                    is ConnectException,
+                    is UnknownHostException,
+                    is SSLHandshakeException -> {
+                        viewModelScope.launch {
+                            checkConnectionStateUseCase()
+                        }
+                    }
+
+                    else -> {
+                        if (showSnackbar) {
+                            showSnackbarError(message = uiText)
+                        }
+                    }
+                }
+            }
+
+            is Resource.Error -> {
+                if (showSnackbar) {
+                    showSnackbarError(message = uiText)
+                }
+            }
+
+            is Resource.Success -> {
+                block(this.data)
             }
         }
-
-        if (this is Resource.ComplexError) {
-            onError(exception)
-        }
-
-        if (this is Resource.Success) {
-            block(this.data)
-        }
-
         finally()
     }
 

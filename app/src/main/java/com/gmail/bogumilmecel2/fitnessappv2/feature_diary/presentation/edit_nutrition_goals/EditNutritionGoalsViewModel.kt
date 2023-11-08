@@ -3,7 +3,6 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.edit_nut
 import androidx.lifecycle.viewModelScope
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValue
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.round
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.AccountScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.feature_account.domain.use_case.EditNutritionGoalUseCases
@@ -83,16 +82,12 @@ class EditNutritionGoalsViewModel @Inject constructor(
     }
 
     private fun saveNutritionValues() {
+        loaderVisible = true
         viewModelScope.launch {
-            when (val resource = useCases.saveNutritionValues(_state.value.nutritionValues)) {
-                is Resource.Error -> {
-                    showSnackbarError(resource.uiText)
-                }
-
-                is Resource.Success -> {
-                    navigateWithPopUp(AccountScreenDestination)
-                }
+            useCases.saveNutritionValues(_state.value.nutritionValues).handle {
+                navigateWithPopUp(AccountScreenDestination)
             }
+            loaderVisible = false
         }
     }
 
