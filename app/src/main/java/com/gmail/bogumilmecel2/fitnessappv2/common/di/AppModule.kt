@@ -16,6 +16,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.DateHolder
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.repository.TokenRepository
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.CalculateNutritionValuesPercentages
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.CheckConnectionStateUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.GetUserCurrencyUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BarcodeScanner
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.DefaultInterceptor
@@ -339,5 +340,15 @@ object AppModule {
         resourceProvider = resourceProvider,
         tokenRepository = tokenRepository,
         validateAuthDataUseCase = validateAuthDataUseCase
+    )
+
+    @Singleton
+    @Provides
+    fun provideCheckConnectionStateUseCase(
+        cachedValuesProvider: CachedValuesProvider,
+        connectivityObserver: ConnectivityObserver
+    ): CheckConnectionStateUseCase = CheckConnectionStateUseCase(
+        cachedValuesProvider = cachedValuesProvider,
+        connectivityObserver = connectivityObserver
     )
 }

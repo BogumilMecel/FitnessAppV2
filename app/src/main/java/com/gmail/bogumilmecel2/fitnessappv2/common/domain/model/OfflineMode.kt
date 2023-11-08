@@ -5,4 +5,5 @@ enum class OfflineMode {
     Online;
 
     fun isOffline() = this == Offline
+    fun isOnline() = this == Online
 }
