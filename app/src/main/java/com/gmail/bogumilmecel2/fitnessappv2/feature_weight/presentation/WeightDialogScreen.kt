@@ -10,6 +10,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.R
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.BaseResult
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.BackHandler
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.util.NonDismissibleDialog
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Constants
@@ -19,14 +20,21 @@ import com.gmail.bogumilmecel2.ui.components.base.CustomDialog
 import com.gmail.bogumilmecel2.ui.components.complex.DoubleNumberPicker
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.result.ResultBackNavigator
 
 @Destination(
     style = NonDismissibleDialog::class,
     navArgsDelegate = WeightDialogNavArguments::class
 )
 @Composable
-fun WeightDialogScreen(navigator: DestinationsNavigator) {
-    hiltViewModel<WeightDialogViewModel>().ViewModelLayout(navigator = navigator) { viewModel, state ->
+fun WeightDialogScreen(
+    navigator: DestinationsNavigator,
+    resultBackNavigator: ResultBackNavigator<BaseResult>,
+) {
+    hiltViewModel<WeightDialogViewModel>().ViewModelLayout(
+        navigator = navigator,
+        resultBackNavigator = resultBackNavigator
+    ) { viewModel, state ->
 
         BackHandler {
             viewModel.onEvent(WeightDialogEvent.ClickedBack)
@@ -52,7 +60,7 @@ fun WeightDialogScreen(navigator: DestinationsNavigator) {
             },
             primaryButtonParams = ButtonParams(
                 text = stringResource(id = R.string.save),
-                onClick = { viewModel.onEvent(WeightDialogEvent.ClickedBack) }
+                onClick = { viewModel.onEvent(WeightDialogEvent.ClickedSave) }
             ),
             secondaryButtonParams = ButtonParams(
                 text = stringResource(id = R.string.cancel),

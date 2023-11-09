@@ -12,8 +12,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.R
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.BaseResult
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.BackHandler
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.ViewModelLayout
+import com.gmail.bogumilmecel2.fitnessappv2.destinations.WeightDialogScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.presentation.components.CaloriesSumSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.presentation.components.LogStreakSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.presentation.components.WeightSection
@@ -22,12 +24,23 @@ import com.gmail.bogumilmecel2.ui.components.base.CustomDialog
 import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.result.NavResult
+import com.ramcosta.composedestinations.result.ResultRecipient
 
 @Destination
 @Composable
-fun SummaryScreen(navigator: DestinationsNavigator) {
+fun SummaryScreen(
+    navigator: DestinationsNavigator,
+    resultRecipient: ResultRecipient<WeightDialogScreenDestination, BaseResult>
+) {
     hiltViewModel<SummaryViewModel>().ViewModelLayout(navigator = navigator) { viewModel, state ->
         val activity = (LocalContext.current as? Activity)
+
+        resultRecipient.onNavResult { result ->
+            if (result is NavResult.Value && result.value == BaseResult.Success) {
+                (viewModel as? SummaryViewModel)?.initWeightData()
+            }
+        }
 
         BackHandler {
             if (state.isAskForWeightPermissionDialogVisible) {

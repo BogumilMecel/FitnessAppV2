@@ -2,7 +2,8 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_weight.presentation
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.BaseResult
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseResultViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.WeightDialogScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.use_case.AddWeightEntryUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,7 +15,7 @@ import javax.inject.Inject
 class WeightDialogViewModel @Inject constructor(
     private val addWeightEntryUseCase: AddWeightEntryUseCase,
     savedStateHandle: SavedStateHandle
-): BaseViewModel<WeightDialogState, WeightDialogEvent, WeightDialogNavArguments>(
+): BaseResultViewModel<WeightDialogState, WeightDialogEvent, WeightDialogNavArguments, BaseResult>(
     navArguments = WeightDialogScreenDestination.argsFrom(savedStateHandle),
     state = WeightDialogState(
         currentWeight = WeightDialogScreenDestination.argsFrom(savedStateHandle).startingValue
@@ -49,7 +50,7 @@ class WeightDialogViewModel @Inject constructor(
             addWeightEntryUseCase(value = currentValue).handle(
                 finally = { loaderVisible = false }
             ) {
-                navigateUp()
+                resultBack.send(BaseResult.Success)
             }
         }
     }

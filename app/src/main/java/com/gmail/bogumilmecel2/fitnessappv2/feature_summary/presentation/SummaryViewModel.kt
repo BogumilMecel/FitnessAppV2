@@ -57,6 +57,14 @@ class SummaryViewModel @Inject constructor(
         }
     }
 
+    fun initWeightData() {
+        viewModelScope.launch(Dispatchers.IO) {
+            latestWeightEntry = cachedValuesProvider.getLatestWeightEntry()
+            checkIfShouldAskForWeightDialogs()
+            _state.update { it.copy(latestWeightEntry = latestWeightEntry) }
+        }
+    }
+
     private fun handleWeightDialogsAnswer(accepted: Boolean?) {
         viewModelScope.launch {
             summaryUseCases.handleWeightDialogsQuestionUseCase(accepted = accepted).handle(
@@ -106,14 +114,6 @@ class SummaryViewModel @Inject constructor(
                     it.copy(isAskForWeightPermissionDialogVisible = true)
                 }
             }
-        }
-    }
-
-    private fun initWeightData() {
-        viewModelScope.launch(Dispatchers.IO) {
-            latestWeightEntry = cachedValuesProvider.getLatestWeightEntry()
-            checkIfShouldAskForWeightDialogs()
-            _state.update { it.copy(latestWeightEntry = latestWeightEntry) }
         }
     }
 
