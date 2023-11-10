@@ -9,7 +9,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.DiaryEntr
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductPrice
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.RecipePriceResponse
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.UserDiaryItemsResponse
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntryPostRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.product.NewPriceRequest
@@ -61,18 +60,8 @@ interface DiaryRepository {
     suspend fun getUserDiaryItems(): Resource<UserDiaryItemsResponse>
     suspend fun insertUserProductsLocally(userProducts: List<Product>): Resource<Unit>
     suspend fun insertUserRecipesLocally(userRecipes: List<Recipe>): Resource<Unit>
-    suspend fun getLocalUserRecipes(
-        userId: String,
-        searchText: String?,
-        limit: Int,
-        skip: Int
-    ): Resource<List<Recipe>>
-    suspend fun getLocalUserProducts(
-        userId: String,
-        searchText: String?,
-        limit: Int,
-        skip: Int
-    ): Resource<List<Product>>
+    suspend fun getUserProducts(): Resource<List<Product>>
+    suspend fun getUserRecipes(): Resource<List<Recipe>>
     suspend fun clearLocalData(userId: String): Resource<Unit>
     suspend fun insertOfflineDiaryEntry(diaryItem: DiaryItem): Resource<Unit>
     suspend fun cacheProduct(product: Product): Resource<Unit>
