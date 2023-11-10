@@ -8,13 +8,10 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.repository.TokenReposi
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.util.BottomBarScreen
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.model.User
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetUserDiaryAndSaveItLocallyUseCase
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetUserDiaryEntriesExperimentalUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_splash.domain.repository.LoadingRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
-import io.mockk.mockkClass
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import org.junit.jupiter.params.ParameterizedTest
@@ -82,16 +79,10 @@ class AuthenticateUserUseCaseTest : BaseTest() {
 
     private val loadingRepository = mockk<LoadingRepository>()
     private val tokenRepository = mockk<TokenRepository>()
-    private val getUserDiaryAndSaveItLocallyUseCase =
-        mockkClass(GetUserDiaryAndSaveItLocallyUseCase::class)
-    private val getUserDiaryEntriesExperimentalUseCase =
-        mockkClass(GetUserDiaryEntriesExperimentalUseCase::class)
     private val authenticateUserUseCase = AuthenticateUserUseCase(
         cachedValuesProvider = cachedValuesProvider,
         loadingRepository = loadingRepository,
         tokenRepository = tokenRepository,
-        getUserDiaryAndSaveItLocallyUseCase = getUserDiaryAndSaveItLocallyUseCase,
-        getUserDiaryEntriesExperimentalUseCase = getUserDiaryEntriesExperimentalUseCase
     )
 
     @Test
@@ -136,8 +127,6 @@ class AuthenticateUserUseCaseTest : BaseTest() {
             user?.let {
                 coEvery { cachedValuesProvider.saveUser(user) } returns Unit
             }
-            coEvery { getUserDiaryAndSaveItLocallyUseCase() } returns Resource.Success(Unit)
-            coEvery { getUserDiaryEntriesExperimentalUseCase() } returns Resource.Success(Unit)
 
             assertEquals(
                 expected = if (user == null) {
@@ -154,11 +143,6 @@ class AuthenticateUserUseCaseTest : BaseTest() {
                 coVerify(exactly = 1) {
                     cachedValuesProvider.saveUser(user)
                 }
-            }
-
-            coVerify(exactly = if (user?.nutritionValues != null && user.userInformation != null) 1 else 0) {
-                getUserDiaryAndSaveItLocallyUseCase()
-                getUserDiaryEntriesExperimentalUseCase()
             }
         }
 

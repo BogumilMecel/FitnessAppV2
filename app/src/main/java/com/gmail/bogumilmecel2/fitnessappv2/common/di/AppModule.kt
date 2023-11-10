@@ -29,9 +29,11 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.data.repository.AuthRep
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.repository.AuthRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.use_case.LogInUserUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.data.api.DiaryApi
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.data.repository.remote.DiaryRepositoryImp
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.data.repository.DiaryRepositoryImp
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.data.repository.OfflineDiaryRepositoryImp
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.dao.UserDiaryItemsDao
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.OfflineDiaryRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CalculateSkipUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CreateSearchItemParamsFromIngredientUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CreateSearchItemParamsFromProductUseCase
@@ -350,5 +352,13 @@ object AppModule {
     ): CheckConnectionStateUseCase = CheckConnectionStateUseCase(
         cachedValuesProvider = cachedValuesProvider,
         connectivityObserver = connectivityObserver
+    )
+
+    @Singleton
+    @Provides
+    fun provideOfflineDiaryRepository(
+        userDiaryItemsDao: UserDiaryItemsDao
+    ): OfflineDiaryRepository = OfflineDiaryRepositoryImp(
+        userDiaryItemsDao = userDiaryItemsDao
     )
 }

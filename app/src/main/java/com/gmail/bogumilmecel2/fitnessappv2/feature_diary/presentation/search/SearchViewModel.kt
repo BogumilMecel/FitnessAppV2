@@ -276,7 +276,7 @@ class SearchViewModel @Inject constructor(
     private fun fetchUserRecipes() {
         viewModelScope.launch(Dispatchers.IO) {
             loaderVisible = true
-            searchDiaryUseCases.getLocalUserRecipesUseCase(
+            searchDiaryUseCases.getOfflineUserRecipesUseCase(
                 page = userRecipesPage,
                 searchText = searchText
             ).handle(
@@ -291,7 +291,7 @@ class SearchViewModel @Inject constructor(
     private fun fetchUserProducts() {
         viewModelScope.launch(Dispatchers.IO) {
             loaderVisible = true
-            searchDiaryUseCases.getLocalUserProductsUseCase(
+            searchDiaryUseCases.getOfflineUserProductsUseCase(
                 page = userProductsPage,
                 searchText = searchText
             ).handle(
