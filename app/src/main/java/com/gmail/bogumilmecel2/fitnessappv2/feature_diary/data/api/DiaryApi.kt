@@ -123,8 +123,14 @@ interface DiaryApi {
     ): RecipePriceResponse?
 
     @GET("/userData/products")
-    suspend fun getUserProducts(): List<Product>
+    suspend fun getUserProducts(latestTimestamp: Long?): List<Product>
 
     @GET("/userData/recipes")
-    suspend fun getUserRecipes(): List<Recipe>
+    suspend fun getUserRecipes(latestTimestamp: Long?): List<Recipe>
+
+    @GET("/userData/product_diary")
+    suspend fun getUserProductDiaryEntries(latestTimestamp: Long?): List<ProductDiaryEntry>
+
+    @GET("/userData/recipe_diary")
+    suspend fun getUserRecipeDiaryEntries(latestTimestamp: Long?): List<RecipeDiaryEntry>
 }
