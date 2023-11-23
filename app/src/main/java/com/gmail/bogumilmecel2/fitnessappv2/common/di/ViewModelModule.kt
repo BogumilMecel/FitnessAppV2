@@ -29,10 +29,11 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.Creat
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GenerateNewRecipeSearchTitleUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetDiaryHistoryUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetPriceUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetProductDiaryAndSaveOfflineUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetProductsAndSaveOfflineUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetRecipeDiaryAndSaveOfflineUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetRecipePriceFromIngredientsUseCase
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetUserDiaryAndSaveOfflineUseCase
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetUserProductsAndSaveOfflineUseCase
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetUserRecipesAndSaveOfflineUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetRecipesAndSaveOfflineUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.ShouldDisplayNextPageUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.CreateLongClickedDiaryItemParamsUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.DeleteDiaryEntryUseCase
@@ -167,7 +168,7 @@ object ViewModelModule {
             createSearchItemParamsFromRecipeUseCase = CreateSearchItemParamsFromRecipeUseCase(resourceProvider),
             createSearchItemParamsFromProductUseCase = createSearchItemParamsFromProductUseCase,
             createSearchItemParamsFromProductDiaryEntryUseCase = CreateSearchItemParamsFromProductDiaryEntryUseCase(resourceProvider),
-            getDiaryHistoryUseCase = GetDiaryHistoryUseCase(diaryRepository),
+            getDiaryHistoryUseCase = GetDiaryHistoryUseCase(offlineDiaryRepository),
             getProductUseCase = getProductUseCase,
             getRecipeUseCase = getRecipeUseCase,
             shouldDisplayNextPageUseCase = ShouldDisplayNextPageUseCase(),
@@ -188,11 +189,12 @@ object ViewModelModule {
     @Provides
     fun provideDiaryUseCases(
         diaryRepository: DiaryRepository,
+        offlineDiaryRepository: OfflineDiaryRepository,
         resourceProvider: ResourceProvider,
         getProductUseCase: GetProductUseCase,
         getRecipeUseCase: GetRecipeUseCase
     ): DiaryUseCases = DiaryUseCases(
-        getOfflineDiaryEntriesUseCase = GetOfflineDiaryEntriesUseCase(diaryRepository = diaryRepository),
+        getOfflineDiaryEntriesUseCase = GetOfflineDiaryEntriesUseCase(offlineDiaryRepository = offlineDiaryRepository),
         getOnlineDiaryEntriesUseCase = GetOnlineDiaryEntriesUseCase(diaryRepository = diaryRepository),
         deleteDiaryEntryUseCase = DeleteDiaryEntryUseCase(diaryRepository = diaryRepository),
         sumNutritionValuesUseCase = SumNutritionValuesUseCase(),
@@ -321,13 +323,10 @@ object ViewModelModule {
         cachedValuesProvider: CachedValuesProvider,
         loadingRepository: LoadingRepository,
         tokenRepository: TokenRepository,
-        diaryRepository: DiaryRepository,
     ): AuthenticateUserUseCase = AuthenticateUserUseCase(
         cachedValuesProvider = cachedValuesProvider,
         loadingRepository = loadingRepository,
         tokenRepository = tokenRepository,
-        getUserDiaryAndSaveItLocallyUseCase = GetUserDiaryAndSaveItLocallyUseCase(diaryRepository),
-        getUserDiaryEntriesExperimentalUseCase = GetUserDiaryEntriesExperimentalUseCase(diaryRepository)
     )
 
     @ViewModelScoped
@@ -339,5 +338,41 @@ object ViewModelModule {
         weightRepository = weightRepository,
         cachedValuesProvider = cachedValuesProvider,
         checkIfWeightIsValidUseCase = CheckIfWeightIsValidUseCase()
+    )
+
+    @ViewModelScoped
+    @Provides
+    fun provideLoadingUseCases(
+        cachedValuesProvider: CachedValuesProvider,
+        loadingRepository: LoadingRepository,
+        tokenRepository: TokenRepository,
+        diaryRepository: DiaryRepository,
+        offlineDiaryRepository: OfflineDiaryRepository
+    ): LoadingUseCases = LoadingUseCases(
+        authenticateUserUseCase = AuthenticateUserUseCase(
+            cachedValuesProvider = cachedValuesProvider,
+            loadingRepository = loadingRepository,
+            tokenRepository = tokenRepository
+        ),
+        getProductsAndSaveOfflineUseCase = GetProductsAndSaveOfflineUseCase(
+            diaryRepository = diaryRepository,
+            cachedValuesProvider = cachedValuesProvider,
+            offlineDiaryRepository = offlineDiaryRepository
+        ),
+        getRecipesAndSaveOfflineUseCase = GetRecipesAndSaveOfflineUseCase(
+            cachedValuesProvider = cachedValuesProvider,
+            offlineDiaryRepository = offlineDiaryRepository,
+            diaryRepository = diaryRepository
+        ),
+        getProductDiaryAndSaveOfflineUseCase = GetProductDiaryAndSaveOfflineUseCase(
+            diaryRepository = diaryRepository,
+            cachedValuesProvider = cachedValuesProvider,
+            offlineDiaryRepository = offlineDiaryRepository
+        ),
+        getRecipeDiaryAndSaveOfflineUseCase = GetRecipeDiaryAndSaveOfflineUseCase(
+            cachedValuesProvider = cachedValuesProvider,
+            offlineDiaryRepository = offlineDiaryRepository,
+            diaryRepository = diaryRepository
+        )
     )
 }

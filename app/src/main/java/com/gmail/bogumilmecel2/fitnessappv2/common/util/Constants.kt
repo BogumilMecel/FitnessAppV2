@@ -11,6 +11,7 @@ object Constants {
     object Query {
         const val SEARCH_TEXT = "search_text"
         const val PAGE = "page"
+        const val LATEST_TIMESTAMP = "latest_timestamp"
     }
 
     object HttpStatusCodes {

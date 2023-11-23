@@ -13,9 +13,12 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import kotlin.test.assertIs
 
-class GetUserDiaryAndSaveItLocallyUseCaseTest: BaseTest() {
+class GetProductsAndSaveOfflineUseCaseTest: BaseTest() {
     private val diaryRepository = mockk<DiaryRepository>()
-    private val getUserDiaryAndSaveItLocallyUseCase = GetUserDiaryAndSaveItLocallyUseCase(diaryRepository = diaryRepository)
+    private val getProductsAndSaveOfflineUseCase = GetProductsAndSaveOfflineUseCase(
+        diaryRepository = diaryRepository,
+        cachedValuesProvider = cachedValuesProvider
+    )
 
     @Test
     fun `Check if diary repository returns resource error when getting diary items, resource error is returned`() = runTest {
@@ -86,5 +89,5 @@ class GetUserDiaryAndSaveItLocallyUseCaseTest: BaseTest() {
         userRecipes = recipes
     )
 
-    private suspend fun callTestedMethod() = getUserDiaryAndSaveItLocallyUseCase()
+    private suspend fun callTestedMethod() = getProductsAndSaveOfflineUseCase()
 }

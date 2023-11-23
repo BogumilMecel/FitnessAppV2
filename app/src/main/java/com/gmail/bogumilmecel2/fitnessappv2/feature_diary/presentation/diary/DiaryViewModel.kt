@@ -235,16 +235,16 @@ class DiaryViewModel @Inject constructor(
 
     private fun getDiaryEntries(withOnlineDiaryEntries: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
-            diaryUseCases.getOfflineDiaryEntriesUseCase(date = dateHolder.getLocalDateString())
-                .handle { diaryEntries ->
-                    this@DiaryViewModel.diaryEntries = diaryEntries.toMutableList()
-                    groupDiaryEntries()
-                    recalculateTotalNutritionValues()
+            diaryEntries = diaryUseCases.getOfflineDiaryEntriesUseCase(
+                date = dateHolder.getLocalDateString()
+            ).toMutableList()
 
-                    if (withOnlineDiaryEntries) {
-                        getOnlineDiaryEntries()
-                    }
-                }
+            groupDiaryEntries()
+            recalculateTotalNutritionValues()
+
+            if (withOnlineDiaryEntries) {
+                getOnlineDiaryEntries()
+            }
         }
     }
 

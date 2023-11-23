@@ -22,9 +22,9 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.Recip
 interface DiaryRepository {
     suspend fun getDiaryEntries(date: String): Resource<DiaryEntriesResponse>
     suspend fun getDiaryEntriesComplete(): Resource<DiaryEntriesResponse>
-    suspend fun getOfflineDiaryEntries(date: String): Resource<DiaryEntriesResponse>
+    suspend fun getProductDiaryEntries(latestTimestamp: Long?): Resource<List<ProductDiaryEntry>>
+    suspend fun getRecipeDiaryEntries(latestTimestamp: Long?): Resource<List<RecipeDiaryEntry>>
     suspend fun insertOfflineDiaryEntries(diaryEntriesResponse: DiaryEntriesResponse): Resource<Unit>
-    suspend fun getDiaryEntriesCount(): Resource<Int>
     suspend fun searchForProducts(searchText: String, page: Int): Resource<List<Product>>
     suspend fun searchForProductWithBarcode(barcode: String): Resource<Product?>
     suspend fun searchForRecipes(searchText: String): Resource<List<Recipe>>
@@ -56,13 +56,10 @@ interface DiaryRepository {
     ): Resource<ProductPrice>
 
     suspend fun addNewRecipe(newRecipeRequest: NewRecipeRequest): Resource<Recipe>
-    suspend fun getOfflineDiaryEntries(limit: Int, offset: Int, searchText: String): Resource<List<ProductDiaryEntry>>
-    suspend fun getUserDiaryItems(): Resource<UserDiaryItemsResponse>
     suspend fun insertUserProductsLocally(userProducts: List<Product>): Resource<Unit>
     suspend fun insertUserRecipesLocally(userRecipes: List<Recipe>): Resource<Unit>
-    suspend fun getUserProducts(): Resource<List<Product>>
-    suspend fun getUserRecipes(): Resource<List<Recipe>>
-    suspend fun clearLocalData(userId: String): Resource<Unit>
+    suspend fun getUserProducts(latestTimestamp: Long?): Resource<List<Product>>
+    suspend fun getUserRecipes(latestTimestamp: Long?): Resource<List<Recipe>>
     suspend fun insertOfflineDiaryEntry(diaryItem: DiaryItem): Resource<Unit>
     suspend fun cacheProduct(product: Product): Resource<Unit>
     suspend fun cacheRecipe(recipe: Recipe): Resource<Unit>

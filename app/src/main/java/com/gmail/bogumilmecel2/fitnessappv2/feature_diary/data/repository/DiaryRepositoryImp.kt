@@ -12,7 +12,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.DiaryEntr
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductPrice
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.RecipePriceResponse
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.UserDiaryItemsResponse
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntryPostRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.product.NewPriceRequest
@@ -32,6 +31,18 @@ class DiaryRepositoryImp(
     override suspend fun getDiaryEntries(date: String): Resource<DiaryEntriesResponse> {
         return handleRequest {
             diaryApi.getDiaryEntries(date = date)
+        }
+    }
+
+    override suspend fun getProductDiaryEntries(latestTimestamp: Long?): Resource<List<ProductDiaryEntry>> {
+        return handleRequest {
+            diaryApi.getUserProductDiaryEntries(latestTimestamp)
+        }
+    }
+
+    override suspend fun getRecipeDiaryEntries(latestTimestamp: Long?): Resource<List<RecipeDiaryEntry>> {
+        return handleRequest {
+            diaryApi.getUserRecipeDiaryEntries(latestTimestamp)
         }
     }
 
@@ -108,16 +119,6 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun getOfflineDiaryEntries(limit: Int, offset: Int, searchText: String): Resource<List<ProductDiaryEntry>> {
-        return handleRequest {
-            userDiaryItemsDao.getProductDiaryEntriesForSearch(
-                limit = limit,
-                offset = offset,
-                searchText = searchText
-            )
-        }
-    }
-
     override suspend fun editProductDiaryEntry(productDiaryEntry: ProductDiaryEntry): Resource<ProductDiaryEntry> {
         return handleRequest {
             diaryApi.editProductDiaryEntry(productDiaryEntry = productDiaryEntry)
@@ -189,43 +190,27 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun getUserDiaryItems(): Resource<UserDiaryItemsResponse> {
+    override suspend fun getUserProducts(latestTimestamp: Long?): Resource<List<Product>> {
         return handleRequest {
-            diaryApi.getUserDiaryItems()
+            diaryApi.getUserProducts(latestTimestamp)
+        }
+    }
+
+    override suspend fun getUserRecipes(latestTimestamp: Long?): Resource<List<Recipe>> {
+        return handleRequest {
+            diaryApi.getUserRecipes(latestTimestamp)
         }
     }
 
     override suspend fun insertUserProductsLocally(userProducts: List<Product>): Resource<Unit> {
         return handleRequest {
-            userDiaryItemsDao.insertUserProducts(userProducts)
+            userDiaryItemsDao.insertProducts(userProducts)
         }
     }
 
     override suspend fun insertUserRecipesLocally(userRecipes: List<Recipe>): Resource<Unit> {
         return handleRequest {
-            userDiaryItemsDao.insertUserRecipes(userRecipes)
-        }
-    }
-
-    override suspend fun clearLocalData(userId: String): Resource<Unit> {
-        return handleRequest {
-            userDiaryItemsDao.deleteUserProducts(userId)
-            userDiaryItemsDao.deleteUserRecipes(userId)
-        }
-    }
-
-    override suspend fun getOfflineDiaryEntries(date: String): Resource<DiaryEntriesResponse> {
-        return handleRequest {
-            DiaryEntriesResponse(
-                productDiaryEntries = userDiaryItemsDao.getProductDiaryEntries(date),
-                recipeDiaryEntries = userDiaryItemsDao.getRecipeDiaryEntries(date)
-            )
-        }
-    }
-
-    override suspend fun getDiaryEntriesCount(): Resource<Int> {
-        return handleRequest {
-            userDiaryItemsDao.getRecipeDiaryEntryCount() + userDiaryItemsDao.getProductDiaryEntryCount()
+            userDiaryItemsDao.insertRecipes(userRecipes)
         }
     }
 
