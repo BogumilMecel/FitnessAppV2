@@ -13,7 +13,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkClass
 import kotlinx.coroutines.test.runTest
-import kotlin.test.Test
+import org.junit.Test
 
 internal class RegisterUserUseCaseTest : BaseTest() {
 
