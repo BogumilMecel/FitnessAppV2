@@ -1,93 +1,86 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases
 
 import com.gmail.bogumilmecel2.fitnessappv2.common.BaseTest
+import com.gmail.bogumilmecel2.fitnessappv2.common.MockConstants
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.UserDiaryItemsResponse
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.OfflineDiaryRepository
 import io.mockk.coEvery
-import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
-import kotlin.test.assertIs
 
-class GetProductsAndSaveOfflineUseCaseTest: BaseTest() {
+class GetProductsAndSaveOfflineUseCaseTest : BaseTest() {
     private val diaryRepository = mockk<DiaryRepository>()
+    private val offlineDiaryRepository = mockk<OfflineDiaryRepository>()
     private val getProductsAndSaveOfflineUseCase = GetProductsAndSaveOfflineUseCase(
         diaryRepository = diaryRepository,
-        cachedValuesProvider = cachedValuesProvider
+        cachedValuesProvider = cachedValuesProvider,
+        offlineDiaryRepository = offlineDiaryRepository
     )
 
     @Test
-    fun `Check if diary repository returns resource error when getting diary items, resource error is returned`() = runTest {
-        mockGetItemsResource(Resource.Error())
-        assertIs<Resource.Error<Unit>>(callTestedMethod())
+    fun `Check if user is in offline mode resource error is returned`() = runTest {
+        mockData(online = false)
+        callTestedMethod().assertIsError()
     }
 
     @Test
-    fun `Check if diary repository returns empty items, items are not saved`() = runTest {
-        mockGetItemsResource()
-        verifyInsertMethods(
-            expected = 0,
-            products = emptyList(),
-            recipes = emptyList()
-        )
-        assertIs<Resource.Success<Unit>>(callTestedMethod())
-    }
+    fun `Check if offline diary repository returns resource error when getting latest product, resource error is returned`() =
+        runTest {
+            mockData(getOfflineProductsResource = Resource.Error())
+            callTestedMethod().assertIsError()
+        }
 
     @Test
-    fun `Check if diary repository returns not empty items, items are saved`() = runTest {
-        val products = listOf(Product())
-        val recipes = listOf(Recipe())
-        mockGetItemsResource(
-            resource = Resource.Success(
-                data = mockUserDiaryItemsResponse(
-                    products = products,
-                    recipes = recipes
-                )
-            )
-        )
-        coEvery { diaryRepository.insertUserProductsLocally(products) } returns Resource.Success(Unit)
-        coEvery { diaryRepository.insertUserRecipesLocally(recipes) } returns Resource.Success(Unit)
-        assertIs<Resource.Success<Unit>>(callTestedMethod())
-        verifyInsertMethods(
-            expected = 1,
-            products = products,
-            recipes = recipes
-        )
-    }
+    fun `Check if diary repository returns error when getting products, resource error is returned`() =
+        runTest {
+            mockData(getOnlineProductsResource = Resource.Error())
+            callTestedMethod().assertIsError()
+        }
 
-    private fun verifyInsertMethods(
-        products: List<Product>,
-        recipes: List<Recipe>,
-        expected: Int
+    @Test
+    fun `Check if offline diary repository returns resource error when inserting products, resource error is returned`() =
+        runTest {
+            mockData(insertingResource = Resource.Error())
+            callTestedMethod().assertIsError()
+        }
+
+    @Test
+    fun `Check if offline diary repository returns resource success when inserting products, resource success is returned`() =
+        runTest {
+            mockData()
+            callTestedMethod().assertIsSuccess()
+        }
+
+    private fun mockData(
+        online: Boolean = true,
+        getOfflineProductsResource: Resource<List<Product>> = Resource.Success(createOfflineProductsList()),
+        getOnlineProductsResource: Resource<List<Product>> = Resource.Success(createOnlineProductsList()),
+        insertingResource: Resource<Unit> = Resource.Success(Unit)
     ) {
-        coVerify(exactly = expected) {
-            diaryRepository.insertUserProductsLocally(products)
-            diaryRepository.insertUserRecipesLocally(recipes)
+        mockUserId()
+        mockOfflineMode(online = online)
+        coEvery {
+            offlineDiaryRepository.getProducts(
+                limit = 1,
+                userId = MockConstants.USER_ID
+            )
+        } returns getOfflineProductsResource
+        coEvery { diaryRepository.getUserProducts(latestTimestamp = MockConstants.TIMESTAMP) } returns getOnlineProductsResource
+        getOnlineProductsResource.data?.let {
+            coEvery { offlineDiaryRepository.insertProducts(it) } returns insertingResource
         }
     }
 
-    private fun mockGetItemsResource(
-        resource: Resource<UserDiaryItemsResponse> = Resource.Success(
-            data = mockUserDiaryItemsResponse(
-                products = emptyList(),
-                recipes = emptyList()
-            )
-        )
-    ) {
-        coEvery { diaryRepository.getUserDiaryItems() } returns resource
-    }
+    private fun createOfflineProductsList() = listOf(Product(utcTimestamp = MockConstants.TIMESTAMP))
 
-    private fun mockUserDiaryItemsResponse(
-        products: List<Product>,
-        recipes: List<Recipe>
-    ) = UserDiaryItemsResponse(
-        userProducts = products,
-        userRecipes = recipes
-    )
+    private fun createOnlineProductsList() = buildList {
+        repeat(4) {
+            add(Product(utcTimestamp = MockConstants.TIMESTAMP * it))
+        }
+    }
 
     private suspend fun callTestedMethod() = getProductsAndSaveOfflineUseCase()
 }
