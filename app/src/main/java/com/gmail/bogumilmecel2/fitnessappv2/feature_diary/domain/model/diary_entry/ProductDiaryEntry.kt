@@ -59,6 +59,10 @@ data class ProductDiaryEntry(
     @SerialName("weight")
     @ColumnInfo("weight")
     val weight: Int = 0,
+
+    @SerialName("deleted")
+    @ColumnInfo("deleted")
+    val deleted: Boolean = false
 ) : DiaryItem {
     @Composable
     override fun getDisplayValue() = "${this.weight} ${stringResource(id = this.productMeasurementUnit.getStringRes())}"

@@ -55,6 +55,10 @@ data class RecipeDiaryEntry(
     @SerialName("servings")
     @ColumnInfo("servings")
     val servings: Int = 0,
+
+    @SerialName("deleted")
+    @ColumnInfo("deleted")
+    val deleted: Boolean = false
 ) : DiaryItem {
     @Composable
     override fun getDisplayValue() = pluralStringResource(
