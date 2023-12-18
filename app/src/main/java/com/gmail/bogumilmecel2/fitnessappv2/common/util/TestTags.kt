@@ -7,6 +7,10 @@ object TestTags {
         const val PRIMARY_BUTTON = "primary_button"
     }
 
+    object Login {
+        const val FORGOT_PASSWORD = "forgot_password"
+    }
+
     object RegisterScreen {
         const val USERNAME = "username"
         const val CONFIRM_PASSWORD = "confirm_password"

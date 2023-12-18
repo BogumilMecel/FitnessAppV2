@@ -330,3 +330,4 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 /.idea/deploymentTargetDropDown.xml
+/.idea/androidTestResultsUserPreferences.xml

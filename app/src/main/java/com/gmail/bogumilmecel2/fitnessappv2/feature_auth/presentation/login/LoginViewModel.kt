@@ -6,7 +6,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.destinations.RegisterScreenDestinati
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.ResetPasswordScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.SplashScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.use_case.AuthUseCases
-import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.presentation.util.AuthEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.update
@@ -16,14 +15,14 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val authUseCases: AuthUseCases
-) : BaseViewModel<LoginState, AuthEvent, Unit>(
+) : BaseViewModel<LoginState, LoginEvent, Unit>(
     state = LoginState(),
     navArguments = Unit
 ) {
 
-    override fun onEvent(event: AuthEvent) {
+    override fun onEvent(event: LoginEvent) {
         when (event) {
-            is AuthEvent.EnteredEmail -> {
+            is LoginEvent.EnteredEmail -> {
                 _state.update {
                     it.copy(
                         email = event.email
@@ -31,7 +30,7 @@ class LoginViewModel @Inject constructor(
                 }
             }
 
-            is AuthEvent.EnteredPassword -> {
+            is LoginEvent.EnteredPassword -> {
                 _state.update {
                     it.copy(
                         password = event.password
@@ -39,15 +38,15 @@ class LoginViewModel @Inject constructor(
                 }
             }
 
-            is AuthEvent.RegisterLoginButtonClicked -> {
+            is LoginEvent.RegisterLoginButtonClicked -> {
                 navigateTo(RegisterScreenDestination)
             }
 
-            is AuthEvent.ForgotButtonClicked -> {
+            is LoginEvent.ForgotButtonClicked -> {
                 navigateTo(ResetPasswordScreenDestination)
             }
 
-            else -> {
+            is LoginEvent.LoginButtonClicked -> {
                 viewModelScope.launch(Dispatchers.IO) {
                     _state.update {
                         it.copy(isLoading = true)
