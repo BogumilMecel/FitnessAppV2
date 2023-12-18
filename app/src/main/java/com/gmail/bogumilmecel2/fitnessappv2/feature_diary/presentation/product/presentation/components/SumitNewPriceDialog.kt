@@ -27,8 +27,8 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.Currency
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.MeasurementUnit
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.ButtonStyle
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.CustomButton
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.HeightSpacer
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.WidthSpacer
+import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
+import com.gmail.bogumilmecel2.ui.components.base.WidthSpacer
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.DarkGreyElevation2
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.TextGrey
 import com.gmail.bogumilmecel2.fitnessappv2.components.CustomBasicTextField

@@ -14,6 +14,7 @@ data class FitnessAppTypography(
     val Button: TextStyle = text(fontSize = 14.sp, fontWeight = FontWeight.Medium),
     val ParagraphLarge: TextStyle = paragraph(fontSize = 16.sp),
     val ParagraphMedium: TextStyle = paragraph(fontSize = 14.sp),
+    val ParagraphSmall: TextStyle = paragraph(fontSize = 12.sp),
     val HeaderLarge: TextStyle = header(fontSize = 20.sp),
     val HeaderSmall: TextStyle = header(fontSize = 16.sp)
 )

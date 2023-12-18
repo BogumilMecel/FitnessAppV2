@@ -25,8 +25,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.gmail.bogumilmecel2.fitnessappv2.R
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.HeightSpacer
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.WidthSpacer
+import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
+import com.gmail.bogumilmecel2.ui.components.base.WidthSpacer
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.BlueViolet3
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.LightGreen3
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.OrangeYellow3

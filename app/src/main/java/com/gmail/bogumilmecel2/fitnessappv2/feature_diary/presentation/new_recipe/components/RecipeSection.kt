@@ -1,24 +1,20 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_recipe.components
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.gmail.bogumilmecel2.fitnessappv2.R
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.HeightSpacer
-import com.gmail.bogumilmecel2.fitnessappv2.components.BackArrow
+import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_recipe.NewRecipeEvent
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_recipe.NewRecipeState
+import com.gmail.bogumilmecel2.ui.components.complex.HeaderRow
 
 @Composable
 fun RecipeSection(
@@ -31,22 +27,12 @@ fun RecipeSection(
             .fillMaxSize()
             .verticalScroll(scrollState)
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-        ) {
-            BackArrow(
-                modifier = Modifier.align(Alignment.CenterStart)
-            ) {
+        HeaderRow(
+            middlePrimaryText = stringResource(id = R.string.add_recipe),
+            onBackPressed = {
                 onEvent(NewRecipeEvent.ClickedBackArrow)
             }
-
-            Text(
-                text = stringResource(id = R.string.add_recipe),
-                style = MaterialTheme.typography.h2,
-                modifier = Modifier.align(Alignment.Center)
-            )
-        }
+        )
 
         HeightSpacer(height = 10.dp)
 
