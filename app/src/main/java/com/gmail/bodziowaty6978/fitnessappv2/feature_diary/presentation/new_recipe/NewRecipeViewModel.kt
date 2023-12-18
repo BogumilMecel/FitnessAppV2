@@ -3,11 +3,12 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_rec
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
+import com.gmail.bodziowaty6978.fitnessappv2.common.util.extensions.toValidInt
 import com.gmail.bodziowaty6978.fitnessappv2.destinations.NewRecipeScreenDestination
 import com.gmail.bodziowaty6978.fitnessappv2.destinations.RecipeScreenDestination
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Price
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.calculateNutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.Ingredient
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.RecipePrice
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.new_recipe.NewRecipeUseCases
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_recipe.util.SelectedNutritionType
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -198,27 +199,42 @@ class NewRecipeViewModel @Inject constructor(
             with(_state.value) {
                 selectedProduct?.let { product ->
                     productWeight.toIntOrNull()?.let { weight ->
-                        val newIngredients = ingredients.toMutableList()
-                        newIngredients.removeIf { it.productId == product.id }
-                        newIngredients.add(
-                            Ingredient(
-                                weight = weight,
-                                productName = product.name,
-                                measurementUnit = product.measurementUnit,
-                                nutritionValues = product.calculateNutritionValues(weight),
-                                productId = product.id
-                            )
+                        val ingredient = Ingredient(
+                            weight = weight,
+                            productName = product.name,
+                            measurementUnit = product.measurementUnit,
+                            nutritionValues = product.calculateNutritionValues(weight),
+                            productId = product.id
                         )
-                        _state.update {
-                            it.copy(
-                                ingredients = newIngredients
-                            )
-                        }
-                        recalculatePrice(price = selectedProduct.price, weight = weight)
+                        ingredients.removeIf { it.productId == ingredient.productId }
+                        ingredients.add(ingredient)
+
+                        fetchPrices()
+
                         changeState(isRecipeSectionVisible = true)
                     }
                 }
                 calculateRecipeInformation()
+            }
+        }
+    }
+
+    private fun fetchPrices() {
+        viewModelScope.launch {
+            newRecipeUseCases.getRecipePriceFromIngredientsUseCase(ingredients = _state.value.ingredients).handle(
+                showSnackbar = false
+            ) { response ->
+                _state.update {
+                    it.copy(
+                        recipePrice = response?.let {
+                            RecipePrice(
+                                totalPrice = response.totalPrice,
+                                shouldShowPriceWarning = response.shouldShowPriceWarning
+                            )
+                        }
+                    )
+                }
+                updateRecipeServingPrice()
             }
         }
     }
@@ -230,50 +246,39 @@ class NewRecipeViewModel @Inject constructor(
                     if (selectedNutritionType is SelectedNutritionType.Recipe) 1 else servings.toIntOrNull()
                 servings?.let {
                     if (servings > 0) {
-                        val newPrice = recipePrice?.let { price ->
-                            newRecipeUseCases.calculatePricePerServingUseCase(
-                                price = price,
-                                servings = servings
-                            )
-                        }
-                        _state.update {
-                            it.copy(
-                                nutritionData = it.nutritionData.copy(
-                                    nutritionValues = newRecipeUseCases.calculateRecipeNutritionValues(
-                                        servings = servings,
-                                        ingredients = ingredients
-                                    )
-                                ),
-                                recipePrice = newPrice
-                            )
-                        }
+                        updateRecipeNutritionData(it)
+                        updateRecipeServingPrice()
                     }
                 }
             }
         }
     }
 
-    private fun recalculatePrice(price: Price?, weight: Int) {
-        val newPrice = price?.let {
-            newRecipeUseCases.calculatePrice(
-                price = price,
-                weight = weight
-            )
-        }
-        with(_state.value) {
-            _state.update {
-                it.copy(
-                    recipePrice = if (recipePrice == null && newPrice != null) newPrice else {
-                        newPrice?.let { newPrice ->
-                            recipePrice?.let { currentPrice ->
-                                currentPrice.copy(
-                                    value = currentPrice.value + newPrice.value
-                                )
-                            }
-                        }
-                    }
-                )
+    private fun updateRecipeServingPrice() = with(_state.value) {
+        servings.toValidInt()?.let { servings ->
+            recipePrice?.let { recipePrice ->
+                _state.update {
+                    it.copy(
+                        servingPrice = newRecipeUseCases.calculateServingPrice(
+                            servings = servings,
+                            priceValue = recipePrice.totalPrice
+                        )
+                    )
+                }
             }
+        }
+    }
+
+    private fun updateRecipeNutritionData(servings: Int) = with(_state.value){
+        _state.update {
+            it.copy(
+                nutritionData = it.nutritionData.copy(
+                    nutritionValues = newRecipeUseCases.calculateRecipeNutritionValues(
+                        servings = servings,
+                        ingredients = ingredients
+                    )
+                )
+            )
         }
     }
 

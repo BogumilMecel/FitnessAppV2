@@ -41,13 +41,15 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bodziowaty6978.fitnessappv2.R
-import com.gmail.bodziowaty6978.fitnessappv2.components.BackArrow
-import com.gmail.bodziowaty6978.fitnessappv2.components.CustomBasicTextField
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.CustomButton
-import com.gmail.bodziowaty6978.fitnessappv2.components.DefaultCardBackground
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.DropdownArrow
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.HeightSpacer
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.WidthSpacer
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.TextGrey
+import com.gmail.bodziowaty6978.fitnessappv2.components.BackArrow
+import com.gmail.bodziowaty6978.fitnessappv2.components.CustomBasicTextField
+import com.gmail.bodziowaty6978.fitnessappv2.components.DefaultCardBackground
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_recipe.components.RecipePriceSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.presentation.components.ProductNutritionSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search.componens.SearchProductItem
 import com.ramcosta.composedestinations.annotation.Destination
@@ -70,8 +72,7 @@ fun RecipeScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 5.dp)
-                .padding(horizontal = 15.dp),
+                .padding(horizontal = 16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -81,7 +82,7 @@ fun RecipeScreen(
                 viewModel.onEvent(RecipeEvent.ClickedBackArrow)
             }
 
-            Spacer(modifier = Modifier.width(10.dp))
+            WidthSpacer()
 
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -97,17 +98,20 @@ fun RecipeScreen(
                     maxLines = 4
                 )
 
-                Spacer(modifier = Modifier.height(4.dp))
+                HeightSpacer(height = 4.dp)
 
                 Text(
-                    text = stringResource(id = R.string.kcal_with_value, state.recipe.nutritionValues.calories),
+                    text = stringResource(
+                        id = R.string.kcal_with_value,
+                        state.recipe.nutritionValues.calories
+                    ),
                     style = MaterialTheme.typography.body2.copy(
                         color = TextGrey
                     )
                 )
             }
 
-            Spacer(modifier = Modifier.width(10.dp))
+            WidthSpacer()
 
             IconButton(
                 onClick = {
@@ -140,7 +144,7 @@ fun RecipeScreen(
                 content = {
                     Column(
                         modifier = Modifier
-                            .padding(15.dp)
+                            .padding(16.dp)
                             .fillMaxWidth(),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
@@ -153,7 +157,7 @@ fun RecipeScreen(
                                 contentDescription = null
                             )
 
-                            Spacer(modifier = Modifier.width(8.dp))
+                            WidthSpacer(width = 8.dp)
 
                             Text(
                                 text = state.recipe.timeRequired.displayValue,
@@ -161,7 +165,7 @@ fun RecipeScreen(
                             )
                         }
 
-                        Spacer(modifier = Modifier.height(4.dp))
+                        HeightSpacer(height = 4.dp)
 
                         Text(
                             text = stringResource(id = R.string.recipe_time_required),
@@ -171,7 +175,7 @@ fun RecipeScreen(
                 }
             )
 
-            Spacer(modifier = Modifier.width(12.dp))
+            WidthSpacer(width = 12.dp)
 
             DefaultCardBackground(
                 modifier = Modifier.weight(1F),
@@ -190,7 +194,7 @@ fun RecipeScreen(
                                 contentDescription = null
                             )
 
-                            Spacer(modifier = Modifier.width(8.dp))
+                            HeightSpacer(height = 8.dp)
 
                             Text(
                                 text = "${state.recipe.difficulty.displayValue} / 5",
@@ -198,7 +202,7 @@ fun RecipeScreen(
                             )
                         }
 
-                        Spacer(modifier = Modifier.height(4.dp))
+                        HeightSpacer(height = 4.dp)
 
                         Text(
                             text = stringResource(id = R.string.recipe_difficulty),
@@ -209,23 +213,22 @@ fun RecipeScreen(
             )
         }
 
-        Spacer(modifier = Modifier.height(12.dp))
+        HeightSpacer()
 
         DefaultCardBackground(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 13.dp),
+                .padding(horizontal = 16.dp),
             content = {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(15.dp)
+                        .padding(16.dp)
                 ) {
                     Row(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-
                         Column(
                             modifier = Modifier.weight(0.75F)
                         ) {
@@ -245,20 +248,22 @@ fun RecipeScreen(
                                 )
                             }
 
-
-                            Spacer(modifier = Modifier.height(4.dp))
+                            HeightSpacer(height = 4.dp)
 
                             Text(
-                                text = stringResource(id = R.string.recipe_serves, state.recipe.servings),
+                                text = stringResource(
+                                    id = R.string.recipe_serves,
+                                    state.recipe.servings
+                                ),
                                 style = MaterialTheme.typography.body2.copy(color = TextGrey)
                             )
                         }
 
 
                         CustomBasicTextField(
-                            value = state.portions,
+                            value = state.servings,
                             onValueChange = {
-                                viewModel.onEvent(RecipeEvent.EnteredPortions(it))
+                                viewModel.onEvent(RecipeEvent.EnteredServings(it))
                             },
                             keyboardOptions = KeyboardOptions.Default.copy(
                                 keyboardType = KeyboardType.Number
@@ -267,12 +272,15 @@ fun RecipeScreen(
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(12.dp))
+                    HeightSpacer(height = 12.dp)
 
                     CustomButton(
                         modifier = Modifier.fillMaxWidth(),
                         iconLeft = Icons.Default.Save,
-                        text = stringResource(id = R.string.recipe_save_to, state.mealName)
+                        text = stringResource(
+                            id = R.string.recipe_save_to,
+                            state.mealName
+                        )
                     ) {
                         viewModel.onEvent(RecipeEvent.ClickedSaveRecipeDiaryEntry)
                     }
@@ -280,7 +288,7 @@ fun RecipeScreen(
             }
         )
 
-        Spacer(modifier = Modifier.height(12.dp))
+        HeightSpacer()
 
         ProductNutritionSection(
             nutritionData = state.nutritionData,
@@ -289,12 +297,29 @@ fun RecipeScreen(
                 .padding(horizontal = 13.dp)
         )
 
-        Spacer(modifier = Modifier.height(12.dp))
+        if (state.recipePrice != null && state.servingPrice != null) {
+            HeightSpacer()
+
+            RecipePriceSection(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                totalPrice = state.recipePrice.totalPrice,
+                servingPrice = state.servingPrice,
+                shouldShowPriceWarning = state.recipePrice.shouldShowPriceWarning,
+                isNewRecipe = false,
+                onInfoClicked = {
+
+                }
+            )
+        }
+
+        HeightSpacer()
 
         DefaultCardBackground(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 15.dp)
+                .padding(horizontal = 16.dp)
                 .animateContentSize(
                     animationSpec = tween(
                         durationMillis = 400,
@@ -309,7 +334,7 @@ fun RecipeScreen(
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 15.dp)
+                            .padding(horizontal = 16.dp)
                     ) {
 
                         Text(

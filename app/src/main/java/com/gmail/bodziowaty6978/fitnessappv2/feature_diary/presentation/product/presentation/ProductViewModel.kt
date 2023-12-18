@@ -8,7 +8,6 @@ import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.extensions.toValidInt
 import com.gmail.bodziowaty6978.fitnessappv2.destinations.DiaryScreenDestination
 import com.gmail.bodziowaty6978.fitnessappv2.destinations.ProductScreenDestination
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.product.ProductUseCases
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.domain.model.NutritionData
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -34,7 +33,8 @@ class ProductViewModel @Inject constructor(
     val state: StateFlow<ProductState> = _state
 
     init {
-        initializeProductData(product = _state.value.product)
+        initializeProductData()
+        getProductPrice()
     }
 
     fun onEvent(event: ProductEvent) {
@@ -82,8 +82,14 @@ class ProductViewModel @Inject constructor(
                 navigateUp()
             }
 
-            is ProductEvent.ClickedSubmitNewPrice -> {
+            is ProductEvent.SubmitNewPrice -> {
                 viewModelScope.launch {
+                    _state.update {
+                        it.copy(
+                            isSubmitPriceDialogVisible = false
+                        )
+                    }
+
                     with(_state.value) {
                         productUseCases.submitNewPriceUseCase(
                             paidHowMuch = priceValue,
@@ -92,9 +98,7 @@ class ProductViewModel @Inject constructor(
                         ).handle { newPrice ->
                             _state.update {
                                 it.copy(
-                                    product = it.product.copy(
-                                        price = newPrice
-                                    ),
+                                    productPrice = newPrice,
                                     priceForValue = "",
                                     priceValue = ""
                                 )
@@ -120,17 +124,51 @@ class ProductViewModel @Inject constructor(
                     )
                 }
             }
+
+            is ProductEvent.DismissedSubmitNewPriceDialog -> {
+                _state.update {
+                    it.copy(
+                        isSubmitPriceDialogVisible = false
+                    )
+                }
+            }
+
+            is ProductEvent.ClickedInfoPriceButton -> {
+
+            }
+
+            is ProductEvent.ClickedSubmitNewPrice -> {
+                _state.update {
+                    it.copy(
+                        isSubmitPriceDialogVisible = true
+                    )
+                }
+            }
         }
     }
 
-    private fun initializeProductData(product: Product) {
-        _state.update {
-            it.copy(
-                nutritionData = NutritionData(
-                    nutritionValues = product.nutritionValues,
-                    pieChartData = productUseCases.createPieChartData(nutritionValues = product.nutritionValues)
-                ),
-            )
+    private fun initializeProductData() {
+        with(_state.value.product.nutritionValues) {
+            _state.update {
+                it.copy(
+                    nutritionData = NutritionData(
+                        nutritionValues = this,
+                        pieChartData = productUseCases.createPieChartData(nutritionValues = this)
+                    )
+                )
+            }
+        }
+    }
+
+    private fun getProductPrice(){
+        viewModelScope.launch {
+            productUseCases.getPriceUseCase(productId = _state.value.product.id).handle { price ->
+                _state.update {
+                    it.copy(
+                        productPrice = price
+                    )
+                }
+            }
         }
     }
 }

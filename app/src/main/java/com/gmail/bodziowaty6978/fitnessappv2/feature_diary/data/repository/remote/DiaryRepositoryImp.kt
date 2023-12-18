@@ -1,13 +1,15 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.data.repository.remote
 
+import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.Currency
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseRepository
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.data.api.DiaryApi
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.DeleteDiaryEntryRequest
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.DiaryEntriesResponse
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Price
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.ProductPrice
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.RecipePriceResponse
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntryPostRequest
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.product.NewPriceRequest
@@ -16,6 +18,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.N
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntryRequest
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.repository.DiaryRepository
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.RecipePriceRequest
 
 class DiaryRepositoryImp(
     private val diaryApi: DiaryApi, private val resourceProvider: ResourceProvider
@@ -87,9 +90,41 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun addNewPrice(newPriceRequest: NewPriceRequest): Resource<Price> {
+    override suspend fun getPrice(
+        productId: String,
+        currency: Currency
+    ): Resource<ProductPrice?> {
         return handleRequest {
-            diaryApi.addNewPriceForProduct(newPriceRequest = newPriceRequest)
+            diaryApi.getProductPrice(
+                productId = productId,
+                currency = currency
+            ).productPrice
+        }
+    }
+
+    override suspend fun submitNewPrice(
+        newPriceRequest: NewPriceRequest,
+        productId: String,
+        currency: Currency
+    ): Resource<ProductPrice> {
+        return handleRequest {
+            diaryApi.addNewPriceForProduct(
+                newPriceRequest = newPriceRequest,
+                productId = productId,
+                currency = currency
+            )
+        }
+    }
+
+    override suspend fun getRecipePriceFromIngredients(
+        recipePriceRequest: RecipePriceRequest,
+        currency: Currency
+    ): Resource<RecipePriceResponse?> {
+        return handleRequest(shouldHandleException = false) {
+            diaryApi.getRecipePriceFromIngredients(
+                recipePriceRequest = recipePriceRequest,
+                currency = currency
+            )
         }
     }
 

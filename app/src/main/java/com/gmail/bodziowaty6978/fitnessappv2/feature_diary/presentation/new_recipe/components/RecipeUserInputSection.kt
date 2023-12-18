@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Icon
@@ -20,14 +21,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.gmail.bodziowaty6978.fitnessappv2.R
-import com.gmail.bodziowaty6978.fitnessappv2.components.CustomBasicTextField
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.CustomButton
-import com.gmail.bodziowaty6978.fitnessappv2.components.DefaultCardBackground
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.HeightSpacer
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.WidthSpacer
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.TextGrey
+import com.gmail.bodziowaty6978.fitnessappv2.components.CustomBasicTextField
+import com.gmail.bodziowaty6978.fitnessappv2.components.DefaultCardBackground
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_recipe.NewRecipeEvent
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_recipe.NewRecipeState
 
@@ -154,8 +156,11 @@ fun RecipeUserInputSection(
                     onValueChange = {
                         onEvent(NewRecipeEvent.EnteredServing(it))
                     },
-                    modifier = Modifier.width(90.dp),
-                    singleLine = true
+                    modifier = Modifier.width(80.dp).height(48.dp),
+                    singleLine = true,
+                    textStyle = MaterialTheme.typography.body1.copy(
+                        textAlign = TextAlign.Center
+                    )
                 )
             }
         }

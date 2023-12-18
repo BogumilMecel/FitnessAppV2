@@ -5,5 +5,5 @@ sealed interface RecipeEvent{
     object ClickedFavorite: RecipeEvent
     object ClickedExpandIngredientsList: RecipeEvent
     object ClickedSaveRecipeDiaryEntry: RecipeEvent
-    data class EnteredPortions(val value: String): RecipeEvent
+    data class EnteredServings(val value: String): RecipeEvent
 }

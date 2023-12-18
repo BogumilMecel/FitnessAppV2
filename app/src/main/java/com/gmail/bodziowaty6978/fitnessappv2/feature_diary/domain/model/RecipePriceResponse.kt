@@ -1,0 +1,9 @@
+package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model
+
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class RecipePriceResponse(
+    val totalPrice: Double,
+    val shouldShowPriceWarning: Boolean
+)

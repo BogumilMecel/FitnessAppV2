@@ -21,10 +21,13 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.domain.use_case.*
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.data.api.DiaryApi
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.data.repository.remote.DiaryRepositoryImp
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.repository.DiaryRepository
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.CalculateSelectedServingPriceUseCase
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.CalculateServingPrice
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.GetPriceUseCase
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.GetRecipePriceFromIngredientsUseCase
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.diary.*
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.new_product.SaveNewProduct
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.new_recipe.AddNewRecipe
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.new_recipe.CalculatePrice
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.new_recipe.CalculateRecipeNutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.new_recipe.NewRecipeUseCases
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.product.*
@@ -275,10 +278,6 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideCalculateRecipePriceUseCase(): CalculatePrice = CalculatePrice()
-
-    @Singleton
-    @Provides
     fun provideAddNewRecipe(
         diaryRepository: DiaryRepository,
         resourceProvider: ResourceProvider
@@ -289,21 +288,50 @@ object AppModule {
 
     @Singleton
     @Provides
+    fun provideGetUserCurrencyUseCase(
+        sharedPreferences: SharedPreferences
+    ): GetUserCurrencyUseCase = GetUserCurrencyUseCase(
+        sharedPreferences = sharedPreferences
+    )
+
+    @Singleton
+    @Provides
+    fun provideGetPriceUseCase(
+        diaryRepository: DiaryRepository,
+        getUserCurrencyUseCase: GetUserCurrencyUseCase
+    ): GetPriceUseCase = GetPriceUseCase(
+        diaryRepository = diaryRepository,
+        getUserCurrency = getUserCurrencyUseCase
+    )
+
+    @Singleton
+    @Provides
+    fun provideGetRecipePriceUseCase(
+        diaryRepository: DiaryRepository,
+        getUserCurrencyUseCase: GetUserCurrencyUseCase
+    ): GetRecipePriceFromIngredientsUseCase = GetRecipePriceFromIngredientsUseCase(
+        diaryRepository = diaryRepository,
+        getUserCurrencyUseCase = getUserCurrencyUseCase
+    )
+
+    @Singleton
+    @Provides
     fun provideNewRecipeUseCases(
         addNewRecipe: AddNewRecipe,
-        calculatePrice: CalculatePrice,
         calculateRecipeNutritionValues: CalculateRecipeNutritionValues,
         createPieChartData: CreatePieChartData,
         searchForProducts: SearchForProducts,
-        calculateProductNutritionValues: CalculateProductNutritionValues
+        calculateProductNutritionValues: CalculateProductNutritionValues,
+        getRecipePriceFromIngredientsUseCase: GetRecipePriceFromIngredientsUseCase,
+        calculateServingPrice: CalculateServingPrice
     ): NewRecipeUseCases = NewRecipeUseCases(
         addNewRecipe = addNewRecipe,
-        calculatePrice = calculatePrice,
         calculateRecipeNutritionValues = calculateRecipeNutritionValues,
         createPieChartData = createPieChartData,
         searchForProducts = searchForProducts,
         calculateProductNutritionValues = calculateProductNutritionValues,
-        calculatePricePerServingUseCase = CalculatePricePerServingUseCase()
+        getRecipePriceFromIngredientsUseCase = getRecipePriceFromIngredientsUseCase,
+        calculateServingPrice = calculateServingPrice
     )
 
     @Singleton
@@ -400,6 +428,11 @@ object AppModule {
 
     @Singleton
     @Provides
+    fun provideCalculateSelectedServingPriceUseCase(): CalculateSelectedServingPriceUseCase =
+        CalculateSelectedServingPriceUseCase()
+
+    @Singleton
+    @Provides
     fun provideDiarySearchUseCases(
         diaryRepository: DiaryRepository,
         searchForProducts: SearchForProducts,
@@ -425,21 +458,31 @@ object AppModule {
 
     @Singleton
     @Provides
+    fun provideCalculateServingPriceUseCase(): CalculateServingPrice = CalculateServingPrice()
+
+    @Singleton
+    @Provides
     fun provideProductUseCases(
         diaryRepository: DiaryRepository,
         resourceProvider: ResourceProvider,
-        createPieChartData: CreatePieChartData
+        createPieChartData: CreatePieChartData,
+        getUserCurrencyUseCase: GetUserCurrencyUseCase
     ): ProductUseCases =
         ProductUseCases(
             calculateProductNutritionValues = CalculateProductNutritionValues(),
             createPieChartData = createPieChartData,
             addDiaryEntry = AddDiaryEntry(
-                diaryRepository,
+                diaryRepository = diaryRepository,
                 resourceProvider = resourceProvider
             ),
             submitNewPriceUseCase = SubmitNewPriceUseCase(
                 diaryRepository = diaryRepository,
-                resourceProvider = resourceProvider
+                resourceProvider = resourceProvider,
+                getUserCurrencyUseCase = getUserCurrencyUseCase
+            ),
+            getPriceUseCase = GetPriceUseCase(
+                diaryRepository = diaryRepository,
+                getUserCurrency = getUserCurrencyUseCase
             )
         )
 
@@ -452,5 +495,4 @@ object AppModule {
         diaryRepository = diaryRepository,
         resourceProvider = resourceProvider
     )
-
 }

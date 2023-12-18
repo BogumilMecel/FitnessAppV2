@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.DarkGreyElevation9
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -20,19 +21,21 @@ fun DropdownItem(
     selectedItem: String,
     isDropdownExpanded: Boolean,
     dropdownItems: List<String>,
-    onItemSelected:(Int) -> Unit
+    onItemSelected: (Int) -> Unit
 ) {
-    Card(elevation = 6.dp,
-         shape = RoundedCornerShape(30),
-         modifier = Modifier.width(80.dp),
-         onClick = {
-             onArrowClick()
-         }
+    Card(
+        elevation = 2.dp,
+        shape = RoundedCornerShape(15.dp),
+        modifier = Modifier.width(80.dp),
+        onClick = {
+            onArrowClick()
+        },
+        backgroundColor = DarkGreyElevation9
     ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(15.dp)
+                .padding(12.dp)
         ) {
             Text(
                 text = selectedItem,
@@ -56,7 +59,8 @@ fun DropdownItem(
                         onItemSelected(index)
                     }) {
                         Text(
-                            text = i, style = MaterialTheme.typography.body1
+                            text = i,
+                            style = MaterialTheme.typography.body1
                         )
                     }
                 }

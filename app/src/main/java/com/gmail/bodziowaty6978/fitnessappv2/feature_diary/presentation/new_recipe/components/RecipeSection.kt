@@ -2,10 +2,8 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_rec
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -17,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.gmail.bodziowaty6978.fitnessappv2.R
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.HeightSpacer
 import com.gmail.bodziowaty6978.fitnessappv2.components.BackArrow
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_recipe.NewRecipeEvent
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_recipe.NewRecipeState
@@ -35,7 +34,6 @@ fun RecipeSection(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 10.dp)
         ) {
             BackArrow(
                 modifier = Modifier.align(Alignment.CenterStart)
@@ -50,7 +48,7 @@ fun RecipeSection(
             )
         }
 
-        Spacer(modifier = Modifier.height(10.dp))
+        HeightSpacer(height = 10.dp)
 
         RecipeUserInputSection(
             state = state,
@@ -59,7 +57,7 @@ fun RecipeSection(
             }
         )
 
-        Spacer(modifier = Modifier.height(18.dp))
+        HeightSpacer()
 
         RecipeListSection(
             state = state,
@@ -68,26 +66,42 @@ fun RecipeSection(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 15.dp)
+                .padding(horizontal = 16.dp)
         )
 
         if (state.ingredients.isNotEmpty()) {
 
-            Spacer(modifier = Modifier.height(24.dp))
+            HeightSpacer()
 
             RecipeNutritionSection(
                 nutritionData = state.nutritionData,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 15.dp),
+                    .padding(horizontal = 16.dp),
                 selectedNutritionType = state.selectedNutritionType,
                 onSelectedNutritionType = {
                     onEvent(NewRecipeEvent.ChangedSelectedNutritionType(it))
                 },
-                price = state.recipePrice
             )
         }
 
-        Spacer(modifier = Modifier.height(64.dp))
+        if (state.recipePrice != null && state.servingPrice != null) {
+            HeightSpacer()
+
+            RecipePriceSection(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                totalPrice = state.recipePrice.totalPrice,
+                servingPrice = state.servingPrice,
+                shouldShowPriceWarning = state.recipePrice.shouldShowPriceWarning,
+                isNewRecipe = true,
+                onInfoClicked = {
+
+                }
+            )
+        }
+
+        HeightSpacer(height = 64.dp)
     }
 }

@@ -6,21 +6,31 @@ import retrofit2.HttpException
 open class BaseRepository(
     private val resourceProvider: ResourceProvider
 ) {
-    suspend inline fun <R> handleRequest(block: () -> R): Resource<R> {
+    suspend inline fun <R> handleRequest(shouldHandleException: Boolean = true, block: () -> R): Resource<R> {
         return try {
             Resource.Success(block())
         } catch (e: Exception) {
-            handleExceptionWithResource(exception = e)
+            handleExceptionWithResource(
+                exception = e,
+                shouldHandleException = shouldHandleException
+            )
         }
     }
 
-    suspend fun <T> handleExceptionWithResource(exception: Exception, data: T? = null): Resource<T> {
-        exception.printStackTrace()
-        if (exception is HttpException) {
-            if (exception.code() == 401) {
-                TokenStatus.tokenNotPresent()
+    suspend fun <T> handleExceptionWithResource(
+        exception: Exception,
+        data: T? = null,
+        shouldHandleException: Boolean
+    ): Resource<T> {
+        if (shouldHandleException) {
+            exception.printStackTrace()
+            if (exception is HttpException) {
+                if (exception.code() == 401) {
+                    TokenStatus.tokenNotPresent()
+                }
             }
         }
+
         return Resource.Error(
             uiText = exception.message ?: resourceProvider.getUnknownErrorString(),
             data = data
