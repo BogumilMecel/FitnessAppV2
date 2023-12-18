@@ -10,11 +10,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import com.gmail.bodziowaty6978.fitnessappv2.R
+import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.MeasurementUnit
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.DarkGreyElevation
 
 @Composable
 fun TabSection(
-    unitIndex: Int = 0,
+    measurementUnit: MeasurementUnit,
     selectedTabIndex: Int,
     onTabSelected: (Int) -> Unit
 ) {
@@ -24,7 +25,6 @@ fun TabSection(
         backgroundColor = DarkGreyElevation,
         contentColor = Color.White,
     ) {
-
         Tab(
             selected = selectedTabIndex == 0,
             onClick = {
@@ -32,7 +32,7 @@ fun TabSection(
             },
             text = {
                 Text(
-                    text = if (unitIndex == 0) stringResource(id = R.string.in_100g)
+                    text = if (measurementUnit == MeasurementUnit.GRAMS) stringResource(id = R.string.in_100g)
                     else stringResource(id = R.string.in_100ml),
                     color = Color.White,
                     style = MaterialTheme.typography.button

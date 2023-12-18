@@ -28,31 +28,33 @@ fun PriceRows(
 
     Spacer(modifier = Modifier.height(8.dp))
 
+    val currency = stringResource(id = price.currency.getDisplayValue())
+
     PriceRow(
         name = stringResource(id = R.string.price_for_100_kcal),
         value = (price.value / nutritionValues.calories.toDouble() * 100.0).round(2),
-        currency = price.currency,
+        currency = currency,
         index = 1
     )
 
     PriceRow(
         name = stringResource(id = R.string.price_for_100g_of_carbohydrates),
         value = (price.value / nutritionValues.carbohydrates * 100.0).round(2),
-        currency = price.currency,
+        currency = currency,
         index = 2
     )
 
     PriceRow(
         name = stringResource(id = R.string.price_for_100g_of_protein),
         value = (price.value / nutritionValues.protein * 100.0).round(2),
-        currency = price.currency,
+        currency = currency,
         index = 3
     )
 
     PriceRow(
         name = stringResource(id = R.string.price_for_100g_of_fat),
         value = (price.value / nutritionValues.fat * 100.0).round(2),
-        currency = price.currency,
+        currency = currency,
         index = 4
     )
 }

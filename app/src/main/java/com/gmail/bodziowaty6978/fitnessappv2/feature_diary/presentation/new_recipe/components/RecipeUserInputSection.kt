@@ -3,17 +3,17 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_rec
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Switch
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.Equalizer
+import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.SupervisorAccount
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,7 +22,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.gmail.bodziowaty6978.fitnessappv2.R
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.ButtonWithIcon
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.CustomBasicTextField
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.DefaultCardBackground
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.HeightSpacer
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.WidthSpacer
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.TextGrey
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_recipe.NewRecipeEvent
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_recipe.NewRecipeState
 
@@ -39,7 +44,7 @@ fun RecipeUserInputSection(
             modifier = Modifier.padding(start = 4.dp)
         )
 
-        Spacer(modifier = Modifier.height(6.dp))
+        HeightSpacer(height = 6.dp)
 
         CustomBasicTextField(
             modifier = Modifier.fillMaxWidth(),
@@ -49,7 +54,7 @@ fun RecipeUserInputSection(
                 onEvent(NewRecipeEvent.EnteredName(it))
             })
 
-        Spacer(modifier = Modifier.height(18.dp))
+        HeightSpacer()
 
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -66,7 +71,7 @@ fun RecipeUserInputSection(
                         contentDescription = null
                     )
 
-                    Spacer(modifier = Modifier.width(6.dp))
+                    WidthSpacer(width = 6.dp)
 
                     Text(
                         text = stringResource(id = R.string.difficulty),
@@ -76,15 +81,15 @@ fun RecipeUserInputSection(
                     )
                 }
 
-                Spacer(modifier = Modifier.height(6.dp))
+                HeightSpacer(height = 6.dp)
 
                 DropdownItem(
                     onArrowClick = { onEvent(NewRecipeEvent.ClickedDifficultyArrow) },
-                    selectedItem = state.selectedDifficulty,
+                    selectedItem = state.selectedDifficulty.displayValue,
                     isDropdownExpanded = state.isDifficultyExpanded,
-                    dropdownItems = state.difficulties,
+                    dropdownItems = state.difficulties.map { it.displayValue },
                     onItemSelected = {
-                        onEvent(NewRecipeEvent.SelectedDifficulty(it))
+                        onEvent(NewRecipeEvent.SelectedDifficulty(state.difficulties[it]))
                     }
                 )
             }
@@ -100,7 +105,7 @@ fun RecipeUserInputSection(
                         contentDescription = null
                     )
 
-                    Spacer(modifier = Modifier.width(6.dp))
+                    WidthSpacer(width = 6.dp)
 
                     Text(
                         text = stringResource(id = R.string.time),
@@ -110,15 +115,15 @@ fun RecipeUserInputSection(
                     )
                 }
 
-                Spacer(modifier = Modifier.height(6.dp))
+                HeightSpacer(height = 6.dp)
 
                 DropdownItem(
                     onArrowClick = { onEvent(NewRecipeEvent.ClickedTimeArrow) },
-                    selectedItem = state.selectedTime,
+                    selectedItem = state.selectedTime.getDisplayValueWithoutMin(),
                     isDropdownExpanded = state.isTimeExpanded,
-                    dropdownItems = state.times,
+                    dropdownItems = state.times.map { it.displayValue },
                     onItemSelected = {
-                        onEvent(NewRecipeEvent.SelectedTime(it))
+                        onEvent(NewRecipeEvent.SelectedTime(state.times[it]))
                     }
                 )
             }
@@ -134,7 +139,7 @@ fun RecipeUserInputSection(
                         contentDescription = null
                     )
 
-                    Spacer(modifier = Modifier.width(6.dp))
+                    WidthSpacer(width = 6.dp)
 
                     Text(
                         text = stringResource(id = R.string.servings),
@@ -142,14 +147,65 @@ fun RecipeUserInputSection(
                     )
                 }
 
-                Spacer(modifier = Modifier.height(6.dp))
+                HeightSpacer(height = 6.dp)
 
                 CustomBasicTextField(
-                    value = state.servings, onValueChange = {
+                    value = state.servings,
+                    onValueChange = {
                         onEvent(NewRecipeEvent.EnteredServing(it))
-                    }, modifier = Modifier.width(90.dp), singleLine = true
+                    },
+                    modifier = Modifier.width(90.dp),
+                    singleLine = true
                 )
             }
+        }
+
+        HeightSpacer()
+
+        DefaultCardBackground(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .padding(15.dp)
+            ) {
+                Column(
+                    modifier = Modifier.weight(0.8f)
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.new_recipe_public),
+                        style = MaterialTheme.typography.body1
+                    )
+
+                    HeightSpacer(height = 4.dp)
+
+                    Text(
+                        text = stringResource(id = R.string.new_recipe_public_des),
+                        style = MaterialTheme.typography.body2.copy(color = TextGrey)
+                    )
+                }
+
+                WidthSpacer()
+
+                Switch(
+                    checked = state.isRecipePublic,
+                    onCheckedChange = {
+                        onEvent(NewRecipeEvent.SwitchedPublic(it))
+                    },
+                    modifier = Modifier.weight(0.2f)
+                )
+            }
+        }
+
+        HeightSpacer()
+
+        ButtonWithIcon(
+            modifier = Modifier.fillMaxWidth(),
+            icon = Icons.Default.Save,
+            text = stringResource(id = R.string.new_recipe_save)
+        ) {
+            onEvent(NewRecipeEvent.ClickedSaveRecipe)
         }
     }
 }

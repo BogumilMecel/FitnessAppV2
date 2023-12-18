@@ -1,7 +1,6 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_splash.loading.presentation
 
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavOptions
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.use_case.GetToken
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bodziowaty6978.fitnessappv2.destinations.IntroductionScreenDestination
@@ -24,9 +23,8 @@ class LoadingViewModel @Inject constructor(
             getToken()?.let {
                 authenticateUser()
             } ?: kotlin.run {
-                navigateTo(
-                    destination = LoginScreenDestination,
-                    navOptions = NavOptions.Builder().setPopUpTo(0, true).build()
+                navigateWithPopUp(
+                    destination = LoginScreenDestination
                 )
             }
         }
@@ -38,20 +36,17 @@ class LoadingViewModel @Inject constructor(
         )
         authenticationResource.data?.let { user ->
             if (user.nutritionValues != null && user.userInformation != null) {
-                navigateTo(
-                    destination = SummaryScreenDestination,
-                    navOptions = NavOptions.Builder().setPopUpTo(0, true).build()
+                navigateWithPopUp(
+                    destination = SummaryScreenDestination
                 )
             } else {
-                navigateTo(
-                    destination = IntroductionScreenDestination,
-                    navOptions = NavOptions.Builder().setPopUpTo(0, true).build()
+                navigateWithPopUp(
+                    destination = IntroductionScreenDestination
                 )
             }
         } ?: kotlin.run {
-            navigateTo(
-                destination = LoginScreenDestination,
-                navOptions = NavOptions.Builder().setPopUpTo(0, true).build()
+            navigateWithPopUp(
+                destination = LoginScreenDestination
             )
         }
     }

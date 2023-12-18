@@ -60,16 +60,23 @@
     <string name="in_100ml">In 100 ml</string>
     <string name="container_weight">Container weight</string>
     <string name="average_weight">Average weight</string>
-    <string name="please_make_product_name_is_not_empty">Please make sure product name is not empty</string>
-    <string name="please_make_sure_the_product_name_is_not_longer_than_24_characters_and_not_shorter_than_3">Please make sure the product name is not longer than 24 characters and not shorter than 3</string>
+
+    <string name="new_product_empty_name">Please make sure product name is not empty</string>
+    <string name="new_product_wrong_name_length_short">Please make sure that the product name is not shorter than 3 characters</string>
+    <string name="new_product_wrong_name_length_long">Please make sure that the product name is not longer than 48 characters</string>
+    <string name="new_product_bad_container_weight">Please make sure that you have entered correct container weight</string>
+    <string name="new_product_bad_nutrition_values">Please make sure that you have entered nutrition values correctly</string>
+
     <string name="camera_permission_is_required_to_scan_a_product_barcode">Camera permission is required to scan a product barcode</string>
     <string name="there_is_no_product_with_provided_barcode_do_you_want_to_add_it">There is no product with provided barcode. Do you want to add it?</string>
     <string name="portions">portions</string>
-    
-    <string-array name="units">
-        <item>g</item>
-        <item>ml</item>
-    </string-array>
+
+    <string name="measurement_unit_gram">g</string>
+    <string name="measurement_unit_milliliter">ml</string>
+
+    <string name="currency_pln">zł</string>
+    <string name="currency_usd">$</string>
+    <string name="currency_eur">€</string>
 
     <string name="kcal"> Kcal</string>
     <string name="delete">delete</string>
@@ -119,6 +126,11 @@
     <string name="empty_recipe_ingredients">Please make sure there are at least 2 ingredients in your recipe.</string>
     <string name="bad_recipe_name">Please make sure your recipe\'s name is at least 4 characters long</string>
 
+    <string name="recipe_ingredients">Ingredients</string>
+
+    <string name="new_recipe_public">Should recipe be public</string>
+    <string name="new_recipe_public_des">Everybody will be able to see it and you will not be able to delete it</string>
+    <string name="new_recipe_save">Save recipe</string>
 
     <string name="next">NEXT</string>
     <string name="finish">FINISH</string>

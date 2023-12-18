@@ -28,7 +28,9 @@ fun RecipeSection(
 ) {
     val scrollState = rememberScrollState()
     Column(
-        modifier = Modifier.fillMaxSize().verticalScroll(scrollState)
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(scrollState)
     ) {
         Box(
             modifier = Modifier
@@ -43,12 +45,12 @@ fun RecipeSection(
 
             Text(
                 text = stringResource(id = R.string.add_recipe),
-                style = MaterialTheme.typography.h3,
+                style = MaterialTheme.typography.h2,
                 modifier = Modifier.align(Alignment.Center)
             )
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
         RecipeUserInputSection(
             state = state,
@@ -57,7 +59,7 @@ fun RecipeSection(
             }
         )
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(18.dp))
 
         RecipeListSection(
             state = state,
@@ -69,7 +71,7 @@ fun RecipeSection(
                 .padding(horizontal = 15.dp)
         )
 
-        if (state.ingredients.isNotEmpty()){
+        if (state.ingredients.isNotEmpty()) {
 
             Spacer(modifier = Modifier.height(24.dp))
 

@@ -14,5 +14,5 @@ data class SearchState(
     val barcode: String? = null,
     val mealName: String = "",
     val recipes: List<Recipe> = emptyList(),
-    val currentTabIndex: Int = 0
+    val currentTabIndex: Int = 0,
 )

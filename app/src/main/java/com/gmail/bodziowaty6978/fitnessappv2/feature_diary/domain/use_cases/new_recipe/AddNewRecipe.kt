@@ -1,11 +1,13 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.new_recipe
 
 import com.gmail.bodziowaty6978.fitnessappv2.R
-import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.Ingredient
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.NewRecipeRequest
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.Recipe
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.utils.Difficulty
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.utils.TimeRequired
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 
 class AddNewRecipe(
@@ -14,41 +16,29 @@ class AddNewRecipe(
 ) {
     suspend operator fun invoke(
         ingredients: List<Ingredient>,
-        difficulty: String,
-        time: String,
+        difficulty: Difficulty,
+        time: TimeRequired,
         servings: String,
         recipeName: String,
-        nutritionValues: NutritionValues,
-        userId: String,
-        username: String
+        isRecipePublic: Boolean
     ): Resource<Recipe> {
         return if (ingredients.size < 2) {
             Resource.Error(resourceProvider.getString(R.string.empty_recipe_ingredients))
         } else if (recipeName.length < 4) {
             Resource.Error(resourceProvider.getString(R.string.bad_recipe_name))
         } else {
-            val difficultyValue = difficulty.toIntOrNull()
-            val timeValue = time.toIntOrNull()
-            val servingsValue = servings.toIntOrNull()
-            if (difficultyValue != null && timeValue != null && servingsValue != null) {
-                val recipe = Recipe(
+            servings.toIntOrNull()?.let { servingsValue ->
+                val newRecipeRequest = NewRecipeRequest(
                     ingredients = ingredients,
-                    timeNeeded = timeValue,
-                    difficulty = difficultyValue,
+                    timeRequired = time,
+                    difficulty = difficulty,
                     servings = servingsValue,
                     timestamp = System.currentTimeMillis(),
-                    name = recipeName,
-                    username = username,
-                    nutritionValues = nutritionValues,
-                    userId = userId
+                    recipeName = recipeName,
+                    isPublic = isRecipePublic
                 )
-                diaryRepository.addNewRecipe(
-                    recipe = recipe,
-                    timestamp = System.currentTimeMillis()
-                )
-            } else {
-                Resource.Error(resourceProvider.getString(R.string.please_make_sure_all_fields_are_filled_in_correctly))
-            }
+                diaryRepository.addNewRecipe(newRecipeRequest = newRecipeRequest)
+            } ?: Resource.Error(resourceProvider.getString(R.string.please_make_sure_all_fields_are_filled_in_correctly))
         }
     }
 }

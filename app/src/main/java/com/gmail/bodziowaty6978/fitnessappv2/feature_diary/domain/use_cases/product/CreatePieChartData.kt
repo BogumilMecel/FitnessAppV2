@@ -14,8 +14,10 @@ class CreatePieChartData(
 
         calculatedPercentages.keys.forEach { key ->
             calculatedPercentages[key]?.let {
-                entries.add(PieEntry(it, key))
-                entries.add(PieEntry(1F, ""))
+                if (it != 0f) {
+                    entries.add(PieEntry(it, key))
+                    entries.add(PieEntry(1F, ""))
+                }
             }
         }
         return entries

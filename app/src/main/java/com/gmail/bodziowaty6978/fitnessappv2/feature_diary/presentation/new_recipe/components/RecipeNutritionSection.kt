@@ -10,8 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Switch
 import androidx.compose.material.SwitchDefaults
@@ -20,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.DefaultCardBackground
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.LightGreen1
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.LightGreen3
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.TextGrey
@@ -38,21 +37,17 @@ fun RecipeNutritionSection(
     onSelectedNutritionType: (SelectedNutritionType) -> Unit,
     price: Price?
 ) {
-    Card(
+    DefaultCardBackground(
         modifier = modifier,
-        elevation = 3.dp,
-        shape = RoundedCornerShape(10)
     ) {
         Column(
             modifier = Modifier
-
                 .padding(bottom = 15.dp, top = 6.dp)
         ) {
             Column(
                 modifier = Modifier
                     .padding(horizontal = 15.dp)
             ) {
-
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),

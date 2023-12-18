@@ -6,6 +6,9 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Price
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntryPostRequest
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.product.NewPriceRequest
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.product.NewProductRequest
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.NewRecipeRequest
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntryRequest
 
@@ -19,8 +22,8 @@ interface DiaryRepository {
     suspend fun addRecipeDiaryEntry(recipeDiaryEntryRequest: RecipeDiaryEntryRequest): Resource<Boolean>
     suspend fun deleteDiaryEntry(diaryEntryId: String): CustomResult
     suspend fun editDiaryEntry(productDiaryEntry: ProductDiaryEntry): CustomResult
-    suspend fun saveNewProduct(product: Product): Resource<Product>
+    suspend fun saveNewProduct(newProductRequest: NewProductRequest): Resource<Product>
     suspend fun getCaloriesSum(date: String): Resource<Int>
-    suspend fun addNewPrice(price: Price, productId: String): Resource<Price>
-    suspend fun addNewRecipe(recipe: Recipe, timestamp: Long): Resource<Recipe>
+    suspend fun addNewPrice(newPriceRequest: NewPriceRequest): Resource<Price>
+    suspend fun addNewRecipe(newRecipeRequest: NewRecipeRequest): Resource<Recipe>
 }

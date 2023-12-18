@@ -15,7 +15,6 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -41,10 +40,6 @@ fun NewProductScreen(
     viewModel: NewProductViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.collectAsState().value
-
-    LaunchedEffect(key1 = true) {
-        viewModel.initData()
-    }
 
     BackHandler(
         enabled = state.isScannerVisible
@@ -105,8 +100,7 @@ fun NewProductScreen(
                     state = state,
                     onEvent = {
                         viewModel.onEvent(it)
-                    },
-                    containerWeightText = state.containerWeight,
+                    }
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))

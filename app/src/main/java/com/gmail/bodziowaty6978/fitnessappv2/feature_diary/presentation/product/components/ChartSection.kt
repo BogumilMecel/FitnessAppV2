@@ -10,7 +10,7 @@ import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.formatter.PercentFormatter
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.BlueViolet3
-import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.DarkGreyElevation
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.DarkGreyElevation6
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.LightGreen3
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.OrangeYellow3
 
@@ -18,9 +18,10 @@ import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.Orange
 fun ChartSection(
     modifier: Modifier,
     nutritionData: NutritionData,
-    isCircleTextVisible:Boolean = true
+    isCircleTextVisible:Boolean = true,
+    background: androidx.compose.ui.graphics.Color = DarkGreyElevation6
 ) {
-    val backgroundColor = DarkGreyElevation.toArgb()
+    val backgroundColor = background.toArgb()
 
         AndroidView(
             modifier = modifier,

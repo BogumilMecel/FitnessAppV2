@@ -80,7 +80,7 @@ fun RecipeSection(
                 Spacer(modifier = Modifier.width(4.dp))
 
                 Text(
-                    text = "${recipe.timeNeeded} min",
+                    text = "${recipe.timeRequired.displayValue} min",
                     style = MaterialTheme.typography.body2.copy(
                         color = TextGrey
                     )

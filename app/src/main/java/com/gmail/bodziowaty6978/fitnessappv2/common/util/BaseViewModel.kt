@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-open class BaseViewModel @Inject constructor(): ViewModel() {
+open class BaseViewModel @Inject constructor() : ViewModel() {
 
     @Inject
     lateinit var navigator: Navigator
@@ -23,8 +23,25 @@ open class BaseViewModel @Inject constructor(): ViewModel() {
     @Inject
     lateinit var resourceProvider: ResourceProvider
 
-    suspend fun showSnackbarError(message: String) {
-        ErrorUtils.showSnackbarWithMessage(message = message)
+    fun showSnackbarError(message: String) {
+        viewModelScope.launch {
+            ErrorUtils.showSnackbarWithMessage(message = message)
+        }
+    }
+
+    inline fun <T> Resource<T>.handle(block: (T) -> Unit) {
+        if (this is Resource.Error) {
+            showSnackbarError(message = this.uiText)
+        } else if (this is Resource.Success) {
+            block(this.data)
+        }
+    }
+
+    fun navigateWithPopUp(destination: Direction) {
+        navigateTo(
+            destination = destination,
+            navOptions = NavOptions.Builder().setPopUpTo(0, true).build()
+        )
     }
 
     fun navigateTo(destination: Direction, navOptions: NavOptions = NavOptions.Builder().build()) =

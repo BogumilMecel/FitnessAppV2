@@ -22,7 +22,7 @@ fun DropdownItem(
     dropdownItems: List<String>,
     onItemSelected:(Int) -> Unit
 ) {
-    Card(elevation = 3.dp,
+    Card(elevation = 6.dp,
          shape = RoundedCornerShape(30),
          modifier = Modifier.width(80.dp),
          onClick = {

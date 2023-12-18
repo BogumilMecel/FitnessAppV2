@@ -18,6 +18,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Logout
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -28,11 +29,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.BackHandler
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.ButtonWithIcon
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.BlueViolet3
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.LightGreen3
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.OrangeYellow3
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.TextGrey
-import com.gmail.bodziowaty6978.fitnessappv2.feature_account.presentation.components.LogOutButton
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.ChartSection
 import com.ramcosta.composedestinations.annotation.Destination
 
@@ -167,10 +168,14 @@ fun AccountScreen(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        LogOutButton(
+        ButtonWithIcon(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 10.dp)
-        ) { viewModel.onEvent(AccountEvent.ClickedLogOutButtonClicked) }
+                .padding(horizontal = 10.dp),
+            icon = Icons.Default.Logout,
+            text = stringResource(id = R.string.log_out),
+        ) {
+            viewModel.onEvent(AccountEvent.ClickedLogOutButtonClicked)
+        }
     }
 }

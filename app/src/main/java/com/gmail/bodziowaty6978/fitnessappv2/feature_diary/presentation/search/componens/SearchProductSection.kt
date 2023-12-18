@@ -158,7 +158,7 @@ fun SearchProductSection(
                         val product = items[itemPosition]
                         SearchProductItem(
                             name = product.name,
-                            unit = product.unit,
+                            unit = stringResource(id = product.measurementUnit.getDisplayValue()),
                             weight = product.containerWeight,
                             calories = product.nutritionValues.calories,
                             onItemClick = {

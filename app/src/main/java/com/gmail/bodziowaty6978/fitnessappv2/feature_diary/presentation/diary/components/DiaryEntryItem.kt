@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.DiaryItem
@@ -66,8 +67,8 @@ fun DiaryEntryItem(
 
                     Text(
                         text = when (diaryItem) {
-                            is ProductDiaryEntry -> "(${diaryItem.weight}${diaryItem.product.unit})"
-                            is RecipeDiaryEntry -> "(${diaryItem.portions} " + stringArrayResource(
+                            is ProductDiaryEntry -> "(${diaryItem.weight}${diaryItem.product.measurementUnit})"
+                            is RecipeDiaryEntry -> "(${diaryItem.portions} " + stringResource(
                                 id = R.string.portions
                             ) + ")"
                             else -> ""
