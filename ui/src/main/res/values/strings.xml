@@ -16,5 +16,6 @@
     <string name="account">Account icon</string>
     <string name="barcode">Barcode icon</string>
     <string name="info">Info icon</string>
+    <string name="arrow_down">Arrow down icon</string>
 <!--    Icon description ↑ ↑ ↑-->
 </resources>
