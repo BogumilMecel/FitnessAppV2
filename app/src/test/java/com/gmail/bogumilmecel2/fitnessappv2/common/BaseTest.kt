@@ -1,6 +1,6 @@
 package com.gmail.bogumilmecel2.fitnessappv2.common
 
-import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.ResourceProvider
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvider
 import org.junit.After
 import org.junit.Before
 import org.mockito.MockitoAnnotations

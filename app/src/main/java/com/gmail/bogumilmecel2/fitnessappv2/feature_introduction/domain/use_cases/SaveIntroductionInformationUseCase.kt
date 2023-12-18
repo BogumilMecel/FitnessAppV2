@@ -1,7 +1,7 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.use_cases
 
 import com.gmail.bogumilmecel2.fitnessappv2.R
-import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.ResourceProvider
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.toValidDouble
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.toValidInt

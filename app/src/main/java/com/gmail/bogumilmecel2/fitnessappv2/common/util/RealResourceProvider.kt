@@ -3,7 +3,7 @@ package com.gmail.bogumilmecel2.fitnessappv2.common.util
 import android.content.Context
 import androidx.annotation.PluralsRes
 import androidx.annotation.StringRes
-import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.ResourceProvider
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvider
 
 class RealResourceProvider(private val context: Context): ResourceProvider {
 

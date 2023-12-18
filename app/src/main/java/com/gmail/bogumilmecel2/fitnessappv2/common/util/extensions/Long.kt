@@ -3,7 +3,7 @@ package com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions
 import android.text.format.DateUtils
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.DateModel
-import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.ResourceProvider
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvider
 import java.util.*
 
 fun Long.formatToAppDateModel(resourceProvider: ResourceProvider): DateModel {

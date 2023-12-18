@@ -1,7 +1,7 @@
 package com.gmail.bogumilmecel2.fitnessappv2.common.util
 
 import android.content.SharedPreferences
-import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.CachedValuesProvider
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.CachedValuesProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.Currency
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.model.User
