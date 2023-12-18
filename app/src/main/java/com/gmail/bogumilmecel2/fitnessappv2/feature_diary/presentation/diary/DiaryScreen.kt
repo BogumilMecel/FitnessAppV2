@@ -77,18 +77,20 @@ fun DiaryScreen(
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 CalendarSection(
-                    onArrowPressed = {
-                        viewModel.onEvent(
-                            event = DiaryEvent.ChangedDate
-                        )
-                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(MaterialTheme.colors.background)
                         .padding(
                             horizontal = 10.dp,
                             vertical = 2.dp
-                        )
+                        ),
+                    date = state.displayedDate,
+                    onArrowForwardClicked = {
+                        viewModel.onEvent(event = DiaryEvent.ClickedCalendarArrowForward)
+                    },
+                    onArrowBackwardsClicked = {
+                        viewModel.onEvent(event = DiaryEvent.ClickedCalendarArrowBackwards)
+                    },
                 )
 
                 val mealNames = MealName.values()

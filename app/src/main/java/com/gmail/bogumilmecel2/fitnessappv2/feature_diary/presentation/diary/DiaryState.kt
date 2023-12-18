@@ -10,7 +10,8 @@ data class DiaryState(
     val currentTotalNutritionValues: NutritionValues = NutritionValues(),
     val mealNutritionValues: Map<MealName, NutritionValues> = mutableMapOf(),
     val longClickedDiaryItemParams: LongClickedDiaryItemParams? = null,
-    val currentlySelectedMealName: MealName? = null
+    val currentlySelectedMealName: MealName? = null,
+    val displayedDate: String = ""
 ) {
     fun getDiaryEntries(mealName: MealName) = diaryEntries[mealName] ?: emptyList()
 }
