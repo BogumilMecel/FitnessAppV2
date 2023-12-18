@@ -3,26 +3,72 @@ package com.gmail.bodziowaty6978.fitnessappv2.common.data.utils
 import android.content.SharedPreferences
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.UserInformation
+import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.domain.model.User
+import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.domain.model.LogEntry
+import com.gmail.bodziowaty6978.fitnessappv2.feature_weight.domain.model.WeightEntry
 import com.google.gson.Gson
 
 class CustomSharedPreferencesUtils(
     private val sharedPreferences: SharedPreferences,
     private val gson: Gson
 ) {
+    fun updateLatestLogEntry(logEntry: LogEntry): Boolean {
+        return getUser()?.copy(
+            latestLogEntry = logEntry
+        )?.let {
+            saveItemToJson(it, SharedPreferencesKeys.USER_KEY)
+            true
+        } ?: false
+    }
+
+    fun getLatestLogEntry() = getUser()?.latestLogEntry
+
+    fun getLatestWeightEntries() = getUser()?.weightEntries ?: emptyList()
+
+    fun updateLatestWeightEntries(weightEntry: WeightEntry){
+        getUser()?.let {
+            saveUser(
+                user = it.copy(
+                    weightEntries = it.weightEntries.toMutableList().apply {
+                        add(weightEntry)
+                    }
+                )
+            )
+        }
+    }
+
     fun saveWantedNutritionValues(wantedNutritionValues: NutritionValues): Boolean{
-        return saveItemToJson(wantedNutritionValues, SharedPreferencesKeys.WANTED_NUTRITION_VALUES_KEY)
+        return getUser()?.copy(
+            nutritionValues = wantedNutritionValues
+        )?.let {
+            saveItemToJson(it, SharedPreferencesKeys.USER_KEY)
+            true
+        } ?: false
     }
 
     fun getWantedNutritionValues(): NutritionValues? {
-        return getItemFromJson(SharedPreferencesKeys.WANTED_NUTRITION_VALUES_KEY, NutritionValues::class.java)
+        return getUser()?.nutritionValues
     }
 
     fun saveUserInformation(userInformation: UserInformation): Boolean{
-        return saveItemToJson(userInformation, SharedPreferencesKeys.USER_INFORMATION_KEY)
+        return getUser()?.copy(
+            userInformation = userInformation
+        )?.let {
+            saveItemToJson(it, SharedPreferencesKeys.USER_KEY)
+            true
+        } ?: false
     }
 
     fun getUserInformation(): UserInformation? {
         return getItemFromJson(SharedPreferencesKeys.USER_INFORMATION_KEY, UserInformation::class.java)
+    }
+
+    fun getUser(): User? {
+        return getItemFromJson(SharedPreferencesKeys.USER_KEY, User::class.java)
+    }
+
+    fun saveUser(user: User): Boolean {
+        return saveItemToJson(user, SharedPreferencesKeys.USER_KEY)
     }
 
     private fun <T> getItemFromJson(key: String, clazz: Class<T>): T?{

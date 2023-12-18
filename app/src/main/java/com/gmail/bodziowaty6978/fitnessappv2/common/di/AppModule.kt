@@ -22,10 +22,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_account.domain.use_case.Del
 import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.data.api.AuthApi
 import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.data.repository.AuthRepositoryImp
 import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.domain.repository.AuthRepository
-import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.domain.use_case.AuthUseCases
-import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.domain.use_case.LogInUser
-import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.domain.use_case.RegisterUser
-import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.domain.use_case.ResetPasswordWithEmail
+import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.domain.use_case.*
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.data.api.DiaryApi
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.data.repository.remote.DiaryRepositoryImp
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.repository.DiaryRepository
@@ -49,7 +46,6 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.use_cas
 import com.gmail.bodziowaty6978.fitnessappv2.feature_splash.data.api.LoadingApi
 import com.gmail.bodziowaty6978.fitnessappv2.feature_splash.data.repository.LoadingRepositoryImp
 import com.gmail.bodziowaty6978.fitnessappv2.feature_splash.domain.repository.LoadingRepository
-import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.data.api.LogApi
 import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.data.repository.LogRepositoryImp
 import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.domain.repository.LogRepository
 import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.domain.use_case.*
@@ -215,7 +211,7 @@ object AppModule {
 
         registerUser = RegisterUser(
             repository = authRepository,
-            resourceProvider = resourceProvider
+            resourceProvider = resourceProvider,
         ),
 
         resetPasswordWithEmail = ResetPasswordWithEmail(
@@ -281,18 +277,12 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideLogApi(
-        retrofit: Retrofit
-    ): LogApi = retrofit.create(LogApi::class.java)
-
-    @Singleton
-    @Provides
     fun provideLogRepository(
-        logApi: LogApi,
+        customSharedPreferencesUtils: CustomSharedPreferencesUtils,
         resourceProvider: ResourceProvider
     ): LogRepository = LogRepositoryImp(
-        logApi = logApi,
-        resourceProvider = resourceProvider
+        resourceProvider = resourceProvider,
+        customSharedPreferencesUtils = customSharedPreferencesUtils
     )
 
     @Singleton
@@ -349,12 +339,17 @@ object AppModule {
     @Provides
     fun provideWeightRepository(
         weightApi: WeightApi,
-        resourceProvider: ResourceProvider
+        resourceProvider: ResourceProvider,
+        customSharedPreferencesUtils: CustomSharedPreferencesUtils
     ): WeightRepository = WeighRepositoryImp(
         weightApi = weightApi,
-        resourceProvider = resourceProvider
+        resourceProvider = resourceProvider,
+        customSharedPreferencesUtils = customSharedPreferencesUtils
     )
 
+    @Singleton
+    @Provides
+    fun provideGetLatestLogEntry(logRepository: LogRepository): GetLatestLogEntry = GetLatestLogEntry(logRepository = logRepository)
 
     @Singleton
     @Provides

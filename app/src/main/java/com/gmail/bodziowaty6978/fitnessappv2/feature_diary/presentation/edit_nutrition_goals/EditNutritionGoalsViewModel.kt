@@ -1,6 +1,5 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.edit_nutrition_goals
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.NavigationActions
@@ -22,7 +21,6 @@ import javax.inject.Inject
 @HiltViewModel
 class EditNutritionGoalsViewModel @Inject constructor(
     private val navigator: Navigator,
-    private val savedStateHandle: SavedStateHandle,
     private val getWantedNutritionValues: GetWantedNutritionValues,
     private val calculateNutritionValuesPercentages: CalculateNutritionValuesPercentages,
     private val saveNutritionValues: SaveNutritionValues

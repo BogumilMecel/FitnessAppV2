@@ -1,7 +1,6 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_splash.data.api
 
-import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValues
-import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.UserInformation
+import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.domain.model.User
 import retrofit2.http.GET
 
 interface LoadingApi {
@@ -9,9 +8,6 @@ interface LoadingApi {
     @GET("/authentication/authenticate")
     suspend fun authenticate(): Boolean
 
-    @GET("/userData/nutritionValues/")
-    suspend fun getNutritionValues(): NutritionValues?
-
-    @GET("/userData/userInformation")
-    suspend fun getUserInformation(): UserInformation?
+    @GET("/userData/user/")
+    suspend fun getUser(): User?
 }

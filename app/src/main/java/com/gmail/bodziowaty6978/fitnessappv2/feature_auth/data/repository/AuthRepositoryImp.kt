@@ -14,11 +14,14 @@ class AuthRepositoryImp(
     private val resourceProvider: ResourceProvider
 ) : AuthRepository {
 
-    override suspend fun logInUser(email: String, password: String): Resource<TokenResponse> {
+    override suspend fun logInUser(
+        email: String,
+        password: String
+    ): Resource<TokenResponse> {
         return try {
             val token = authApi.signIn(
                 AuthRequest(
-                    username = email,
+                    email = email,
                     password = password
                 )
             )
@@ -30,17 +33,21 @@ class AuthRepositoryImp(
     }
 
     override suspend fun registerUser(
+        username: String,
         email: String,
         password: String,
     ): CustomResult {
         return try {
             val wasAcknowledged = authApi.registerUser(
                 AuthRequest(
-                    username = email,
+                    username = username,
+                    email = email,
                     password = password
                 )
             )
-            return if (wasAcknowledged) CustomResult.Success else CustomResult.Error(resourceProvider.getUnknownErrorString())
+            return if (wasAcknowledged) CustomResult.Success else CustomResult.Error(
+                resourceProvider.getUnknownErrorString()
+            )
         } catch (e: Exception) {
             e.printStackTrace()
             CustomResult.Error(resourceProvider.getString(R.string.unknown_error))
@@ -49,5 +56,14 @@ class AuthRepositoryImp(
 
     override suspend fun sendPasswordResetEmail(email: String): CustomResult {
         return CustomResult.Error(resourceProvider.getString(R.string.unknown_error))
+    }
+
+    override suspend fun checkIfUsernameExists(username: String): Resource<Boolean> {
+        return try {
+            Resource.Success(data = authApi.checkUsername(username = username))
+        }catch (e:Exception){
+            e.printStackTrace()
+            Resource.Error(resourceProvider.getUnknownErrorString())
+        }
     }
 }
