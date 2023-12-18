@@ -27,7 +27,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.BackHandler
-import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.ButtonWithIcon
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.Button
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.DefaultCardBackground
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.PieChartWithMiddleText
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.BlueViolet3
@@ -165,11 +165,11 @@ fun AccountScreen(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        ButtonWithIcon(
+        Button(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 10.dp),
-            icon = Icons.Default.Logout,
+            iconLeft = Icons.Default.Logout,
             text = stringResource(id = R.string.log_out),
         ) {
             viewModel.onEvent(AccountEvent.ClickedLogOutButtonClicked)
