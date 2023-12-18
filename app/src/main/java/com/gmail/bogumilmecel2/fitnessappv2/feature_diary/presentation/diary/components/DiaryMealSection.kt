@@ -99,7 +99,8 @@ fun DiaryMealSection(
                             diaryItem = it,
                             mealName = mealName
                         ))
-                    })
+                    }
+                )
             }
 
             Divider(

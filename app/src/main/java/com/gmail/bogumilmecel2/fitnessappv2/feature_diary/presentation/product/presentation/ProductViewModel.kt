@@ -24,12 +24,14 @@ class ProductViewModel @Inject constructor(
 ) : BaseViewModel<ProductState, ProductEvent>(
     state = with(ProductScreenDestination.argsFrom(savedStateHandle)) {
         ProductState(
-            weight = if (entryData is ProductEntryData.Editing) entryData.productDiaryEntry.weight.toString() else "",
-            entryData = entryData,
+            weight = if (entryData is ProductEntryData.Editing) entryData.weight else "",
             date = entryData.dateTransferObject.displayedDate
         )
     }
 ) {
+
+    val entryData = ProductScreenDestination.argsFrom(savedStateHandle).entryData
+
     init {
         initializeProductData()
         getProductPrice()
@@ -45,7 +47,7 @@ class ProductViewModel @Inject constructor(
                                 nutritionData = it.nutritionData.copy(
                                     nutritionValues = productUseCases.calculateProductNutritionValuesUseCase(
                                         weight = newWeight,
-                                        product = _state.value.entryData.product
+                                        product = entryData.product
                                     )
                                 )
                             )
@@ -65,7 +67,7 @@ class ProductViewModel @Inject constructor(
                         when (entryData) {
                             is ProductEntryData.Adding -> {
                                 productUseCases.addDiaryEntry(
-                                    product = entryData.product,
+                                    productId = entryData.product.id,
                                     mealName = entryData.mealName,
                                     weight = weight.toIntOrNull(),
                                     date = entryData.dateTransferObject.realDate
@@ -78,7 +80,7 @@ class ProductViewModel @Inject constructor(
 
                             is ProductEntryData.Editing -> {
                                 editProductDiaryEntryUseCase(
-                                    productDiaryEntry = entryData.productDiaryEntry,
+                                    productDiaryEntryId = entryData.productDiaryEntryId,
                                     newWeightStringValue = weight
                                 ).handle {
                                     navigateUp()
@@ -159,7 +161,7 @@ class ProductViewModel @Inject constructor(
     }
 
     private fun initializeProductData() {
-        with(_state.value.entryData.product.nutritionValues) {
+        with(entryData.product.nutritionValues) {
             _state.update {
                 it.copy(
                     nutritionData = NutritionData(
@@ -173,7 +175,7 @@ class ProductViewModel @Inject constructor(
 
     private fun getProductPrice() {
         viewModelScope.launch {
-            productUseCases.getPriceUseCase(productId = _state.value.entryData.product.id)
+            productUseCases.getPriceUseCase(productId = entryData.product.id)
                 .handle { price ->
                     _state.update {
                         it.copy(

@@ -6,6 +6,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.GetDiaryEntriesUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.SortDiaryEntriesUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_product.SaveNewProductUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.GetProductUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -41,4 +42,10 @@ object ViewModelModule {
         diaryRepository = diaryRepository,
         resourceProvider = resourceProvider
     )
+
+    @ViewModelScoped
+    @Provides
+    fun provideGetProductUseCase(
+        diaryRepository: DiaryRepository
+    ): GetProductUseCase = GetProductUseCase(diaryRepository)
 }

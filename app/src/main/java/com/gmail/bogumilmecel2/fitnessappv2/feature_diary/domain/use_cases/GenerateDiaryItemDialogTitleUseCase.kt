@@ -14,7 +14,7 @@ class GenerateDiaryItemDialogTitleUseCase(
             "${diaryItem.recipe.name} (${resourceProvider.getPluralString(R.plurals.servings, diaryItem.servings)})"
         }
         is ProductDiaryEntry -> {
-            "${diaryItem.product.name} (${diaryItem.weight}${resourceProvider.getString(stringResId = diaryItem.product.measurementUnit.getStringRes())})"
+            "${diaryItem.productName} (${diaryItem.weight}${resourceProvider.getString(stringResId = diaryItem.productMeasurementUnit.getStringRes())})"
         }
         else -> ""
     }

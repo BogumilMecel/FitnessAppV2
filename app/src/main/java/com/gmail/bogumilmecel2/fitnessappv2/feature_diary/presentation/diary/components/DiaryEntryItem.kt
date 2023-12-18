@@ -57,7 +57,7 @@ fun DiaryEntryItem(
                 ) {
                     Text(
                         text = when (diaryItem) {
-                            is ProductDiaryEntry -> diaryItem.product.name
+                            is ProductDiaryEntry -> diaryItem.productName
                             is RecipeDiaryEntry -> diaryItem.recipe.name
                             else -> ""
                         },
@@ -110,7 +110,6 @@ fun DiaryEntryItem(
                         style = MaterialTheme.typography.body2,
                         color = FitnessAppTheme.colors.ContentSecondary
                     )
-
                 }
             }
         }

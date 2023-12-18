@@ -7,13 +7,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.domain.model.NutritionData
 
 @Composable
 fun ProductMainSection(
     modifier: Modifier = Modifier,
-    product: Product,
+    productName: String,
     currentWeight: String,
     onWeightEntered: (String) -> Unit,
     nutritionData: NutritionData
@@ -23,7 +22,7 @@ fun ProductMainSection(
     ) {
         ProductNameSection(
             currentWeight = currentWeight,
-            product = product,
+            productName = productName,
             onWeightEntered = {
                 onWeightEntered(it)
             },

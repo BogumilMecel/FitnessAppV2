@@ -3,14 +3,13 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.prod
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.toValidInt
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.EditProductDiaryEntryRequest
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 
 class EditProductDiaryEntryUseCase(
     private val diaryRepository: DiaryRepository
 ) {
     suspend operator fun invoke(
-        productDiaryEntry: ProductDiaryEntry,
+        productDiaryEntryId: String,
         newWeightStringValue: String
     ): Resource<Unit> {
         val weight = newWeightStringValue.toValidInt() ?: return Resource.Error()
@@ -21,7 +20,7 @@ class EditProductDiaryEntryUseCase(
 
         return diaryRepository.editProductDiaryEntry(
             editProductDiaryEntryRequest = EditProductDiaryEntryRequest(
-                productDiaryEntryId = productDiaryEntry.id,
+                productDiaryEntryId = productDiaryEntryId,
                 newWeight = weight
             )
         )

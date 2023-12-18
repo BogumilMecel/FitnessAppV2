@@ -4,7 +4,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.MealName
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntryPostRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
@@ -15,7 +14,7 @@ class AddDiaryEntry(
 ) {
 
     suspend operator fun invoke(
-        product: Product,
+        productId: String,
         mealName: MealName,
         date: String,
         weight: Int?,
@@ -27,7 +26,7 @@ class AddDiaryEntry(
                 )
             } else {
                 val productDiaryEntryPostRequest = ProductDiaryEntryPostRequest(
-                    product = product,
+                    productId = productId,
                     weight = it,
                     mealName = mealName,
                     date = date,
