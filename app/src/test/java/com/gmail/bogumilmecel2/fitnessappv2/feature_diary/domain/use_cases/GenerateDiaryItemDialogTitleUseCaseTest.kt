@@ -4,6 +4,8 @@ import androidx.compose.runtime.Composable
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.BaseMockkTest
 import com.gmail.bogumilmecel2.fitnessappv2.common.MockConstants
+import com.gmail.bogumilmecel2.fitnessappv2.common.MockConstants.Diary.SERVING
+import com.gmail.bogumilmecel2.fitnessappv2.common.MockConstants.Diary.SERVINGS
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.DiaryItem
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.MeasurementUnit
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
@@ -20,8 +22,6 @@ import kotlin.test.assertEquals
 class GenerateDiaryItemDialogTitleUseCaseTest : BaseMockkTest() {
 
     companion object {
-        private const val SERVING = "serving"
-        private const val SERVINGS = "servings"
         private const val GRAMS = "g"
         private const val MILLILITERS = "ml"
     }
