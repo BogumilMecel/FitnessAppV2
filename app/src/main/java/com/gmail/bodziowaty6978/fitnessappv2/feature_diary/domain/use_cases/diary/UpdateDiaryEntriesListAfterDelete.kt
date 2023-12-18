@@ -8,24 +8,23 @@ class UpdateDiaryEntriesListAfterDelete {
         diaryEntryId: Int,
         meals: List<Meal>
     ): List<Meal> {
-        meals.forEach { meal ->
-            meal.diaryEntries.forEach { calculatedDiaryEntry ->
-                val diaryEntry = calculatedDiaryEntry.diaryEntry
-                if (diaryEntry.id == diaryEntryId) {
-                    val mutableDiaryEntries = meal.diaryEntries.toMutableList()
-                    mutableDiaryEntries.removeIf { comparedDiaryEntryWithId ->
-                        comparedDiaryEntryWithId.diaryEntry.id == diaryEntryId
-                    }
-                    val mutableMeals = meals.toMutableList()
-                    mutableMeals.remove(meal)
-                    mutableMeals.add(
-                        Meal(
-                            mealName = meal.mealName,
-                            diaryEntries = mutableDiaryEntries
-                        )
-                    )
-                    return mutableMeals
-                }
+        meals.forEachIndexed { index, meal ->
+            val diaryEntry = meal.diaryEntries.find {
+                it.diaryEntry.id == diaryEntryId
+            }
+
+            diaryEntry?.let {
+                val mutableDiaryEntries = meal.diaryEntries.toMutableList()
+                mutableDiaryEntries.remove(it)
+
+                val newMeal = Meal(
+                    mealName = meal.mealName,
+                    diaryEntries = mutableDiaryEntries
+                )
+
+                val mutableMeals = meals.toMutableList()
+                mutableMeals[index] = newMeal
+                return mutableMeals
             }
         }
         return meals
