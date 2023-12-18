@@ -104,3 +104,13 @@ abstract class BaseViewModel<STATE : Any, EVENT : Any, NAV_ARGUMENTS : Any>(
         )
     }
 }
+
+abstract class BaseResultViewModel<STATE : Any, EVENT : Any, NAV_ARGUMENTS : Any, RESULT_BACK : Any>(
+    state: STATE,
+    navArguments: NAV_ARGUMENTS
+) : BaseViewModel<STATE, EVENT, NAV_ARGUMENTS>(
+    state = state,
+    navArguments = navArguments
+) {
+    val resultBack: Channel<RESULT_BACK> = Channel()
+}

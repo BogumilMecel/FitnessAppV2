@@ -1,6 +1,7 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search
 
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductResult
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 
 sealed interface SearchEvent {
@@ -13,6 +14,7 @@ sealed interface SearchEvent {
     data class ClickedProduct(val product: Product) : SearchEvent
     data class ClickedRecipe(val recipe: Recipe) : SearchEvent
     data class SelectedTab(val index: Int) : SearchEvent
+    data class ReceivedProductResult(val product: ProductResult): SearchEvent
     data object ClickedCreateNewRecipe : SearchEvent
     data object ReachedListEnd : SearchEvent
     data object DismissedNoProductFoundDialog : SearchEvent

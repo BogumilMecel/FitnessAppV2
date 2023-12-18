@@ -3,10 +3,11 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.gmail.bogumilmecel2.fitnessappv2.R
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseResultViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.toValidInt
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.DiaryScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.ProductScreenDestination
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductResult
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.ProductUseCases
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.domain.model.NutritionData
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +20,7 @@ import javax.inject.Inject
 class ProductViewModel @Inject constructor(
     private val productUseCases: ProductUseCases,
     savedStateHandle: SavedStateHandle
-) : BaseViewModel<ProductState, ProductEvent, ProductNavArguments>(
+) : BaseResultViewModel<ProductState, ProductEvent, ProductNavArguments, ProductResult>(
     state = ProductState(),
     navArguments = ProductScreenDestination.argsFrom(savedStateHandle)
 ) {
@@ -27,10 +28,38 @@ class ProductViewModel @Inject constructor(
     val entryData = navArguments.entryData
 
     override fun configureOnStart() {
+        when (entryData) {
+            is ProductEntryData.Editing -> {
+                _state.update {
+                    it.copy(
+                        weight = entryData.productDiaryEntry.weight.toString(),
+                        headerSecondaryText = entryData.displayedDate,
+                        headerPrimaryText = resourceProvider.getString(stringResId = entryData.mealName.getDisplayValue())
+                    )
+                }
+            }
+
+            is ProductEntryData.Adding -> {
+                _state.update {
+                    it.copy(
+                        headerSecondaryText = entryData.dateTransferObject.displayedDate,
+                        headerPrimaryText = resourceProvider.getString(stringResId = entryData.mealName.getDisplayValue())
+                    )
+                }
+            }
+
+            is ProductEntryData.NewRecipe -> {
+                _state.update {
+                    it.copy(
+                        headerPrimaryText = entryData.recipeName
+                            .ifEmpty { resourceProvider.getString(stringResId = R.string.search_add_ingredient) }
+                    )
+                }
+            }
+        }
+
         _state.update {
             it.copy(
-                weight = if (entryData is ProductEntryData.Editing) entryData.productDiaryEntry.weight.toString() else "",
-                date = entryData.dateTransferObject.displayedDate,
                 nutritionData = NutritionData(
                     nutritionValues = entryData.product.nutritionValues,
                     pieChartData = productUseCases.createPieChartDataUseCase(nutritionValues = entryData.product.nutritionValues)
@@ -90,6 +119,15 @@ class ProductViewModel @Inject constructor(
                                 ).handle {
                                     navigateUp()
                                 }
+                            }
+
+                            is ProductEntryData.NewRecipe -> {
+                                resultBack.send(
+                                    element = ProductResult(
+                                        product = entryData.product,
+                                        weight = weight
+                                    )
+                                )
                             }
                         }
                     }

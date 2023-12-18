@@ -1,7 +1,6 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.presentation
 
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.MeasurementUnit
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.MealName
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductPrice
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.domain.model.NutritionData
 
@@ -14,6 +13,6 @@ data class ProductState(
     val isSubmitPriceDialogVisible: Boolean = false,
     val productName: String = "",
     val productMeasurementUnit: MeasurementUnit = MeasurementUnit.GRAMS,
-    val mealName: MealName = MealName.BREAKFAST,
-    val date: String = ""
+    val headerPrimaryText: String = "",
+    val headerSecondaryText: String = ""
 )

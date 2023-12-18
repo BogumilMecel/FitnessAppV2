@@ -5,13 +5,14 @@ import androidx.lifecycle.viewModelScope
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.ApiConstants
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BarcodeScanner
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseResultViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.NewProductScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.NewRecipeScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.ProductScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.RecipeScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.SearchScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductResult
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.SearchDiaryUseCases
@@ -29,7 +30,7 @@ class SearchViewModel @Inject constructor(
     private val searchDiaryUseCases: SearchDiaryUseCases,
     private val barcodeScanner: BarcodeScanner,
     savedStateHandle: SavedStateHandle,
-) : BaseViewModel<SearchState, SearchEvent, SearchNavArguments>(
+) : BaseResultViewModel<SearchState, SearchEvent, SearchNavArguments, ProductResult>(
     state = SearchState(),
     navArguments = SearchScreenDestination.argsFrom(savedStateHandle)
 ) {
@@ -46,13 +47,29 @@ class SearchViewModel @Inject constructor(
     private var currentTabIndex = SearchTab.EVERYTHING.ordinal
     private var searchText: String? = null
     private var barcode: String? = null
+    private val entryData = navArguments.entryData
 
     override fun configureOnStart() {
-        _state.update {
-            it.copy(
-                mealName = navArguments.mealName,
-                date = navArguments.dateTransferObject.displayedDate
-            )
+        with(entryData) {
+            when(this) {
+                is SearchEntryData.DiaryArguments -> {
+                    _state.update {
+                        it.copy(
+                            headerPrimaryText = resourceProvider.getString(stringResId = mealName.getDisplayValue()),
+                            headerSecondaryText = dateTransferObject.displayedDate,
+                        )
+                    }
+                }
+
+                is SearchEntryData.NewRecipeArguments -> {
+                    _state.update { state ->
+                        state.copy(
+                            headerPrimaryText = recipeName.ifEmpty { resourceProvider.getString(R.string.search_add_ingredient) },
+                            recipeTabVisible = false
+                        )
+                    }
+                }
+            }
         }
 
         if (!isDataInitialized) {
@@ -96,17 +113,19 @@ class SearchViewModel @Inject constructor(
             }
 
             is SearchEvent.ClickedNewProduct -> {
-                _state.update {
-                    it.copy(noProductFoundVisible = false)
-                }
-                navigateTo(
-                    NewProductScreenDestination(
-                        mealName = _state.value.mealName,
-                        barcode = barcode,
-                        dateTransferObject = navArguments.dateTransferObject
+                if (entryData is SearchEntryData.DiaryArguments) {
+                    _state.update {
+                        it.copy(noProductFoundVisible = false)
+                    }
+                    navigateTo(
+                        NewProductScreenDestination(
+                            mealName = entryData.mealName,
+                            barcode = barcode,
+                            dateTransferObject = entryData.dateTransferObject
+                        )
                     )
-                )
-                barcode = null
+                    barcode = null
+                }
             }
 
             is SearchEvent.ClickedScanButton -> {
@@ -125,12 +144,14 @@ class SearchViewModel @Inject constructor(
             }
 
             is SearchEvent.ClickedCreateNewRecipe -> {
-                navigateTo(
-                    NewRecipeScreenDestination(
-                        mealName = navArguments.mealName,
-                        dateTransferObject = navArguments.dateTransferObject
+                if (entryData is SearchEntryData.DiaryArguments) {
+                    navigateTo(
+                        NewRecipeScreenDestination(
+                            mealName = entryData.mealName,
+                            dateTransferObject = entryData.dateTransferObject
+                        )
                     )
-                )
+                }
             }
 
             is SearchEvent.SelectedTab -> {
@@ -144,15 +165,17 @@ class SearchViewModel @Inject constructor(
             }
 
             is SearchEvent.ClickedRecipe -> {
-                navigateTo(
-                    RecipeScreenDestination(
-                        entryData = RecipeEntryData.Adding(
-                            recipe = event.recipe,
-                            mealName = navArguments.mealName,
-                            dateTransferObject = navArguments.dateTransferObject
+                if (entryData is SearchEntryData.DiaryArguments) {
+                    navigateTo(
+                        RecipeScreenDestination(
+                            entryData = RecipeEntryData.Adding(
+                                recipe = event.recipe,
+                                mealName = entryData.mealName,
+                                dateTransferObject = entryData.dateTransferObject
+                            )
                         )
                     )
-                )
+                }
             }
 
             is SearchEvent.ReachedListEnd -> {
@@ -165,6 +188,12 @@ class SearchViewModel @Inject constructor(
                     it.copy(
                         noProductFoundVisible = false
                     )
+                }
+            }
+
+            is SearchEvent.ReceivedProductResult -> {
+                viewModelScope.launch {
+                    resultBack.send(event.product)
                 }
             }
         }
@@ -349,7 +378,13 @@ class SearchViewModel @Inject constructor(
                 showSnackbar = false
             ) { product ->
                 product?.let {
-                    navigateToProductScreen(product = it)
+                    resultBack.send(
+                        ProductResult(
+                            product = product,
+                            weight = 200
+                        )
+                    )
+//                    navigateToProductScreen(product = it)
                 }
             }
         }
@@ -381,31 +416,35 @@ class SearchViewModel @Inject constructor(
                     }
                 }
             ) { product ->
-                product?.let {
-                    navigate(
-                        ProductScreenDestination(
-                            entryData = ProductEntryData.Adding(
-                                product = product,
-                                mealName = _state.value.mealName,
-                                dateTransferObject = navArguments.dateTransferObject
-                            ),
+                if (entryData is SearchEntryData.DiaryArguments) {
+                    product?.let {
+                        navigate(
+                            ProductScreenDestination(
+                                entryData = ProductEntryData.Adding(
+                                    product = product,
+                                    mealName = entryData.mealName,
+                                    dateTransferObject = entryData.dateTransferObject
+                                ),
+                            )
                         )
-                    )
+                    }
                 }
             }
         }
     }
 
     private fun navigateToProductScreen(product: Product) {
-        navigateTo(
-            ProductScreenDestination(
-                entryData = ProductEntryData.Adding(
-                    product = product,
-                    mealName = _state.value.mealName,
-                    dateTransferObject = navArguments.dateTransferObject
-                ),
+        if (entryData is SearchEntryData.DiaryArguments) {
+            navigateTo(
+                ProductScreenDestination(
+                    entryData = ProductEntryData.Adding(
+                        product = product,
+                        mealName = entryData.mealName,
+                        dateTransferObject = entryData.dateTransferObject
+                    ),
+                )
             )
-        )
+        }
     }
 }
 
