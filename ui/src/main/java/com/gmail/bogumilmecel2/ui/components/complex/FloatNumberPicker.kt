@@ -4,28 +4,28 @@ import androidx.compose.ui.Modifier
 import com.chargemap.compose.numberpicker.ListItemPicker
 
 @androidx.compose.runtime.Composable
-fun FloatNumberPicker(
+fun DoubleNumberPicker(
     modifier: Modifier,
-    value: Float,
-    minValue: Float,
-    maxValue: Float,
-    onValueChange: (Float) -> Unit
+    value: Double,
+    minValue: Double,
+    maxValue: Double,
+    onValueChange: (Double) -> Unit
 ) {
-    val realMinValue = (minValue / 0.1f).toInt()
-    val realMaxValue = (maxValue / 0.1f).toInt()
+    val realMinValue = (minValue / 0.1).toInt()
+    val realMaxValue = (maxValue / 0.1).toInt()
 
     ListItemPicker(
         value = value,
         onValueChange = onValueChange,
         list = (realMinValue..realMaxValue).map {
-            (it.toFloat() * 0.1f).round(1)
+            (it.toDouble() * 0.1).round(1)
         },
         modifier = modifier
     )
 }
 
-private fun Float.round(decimals: Int): Float {
+private fun Double.round(decimals: Int): Double {
     var multiplier = 1.0
     repeat(decimals) { multiplier *= 10 }
-    return (kotlin.math.round(this * multiplier) / multiplier).toFloat()
+    return (kotlin.math.round(this * multiplier) / multiplier)
 }

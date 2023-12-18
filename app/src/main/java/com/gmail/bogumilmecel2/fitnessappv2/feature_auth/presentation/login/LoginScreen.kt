@@ -32,6 +32,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.presentation.util.AuthE
 import com.gmail.bogumilmecel2.ui.components.base.CustomBasicTextField
 import com.gmail.bogumilmecel2.ui.components.base.CustomButton
 import com.gmail.bogumilmecel2.ui.components.base.IconVector
+import com.gmail.bogumilmecel2.ui.components.base.LeftContent
 import com.ramcosta.composedestinations.annotation.Destination
 
 @Composable
@@ -109,7 +110,7 @@ fun LoginScreen(
                             .padding(horizontal = 20.dp)
                             .fillMaxWidth()
                             .testTag(TestTags.General.PRIMARY_BUTTON),
-                        iconLeft = IconVector.Login,
+                        leftContent = LeftContent.Icon(IconVector.Login),
                         text = stringResource(id = R.string.sign_in)
                     )
 

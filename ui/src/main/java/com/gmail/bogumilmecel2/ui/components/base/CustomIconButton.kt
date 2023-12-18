@@ -17,7 +17,7 @@ fun CustomIconButton(
         enabled = params.enabled
     ) {
         CustomIcon(
-            iconStyle = params.iconVector,
+            iconVector = params.iconVector,
             iconColor = iconColor
         )
     }

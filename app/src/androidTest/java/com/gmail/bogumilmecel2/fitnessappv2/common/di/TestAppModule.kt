@@ -268,7 +268,7 @@ object TestAppModule {
         ) {
         }
 
-        override suspend fun getLatestLogEntry() = LogEntry()
+        override suspend fun getLogStreak() = LogEntry()
 
         override suspend fun getLatestWeightEntry() = null
 

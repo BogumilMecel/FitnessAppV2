@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.OutlinedButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,7 +21,7 @@ import com.gmail.bogumilmecel2.ui.theme.FitnessAppColor
 fun CustomButton(
     modifier: Modifier = Modifier,
     buttonStyle: ButtonStyle = ButtonStyle.PrimaryButton,
-    iconLeft: IconVector? = null,
+    leftContent: LeftContent? = null,
     text: String,
     onClick: () -> Unit
 ) = with(buttonStyle) {
@@ -43,7 +44,7 @@ fun CustomButton(
                 )
             ) {
                 ButtonContent(
-                    iconLeft = iconLeft,
+                    leftContent = leftContent,
                     text = text,
                     contentColor = buttonStyle.contentColor
                 )
@@ -62,7 +63,7 @@ fun CustomButton(
                 shape = shape
             ) {
                 ButtonContent(
-                    iconLeft = iconLeft,
+                    leftContent = leftContent,
                     text = text,
                     contentColor = buttonStyle.contentColor
                 )
@@ -73,7 +74,7 @@ fun CustomButton(
 
 @Composable
 private fun ButtonContent(
-    iconLeft: IconVector?,
+    leftContent: LeftContent?,
     text: String,
     contentColor: FitnessAppColor
 ) {
@@ -84,11 +85,17 @@ private fun ButtonContent(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
-        iconLeft?.let {
-            CustomIcon(
-                iconStyle = it,
-                iconColor = contentColor(),
-            )
+        leftContent?.let { content ->
+            when(content) {
+                is LeftContent.Icon -> CustomIcon(
+                    iconVector = content.iconVector,
+                    iconColor = contentColor(),
+                )
+
+                is LeftContent.Loading -> {
+                    CircularProgressIndicator()
+                }
+            }
 
             WidthSpacer(width = 8.dp)
         }
@@ -100,6 +107,11 @@ private fun ButtonContent(
             )
         )
     }
+}
+
+sealed interface LeftContent {
+    data class Icon(val iconVector: IconVector): LeftContent
+    object Loading: LeftContent
 }
 
 enum class ButtonType {

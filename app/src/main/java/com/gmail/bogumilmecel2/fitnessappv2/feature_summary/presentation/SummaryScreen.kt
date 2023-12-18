@@ -15,10 +15,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.BackHandler
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.BottomSheetContent
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.presentation.components.CaloriesSumSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.presentation.components.LogStreakSection
-import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.presentation.components.WeightPickerDialog
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.presentation.components.WeightSection
 import com.ramcosta.composedestinations.annotation.Destination
 
@@ -36,24 +34,6 @@ fun SummaryScreen(
 
     BackHandler {
         activity?.finish()
-    }
-
-    if (state.isWeightPickerVisible) {
-        viewModel.showBottomSheet(
-            bottomSheetContent = BottomSheetContent(
-                content = {
-                    WeightPickerDialog(
-                        onEvent = {
-                            viewModel.onEvent(it)
-                        },
-                        startingValue = 100.0f
-                    )
-                },
-                onBottomSheetClosed = {
-                    viewModel.onEvent(SummaryEvent.DismissedWeightPickerDialog)
-                }
-            ),
-        )
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
@@ -90,6 +70,5 @@ fun SummaryScreen(
         )
 
         Spacer(modifier = Modifier.height(12.dp))
-
     }
 }

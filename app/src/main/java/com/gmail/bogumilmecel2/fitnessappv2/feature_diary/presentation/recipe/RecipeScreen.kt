@@ -46,6 +46,7 @@ import com.gmail.bogumilmecel2.ui.components.base.CustomButton
 import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
 import com.gmail.bogumilmecel2.ui.components.base.IconButtonParams
 import com.gmail.bogumilmecel2.ui.components.base.IconVector
+import com.gmail.bogumilmecel2.ui.components.base.LeftContent
 import com.gmail.bogumilmecel2.ui.components.base.WidthSpacer
 import com.gmail.bogumilmecel2.ui.components.complex.HeaderRow
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
@@ -231,7 +232,7 @@ fun RecipeScreen(
 
                     CustomButton(
                         modifier = Modifier.fillMaxWidth(),
-                        iconLeft = IconVector.Save,
+                        leftContent = LeftContent.Icon(IconVector.Save),
                         text = stringResource(
                             id = R.string.recipe_save_to,
                             state.entryData.mealName
@@ -337,7 +338,7 @@ fun RecipeScreen(
 
             CustomButton(
                 modifier = Modifier.padding(horizontal = 15.dp),
-                iconLeft = IconVector.Edit,
+                leftContent = LeftContent.Icon(IconVector.Edit),
                 text = stringResource(id = R.string.recipe_edit),
                 buttonStyle = ButtonStyle.ButtonSecondary
             ) {

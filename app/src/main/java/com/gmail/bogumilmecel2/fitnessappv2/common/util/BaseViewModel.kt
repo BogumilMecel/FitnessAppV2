@@ -36,10 +36,8 @@ abstract class BaseViewModel<STATE: Any, EVENT: Any>(state: STATE) : ViewModel()
         }
     }
 
-    fun showBottomSheet(bottomSheetContent: BottomSheetContent) {
-        viewModelScope.launch {
-            bottomSheetContentProvider.provideContent(bottomSheetContent)
-        }
+    protected suspend fun showBottomSheet(bottomSheetContent: BottomSheetContent) {
+        bottomSheetContentProvider.provideContent(bottomSheetContent)
     }
 
     abstract fun onEvent(event: EVENT)
