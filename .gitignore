@@ -331,3 +331,4 @@ $RECYCLE.BIN/
 *.lnk
 /.idea/deploymentTargetDropDown.xml
 /.idea/androidTestResultsUserPreferences.xml
+/.idea/appInsightsSettings.xml
