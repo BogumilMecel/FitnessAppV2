@@ -41,7 +41,7 @@ fun CustomBasicTextField(
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     textAlign: TextAlign = TextAlign.Start,
     visualTransformation: VisualTransformation = VisualTransformation.None,
-    leadingIcon: IconVector? = null
+    leadingIcon: Icon? = null
 ) {
     val textPadding = PaddingValues(
         start = 12.dp,
@@ -89,7 +89,7 @@ fun CustomBasicTextField(
             cursorBrush = SolidColor(Color.White),
             singleLine = singleLine,
             keyboardOptions = keyboardOptions,
-            visualTransformation = visualTransformation
+            visualTransformation = visualTransformation,
         )
 
         Row(
@@ -100,7 +100,7 @@ fun CustomBasicTextField(
         ) {
             leadingIcon?.let {
                 CustomIcon(
-                    iconVector = it,
+                    icon = it,
                     modifier = Modifier.size(24.dp)
                 )
             }
