@@ -2,11 +2,12 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.data.reposito
 
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.utils.CustomSharedPreferencesUtils
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValues
-import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.UserInformation
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseRepository
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
+import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.domain.model.User
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.data.api.UserDataApi
+import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.model.IntroductionRequest
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.repository.UserDataRepository
 
 
@@ -26,15 +27,13 @@ class UserDataRepositoryImp(
         }
     }
 
-    override suspend fun saveUserInformation(
-        userInformation: UserInformation
-    ): Resource<Unit> {
+    override suspend fun saveUserInformation(introductionRequest: IntroductionRequest): Resource<User> {
         return handleRequest {
-            userDataApi.saveUserInformation(userInformation = userInformation).let {
-                if (it) {
-                    customSharedPreferencesUtils.saveUserInformation(userInformation)
-                }
-            }
+            val user = userDataApi.saveUserInformation(
+                introductionRequest = introductionRequest
+            )
+            customSharedPreferencesUtils.saveUser(user)
+            user
         }
     }
 }

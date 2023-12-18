@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.DefaultTextField
@@ -18,7 +19,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.Defa
 @Composable
 fun TextQuestion(
     text: String,
-    unit: String = "",
+    unitResId: Int?,
     onTextEntered: (String) -> Unit,
     tag:String
 ) {
@@ -43,13 +44,15 @@ fun TextQuestion(
             singleLine = true
         )
 
-        Text(
-            text = unit,
-            style = MaterialTheme.typography.body1.copy(
-                color = MaterialTheme.colors.onBackground
-            ),
-            modifier = Modifier
-                .padding(start = 10.dp)
-        )
+        unitResId?.let {
+            Text(
+                text = stringResource(id = it),
+                style = MaterialTheme.typography.body1.copy(
+                    color = MaterialTheme.colors.onBackground
+                ),
+                modifier = Modifier
+                    .padding(start = 10.dp)
+            )
+        }
     }
 }

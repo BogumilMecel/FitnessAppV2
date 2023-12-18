@@ -3,6 +3,9 @@
 
     <string name="unknown_error">An unknown error has happened</string>
 
+    <string name="cm">cm</string>
+    <string name="kg">kg</string>
+
 <!--    Auth-->
     <string name="email_address">Email Address</string>
     <string name="password">Password</string>
@@ -27,7 +30,7 @@
     <string name="what_is_your_gender">What is your gender?</string>
     <string name="what_is_your_age">What is your age?</string>
     <string name="what_is_your_current_weight">What is your current weight?</string>
-    <string name="what_is_your_desired_weight">What is your desired weight?</string>
+    <string name="what_is_your_desired_weight">What would you like to do with your weight?</string>
     <string name="what_is_your_height">What is your height?</string>
     <string name="what_type_of_work_do_you_have">What type of work do you have?</string>
     <string name="how_often_do_you_train_in_a_week">How often do you train in a week</string>
@@ -35,6 +38,7 @@
     <string name="please_make_sure_you_have_entered_your_weight">Please make sure you have entered your weight</string>
     <string name="please_make_sure_you_have_entered_your_desired_weight">Please make sure you have entered your desired weight</string>
     <string name="please_make_sure_you_have_entered_your_age">Please make sure you have entered your age</string>
+    <string name="introduction_height_error">Please make sure you have entered correct height</string>
 
 <!--    Common-->
     <string name="calories">Calories</string>
@@ -172,6 +176,7 @@
     <string name="introduction_female">Female</string>
     <string name="introduction_loose">Loose</string>
     <string name="introduction_gain">Gain</string>
+    <string name="introduction_keep">Keep</string>
 
 
 <!--    Test tags-->
@@ -191,5 +196,4 @@
     <string name="SEARCH_BUTTON">SEARCH BUTTON</string>
     <string name="WEIGHT_BUTTON">WEIGHT BUTTON</string>
     <string name="scanner">SCANNER</string>
-
 </resources>

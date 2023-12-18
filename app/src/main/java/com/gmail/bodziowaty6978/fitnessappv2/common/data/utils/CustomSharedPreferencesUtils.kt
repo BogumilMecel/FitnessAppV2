@@ -2,7 +2,6 @@ package com.gmail.bodziowaty6978.fitnessappv2.common.data.utils
 
 import android.content.Context
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValues
-import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.UserInformation
 import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.domain.model.User
 import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.domain.model.LogEntry
 import com.gmail.bodziowaty6978.fitnessappv2.feature_weight.domain.model.WeightEntry
@@ -40,16 +39,6 @@ class CustomSharedPreferencesUtils(
             true
         } ?: false
     }
-
-    fun saveUserInformation(userInformation: UserInformation): Boolean{
-        return getUser()?.copy(
-            userInformation = userInformation
-        )?.let {
-            saveItemToJson(it, USER_KEY)
-            true
-        } ?: false
-    }
-
     fun getUserId() = getUser()?.id ?: ""
     fun getUsername() = getUser()?.username ?: ""
     fun getFavoriteRecipesIds() = getUser()?.favoriteUserRecipesIds ?: emptyList()

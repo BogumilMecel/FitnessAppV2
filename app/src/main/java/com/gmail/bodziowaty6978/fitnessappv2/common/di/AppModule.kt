@@ -37,7 +37,6 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.sear
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.data.api.UserDataApi
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.data.repository.UserDataRepositoryImp
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.repository.UserDataRepository
-import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.use_cases.CalculateNutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.use_cases.SaveIntroductionInformation
 import com.gmail.bodziowaty6978.fitnessappv2.feature_splash.data.api.LoadingApi
 import com.gmail.bodziowaty6978.fitnessappv2.feature_splash.data.repository.LoadingRepositoryImp
@@ -221,11 +220,6 @@ object AppModule {
 
         )
 
-    @Provides
-    @Singleton
-    fun provideCalculateNutritionValuesUseCase(): CalculateNutritionValues =
-        CalculateNutritionValues()
-
     @Singleton
     @Provides
     fun provideSaveNutritionValues(userDataRepository: UserDataRepository): SaveNutritionValues =
@@ -236,13 +230,9 @@ object AppModule {
     fun provideSaveInformationUseCase(
         userDataRepository: UserDataRepository,
         resourceProvider: ResourceProvider,
-        calculateNutritionValues: CalculateNutritionValues,
-        saveNutritionValues: SaveNutritionValues
     ): SaveIntroductionInformation = SaveIntroductionInformation(
         userDataRepository = userDataRepository,
-        resourceProvider = resourceProvider,
-        calculateNutritionValues = calculateNutritionValues,
-        saveNutritionValues = saveNutritionValues
+        resourceProvider = resourceProvider
     )
 
     @Singleton
