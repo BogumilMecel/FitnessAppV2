@@ -12,7 +12,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.BackHandler
-import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.SummaryViewModel
 import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.presentation.components.CaloriesSumSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.presentation.components.LogStreakSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.presentation.components.WeightPickerDialog

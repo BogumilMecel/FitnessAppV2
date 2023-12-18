@@ -46,13 +46,13 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.data.repositor
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.repository.UserDataRepository
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.use_cases.CalculateNutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.use_cases.SaveIntroductionInformation
-import com.gmail.bodziowaty6978.fitnessappv2.feature_log.data.api.LogApi
-import com.gmail.bodziowaty6978.fitnessappv2.feature_log.data.repository.LogRepositoryImp
-import com.gmail.bodziowaty6978.fitnessappv2.feature_log.domain.repository.LogRepository
-import com.gmail.bodziowaty6978.fitnessappv2.feature_log.domain.use_case.*
 import com.gmail.bodziowaty6978.fitnessappv2.feature_splash.data.api.LoadingApi
 import com.gmail.bodziowaty6978.fitnessappv2.feature_splash.data.repository.LoadingRepositoryImp
 import com.gmail.bodziowaty6978.fitnessappv2.feature_splash.domain.repository.LoadingRepository
+import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.data.api.LogApi
+import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.data.repository.LogRepositoryImp
+import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.domain.repository.LogRepository
+import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.domain.use_case.*
 import com.gmail.bodziowaty6978.fitnessappv2.feature_weight.data.api.WeightApi
 import com.gmail.bodziowaty6978.fitnessappv2.feature_weight.data.repository.WeighRepositoryImp
 import com.gmail.bodziowaty6978.fitnessappv2.feature_weight.domain.repository.WeightRepository
@@ -297,14 +297,6 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideInsertLogUseCase(
-        logRepository: LogRepository
-    ): InsertLogEntry = InsertLogEntry(
-        logRepository = logRepository,
-    )
-
-    @Singleton
-    @Provides
     fun provideCalculateRecipePriceUseCase(): CalculateRecipePrice = CalculateRecipePrice()
 
     @Singleton
@@ -368,14 +360,11 @@ object AppModule {
     @Provides
     fun provideSummaryUseCases(
         logRepository: LogRepository,
-        insertLogEntry: InsertLogEntry,
         diaryRepository: DiaryRepository,
         weightRepository: WeightRepository,
     ): SummaryUseCases = SummaryUseCases(
         getLatestLogEntry = GetLatestLogEntry(logRepository = logRepository),
-        checkLatestLogEntry = CheckLatestLogEntry(insertLogEntry = insertLogEntry),
         getCaloriesSum = GetCaloriesSum(diaryRepository = diaryRepository),
-        insertLogEntry = insertLogEntry,
         addWeightEntry = AddWeightEntry(weightRepository = weightRepository),
         getLatestWeightEntries = GetLatestWeightEntries(weightRepository = weightRepository),
         calculateWeightProgress = CalculateWeightProgress()

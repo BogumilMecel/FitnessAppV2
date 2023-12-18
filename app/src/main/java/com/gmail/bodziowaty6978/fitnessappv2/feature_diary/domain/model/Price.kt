@@ -4,7 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Price(
-    val id:Int = -1,
     val value:Double = 0.0,
     val currency:String = "zł"
 )

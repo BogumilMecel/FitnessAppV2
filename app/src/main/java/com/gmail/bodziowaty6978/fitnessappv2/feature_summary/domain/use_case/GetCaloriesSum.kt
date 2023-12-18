@@ -1,6 +1,5 @@
-package com.gmail.bodziowaty6978.fitnessappv2.feature_log.domain.use_case
+package com.gmail.bodziowaty6978.fitnessappv2.feature_summary.domain.use_case
 
-import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 
 class GetCaloriesSum(
@@ -8,7 +7,7 @@ class GetCaloriesSum(
 ) {
     suspend operator fun invoke(
         date: String
-    ): Resource<Int> {
-        return diaryRepository.getCaloriesSum(date = date)
+    ): Int {
+        return diaryRepository.getCaloriesSum(date = date).data ?: 0
     }
 }

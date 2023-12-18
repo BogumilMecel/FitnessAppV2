@@ -14,24 +14,25 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.repository.Dia
 import java.util.*
 
 class DiaryRepositoryImp(
-    private val diaryApi:DiaryApi,
+    private val diaryApi: DiaryApi,
     private val resourceProvider: ResourceProvider
-): DiaryRepository {
+) : DiaryRepository {
 
     override suspend fun getDiaryEntries(timestamp: Long): Resource<List<DiaryEntry>> {
         return try {
             val entries = diaryApi.getDiaryEntries(date = Date(timestamp).formatToString())
             Resource.Success(entries)
-        }catch (e:Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
             Resource.Error(uiText = e.message.toString(), data = emptyList())
         }
     }
+
     override suspend fun getProductHistory(): Resource<List<Product>> {
         return try {
             val result = diaryApi.getProductHistory()
             Resource.Success(data = result)
-        }catch (e:Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
             Resource.Error(data = emptyList(), uiText = e.message.toString())
         }
@@ -41,7 +42,7 @@ class DiaryRepositoryImp(
         return try {
             val items = diaryApi.searchForProducts(searchText = searchText)
             return Resource.Success(data = items)
-        }catch (e:Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
             Resource.Error(uiText = e.message.toString(), data = emptyList())
         }
@@ -50,9 +51,9 @@ class DiaryRepositoryImp(
     override suspend fun searchForProductWithBarcode(barcode: String): Resource<Product> {
         return try {
             val product = diaryApi.searchForProductWithBarcode(barcode = barcode)
-            if (product==null) Resource.Error(uiText = resourceProvider.getString(R.string.there_is_no_product_with_provided_barcode_do_you_want_to_add_it))
+            if (product == null) Resource.Error(uiText = resourceProvider.getString(R.string.there_is_no_product_with_provided_barcode_do_you_want_to_add_it))
             else Resource.Success(data = product)
-        }catch (e:Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
             Resource.Error(uiText = resourceProvider.getString(R.string.unknown_error))
         }
@@ -62,7 +63,7 @@ class DiaryRepositoryImp(
         return try {
             val newDiaryEntry = diaryApi.insertDiaryEntry(diaryEntry = diaryEntry)
             Resource.Success(data = newDiaryEntry)
-        }catch (e:Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
             Resource.Error(resourceProvider.getString(R.string.unknown_error))
         }
@@ -72,7 +73,7 @@ class DiaryRepositoryImp(
         return try {
             val newProduct = diaryApi.insertProduct(product = product)
             Resource.Success(data = newProduct)
-        }catch (e:Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
             Resource.Error(uiText = resourceProvider.getString(R.string.unknown_error))
         }
@@ -83,8 +84,12 @@ class DiaryRepositoryImp(
     ): CustomResult {
         return try {
             val wasDeleted = diaryApi.deleteDiaryEntry(entryId = diaryEntryId)
-            if (wasDeleted) CustomResult.Success else CustomResult.Error(message = resourceProvider.getString(R.string.unknown_error))
-        }catch (e:Exception){
+            if (wasDeleted) CustomResult.Success else CustomResult.Error(
+                message = resourceProvider.getString(
+                    R.string.unknown_error
+                )
+            )
+        } catch (e: Exception) {
             e.printStackTrace()
             CustomResult.Error(message = resourceProvider.getString(R.string.unknown_error))
         }
@@ -96,9 +101,9 @@ class DiaryRepositoryImp(
 
     override suspend fun getCaloriesSum(date: String): Resource<Int> {
         return try {
-            val resource = diaryApi.getCaloriesSum(date = date).sum()
+            val resource = diaryApi.getCaloriesSum(date = date).caloriesSum
             Resource.Success(data = resource)
-        }catch (e:Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
             Resource.Error(resourceProvider.getString(R.string.unknown_error))
         }
@@ -112,7 +117,7 @@ class DiaryRepositoryImp(
                     productId = productId
                 )
             )
-        }catch (e:Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
             Resource.Error(resourceProvider.getString(R.string.unknown_error))
         }
@@ -125,7 +130,7 @@ class DiaryRepositoryImp(
                 timestamp = timestamp
             )
             Resource.Success(data = addedRecipe)
-        }catch (e:Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
             Resource.Error(resourceProvider.getUnknownErrorString())
         }
