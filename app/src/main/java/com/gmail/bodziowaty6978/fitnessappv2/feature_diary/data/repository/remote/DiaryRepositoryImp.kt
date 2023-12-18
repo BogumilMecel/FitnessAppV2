@@ -20,6 +20,7 @@ class DiaryRepositoryImp(
 
     override suspend fun getDiaryEntries(timestamp: Long, token:String): Resource<List<DiaryEntry>> {
         return try {
+            Log.e(TAG, Date(timestamp).formatToString())
             val entries = productApi.getDiaryEntries(
                 date = Date(timestamp).formatToString(),
                 token = "Bearer $token"
@@ -92,10 +93,14 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun deleteDiaryEntry(diaryEntryId: Int): CustomResult {
+    override suspend fun deleteDiaryEntry(
+        diaryEntryId: Int,
+        token:String
+    ): CustomResult {
         return try {
             val wasDeleted = productApi.deleteDiaryEntry(
-                entryId = diaryEntryId
+                entryId = diaryEntryId,
+                token = "Bearer $token"
             )
             if (wasDeleted) CustomResult.Success else CustomResult.Error(message = resourceProvider.getString(R.string.unknown_error))
         }catch (e:Exception){

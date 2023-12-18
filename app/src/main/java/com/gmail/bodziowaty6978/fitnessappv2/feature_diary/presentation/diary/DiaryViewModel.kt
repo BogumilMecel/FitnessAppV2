@@ -113,6 +113,7 @@ class DiaryViewModel @Inject constructor(
                                     )
                                 )
                             }
+                            Log.e(TAG,_state.value.meals.toString())
                         }
                     }
                 }

@@ -18,9 +18,10 @@ interface ProductApi {
         @Header("Authorization") token:String
     ):DiaryEntry
 
-    @DELETE("/diaryEntries/{id}")
+    @DELETE("/diaryEntries/{diaryEntryId}")
     suspend fun deleteDiaryEntry(
-        @Path("id") entryId:Int
+        @Header("Authorization") token:String,
+        @Path("diaryEntryId") entryId:Int
     ):Boolean
 
     @GET("/products/{searchText}")

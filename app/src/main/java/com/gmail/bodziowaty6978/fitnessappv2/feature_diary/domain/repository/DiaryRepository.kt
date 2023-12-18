@@ -11,7 +11,7 @@ interface DiaryRepository {
     suspend fun searchForProductWithBarcode(barcode:String):Resource<Product>
     suspend fun getProductHistory(token: String):Resource<List<Product>>
     suspend fun addDiaryEntry(diaryEntry: DiaryEntry, token: String):Resource<DiaryEntry>
-    suspend fun deleteDiaryEntry(diaryEntryId: Int):CustomResult
+    suspend fun deleteDiaryEntry(diaryEntryId: Int, token:String):CustomResult
     suspend fun editDiaryEntry(diaryEntry: DiaryEntry):CustomResult
     suspend fun saveNewProduct(product: Product):Resource<Product>
 }
