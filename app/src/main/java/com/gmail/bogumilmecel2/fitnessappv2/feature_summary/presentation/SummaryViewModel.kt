@@ -93,10 +93,7 @@ class SummaryViewModel @Inject constructor(
     private fun handleWeightDialogsAnswer(accepted: Boolean?) {
         handlingWeightDialogsQuestion = true
         viewModelScope.launch {
-            summaryUseCases.handleWeightDialogsQuestionUseCase(
-                accepted = accepted,
-                cachedValuesProvider = cachedValuesProvider
-            ).handle(
+            summaryUseCases.handleWeightDialogsQuestionUseCase(accepted = accepted).handle(
                 onError = {
                     uiEvent.send(SummaryUiEvent.HideBottomSheet)
                 }
@@ -113,7 +110,7 @@ class SummaryViewModel @Inject constructor(
             summaryUseCases.checkIfShouldShowWeightPickerUseCase().handle(
                 showSnackbar = false
             ) {
-                if (_state.value.bottomSheetContent !is  SummaryBottomSheetContent.WeightPicker) {
+                if (_state.value.bottomSheetContent !is SummaryBottomSheetContent.WeightPicker) {
                     setBottomSheetContent(SummaryBottomSheetContent.WeightPicker)
                 }
                 showBottomBarSheet()

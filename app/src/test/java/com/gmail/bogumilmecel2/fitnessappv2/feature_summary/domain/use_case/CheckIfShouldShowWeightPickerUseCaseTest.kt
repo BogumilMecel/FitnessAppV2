@@ -15,8 +15,6 @@ class CheckIfShouldShowWeightPickerUseCaseTest : BaseMockkTest() {
 
     val checkIfShouldShowWeightPickerUseCase =
         CheckIfShouldShowWeightPickerUseCase(cachedValuesProvider)
-    private val mockedDate = "2023-12-12"
-    private val mockedDate2 = "2022-12-12"
 
     @Test
     fun `Check if dialogs was shown today, resource error is returned`() = runTest {

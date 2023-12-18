@@ -7,12 +7,10 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.model.WeightD
 import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.repository.WeightRepository
 
 class HandleWeightDialogsQuestionUseCase(
-    private val weightRepository: WeightRepository
+    private val weightRepository: WeightRepository,
+    private val cachedValuesProvider: CachedValuesProvider
 ) {
-    suspend operator fun invoke(
-        accepted: Boolean?,
-        cachedValuesProvider: CachedValuesProvider
-    ): Resource<Unit> {
+    suspend operator fun invoke(accepted: Boolean?): Resource<Unit> {
         val resource = weightRepository.handleWeightDialogsQuestion(
             weightDialogsRequest = WeightDialogsRequest(
                 accepted = accepted
