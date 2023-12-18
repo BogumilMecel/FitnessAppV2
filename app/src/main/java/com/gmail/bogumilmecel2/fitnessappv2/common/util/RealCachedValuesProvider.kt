@@ -36,7 +36,7 @@ class RealCachedValuesProvider(
     override suspend fun getWeightProgress() = getUser().weightProgress
 
     override suspend fun updateWeightInfo(
-        weightProgress: String?,
+        weightProgress: Double?,
         latestWeightEntry: WeightEntry?
     ) {
         saveUser(

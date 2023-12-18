@@ -24,6 +24,7 @@ class SummaryViewModel @Inject constructor(
         getCaloriesSum()
         initWeightData()
         initWantedCalories()
+        assignWeightProgress()
     }
 
     override fun onEvent(event: SummaryEvent) {
@@ -142,11 +143,9 @@ class SummaryViewModel @Inject constructor(
                 }
             ) {
                 _state.update { state ->
-                    state.copy(
-                        weightProgress = it.weightProgress,
-                        latestWeightEntry = it.latestWeightEntry,
-                    )
+                    state.copy(latestWeightEntry = it.latestWeightEntry,)
                 }
+                assignWeightProgress()
             }
         }
     }
@@ -157,8 +156,21 @@ class SummaryViewModel @Inject constructor(
             _state.update {
                 it.copy(
                     latestWeightEntry = latestWeightEntry,
-                    weightProgress = cachedValuesProvider.getWeightProgress(),
                     weightPickerCurrentValue = latestWeightEntry?.value ?: 80.0
+                )
+            }
+        }
+    }
+
+    private fun assignWeightProgress() {
+        viewModelScope.launch {
+            _state.update {
+                it.copy(
+                    weightProgress = cachedValuesProvider.getWeightProgress()?.let { weightProgress ->
+                        if (weightProgress > 0) {
+                            "+$weightProgress"
+                        } else weightProgress.toString()
+                    }
                 )
             }
         }
