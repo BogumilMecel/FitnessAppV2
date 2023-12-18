@@ -28,7 +28,7 @@ fun LogOutButton(
 ) {
     Button(
         modifier = modifier,
-        shape = RoundedCornerShape(15),
+        shape = RoundedCornerShape(15.dp),
         onClick = {
             onClick()
         },

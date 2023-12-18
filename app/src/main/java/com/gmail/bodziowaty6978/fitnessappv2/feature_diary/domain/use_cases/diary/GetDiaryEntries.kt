@@ -1,7 +1,5 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.diary
 
-import com.gmail.bodziowaty6978.fitnessappv2.R
-import com.gmail.bodziowaty6978.fitnessappv2.common.domain.use_case.GetToken
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Meal
@@ -18,18 +16,19 @@ class GetDiaryEntries(
         timestamp: Long,
         mealNames: List<String>
     ): Resource<List<Meal>> {
-
         val resource = diaryRepository.getDiaryEntries(
             timestamp = timestamp
         )
         return if (resource is Resource.Error) {
-            Resource.Error(uiText = resource.uiText ?: resourceProvider.getUnknownErrorString())
+            Resource.Error(uiText = resource.uiText)
         } else {
             withContext(Dispatchers.Default) {
-                val data = resource.data!!
-                val sortedEntries = sortDiaryEntries(data, mealNames)
-
-                Resource.Success(sortedEntries)
+                Resource.Success(
+                    data = sortDiaryEntries(
+                        entries = resource.data ?: emptyList(),
+                        mealNames = mealNames
+                    )
+                )
             }
         }
     }

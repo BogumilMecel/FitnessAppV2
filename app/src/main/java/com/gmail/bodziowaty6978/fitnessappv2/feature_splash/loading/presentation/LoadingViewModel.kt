@@ -6,6 +6,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.FitnessApp
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.NavigationActions
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigator
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.use_case.GetToken
+import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
 import com.gmail.bodziowaty6978.fitnessappv2.feature_splash.domain.repository.LoadingRepository
 import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.domain.model.LogRequest
 import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.domain.use_case.GetLatestLogEntry
@@ -51,7 +52,7 @@ class LoadingViewModel @Inject constructor(
     }
 
     private suspend fun authenticateUser() {
-        if (loadingRepository.authenticateUser().data == true){
+        if (loadingRepository.authenticateUser() is CustomResult.Success){
             checkUser()
         } else {
             navigator.navigate(NavigationActions.LoadingScreen.loadingToLogin())

@@ -1,7 +1,12 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_summary.presentation
 
 import android.app.Activity
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
@@ -77,7 +82,7 @@ fun SummaryScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 10.dp),
-                lastWeightEntry = state.weightEntries.sortedByDescending { it.timestamp }.getOrNull(0)?.value,
+                lastWeightEntry = state.latestWeightEntry?.value,
                 weightProgress = state.weightProgress,
                 onEvent = {
                     viewModel.onEvent(it)

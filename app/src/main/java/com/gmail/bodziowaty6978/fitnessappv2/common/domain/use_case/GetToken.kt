@@ -8,15 +8,14 @@ class GetToken(
     private val tokenRepository: TokenRepository
 ) {
     operator fun invoke(): String? {
-        return when(val resource = tokenRepository.getToken()){
+        return when (val resource = tokenRepository.getToken()) {
             is Resource.Error -> {
                 TokenStatus.changeTokenStatus(false)
                 null
             }
+
             is Resource.Success -> {
-                resource.data?.let { token ->
-                    "Bearer $token"
-                }
+                "Bearer ${resource.data}"
             }
         }
     }

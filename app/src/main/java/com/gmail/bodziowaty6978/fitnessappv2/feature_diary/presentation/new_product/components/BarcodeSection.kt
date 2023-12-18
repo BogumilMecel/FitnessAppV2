@@ -1,6 +1,10 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_product.components
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -16,7 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.gmail.bodziowaty6978.fitnessappv2.R
-import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.DefaultTextField
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.CustomBasicTestField
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_product.NewProductEvent
 
 @Composable
@@ -28,7 +32,7 @@ fun BarcodeSection(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 20.dp),
+            .padding(horizontal = 15.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -41,7 +45,7 @@ fun BarcodeSection(
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            DefaultTextField(
+            CustomBasicTestField(
                 value = barcode,
                 onValueChange = {
                     onEvent(NewProductEvent.EnteredBarcode(it))
@@ -52,7 +56,8 @@ fun BarcodeSection(
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Number
                 ),
-                singleLine = true
+                singleLine = true,
+                elevation = 9
             )
 
             IconButton(

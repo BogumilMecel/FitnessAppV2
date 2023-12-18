@@ -115,6 +115,7 @@ class DiaryViewModel @Inject constructor(
             is DiaryEvent.ClickedEditInDialog -> {
 
             }
+
             is DiaryEvent.BackPressed -> {
                 navigator.navigate(NavigationActions.DiaryScreen.diaryToSummary())
             }
@@ -140,20 +141,15 @@ class DiaryViewModel @Inject constructor(
             )
             when (resource) {
                 is Resource.Success -> {
-                    val data = resource.data
-                    data?.let { meals ->
-                        _state.update {
-                            it.copy(
-                                meals = meals
-                            )
-                        }
+                    _state.update {
+                        it.copy(
+                            meals = resource.data
+                        )
                     }
                 }
 
                 is Resource.Error -> {
-                    resource.uiText?.let { error ->
-                        _errorState.send(error)
-                    }
+                    _errorState.send(resource.uiText)
                 }
             }
         }

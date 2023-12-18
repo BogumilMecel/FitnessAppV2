@@ -54,7 +54,7 @@ class ProductViewModel @Inject constructor(
             Gson().fromJson(recipeString, Recipe::class.java)
         }
     ))
-    val state:StateFlow<ProductState> = _state
+    val state: StateFlow<ProductState> = _state
 
     init {
         savedStateHandle.get<String>("mealName")?.let { mealName ->
@@ -94,6 +94,7 @@ class ProductViewModel @Inject constructor(
                     }
                 }
             }
+
             is ProductEvent.ClickedAddProduct -> {
                 viewModelScope.launch(Dispatchers.IO) {
                     val addingResult = productUseCases.addDiaryEntry(
@@ -105,54 +106,50 @@ class ProductViewModel @Inject constructor(
                     if (addingResult is Resource.Success) {
                         navigator.navigate(NavigationActions.ProductScreen.productToDiary())
                     } else if (addingResult is Resource.Error) {
-                        addingResult.uiText?.let {error ->
-                            _errorState.send(error)
-                        }
+                        _errorState.send(addingResult.uiText)
                     }
                 }
             }
+
             is ProductEvent.ClickedBackArrow -> {
                 navigator.navigate(NavigationActions.General.navigateUp())
             }
+
             is ProductEvent.ClickedSubmitNewPrice -> {
                 val calculatedPrice = productUseCases.calculatePriceFor100g(
                     priceStringForValue = _state.value.priceForValue,
                     priceStringValue = _state.value.priceValue
                 )
                 viewModelScope.launch {
-                    _state.value.product.id?.let { id ->
-                        if (calculatedPrice != null && _state.value.product.id != null){
-                            val resource = productUseCases.addNewPrice(
-                                price = calculatedPrice,
-                                productId = id
-                            )
-                            when(resource){
-                                is Resource.Success -> {
-                                    resource.data?.let { newPrice ->
-                                        _state.update {
-                                            it.copy(
-                                                product = it.product.copy(
-                                                    price = newPrice
-                                                ),
-                                                priceForValue = "",
-                                                priceValue = ""
-                                            )
-                                        }
-                                        _errorState.send(resourceProvider.getString(R.string.successfully_submitted_new_price))
-                                    }
+                    if (calculatedPrice != null) {
+                        val resource = productUseCases.addNewPrice(
+                            price = calculatedPrice,
+                            productId = _state.value.product.id
+                        )
+                        when (resource) {
+                            is Resource.Success -> {
+                                _state.update {
+                                    it.copy(
+                                        product = it.product.copy(
+                                            price = resource.data
+                                        ),
+                                        priceForValue = "",
+                                        priceValue = ""
+                                    )
                                 }
-                                is Resource.Error -> {
-                                    resource.uiText?.let {
-                                        _errorState.send(it)
-                                    }
-                                }
+                                _errorState.send(resourceProvider.getString(R.string.successfully_submitted_new_price))
                             }
-                        }else{
-                            _errorState.send(resourceProvider.getString(R.string.please_make_sure_you_have_entered_correct_values_for_new_price))
+
+                            is Resource.Error -> {
+                                _errorState.send(resource.uiText)
+                            }
                         }
+                    } else {
+                        _errorState.send(resourceProvider.getString(R.string.please_make_sure_you_have_entered_correct_values_for_new_price))
                     }
                 }
             }
+
             is ProductEvent.EnteredPriceFor -> {
                 val enteredValue = event.value.replace(",", ".")
                 _state.update {
@@ -161,6 +158,7 @@ class ProductViewModel @Inject constructor(
                     )
                 }
             }
+
             is ProductEvent.EnteredPriceValue -> {
                 val enteredValue = event.value.replace(",", ".")
                 _state.update {

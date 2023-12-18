@@ -62,7 +62,7 @@ fun ProductScreen(
                 },
                 backgroundColor = LightRed,
                 modifier = Modifier
-                    .testTag(stringResource(id = R.string.add_product))
+                    .testTag(stringResource(id = R.string.create_product))
             )
         }
     ) {

@@ -43,7 +43,7 @@ fun AccountScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 10.dp),
-            shape = RoundedCornerShape(15),
+            shape = RoundedCornerShape(15.dp),
             elevation = 3.dp
         ) {
             Column(

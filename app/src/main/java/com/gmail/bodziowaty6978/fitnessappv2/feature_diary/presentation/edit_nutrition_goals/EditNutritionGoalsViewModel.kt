@@ -52,6 +52,7 @@ class EditNutritionGoalsViewModel @Inject constructor(
                     calculateAllNutritionValues()
                 }
             }
+
             is EditNutritionGoalsEvent.CarbohydratesPickerValueChanged -> {
                 _state.update {
                     it.copy(
@@ -61,6 +62,7 @@ class EditNutritionGoalsViewModel @Inject constructor(
                 calculateTotalPercentage()
                 calculateCarbohydratesValue()
             }
+
             is EditNutritionGoalsEvent.ProteinPickerValueChanged -> {
                 _state.update {
                     it.copy(
@@ -70,6 +72,7 @@ class EditNutritionGoalsViewModel @Inject constructor(
                 calculateTotalPercentage()
                 calculateProteinValue()
             }
+
             is EditNutritionGoalsEvent.FatPickerValueChanged -> {
                 _state.update {
                     it.copy(
@@ -79,9 +82,11 @@ class EditNutritionGoalsViewModel @Inject constructor(
                 calculateTotalPercentage()
                 calculateFatValue()
             }
+
             is EditNutritionGoalsEvent.BackArrowPressed -> {
                 navigator.navigate(NavigationActions.General.navigateUp())
             }
+
             is EditNutritionGoalsEvent.SaveButtonClicked -> {
                 saveNutritionValues()
             }
@@ -92,10 +97,9 @@ class EditNutritionGoalsViewModel @Inject constructor(
         viewModelScope.launch {
             when (val resource = saveNutritionValues(_state.value.nutritionValues)) {
                 is Resource.Error -> {
-                    resource.uiText?.let {
-                        _errorState.send(it)
-                    }
+                    _errorState.send(resource.uiText)
                 }
+
                 is Resource.Success -> {
                     navigator.navigate(NavigationActions.EditNutritionGoals.editNutritionGoalsToAccount())
                 }
@@ -113,7 +117,9 @@ class EditNutritionGoalsViewModel @Inject constructor(
         _state.update {
             it.copy(
                 nutritionValues = it.nutritionValues.copy(
-                    carbohydrates = ((it.nutritionValues.calories / 4.0) * it.carbohydratesPercentageValue.toDouble() / 100.0).round(2)
+                    carbohydrates = ((it.nutritionValues.calories / 4.0) * it.carbohydratesPercentageValue.toDouble() / 100.0).round(
+                        2
+                    )
                 )
             )
         }
@@ -123,7 +129,9 @@ class EditNutritionGoalsViewModel @Inject constructor(
         _state.update {
             it.copy(
                 nutritionValues = it.nutritionValues.copy(
-                    protein = ((it.nutritionValues.calories / 4.0) * it.proteinPercentageValue.toDouble() / 100.0).round(2)
+                    protein = ((it.nutritionValues.calories / 4.0) * it.proteinPercentageValue.toDouble() / 100.0).round(
+                        2
+                    )
                 )
             )
         }
@@ -133,7 +141,9 @@ class EditNutritionGoalsViewModel @Inject constructor(
         _state.update {
             it.copy(
                 nutritionValues = it.nutritionValues.copy(
-                    fat = ((it.nutritionValues.calories / 9.0) * it.fatPercentageValue.toDouble() / 100.0).round(2)
+                    fat = ((it.nutritionValues.calories / 9.0) * it.fatPercentageValue.toDouble() / 100.0).round(
+                        2
+                    )
                 )
             )
         }

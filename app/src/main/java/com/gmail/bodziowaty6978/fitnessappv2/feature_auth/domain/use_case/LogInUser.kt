@@ -27,14 +27,13 @@ class LogInUser(
         )
         return when (loginResource) {
             is Resource.Success -> {
-                loginResource.data?.let {
-                    if (saveToken(it.token)) CustomResult.Success else CustomResult.Error(
-                        resourceProvider.getString(R.string.unknown_error)
-                    )
-                } ?: CustomResult.Error(resourceProvider.getString(R.string.unknown_error))
+                if (saveToken(loginResource.data.token)) CustomResult.Success else CustomResult.Error(
+                    resourceProvider.getString(R.string.unknown_error)
+                )
             }
+
             is Resource.Error -> {
-                CustomResult.Error(loginResource.uiText.toString())
+                CustomResult.Error(loginResource.uiText)
             }
         }
     }

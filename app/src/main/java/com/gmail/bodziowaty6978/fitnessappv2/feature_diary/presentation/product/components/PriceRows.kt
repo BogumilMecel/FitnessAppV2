@@ -21,7 +21,7 @@ fun PriceRows(
 ) {
     Text(
         text = stringResource(id = R.string.prices),
-        style = MaterialTheme.typography.h3,
+        style = MaterialTheme.typography.body1,
         modifier = Modifier
             .padding(top = 15.dp, start = 15.dp)
     )

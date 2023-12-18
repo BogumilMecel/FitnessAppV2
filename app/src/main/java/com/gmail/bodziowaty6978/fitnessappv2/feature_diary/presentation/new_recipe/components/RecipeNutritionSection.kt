@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
@@ -99,7 +100,9 @@ fun RecipeNutritionSection(
                 ) {
                     ChartSection(
                         nutritionData = nutritionData,
-                        modifier = Modifier.weight(0.4F)
+                        modifier = Modifier
+                            .weight(0.4F)
+                            .fillMaxHeight()
                     )
 
                     NutritionValuesList(
@@ -111,13 +114,38 @@ fun RecipeNutritionSection(
                 }
             }
 
-            price?.let {
-                Spacer(modifier = Modifier.height(6.dp))
+            Spacer(modifier = Modifier.height(6.dp))
 
+            if (price != null && price.value != 0.0){
                 PriceRows(
                     price = price,
                     nutritionValues = nutritionData.nutritionValues
                 )
+            } else {
+                Column(
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(start = 15.dp)
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = "Prices:",
+                            style = MaterialTheme.typography.body1
+                        )
+
+                        Spacer(modifier = Modifier.width(3.dp))
+
+                        Text(
+                            text = "N/A",
+                            style = MaterialTheme.typography.h3
+                        )
+                    }
+                    Text(
+                        text = "Not every product has a price",
+                        style = MaterialTheme.typography.body2.copy(
+                            color = TextGrey
+                        )
+                    )
+                }
             }
         }
     }

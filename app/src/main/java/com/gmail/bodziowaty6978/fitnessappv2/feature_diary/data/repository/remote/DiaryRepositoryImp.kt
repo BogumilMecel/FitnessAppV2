@@ -1,6 +1,7 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.data.repository.remote
 
 import com.gmail.bodziowaty6978.fitnessappv2.R
+import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseRepository
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
@@ -14,17 +15,15 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.repository.Dia
 import java.util.Date
 
 class DiaryRepositoryImp(
-    private val diaryApi: DiaryApi,
-    private val resourceProvider: ResourceProvider
-) : DiaryRepository {
+    private val diaryApi: DiaryApi, private val resourceProvider: ResourceProvider
+) : DiaryRepository, BaseRepository(resourceProvider) {
 
     override suspend fun getDiaryEntries(timestamp: Long): Resource<List<DiaryEntry>> {
         return try {
             val entries = diaryApi.getDiaryEntries(date = Date(timestamp).formatToString())
             Resource.Success(entries)
         } catch (e: Exception) {
-            e.printStackTrace()
-            Resource.Error(uiText = e.message.toString(), data = emptyList())
+            handleExceptionWithResource(exception = e)
         }
     }
 
@@ -33,8 +32,7 @@ class DiaryRepositoryImp(
             val result = diaryApi.getProductHistory()
             Resource.Success(data = result)
         } catch (e: Exception) {
-            e.printStackTrace()
-            Resource.Error(data = emptyList(), uiText = e.message.toString())
+            handleExceptionWithResource(exception = e, data = emptyList())
         }
     }
 
@@ -43,8 +41,7 @@ class DiaryRepositoryImp(
             val items = diaryApi.searchForProducts(searchText = searchText)
             return Resource.Success(data = items)
         } catch (e: Exception) {
-            e.printStackTrace()
-            Resource.Error(uiText = e.message.toString(), data = emptyList())
+            handleExceptionWithResource(exception = e, data = emptyList())
         }
     }
 
@@ -54,8 +51,7 @@ class DiaryRepositoryImp(
             if (product == null) Resource.Error(uiText = resourceProvider.getString(R.string.there_is_no_product_with_provided_barcode_do_you_want_to_add_it))
             else Resource.Success(data = product)
         } catch (e: Exception) {
-            e.printStackTrace()
-            Resource.Error(uiText = resourceProvider.getString(R.string.unknown_error))
+            handleExceptionWithResource(exception = e)
         }
     }
 
@@ -63,8 +59,7 @@ class DiaryRepositoryImp(
         return try {
             Resource.Success(data = diaryApi.searchForRecipes(searchText))
         } catch (e: Exception) {
-            e.printStackTrace()
-            Resource.Error(uiText = resourceProvider.getUnknownErrorString())
+            handleExceptionWithResource(exception = e)
         }
     }
 
@@ -73,8 +68,7 @@ class DiaryRepositoryImp(
             val newDiaryEntry = diaryApi.insertDiaryEntry(diaryEntry = diaryEntry)
             Resource.Success(data = newDiaryEntry)
         } catch (e: Exception) {
-            e.printStackTrace()
-            Resource.Error(resourceProvider.getString(R.string.unknown_error))
+            handleExceptionWithResource(exception = e)
         }
     }
 
@@ -83,8 +77,7 @@ class DiaryRepositoryImp(
             val newProduct = diaryApi.insertProduct(product = product)
             Resource.Success(data = newProduct)
         } catch (e: Exception) {
-            e.printStackTrace()
-            Resource.Error(uiText = resourceProvider.getString(R.string.unknown_error))
+            handleExceptionWithResource(exception = e)
         }
     }
 
@@ -99,8 +92,7 @@ class DiaryRepositoryImp(
                 )
             )
         } catch (e: Exception) {
-            e.printStackTrace()
-            CustomResult.Error(message = resourceProvider.getString(R.string.unknown_error))
+            handleExceptionWithCustomResult(exception = e)
         }
     }
 
@@ -110,11 +102,11 @@ class DiaryRepositoryImp(
 
     override suspend fun getCaloriesSum(date: String): Resource<Int> {
         return try {
-            val resource = diaryApi.getCaloriesSum(date = date).caloriesSum
-            Resource.Success(data = resource)
+            Resource.Success(
+                data = diaryApi.getCaloriesSum(date = date).caloriesSum
+            )
         } catch (e: Exception) {
-            e.printStackTrace()
-            Resource.Error(resourceProvider.getString(R.string.unknown_error))
+            handleExceptionWithResource(exception = e)
         }
     }
 
@@ -122,26 +114,23 @@ class DiaryRepositoryImp(
         return try {
             Resource.Success(
                 data = diaryApi.addNewPriceForProduct(
-                    price = price,
-                    productId = productId
+                    price = price, productId = productId
                 )
             )
         } catch (e: Exception) {
-            e.printStackTrace()
-            Resource.Error(resourceProvider.getString(R.string.unknown_error))
+            handleExceptionWithResource(exception = e)
         }
     }
 
     override suspend fun addNewRecipe(recipe: Recipe, timestamp: Long): Resource<Recipe> {
         return try {
-            val addedRecipe = diaryApi.addNewRecipe(
-                recipe = recipe,
-                timestamp = timestamp
+            Resource.Success(
+                data = diaryApi.addNewRecipe(
+                    recipe = recipe, timestamp = timestamp
+                )
             )
-            Resource.Success(data = addedRecipe)
         } catch (e: Exception) {
-            e.printStackTrace()
-            Resource.Error(resourceProvider.getUnknownErrorString())
+            handleExceptionWithResource(exception = e)
         }
     }
 }
