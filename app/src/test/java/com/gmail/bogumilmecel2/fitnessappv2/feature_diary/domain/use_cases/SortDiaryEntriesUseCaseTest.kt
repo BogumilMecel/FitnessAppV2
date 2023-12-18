@@ -21,7 +21,7 @@ internal class SortDiaryEntriesUseCaseTest {
             diaryEntries.add(
                 ProductDiaryEntry(
                     id = "$it",
-                    timestamp = Random(it).nextLong()
+                    utcTimestamp = Random(it).nextLong()
                 )
             )
         }
@@ -29,7 +29,7 @@ internal class SortDiaryEntriesUseCaseTest {
             diaryEntries.add(
                 RecipeDiaryEntry(
                     id = "$it",
-                    timestamp = Random(it).nextLong()
+                    utcTimestamp = Random(it).nextLong()
                 )
             )
         }
@@ -51,7 +51,7 @@ internal class SortDiaryEntriesUseCaseTest {
 
         result.values.forEach { diaryItems ->
             assertTrue(
-                actual = diaryItems.asSequence().zipWithNext { a, b -> a.timestamp >= b.timestamp }.all { it }
+                actual = diaryItems.asSequence().zipWithNext { a, b -> a.utcTimestamp >= b.utcTimestamp }.all { it }
             )
         }
     }

@@ -10,7 +10,7 @@ data class Recipe(
     val id: String = "",
     val name: String = "",
     val ingredients: List<Ingredient> = emptyList(),
-    val timestamp: Long = System.currentTimeMillis(),
+    val utcTimestamp: Long = System.currentTimeMillis(),
     val imageUrl: String? = null,
     val nutritionValues: NutritionValues = NutritionValues(),
     val timeRequired: TimeRequired = TimeRequired.LOW,

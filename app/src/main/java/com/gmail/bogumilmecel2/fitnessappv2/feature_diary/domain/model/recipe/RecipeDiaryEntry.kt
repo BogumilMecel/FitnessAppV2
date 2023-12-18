@@ -13,7 +13,7 @@ import kotlinx.serialization.Serializable
 data class RecipeDiaryEntry(
     override val id: String,
     override val nutritionValues: NutritionValues = NutritionValues(),
-    override val timestamp: Long = 0,
+    override val utcTimestamp: Long = 0,
     override val userId: String = "",
     override val mealName: MealName = MealName.BREAKFAST,
     override val date: String = "",
