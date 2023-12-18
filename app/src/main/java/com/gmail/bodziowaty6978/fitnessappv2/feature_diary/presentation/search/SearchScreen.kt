@@ -35,7 +35,11 @@ import com.google.accompanist.pager.rememberPagerState
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalPermissionsApi::class, ExperimentalLifecycleComposeApi::class, ExperimentalPagerApi::class)
+@OptIn(
+    ExperimentalPermissionsApi::class,
+    ExperimentalLifecycleComposeApi::class,
+    ExperimentalPagerApi::class
+)
 @Composable
 fun SearchScreen(
     viewModel: SearchViewModel = hiltViewModel()
@@ -45,14 +49,14 @@ fun SearchScreen(
     val scope = rememberCoroutineScope()
 
     val scaffoldState = rememberScaffoldState()
-    val pagerState = rememberPagerState(initialPage = 0)
+    val pagerState = rememberPagerState(initialPage = state.currentTabIndex)
 
     LaunchedEffect(key1 = true) {
         viewModel.initializeHistory()
     }
 
     LaunchedEffect(key1 = true) {
-        viewModel.errorState.collect {error ->
+        viewModel.errorState.collect { error ->
             scaffoldState.snackbarHostState.showSnackbar(error)
         }
     }
@@ -92,7 +96,10 @@ fun SearchScreen(
                 SearchTopSection(
                     modifier = Modifier
                         .background(DarkGreyElevation1),
-                    searchBarText = state.searchBarText,
+                    searchBarText = when (state.currentTabIndex) {
+                        0 -> state.productSearchBarText
+                        else -> state.recipesSearchBarText
+                    },
                     mealName = state.mealName,
                     date = CurrentDate.dateModel(LocalContext.current).valueToDisplay
                         ?: CurrentDate.dateModel(LocalContext.current).date,
@@ -100,14 +107,15 @@ fun SearchScreen(
                         viewModel.onEvent(searchEvent)
                     },
                     pagerState = pagerState,
-                    scope = scope
+                    scope = scope,
+                    searchBarPlaceholderText = state.searchBarPlaceholderText
                 )
 
                 HorizontalPager(
                     count = 2,
                     state = pagerState
-                ) {pagerScope ->
-                    when(pagerScope){
+                ) { pagerScope ->
+                    when (pagerScope) {
                         0 -> {
                             SearchProductSection(
                                 modifier = Modifier
@@ -124,9 +132,10 @@ fun SearchScreen(
                                 state = state
                             )
                         }
+
                         1 -> {
                             SearchRecipeSection(
-                                calculatedRecipes = state.calculatedRecipes,
+                                recipe = state.recipes,
                                 onEvent = {
                                     viewModel.onEvent(it)
                                 }

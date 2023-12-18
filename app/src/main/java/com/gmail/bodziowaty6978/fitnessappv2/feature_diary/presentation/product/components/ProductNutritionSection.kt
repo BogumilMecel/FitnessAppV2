@@ -28,12 +28,12 @@ fun ProductNutritionSection(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(IntrinsicSize.Max)
-                .padding(bottom = 15.dp, end = 15.dp, top = 15.dp, start = 10.dp),
+                .padding(bottom = 15.dp, end = 15.dp, top = 15.dp, start = 5.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             ChartSection(
                 nutritionData = nutritionData,
-                modifier = Modifier.weight(0.4F)
+                modifier = Modifier.weight(0.4F).fillMaxHeight()
             )
 
             NutritionValuesList(

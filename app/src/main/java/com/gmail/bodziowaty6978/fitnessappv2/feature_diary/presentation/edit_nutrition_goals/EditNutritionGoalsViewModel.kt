@@ -2,10 +2,10 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.edit_nu
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gmail.bodziowaty6978.fitnessappv2.FitnessApp
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.NavigationActions
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigator
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.use_case.CalculateNutritionValuesPercentages
-import com.gmail.bodziowaty6978.fitnessappv2.common.domain.use_case.GetWantedNutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.use_case.SaveNutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.extensions.round
@@ -21,7 +21,6 @@ import javax.inject.Inject
 @HiltViewModel
 class EditNutritionGoalsViewModel @Inject constructor(
     private val navigator: Navigator,
-    private val getWantedNutritionValues: GetWantedNutritionValues,
     private val calculateNutritionValuesPercentages: CalculateNutritionValuesPercentages,
     private val saveNutritionValues: SaveNutritionValues
 ) : ViewModel() {
@@ -141,7 +140,7 @@ class EditNutritionGoalsViewModel @Inject constructor(
     }
 
     private fun initWantedNutritionValues() {
-        val wantedNutritionValues = getWantedNutritionValues()
+        val wantedNutritionValues = FitnessApp.getWantedNutritionValues()
         _state.update {
             it.copy(
                 nutritionValues = wantedNutritionValues,

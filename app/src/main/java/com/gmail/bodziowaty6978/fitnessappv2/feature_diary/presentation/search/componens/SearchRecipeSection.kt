@@ -1,6 +1,12 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search.componens
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.Icon
@@ -16,12 +22,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.Beige1
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.CalculatedRecipe
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search.SearchEvent
 
 @Composable
 fun SearchRecipeSection(
-    calculatedRecipes: List<CalculatedRecipe>,
+    recipe: List<Recipe>,
     onEvent: (SearchEvent) -> Unit
 ) {
     Column(
@@ -73,12 +79,12 @@ fun SearchRecipeSection(
         Spacer(modifier = Modifier.height(24.dp))
 
         LazyVerticalGrid(columns = GridCells.Fixed(2)) {
-            items(calculatedRecipes.size) { position ->
+            items(recipe.size) { position ->
                 RecipeSection(
                     onClick = {
                         /*TODO*/
                     },
-                    calculatedRecipe = calculatedRecipes[position]
+                    recipe = recipe[position]
                 )
             }
         }

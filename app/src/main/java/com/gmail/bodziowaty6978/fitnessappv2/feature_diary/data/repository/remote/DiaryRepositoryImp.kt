@@ -11,7 +11,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.diary_entry.DiaryEntry
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.repository.DiaryRepository
-import java.util.*
+import java.util.Date
 
 class DiaryRepositoryImp(
     private val diaryApi: DiaryApi,
@@ -38,7 +38,7 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun searchForProducts(searchText: String): Resource<List<Product>> {
+    override suspend fun searchForProducts(searchText: String?): Resource<List<Product>> {
         return try {
             val items = diaryApi.searchForProducts(searchText = searchText)
             return Resource.Success(data = items)
@@ -56,6 +56,15 @@ class DiaryRepositoryImp(
         } catch (e: Exception) {
             e.printStackTrace()
             Resource.Error(uiText = resourceProvider.getString(R.string.unknown_error))
+        }
+    }
+
+    override suspend fun searchForRecipes(searchText: String?): Resource<List<Recipe>> {
+        return try {
+            Resource.Success(data = diaryApi.searchForRecipes(searchText))
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Resource.Error(uiText = resourceProvider.getUnknownErrorString())
         }
     }
 

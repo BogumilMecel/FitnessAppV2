@@ -42,9 +42,11 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 fun NavHostGraph(
     navController: NavHostController = rememberNavController(),
     navigator: Navigator,
+//    startDestination: String = Screen.ProductScreen.route + "?mealName={mealName}" + "&product={product}" + "&recipe={recipe}"
     startDestination: String = Screen.LoadingScreen.route,
 //    startDestination: String = Screen.NewProductScreen.route + "?mealName={mealName}&barcode={barcode}"
 //    startDestination: String = Screen.NewRecipeScreen.route
+
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
     val navigatorState by navigator.navActions.asLifecycleAwareState(

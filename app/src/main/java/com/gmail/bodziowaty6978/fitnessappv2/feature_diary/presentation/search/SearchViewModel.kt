@@ -30,10 +30,14 @@ class SearchViewModel @Inject constructor(
     private val _errorState = Channel<String>()
     val errorState = _errorState.receiveAsFlow()
 
-    private val _searchState = MutableStateFlow(SearchState())
+    private val _searchState = MutableStateFlow(
+        SearchState(
+            searchBarPlaceholderText = resourceProvider.getString(R.string.products)
+        )
+    )
     val searchState: StateFlow<SearchState> = _searchState
 
-    init{
+    init {
         savedStateHandle.get<String>("mealName")?.let { mealName ->
             _searchState.update {
                 it.copy(
@@ -52,38 +56,33 @@ class SearchViewModel @Inject constructor(
                     )
                 }
             }
+
             is SearchEvent.ClickedBackArrow -> {
                 navigator.navigate(NavigationActions.General.navigateUp())
             }
+
             is SearchEvent.ClickedSearch -> {
-                _searchState.update {
-                    it.copy(
-                        isLoading = true,
-                        barcode = null
-                    )
-                }
-                viewModelScope.launch(Dispatchers.IO) {
-                    val result =
-                        searchDiaryUseCases.searchForProducts(_searchState.value.searchBarText)
-                    if (result is Resource.Error) {
-                        onError(result.uiText)
-                    } else {
-                        _searchState.update {
-                            it.copy(
-                                items = result.data ?: emptyList(),
-                                isLoading = false
-                            )
-                        }
-                    }
+                when (searchState.value.currentTabIndex) {
+                    0 -> searchForProducts()
+                    1 -> searchForRecipes()
                 }
             }
+
             is SearchEvent.EnteredSearchText -> {
                 _searchState.update {
-                    it.copy(
-                        searchBarText = event.text
-                    )
+                    val state = when (searchState.value.currentTabIndex) {
+                        0 -> it.copy(
+                            productSearchBarText = event.text
+                        )
+
+                        else -> it.copy(
+                            recipesSearchBarText = event.text
+                        )
+                    }
+                    state
                 }
             }
+
             is SearchEvent.ClickedSearchItem -> {
                 savedStateHandle.get<String>("mealName")?.let { mealName ->
                     navigator.navigate(
@@ -94,6 +93,7 @@ class SearchViewModel @Inject constructor(
                     )
                 } ?: onError(resourceProvider.getString(R.string.unknown_error))
             }
+
             is SearchEvent.ClickedNewProduct -> {
                 savedStateHandle.get<String>("mealName")?.let {
                     navigator.navigate(
@@ -102,10 +102,11 @@ class SearchViewModel @Inject constructor(
                             barcode = _searchState.value.barcode
                         )
                     )
-                }?: onError(resourceProvider.getString(R.string.unknown_error))
+                } ?: onError(resourceProvider.getString(R.string.unknown_error))
 
 
             }
+
             is SearchEvent.ClickedScanButton -> {
                 _searchState.update {
                     it.copy(
@@ -114,40 +115,11 @@ class SearchViewModel @Inject constructor(
                     )
                 }
             }
+
             is SearchEvent.ScannedBarcode -> {
-                _searchState.update {
-                    it.copy(
-                        isScannerVisible = false,
-                        isLoading = true
-                    )
-                }
-                viewModelScope.launch(Dispatchers.IO) {
-                    val resource = searchDiaryUseCases.searchForProductWithBarcode(event.code)
-                    if (resource is Resource.Error) {
-                        if (resource.uiText == resourceProvider.getString(R.string.there_is_no_product_with_provided_barcode_do_you_want_to_add_it)) {
-                            _searchState.update {
-                                it.copy(
-                                    barcode = event.code,
-                                    isLoading = false
-                                )
-                            }
-                        } else {
-                            onError(resource.uiText)
-                        }
-                    } else {
-                        savedStateHandle.get<String>("mealName")?.let { mealName ->
-                            resource.data?.let { product ->
-                                navigator.navigate(
-                                    NavigationActions.SearchScreen.searchToProduct(
-                                        product = product,
-                                        mealName = mealName,
-                                    )
-                                )
-                            } ?: onError(resourceProvider.getString(R.string.unknown_error))
-                        } ?: onError(resourceProvider.getString(R.string.unknown_error))
-                    }
-                }
+                onBarcodeScanned(event.code)
             }
+
             is SearchEvent.ShowedPermissionDialog -> {
                 _searchState.update {
                     it.copy(
@@ -155,8 +127,27 @@ class SearchViewModel @Inject constructor(
                     )
                 }
             }
+
             is SearchEvent.ClickedCreateNewRecipe -> {
                 navigator.navigate(NavigationActions.SearchScreen.searchToNewRecipe())
+            }
+
+            is SearchEvent.ClickedProductsTab -> {
+                _searchState.update {
+                    it.copy(
+                        searchBarPlaceholderText = resourceProvider.getString(R.string.product_name),
+                        currentTabIndex = 0
+                    )
+                }
+            }
+
+            is SearchEvent.ClickedRecipesTab -> {
+                _searchState.update {
+                    it.copy(
+                        searchBarPlaceholderText = resourceProvider.getString(R.string.recipe_name),
+                        currentTabIndex = 1
+                    )
+                }
             }
         }
     }
@@ -168,6 +159,87 @@ class SearchViewModel @Inject constructor(
                 it.copy(
                     items = history.data ?: emptyList()
                 )
+            }
+        }
+    }
+
+    private fun searchForRecipes() {
+        _searchState.update {
+            it.copy(
+                isLoading = true,
+                barcode = null
+            )
+        }
+
+        viewModelScope.launch {
+            val result =
+                searchDiaryUseCases.searchForRecipes(_searchState.value.recipesSearchBarText)
+            if (result is Resource.Error) {
+                onError(result.uiText)
+            } else {
+                _searchState.update {
+                    it.copy(
+                        recipes = result.data ?: emptyList()
+                    )
+                }
+            }
+        }
+    }
+
+    private fun searchForProducts() {
+        _searchState.update {
+            it.copy(
+                isLoading = true,
+                barcode = null
+            )
+        }
+        viewModelScope.launch(Dispatchers.IO) {
+            val result =
+                searchDiaryUseCases.searchForProducts(_searchState.value.productSearchBarText)
+            if (result is Resource.Error) {
+                onError(result.uiText)
+            } else {
+                _searchState.update {
+                    it.copy(
+                        items = result.data ?: emptyList(),
+                        isLoading = false
+                    )
+                }
+            }
+        }
+    }
+
+    private fun onBarcodeScanned(barcode: String) {
+        _searchState.update {
+            it.copy(
+                isScannerVisible = false,
+                isLoading = true
+            )
+        }
+        viewModelScope.launch(Dispatchers.IO) {
+            val resource = searchDiaryUseCases.searchForProductWithBarcode(barcode)
+            if (resource is Resource.Error) {
+                if (resource.uiText == resourceProvider.getString(R.string.there_is_no_product_with_provided_barcode_do_you_want_to_add_it)) {
+                    _searchState.update {
+                        it.copy(
+                            barcode = barcode,
+                            isLoading = false
+                        )
+                    }
+                } else {
+                    onError(resource.uiText)
+                }
+            } else {
+                savedStateHandle.get<String>("mealName")?.let { mealName ->
+                    resource.data?.let { product ->
+                        navigator.navigate(
+                            NavigationActions.SearchScreen.searchToProduct(
+                                product = product,
+                                mealName = mealName,
+                            )
+                        )
+                    } ?: onError(resourceProvider.getString(R.string.unknown_error))
+                } ?: onError(resourceProvider.getString(R.string.unknown_error))
             }
         }
     }

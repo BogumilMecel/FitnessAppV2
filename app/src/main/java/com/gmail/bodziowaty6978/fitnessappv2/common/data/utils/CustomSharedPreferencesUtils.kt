@@ -21,12 +21,8 @@ class CustomSharedPreferencesUtils(
         } ?: false
     }
 
-    fun getLatestLogEntry() = getUser()?.latestLogEntry
-
-    fun getLatestWeightEntries() = getUser()?.weightEntries ?: emptyList()
-
-    fun updateLatestWeightEntries(weightEntry: WeightEntry){
-        getUser()?.let {
+    fun updateLatestWeightEntries(weightEntry: WeightEntry): Boolean{
+        return getUser()?.let {
             saveUser(
                 user = it.copy(
                     weightEntries = it.weightEntries.toMutableList().apply {
@@ -34,7 +30,7 @@ class CustomSharedPreferencesUtils(
                     }
                 )
             )
-        }
+        } ?: false
     }
 
     fun saveWantedNutritionValues(wantedNutritionValues: NutritionValues): Boolean{
@@ -46,10 +42,6 @@ class CustomSharedPreferencesUtils(
         } ?: false
     }
 
-    fun getWantedNutritionValues(): NutritionValues? {
-        return getUser()?.nutritionValues
-    }
-
     fun saveUserInformation(userInformation: UserInformation): Boolean{
         return getUser()?.copy(
             userInformation = userInformation
@@ -57,10 +49,6 @@ class CustomSharedPreferencesUtils(
             saveItemToJson(it, SharedPreferencesKeys.USER_KEY)
             true
         } ?: false
-    }
-
-    fun getUserInformation(): UserInformation? {
-        return getItemFromJson(SharedPreferencesKeys.USER_INFORMATION_KEY, UserInformation::class.java)
     }
 
     fun getUser(): User? {

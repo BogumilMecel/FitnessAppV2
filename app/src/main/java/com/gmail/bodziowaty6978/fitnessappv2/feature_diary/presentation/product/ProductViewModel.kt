@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.NavigationActions
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.singleton.CurrentDate
+import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigator
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
@@ -40,7 +41,14 @@ class ProductViewModel @Inject constructor(
             Gson().fromJson(productString, Product::class.java)
         } ?: kotlin.run {
             navigator.navigate(NavigationActions.General.navigateUp())
-            Product()
+            Product(
+                nutritionValues = NutritionValues(
+                    calories = 200,
+                    carbohydrates = 20.0,
+                    protein = 15.0,
+                    fat = 2.0
+                )
+            )
         },
         recipe = savedStateHandle.get<String>("recipe")?.let { recipeString ->
             Gson().fromJson(recipeString, Recipe::class.java)
