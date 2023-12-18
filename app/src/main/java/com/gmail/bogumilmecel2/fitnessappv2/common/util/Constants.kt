@@ -18,8 +18,8 @@ object Constants {
         const val NOT_FOUND = 404
     }
 
-    const val DEFAULT_PAGE_SIZE = 20
-    const val DEFAULT_OFFLINE_PAGE_SIZE = 50
+    const val DEFAULT_PAGE_SIZE = 20L
+    const val DEFAULT_OFFLINE_PAGE_SIZE = 50L
 
     const val WEIGHT_PICKER_MIN_VALUE = 30.0
     const val WEIGHT_PICKER_MAX_VALUE = 250.0

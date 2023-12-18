@@ -1,14 +1,55 @@
-CREATE TABLE IF NOT EXISTS product_diary_entry (
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.MeasurementUnit;
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues;
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.MealName;
+import kotlin.Boolean;
+import kotlin.Int;
+
+CREATE TABLE IF NOT EXISTS SqlProductDiaryEntry (
     id TEXT PRIMARY KEY NOT NULL,
-    nutrition_values BLOB NOT NULL,
+    nutrition_values TEXT AS NutritionValues NOT NULL,
     utc_timestamp INTEGER NOT NULL,
     user_id TEXT NOT NULL,
     date TEXT NOT NULL,
-    meal_name TEXT NOT NULL,
-    product_measurement_unit TEXT NOT NULL,
+    meal_name TEXT AS MealName NOT NULL,
+    product_measurement_unit TEXT AS MeasurementUnit NOT NULL,
     edited_utc_timestamp INTEGER NOT NULL,
     product_name TEXT NOT NULL,
     product_id TEXT NOT NULL,
-    weight INTEGER NOT NULL,
-    deleted INTEGER NOT NULL
+    weight INTEGER AS Int NOT NULL,
+    deleted INTEGER AS Boolean NOT NULL
 );
+
+-- Insert single product diary entry
+insertProductDiaryEntry:
+INSERT OR REPLACE INTO SqlProductDiaryEntry VALUES (
+  :id, :nutritionValues, :utcTimestamp, :userId,
+  :date, :mealName, :productMeasurementUnit, :editedUtcTimestamp,
+  :productName, :productId, :weight, :deleted
+);
+
+-- Get product diary entries
+getProductDiaryEntries:
+SELECT * FROM SqlProductDiaryEntry
+WHERE (:searchText IS NULL OR product_name LIKE '%' || :searchText || '%')
+GROUP BY product_id
+ORDER BY utc_timestamp DESC LIMIT :limit OFFSET :offset;
+
+-- Get all product diary entries
+getAllProductDiaryEntries:
+SELECT * FROM SqlProductDiaryEntry ORDER BY utc_timestamp DESC LIMIT :limit;
+
+-- Get product diary entries by date
+getProductDiaryEntriesByDate:
+SELECT * FROM SqlProductDiaryEntry WHERE date = :date ORDER BY utc_timestamp DESC;
+
+-- Delete product diary entry
+deleteProductDiaryEntry:
+DELETE FROM SqlProductDiaryEntry WHERE id = :productDiaryEntryId;
+
+-- Delete product diary entries
+deleteProductDiaryEntries:
+DELETE FROM SqlProductDiaryEntry WHERE date = :date AND id NOT IN :diaryEntriesIds;
+
+-- Get product diary entries' nutrition values by date
+getProductDiaryEntriesNutritionValues:
+SELECT nutrition_values FROM SqlProductDiaryEntry WHERE date = :date;

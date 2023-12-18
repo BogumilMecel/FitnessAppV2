@@ -3,13 +3,11 @@ package com.gmail.bogumilmecel2.fitnessappv2.common.di
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.room.Room
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 import com.gmail.bogumilmecel2.auth.ValidateAuthDataUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.FitnessAppDatabase
-import com.gmail.bogumilmecel2.fitnessappv2.common.data.AppDatabase
 import com.gmail.bogumilmecel2.fitnessappv2.common.data.connectivity.ConnectivityObserverService
 import com.gmail.bogumilmecel2.fitnessappv2.common.data.navigation.repository.TokenRepositoryImp
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.connectivity.ConnectivityObserver
@@ -33,8 +31,12 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.use_case.LogInUs
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.data.api.DiaryApi
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.data.repository.DiaryRepositoryImp
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.data.repository.OfflineDiaryRepositoryImp
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.dao.UserDiaryItemsDao
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.LongToIntAdapter
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.NutritionValuesAdapter
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductAdapter
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductDiaryEntryAdapter
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.RecipeAdapter
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.RecipeDiaryEntryAdapter
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.OfflineDiaryRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CalculateSkipUseCase
@@ -84,22 +86,11 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideRoomDatabase(@ApplicationContext context: Context): AppDatabase = Room
-        .databaseBuilder(
-            context = context,
-            klass = AppDatabase::class.java,
-            name = AppDatabase.DATABASE_NAME
-        ).build()
-
-    @Singleton
-    @Provides
-    fun provideProductAdapter(gson: Gson): ProductAdapter = ProductAdapter(gson)
-
-    @Singleton
-    @Provides
     fun provideFitnessAppDatabase(
+        gson: Gson,
         @ApplicationContext context: Context,
-        productAdapter: ProductAdapter
+        nutritionValuesAdapter: NutritionValuesAdapter,
+        longToIntAdapter: LongToIntAdapter
     ): FitnessAppDatabase =
         FitnessAppDatabase(
             driver = AndroidSqliteDriver(
@@ -107,14 +98,28 @@ object AppModule {
                 context = context,
                 name = "fitness.app.db"
             ),
-            SqlProductAdapter = productAdapter()
+            SqlProductAdapter = ProductAdapter(
+                longToIntAdapter = longToIntAdapter,
+                nutritionValuesAdapter = nutritionValuesAdapter
+            )(),
+            SqlRecipeDiaryEntryAdapter = RecipeDiaryEntryAdapter(
+                nutritionValuesAdapter = nutritionValuesAdapter,
+                longToIntAdapter = longToIntAdapter
+            )(),
+            SqlProductDiaryEntryAdapter = ProductDiaryEntryAdapter(
+                nutritionValuesAdapter = nutritionValuesAdapter,
+                longToIntAdapter = longToIntAdapter
+            )(),
+            SqlRecipeAdapter = RecipeAdapter(
+                gson = gson,
+                nutritionValuesAdapter = nutritionValuesAdapter,
+                longToIntAdapter = longToIntAdapter
+            )()
         )
 
     @Singleton
     @Provides
-    fun provideProductDiaryHistoryDao(
-        database: AppDatabase
-    ): UserDiaryItemsDao = database.productDiaryHistoryDao()
+    fun provideLongToIntAdapter(): LongToIntAdapter = LongToIntAdapter()
 
     @Provides
     @Singleton
@@ -385,10 +390,15 @@ object AppModule {
     @Singleton
     @Provides
     fun provideOfflineDiaryRepository(
-        userDiaryItemsDao: UserDiaryItemsDao,
         fitnessAppDatabase: FitnessAppDatabase
     ): OfflineDiaryRepository = OfflineDiaryRepositoryImp(
-        userDiaryItemsDao = userDiaryItemsDao,
-        productQueries = fitnessAppDatabase.sqlProductQueries
+        productQueries = fitnessAppDatabase.productQueries,
+        recipeDiaryEntryQueries = fitnessAppDatabase.recipeDiaryEntryQueries,
+        productDiaryEntryQueries = fitnessAppDatabase.productDiaryEntryQueries,
+        recipeQueries = fitnessAppDatabase.recipeQueries
     )
+
+    @Singleton
+    @Provides
+    fun provideNutritionValuesAdapter(gson: Gson): NutritionValuesAdapter = NutritionValuesAdapter(gson)
 }

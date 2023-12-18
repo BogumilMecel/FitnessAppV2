@@ -1,13 +1,53 @@
-CREATE TABLE IF NOT EXISTS recipe_diary_entry (
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues;
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.MealName;
+import kotlin.Boolean;
+import kotlin.Int;
+
+CREATE TABLE IF NOT EXISTS SqlRecipeDiaryEntry (
     id TEXT PRIMARY KEY NOT NULL,
-    nutrition_values BLOB NOT NULL,
+    nutrition_values TEXT AS NutritionValues NOT NULL,
     utc_timestamp INTEGER NOT NULL,
     user_id TEXT NOT NULL,
     date TEXT NOT NULL,
-    meal_name TEXT NOT NULL,
+    meal_name TEXT AS MealName NOT NULL,
     edited_utc_timestamp INTEGER NOT NULL,
     recipe_name TEXT NOT NULL,
     recipe_id TEXT NOT NULL,
-    servings INTEGER NOT NULL,
-    deleted INTEGER NOT NULL
+    servings INTEGER AS Int NOT NULL,
+    deleted INTEGER AS Boolean NOT NULL
 );
+
+-- Insert single recipe diary entry
+insertRecipeDiaryEntry:
+INSERT OR REPLACE INTO SqlRecipeDiaryEntry VALUES (
+  :id, :nutritionValues, :utcTimestamp, :userId,
+  :date, :mealName, :editedUtcTimestamp, :recipeName,
+  :recipeId, :servings, :deleted
+);
+
+-- Get recipe diary entries
+getRecipeDiaryEntries:
+SELECT * FROM SqlRecipeDiaryEntry
+WHERE (:searchText IS NULL OR recipe_name LIKE '%' || :searchText || '%')
+GROUP BY recipe_id
+ORDER BY utc_timestamp DESC LIMIT :limit OFFSET :offset;
+
+-- Get all recipe diary entries
+getAllRecipeDiaryEntries:
+SELECT * FROM SqlRecipeDiaryEntry ORDER BY utc_timestamp DESC LIMIT :limit;
+
+-- Get recipe diary entries by date
+getRecipeDiaryEntriesByDate:
+SELECT * FROM SqlRecipeDiaryEntry WHERE date = :date ORDER BY utc_timestamp DESC;
+
+-- Delete recipe diary entry
+deleteRecipeDiaryEntry:
+DELETE FROM SqlRecipeDiaryEntry WHERE id = :recipeDiaryEntryId;
+
+-- Delete recipe diary entries
+deleteRecipeDiaryEntries:
+DELETE FROM SqlRecipeDiaryEntry WHERE date = :date AND id NOT IN :diaryEntriesIds;
+
+-- Get recipe diary entries' nutrition values by date
+getRecipeDiaryEntriesNutritionValues:
+SELECT nutrition_values FROM SqlRecipeDiaryEntry WHERE date = :date;

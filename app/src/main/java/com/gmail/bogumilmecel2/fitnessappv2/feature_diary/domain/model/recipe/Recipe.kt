@@ -1,49 +1,62 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
+import com.gmail.bogumilmecel2.fitnessappv2.database.SqlRecipe
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.utils.Difficulty
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.utils.TimeRequired
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-@Entity
 @Serializable
 data class Recipe(
-    @PrimaryKey
+    @SerialName("id")
     val id: String = "",
 
-    @ColumnInfo(name = "name")
+    @SerialName("name")
     val name: String = "",
 
-    @ColumnInfo(name = "ingredients")
+    @SerialName("ingredients")
     val ingredients: List<Ingredient> = emptyList(),
 
-    @ColumnInfo(name = "utc_timestamp")
+    @SerialName("utc_timestamp")
     val utcTimestamp: Long = System.currentTimeMillis(),
 
-    @ColumnInfo(name = "image_url")
+    @SerialName("image_url")
     val imageUrl: String? = null,
 
-    @ColumnInfo(name = "nutrition_values")
+    @SerialName("nutrition_values")
     val nutritionValues: NutritionValues = NutritionValues(),
 
-    @ColumnInfo(name = "time_required")
+    @SerialName("time_required")
     val timeRequired: TimeRequired = TimeRequired.LOW,
 
-    @ColumnInfo(name = "difficulty")
+    @SerialName("difficulty")
     val difficulty: Difficulty = Difficulty.LOW,
 
-    @ColumnInfo(name = "servings")
+    @SerialName("servings")
     val servings: Int = 0,
 
-    @ColumnInfo(name = "is_public")
+    @SerialName("is_public")
     val isPublic: Boolean = false,
 
-    @ColumnInfo(name = "username")
+    @SerialName("username")
     val username: String = "",
 
-    @ColumnInfo(name = "user_id")
+    @SerialName("user_id")
     val userId: String = "",
+)
+
+fun SqlRecipe.toRecipe() = Recipe(
+    id = id,
+    name = name,
+    ingredients = ingredients,
+    utcTimestamp = utc_timestamp,
+    imageUrl = image_url,
+    nutritionValues = nutrition_values,
+    timeRequired = time_required,
+    difficulty = difficulty,
+    servings = servings,
+    isPublic = is_public,
+    username = username,
+    userId = user_id
 )

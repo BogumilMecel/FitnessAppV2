@@ -17,5 +17,21 @@ CREATE TABLE IF NOT EXISTS SqlProduct (
     date_created TEXT AS LocalDateTime NOT NULL
 );
 
+-- Get products
+getProducts:
+SELECT * FROM SqlProduct
+WHERE (:userId IS NULL OR user_id = :userId)
+  AND (:searchText IS NULL OR name LIKE '%' || :searchText || '%')
+ORDER BY date_created DESC LIMIT :limit OFFSET :offset;
+
+-- Insert product
+insertProduct:
+INSERT OR REPLACE INTO SqlProduct VALUES (
+  :id, :name, :containerWeight, :nutritionValuesIn,
+  :measurementUnit, :nutritionValues, :barcode, :username,
+  :userId, :dateCreated
+);
+
+-- Get product by ID
 getProduct:
 SELECT * FROM SqlProduct WHERE id = :productId LIMIT 1;

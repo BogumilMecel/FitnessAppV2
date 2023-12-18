@@ -1,14 +1,40 @@
-CREATE TABLE IF NOT EXISTS recipe (
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues;
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Ingredient;
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.utils.Difficulty;
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.utils.TimeRequired;
+import kotlin.Boolean;
+import kotlin.Int;
+import kotlin.collections.List;
+
+CREATE TABLE IF NOT EXISTS SqlRecipe (
     id TEXT PRIMARY KEY NOT NULL,
     name TEXT NOT NULL,
-    ingredients BLOB NOT NULL,
+    ingredients TEXT AS List<Ingredient> NOT NULL,
     utc_timestamp INTEGER NOT NULL,
     image_url TEXT,
-    nutrition_values BLOB NOT NULL,
-    time_required TEXT NOT NULL,
-    difficulty TEXT NOT NULL,
-    servings INTEGER NOT NULL,
-    is_public INTEGER NOT NULL,
+    nutrition_values TEXT AS NutritionValues NOT NULL,
+    time_required TEXT AS TimeRequired NOT NULL,
+    difficulty TEXT AS Difficulty NOT NULL,
+    servings INTEGER AS Int NOT NULL,
+    is_public INTEGER AS Boolean NOT NULL,
     username TEXT NOT NULL,
     user_id TEXT NOT NULL
 );
+
+getUserRecipes:
+SELECT * FROM SqlRecipe
+WHERE (:userId IS NULL OR user_id = :userId)
+  AND (:searchText IS NULL OR name LIKE '%' || :searchText || '%')
+ORDER BY utc_timestamp DESC LIMIT :limit OFFSET :offset;
+
+-- Insert recipe
+insertRecipe:
+INSERT OR REPLACE INTO SqlRecipe VALUES (
+  :id, :name, :ingredients, :utcTimestamp, :imageUrl,
+  :nutritionValues, :timeRequired, :difficulty, :servings,
+  :isPublic, :username, :userId
+);
+
+-- Get recipe by ID
+getRecipe:
+SELECT * FROM SqlRecipe WHERE id = :recipeId LIMIT 1;

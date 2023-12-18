@@ -143,7 +143,7 @@ dependencies {
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:1.5.4"
 
     //gson and retrofit
-    implementation 'com.google.code.gson:gson:2.10'
+    implementation 'com.google.code.gson:gson:2.10.1'
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 
@@ -157,7 +157,7 @@ dependencies {
     //serialization
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1"
 
-    implementation 'org.jetbrains.kotlin:kotlin-reflect:1.9.20'
+    implementation 'org.jetbrains.kotlin:kotlin-reflect:1.9.21'
 
     //permissions
     implementation "com.google.accompanist:accompanist-permissions:0.26.0-alpha"
@@ -177,10 +177,6 @@ dependencies {
     implementation("app.cash.sqldelight:coroutines-extensions:2.0.1")
     testImplementation("app.cash.sqldelight:sqlite-driver:2.0.1")
 
-    def room_version = "2.6.0"
-
-    implementation "androidx.room:room-runtime:$room_version"
-    ksp "androidx.room:room-compiler:$room_version"
     implementation 'com.github.bodzio6978:fitness-app-common:1.4'
 }
 

@@ -11,8 +11,8 @@ interface OfflineDiaryRepository {
     suspend fun getProducts(
         userId: String? = null,
         searchText: String? = null,
-        limit: Int,
-        skip: Int? = null
+        limit: Long,
+        skip: Long = 0,
     ): Resource<List<Product>>
 
     suspend fun getProduct(productId: String): Resource<Product?>
@@ -23,11 +23,11 @@ interface OfflineDiaryRepository {
 
     suspend fun getProductDiaryEntries(
         searchText: String? = null,
-        limit: Int,
-        skip: Int? = null,
+        limit: Long,
+        skip: Long = 0,
     ): Resource<List<ProductDiaryEntry>>
 
-    suspend fun getProductDiaryEntries(limit: Int): Resource<List<ProductDiaryEntry>>
+    suspend fun getProductDiaryEntries(limit: Long): Resource<List<ProductDiaryEntry>>
 
     suspend fun getProductDiaryEntries(date: String): Resource<List<ProductDiaryEntry>>
 
@@ -45,8 +45,8 @@ interface OfflineDiaryRepository {
     suspend fun getRecipes(
         userId: String? = null,
         searchText: String? = null,
-        limit: Int,
-        skip: Int? = null
+        limit: Long,
+        skip: Long = 0,
     ): Resource<List<Recipe>>
 
     suspend fun getRecipe(recipeId: String): Resource<Recipe?>
@@ -57,11 +57,11 @@ interface OfflineDiaryRepository {
 
     suspend fun getRecipeDiaryEntries(
         searchText: String? = null,
-        limit: Int,
-        skip: Int? = null,
+        limit: Long,
+        skip: Long = 0,
     ): Resource<List<RecipeDiaryEntry>>
 
-    suspend fun getRecipeDiaryEntries(limit: Int): Resource<List<RecipeDiaryEntry>>
+    suspend fun getRecipeDiaryEntries(limit: Long): Resource<List<RecipeDiaryEntry>>
 
     suspend fun getRecipeDiaryEntries(date: String): Resource<List<RecipeDiaryEntry>>
 
