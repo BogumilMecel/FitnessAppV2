@@ -1,7 +1,6 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search.componens
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
@@ -15,7 +14,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.BackArrow
-import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.DefaultTextField
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.CustomBasicTextField
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.DarkGreyElevation1
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.TextGrey
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.TextWhite
@@ -70,15 +69,11 @@ fun SearchTopSection(
 
         Spacer(modifier = Modifier.height(5.dp))
 
-        DefaultTextField(
+        CustomBasicTextField(
             value = searchBarText,
-            placeholder = {
-                Text(
-                    text = when (pagerState.currentPage) {
-                        0 -> stringResource(id = R.string.product_name)
-                        else -> stringResource(id = R.string.recipe_name)
-                    }
-                )
+            placeholder = when (pagerState.currentPage) {
+                0 -> stringResource(id = R.string.product_name)
+                else -> stringResource(id = R.string.recipe_name)
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -86,8 +81,7 @@ fun SearchTopSection(
                 .padding(horizontal = 20.dp),
             onValueChange = {
                 onEvent(SearchEvent.EnteredSearchText(it))
-            },
-            shape = RoundedCornerShape(25)
+            }
         )
 
         Spacer(modifier = Modifier.height(8.dp))

@@ -17,7 +17,6 @@ fun ProductNutritionSection(
     nutritionData: NutritionData,
     modifier: Modifier
 ) {
-
     DefaultCardBackground(
         modifier = modifier,
         content = {

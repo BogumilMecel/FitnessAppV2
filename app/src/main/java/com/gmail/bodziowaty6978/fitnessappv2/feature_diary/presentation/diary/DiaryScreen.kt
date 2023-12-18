@@ -9,17 +9,20 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedButton
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -28,8 +31,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.BackHandler
-import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.DarkGreyElevation3
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.HeightSpacer
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.WidthSpacer
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.DarkGreyElevation6
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.Grey
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.TextGrey
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.MealName
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntry
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.diary.components.CalendarSection
@@ -37,6 +44,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.diary.co
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.diary.components.NutritionBottomSection
 import com.ramcosta.composedestinations.annotation.Destination
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Destination
 @Composable
 fun DiaryScreen(
@@ -52,125 +60,148 @@ fun DiaryScreen(
         viewModel.onEvent(DiaryEvent.BackPressed)
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        if (state.isDialogShowed) {
-            AlertDialog(
-                backgroundColor = DarkGreyElevation3,
-                shape = RoundedCornerShape(10),
+    Scaffold(
+        bottomBar = {
+            NutritionBottomSection(
+                currentNutritionValues = state.currentTotalNutritionValues,
+                wantedNutritionValues = state.wantedTotalNutritionValues,
                 modifier = Modifier
-                    .padding(horizontal = 10.dp),
-                onDismissRequest = {
-                    viewModel.onEvent(DiaryEvent.DismissedDialog)
-                },
-                buttons = {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    ) {
-                        OutlinedButton(
-                            onClick = {
-                                viewModel.onEvent(DiaryEvent.ClickedDeleteInDialog)
-                            },
-                            modifier = Modifier
-                                .weight(1F)
-                                .padding(horizontal = 10.dp, vertical = 10.dp),
-                            border = BorderStroke(1.dp, MaterialTheme.colors.primary),
-                            colors = ButtonDefaults.outlinedButtonColors(
-                                backgroundColor = Color.Transparent
-                            )
-                        ) {
-                            Text(
-                                text = stringResource(id = R.string.delete).uppercase(),
-                                style = MaterialTheme.typography.button.copy(
-                                    color = MaterialTheme.colors.primary
-                                )
-                            )
-                        }
-
-                        Button(
-                            onClick = {
-                                viewModel.onEvent(DiaryEvent.ClickedEditInDialog)
-                            },
-                            modifier = Modifier
-                                .weight(1F)
-                                .padding(horizontal = 10.dp, vertical = 10.dp)
-                        ) {
-                            Text(
-                                text = stringResource(id = R.string.edit).uppercase(),
-                                style = MaterialTheme.typography.button
-                            )
-                        }
-
-                    }
-                },
-                title = {
-                    Text(
-                        text = state.longClickedDiaryItem?.let { diaryItem ->
-                            when (diaryItem) {
-                                is ProductDiaryEntry -> {
-                                    diaryItem.product.name +
-                                            " (${diaryItem.weight}" +
-                                            "${
-                                                diaryItem.product.measurementUnit
-                                            })"
-                                }
-
-                                is RecipeDiaryEntry -> {
-                                    diaryItem.recipe.name +
-                                            " (${diaryItem.portions}" +
-                                            "${
-                                                stringResource(id = R.string.portions)
-                                            })"
-                                }
-
-                                else -> null
-                            }
-
-                        } ?: ""
-                    )
-                }
+                    .background(Grey)
+                    .padding(bottom = 5.dp)
             )
         }
-
-        Column(
+    ) { paddingValues ->
+        Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 64.dp),
-            verticalArrangement = Arrangement.SpaceBetween
+                .fillMaxSize()
         ) {
-            CalendarSection(
-                onArrowPressed = {
-                    viewModel.onEvent(
-                        event = DiaryEvent.ChangedDate
-                    )
-                },
+            if (state.isDialogShowed) {
+                androidx.compose.material3.AlertDialog(
+                    content = {
+                        Surface(
+                            modifier = Modifier.wrapContentSize(),
+                            shape = RoundedCornerShape(20.dp),
+                            color = DarkGreyElevation6
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(16.dp)
+                            ) {
+                                Row(
+                                    verticalAlignment = CenterVertically
+                                ) {
+                                    state.longClickedDiaryItem?.let { diaryItem ->
+                                        Text(
+                                            text = when (diaryItem) {
+                                                    is ProductDiaryEntry -> diaryItem.product.name
+                                                    is RecipeDiaryEntry -> diaryItem.recipe.name
+                                                    else -> ""
+                                                },
+                                            style = MaterialTheme.typography.h3
+                                        )
+
+                                        WidthSpacer(width = 2.dp)
+
+                                        Text(
+                                            text = "(${diaryItem.getDisplayValue()})",
+                                            style = MaterialTheme.typography.body2,
+                                            color = TextGrey
+                                        )
+                                    }
+                                }
+
+
+                                HeightSpacer(height = 2.dp)
+
+                                Text(text = "What would you like to do:", style = MaterialTheme.typography.body2)
+
+                                HeightSpacer(height = 24.dp)
+
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                ) {
+                                    OutlinedButton(
+                                        onClick = {
+                                            viewModel.onEvent(DiaryEvent.ClickedDeleteInDialog)
+                                        },
+                                        modifier = Modifier.weight(1F),
+                                        border = BorderStroke(
+                                            1.dp,
+                                            MaterialTheme.colors.primary
+                                        ),
+                                        colors = ButtonDefaults.outlinedButtonColors(
+                                            backgroundColor = Color.Transparent
+                                        )
+                                    ) {
+                                        Text(
+                                            text = stringResource(id = R.string.delete).uppercase(),
+                                            style = MaterialTheme.typography.button.copy(
+                                                color = MaterialTheme.colors.primary
+                                            )
+                                        )
+                                    }
+
+                                    WidthSpacer(width = 8.dp)
+
+                                    Button(
+                                        onClick = {
+                                            viewModel.onEvent(DiaryEvent.ClickedEditInDialog)
+                                        },
+                                        modifier = Modifier
+                                            .weight(1F)
+                                    ) {
+                                        Text(
+                                            text = stringResource(id = R.string.edit).uppercase(),
+                                            style = MaterialTheme.typography.button
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    onDismissRequest = {
+                        viewModel.onEvent(DiaryEvent.DismissedDialog)
+                    },
+                )
+            }
+
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(MaterialTheme.colors.background)
-                    .padding(horizontal = 10.dp, vertical = 2.dp)
-            )
+                    .padding(bottom = paddingValues.calculateBottomPadding()),
+                verticalArrangement = Arrangement.SpaceBetween
+            ) {
+                CalendarSection(
+                    onArrowPressed = {
+                        viewModel.onEvent(
+                            event = DiaryEvent.ChangedDate
+                        )
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colors.background)
+                        .padding(
+                            horizontal = 10.dp,
+                            vertical = 2.dp
+                        )
+                )
 
-            LazyColumn {
-                items(state.meals.size) {
-                    DiaryMealSection(
-                        meal = state.meals[it],
-                        onEvent = { event ->
-                            viewModel.onEvent(event)
-                        }
-                    )
+                val mealNames = MealName.values()
+
+                LazyColumn {
+                    items(mealNames.size) {
+                        DiaryMealSection(
+                            mealName = mealNames[it],
+                            diaryEntries = state.getDiaryEntries(mealName = mealNames[it]),
+                            nutritionValues = state.mealNutritionValues[mealNames[it]],
+                            wantedNutritionValues = state.wantedTotalNutritionValues,
+                            onEvent = { event ->
+                                viewModel.onEvent(event)
+                            }
+                        )
+                    }
                 }
             }
         }
-        NutritionBottomSection(
-            meals = state.meals,
-            wantedNutritionValues = state.wantedNutritionValues,
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .background(Grey)
-                .padding(bottom = 5.dp)
-        )
     }
 }

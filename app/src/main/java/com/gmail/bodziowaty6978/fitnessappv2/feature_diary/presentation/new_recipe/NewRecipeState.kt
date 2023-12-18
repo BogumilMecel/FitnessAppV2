@@ -1,5 +1,6 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_recipe
 
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.MealName
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Price
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.Ingredient
@@ -18,7 +19,7 @@ data class NewRecipeState(
     val selectedTime: TimeRequired = TimeRequired.LOW,
     val servings: String = "1",
     val name: String = "",
-    val mealName: String,
+    val mealName: MealName,
     val ingredients: List<Ingredient> = emptyList(),
     val isSearchSectionVisible: Boolean = false,
     val searchItems: List<Product> = emptyList(),

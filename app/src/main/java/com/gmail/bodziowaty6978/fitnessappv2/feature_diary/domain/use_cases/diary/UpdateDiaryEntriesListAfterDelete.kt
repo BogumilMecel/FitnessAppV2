@@ -1,32 +1,15 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.diary
 
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Meal
+import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.DiaryItem
 
 class UpdateDiaryEntriesListAfterDelete {
 
     operator fun invoke(
-        diaryEntryId: String,
-        meals: List<Meal>
-    ): List<Meal> {
-        meals.forEachIndexed { index, meal ->
-            val diaryEntry = meal.diaryEntries.find {
-                it.id == diaryEntryId
-            }
-
-            diaryEntry?.let {
-                val mutableDiaryEntries = meal.diaryEntries.toMutableList()
-                mutableDiaryEntries.remove(it)
-
-                val newMeal = Meal(
-                    mealName = meal.mealName,
-                    diaryEntries = mutableDiaryEntries
-                )
-
-                val mutableMeals = meals.toMutableList()
-                mutableMeals[index] = newMeal
-                return mutableMeals
-            }
-        }
-        return meals
+        diaryEntry: DiaryItem,
+        diaryEntries: List<DiaryItem>,
+    ): List<DiaryItem> {
+        val mutableList = diaryEntries.toMutableList()
+        mutableList.remove(diaryEntry)
+        return mutableList
     }
 }

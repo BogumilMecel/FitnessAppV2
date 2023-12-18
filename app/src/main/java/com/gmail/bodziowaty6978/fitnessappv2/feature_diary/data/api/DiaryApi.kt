@@ -1,5 +1,7 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.data.api
 
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.DeleteDiaryEntryRequest
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.DiaryEntriesResponse
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Price
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
@@ -17,7 +19,7 @@ interface DiaryApi {
     @GET("/diaryEntries")
     suspend fun getDiaryEntries(
         @Query("date") date: String
-    ): List<ProductDiaryEntry>
+    ): DiaryEntriesResponse
 
     @POST("/diaryEntries/product")
     suspend fun insertProductDiaryEntry(
@@ -29,10 +31,10 @@ interface DiaryApi {
         @Body recipeDiaryEntryRequest: RecipeDiaryEntryRequest
     ): Boolean
 
-    @DELETE("/diaryEntries/{diaryEntryId}")
+    @HTTP(method = "DELETE", path = "/diaryEntries", hasBody = true)
     suspend fun deleteDiaryEntry(
-        @Path("diaryEntryId") entryId: String
-    ): Boolean
+        @Body deleteDiaryEntryRequest: DeleteDiaryEntryRequest
+    )
 
     @GET("/products/{searchText}")
     suspend fun searchForProducts(

@@ -2,6 +2,7 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_pro
 
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.MeasurementUnit
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.State
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.MealName
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.product.NutritionValuesIn
 
 data class NewProductState(
@@ -19,7 +20,7 @@ data class NewProductState(
     val barcode: String = "",
     val isLoading: Boolean = false,
     val isScannerVisible: Boolean = false,
-    val mealName: String
+    val mealName: MealName
 ): State
 
 

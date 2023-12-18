@@ -1,12 +1,12 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.diary
 
 import androidx.lifecycle.viewModelScope
-import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.singleton.CurrentDate
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
-import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.destinations.SearchScreenDestination
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Meal
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.MealName
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.diary.CalculateNutritionValuesFromDiaryEntriesUseCase
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.diary.CalculateNutritionValuesFromNutritionValuesUseCase
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.diary.DeleteDiaryEntry
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.diary.GetDiaryEntries
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.diary.UpdateDiaryEntriesListAfterDelete
@@ -23,24 +23,12 @@ class DiaryViewModel @Inject constructor(
     private val getDiaryEntries: GetDiaryEntries,
     private val deleteDiaryEntry: DeleteDiaryEntry,
     private val updateDiaryEntriesListAfterDelete: UpdateDiaryEntriesListAfterDelete,
+    private val calculateNutritionValuesFromDiaryEntriesUseCase: CalculateNutritionValuesFromDiaryEntriesUseCase,
+    private val calculateNutritionValuesFromNutritionValuesUseCase: CalculateNutritionValuesFromNutritionValuesUseCase
 ) : BaseViewModel() {
 
     private val _state = MutableStateFlow(DiaryState())
     val state: StateFlow<DiaryState> = _state
-
-    private fun initMeals() {
-        val mealNames = resourceProvider.getStringArray(R.array.meal_names)
-        _state.update {
-            it.copy(
-                meals = mealNames.map { mealName ->
-                    Meal(
-                        mealName = mealName,
-                        diaryEntries = emptyList()
-                    )
-                }
-            )
-        }
-    }
 
     fun onEvent(event: DiaryEvent) {
         when (event) {
@@ -60,35 +48,46 @@ class DiaryViewModel @Inject constructor(
                 _state.update {
                     it.copy(
                         longClickedDiaryItem = event.diaryItem,
-                        isDialogShowed = true
+                        isDialogShowed = true,
+                        currentlySelectedMealName = event.mealName
                     )
                 }
-
             }
 
             is DiaryEvent.DismissedDialog -> {
-                _state.update {
-                    it.copy(
-                        isDialogShowed = false
-                    )
-                }
+                hideDiaryEntryDialog()
             }
 
             is DiaryEvent.ClickedDeleteInDialog -> {
-                _state.value.longClickedDiaryItem?.let { diaryEntry ->
                     viewModelScope.launch(Dispatchers.IO) {
-                        deleteDiaryEntry(diaryEntry.id).handle {
-                            _state.update {
-                                it.copy(
-                                    isDialogShowed = false,
-                                    meals = updateDiaryEntriesListAfterDelete(
-                                        diaryEntryId = diaryEntry.id,
-                                        meals = _state.value.meals
-                                    )
-                                )
+                        with(_state.value) {
+                            longClickedDiaryItem?.let { diaryEntry ->
+                                deleteDiaryEntry(diaryEntry).handle(
+                                    finally = {
+                                        currentlySelectedMealName?.let {
+                                            calculateMealNutritionValues(mealName = it)
+                                            recalculateTotalNutritionValues()
+                                        }
+                                        hideDiaryEntryDialog()
+                                    }
+                                ) {
+                                    currentlySelectedMealName?.let { mealName ->
+                                        diaryEntries[mealName]?.let { mealDiaryEntries ->
+                                            val mutableDiaryEntries = _state.value.diaryEntries.toMutableMap()
+                                            mutableDiaryEntries[mealName] = updateDiaryEntriesListAfterDelete(
+                                                diaryEntry = diaryEntry,
+                                                diaryEntries = mealDiaryEntries
+                                            )
+                                            _state.update {
+                                                it.copy(
+                                                    diaryEntries = mutableDiaryEntries
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
-                    }
                 }
             }
 
@@ -103,40 +102,63 @@ class DiaryViewModel @Inject constructor(
     }
 
     fun initData() {
-        initMeals()
         getDiaryEntries()
         initWantedNutritionValues()
+    }
+
+    private fun hideDiaryEntryDialog() {
+        _state.update {
+            it.copy(
+                isDialogShowed = false,
+                currentlySelectedMealName = null
+            )
+        }
     }
 
     private fun initWantedNutritionValues() {
         viewModelScope.launch {
             _state.update {
                 it.copy(
-                    wantedNutritionValues = sharedPreferencesUtils.getWantedNutritionValues()
+                    wantedTotalNutritionValues = sharedPreferencesUtils.getWantedNutritionValues()
                 )
             }
+        }
+    }
+
+    private fun calculateMealNutritionValues(mealName: MealName) {
+        val mutableMealNutritionValues = _state.value.mealNutritionValues.toMutableMap()
+        mutableMealNutritionValues[mealName] =
+            calculateNutritionValuesFromDiaryEntriesUseCase(diaryEntries = _state.value.getDiaryEntries(mealName))
+        _state.update {
+            it.copy(
+                mealNutritionValues = mutableMealNutritionValues
+            )
+        }
+    }
+
+    private fun recalculateTotalNutritionValues() {
+        _state.update {
+            it.copy(
+                currentTotalNutritionValues = calculateNutritionValuesFromNutritionValuesUseCase(
+                    nutritionValues = _state.value.mealNutritionValues.values.toList()
+                )
+            )
         }
     }
 
     private fun getDiaryEntries() {
         val currentDate = CurrentDate.dateModel(resourceProvider = resourceProvider)
         viewModelScope.launch(Dispatchers.IO) {
-            val resource = getDiaryEntries(
-                timestamp = currentDate.timestamp,
-                mealNames = resourceProvider.getStringArray(R.array.meal_names).toList()
-            )
-            when (resource) {
-                is Resource.Success -> {
-                    _state.update {
-                        it.copy(
-                            meals = resource.data
-                        )
-                    }
+            getDiaryEntries(date = currentDate.date).handle { diaryEntries ->
+                _state.update {
+                    it.copy(
+                        diaryEntries = diaryEntries
+                    )
                 }
-
-                is Resource.Error -> {
-                    showSnackbarError(resource.uiText)
+                diaryEntries.keys.forEach {
+                    calculateMealNutritionValues(it)
                 }
+                recalculateTotalNutritionValues()
             }
         }
     }

@@ -27,7 +27,8 @@ class RecipeViewModel @Inject constructor(
 
     private val _state = MutableStateFlow(
         RecipeState(
-            recipe = RecipeScreenDestination.argsFrom(savedStateHandle = savedStateHandle).recipe
+            recipe = RecipeScreenDestination.argsFrom(savedStateHandle = savedStateHandle).recipe,
+            mealName = RecipeScreenDestination.argsFrom(savedStateHandle = savedStateHandle).mealName
         )
     )
     val state: StateFlow<RecipeState> = _state
