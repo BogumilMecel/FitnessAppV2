@@ -12,12 +12,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.BackHandler
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.ConfigureViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.MealName
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.diary.components.CalendarSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.diary.components.DiaryMealSection
@@ -28,14 +28,10 @@ import com.ramcosta.composedestinations.annotation.Destination
 
 @Destination
 @Composable
-fun DiaryScreen(
-    viewModel: DiaryViewModel = hiltViewModel(),
-) {
+fun DiaryScreen(viewModel: DiaryViewModel = hiltViewModel()) {
     val state = viewModel.state.collectAsStateWithLifecycle().value
 
-    LaunchedEffect(key1 = true) {
-        viewModel.initData()
-    }
+    ConfigureViewModel(viewModel = viewModel)
 
     BackHandler {
         viewModel.onEvent(DiaryEvent.BackPressed)

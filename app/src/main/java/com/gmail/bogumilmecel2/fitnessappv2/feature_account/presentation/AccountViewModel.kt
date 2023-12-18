@@ -17,7 +17,14 @@ import javax.inject.Inject
 class AccountViewModel @Inject constructor(
     private val deleteToken: DeleteToken,
     private val createPieChartData: CreatePieChartData
-) : BaseViewModel<AccountState, AccountEvent>(state = AccountState()) {
+) : BaseViewModel<AccountState, AccountEvent, Unit>(
+    state = AccountState(),
+    navArguments = Unit
+) {
+
+    override fun configureOnStart() {
+        getWantedNutritionValues()
+    }
 
     override fun onEvent(event: AccountEvent) {
         when (event) {
@@ -33,10 +40,6 @@ class AccountViewModel @Inject constructor(
                 navigateUp()
             }
         }
-    }
-
-    fun initData() {
-        getWantedNutritionValues()
     }
 
     private fun getWantedNutritionValues() {

@@ -1,7 +1,6 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_product
 
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.MeasurementUnit
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.MealName
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.product.NutritionValuesIn
 
 data class NewProductState(
@@ -19,8 +18,6 @@ data class NewProductState(
     val barcode: String = "",
     val isLoading: Boolean = false,
     val isScannerVisible: Boolean = false,
-    val mealName: MealName,
-    val date: String
 )
 
 

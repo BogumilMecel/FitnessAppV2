@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.BackHandler
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.ConfigureViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.presentation.components.CaloriesSumSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.presentation.components.LogStreakSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.presentation.components.WeightSection
@@ -37,16 +38,13 @@ import kotlinx.coroutines.flow.receiveAsFlow
 fun SummaryScreen(
     viewModel: SummaryViewModel = hiltViewModel()
 ) {
+    ConfigureViewModel(viewModel = viewModel)
     val state = viewModel.state.collectAsState().value
     val activity = (LocalContext.current as? Activity)
     val sheetState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
         skipHalfExpanded = true
     )
-
-    LaunchedEffect(key1 = true) {
-        viewModel.initializeData()
-    }
 
     BackHandler {
         if (sheetState.currentValue == ModalBottomSheetValue.Expanded) {

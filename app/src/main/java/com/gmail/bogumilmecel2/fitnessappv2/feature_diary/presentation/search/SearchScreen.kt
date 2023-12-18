@@ -24,6 +24,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.BackHandler
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.ConfigureViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.ErrorUtils
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.componens.SearchEverythingSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.componens.SearchTopSection
@@ -56,9 +57,7 @@ fun SearchScreen(
         SearchTab.values().size
     }
 
-    LaunchedEffect(key1 = true) {
-        viewModel.initializeData()
-    }
+    ConfigureViewModel(viewModel = viewModel)
 
     LaunchedEffect(
         key1 = state.selectedTabIndex,

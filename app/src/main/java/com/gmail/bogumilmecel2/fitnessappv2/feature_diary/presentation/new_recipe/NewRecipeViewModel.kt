@@ -23,13 +23,11 @@ import javax.inject.Inject
 @HiltViewModel
 class NewRecipeViewModel @Inject constructor(
     private val newRecipeUseCases: NewRecipeUseCases,
-    private val savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle,
     private val calculateProductNutritionValuesUseCase: CalculateProductNutritionValuesUseCase
-) : BaseViewModel<NewRecipeState, NewRecipeEvent>(
-    state = NewRecipeState(
-        mealName = NewRecipeScreenDestination.argsFrom(savedStateHandle).mealName,
-        date = NewRecipeScreenDestination.argsFrom(savedStateHandle).dateTransferObject.displayedDate,
-    )
+) : BaseViewModel<NewRecipeState, NewRecipeEvent, NewRecipeNavArguments>(
+    state = NewRecipeState(),
+    navArguments = NewRecipeScreenDestination.argsFrom(savedStateHandle)
 ) {
     private val ingredients = mutableListOf<Ingredient>()
 
@@ -236,8 +234,8 @@ class NewRecipeViewModel @Inject constructor(
                         destination = RecipeScreenDestination(
                             entryData = RecipeEntryData.Adding(
                                 recipe = it,
-                                mealName = mealName,
-                                dateTransferObject = NewRecipeScreenDestination.argsFrom(savedStateHandle).dateTransferObject
+                                mealName = navArguments.mealName,
+                                dateTransferObject = navArguments.dateTransferObject
                             )
                         )
                     )
