@@ -5,6 +5,7 @@ plugins {
     id 'dagger.hilt.android.plugin'
     id "kotlin-parcelize"
     id 'kotlinx-serialization'
+    id 'com.google.devtools.ksp' version '1.8.0-1.0.9'
 }
 
 android {
@@ -56,6 +57,14 @@ android {
     packagingOptions {
         resources.excludes.add("META-INF/*")
     }
+
+    applicationVariants.all { variant ->
+        kotlin.sourceSets {
+            getByName(variant.name) {
+                kotlin.srcDir("build/generated/ksp/${variant.name}/kotlin")
+            }
+        }
+    }
 }
 
 dependencies {
@@ -84,6 +93,9 @@ dependencies {
     implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
     implementation "com.chargemap.compose:numberpicker:1.0.3"
 
+    //navigation
+    implementation 'io.github.raamcosta.compose-destinations:core:1.8.33-beta'
+    ksp 'io.github.raamcosta.compose-destinations:ksp:1.8.33-beta'
 
     //Dagger - Hilt
     implementation "com.google.dagger:hilt-android:$daggerVersion"

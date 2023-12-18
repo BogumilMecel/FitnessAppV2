@@ -56,8 +56,7 @@ fun BarcodeSection(
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Number
                 ),
-                singleLine = true,
-                elevation = 9
+                singleLine = true
             )
 
             IconButton(

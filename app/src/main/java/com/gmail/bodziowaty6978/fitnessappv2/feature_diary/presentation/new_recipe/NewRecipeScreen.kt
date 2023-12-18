@@ -25,7 +25,9 @@ import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.Back
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_recipe.components.RecipeSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_recipe.components.SearchForProductSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.ProductMainSection
+import com.ramcosta.composedestinations.annotation.Destination
 
+@Destination
 @Composable
 fun NewRecipeScreen(
     viewModel: NewRecipeViewModel = hiltViewModel()

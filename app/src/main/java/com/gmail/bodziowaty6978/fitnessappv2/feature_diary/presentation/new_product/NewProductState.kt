@@ -5,19 +5,19 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.ui.graphics.vector.ImageVector
 
 data class NewProductState(
-    val isDropDownMenuExpanded:Boolean = false,
+    val isDropDownMenuExpanded: Boolean = false,
     val dropDownMenuImageVector: ImageVector = Icons.Default.ArrowDropDown,
-    val dropDownItems:List<String> = emptyList(),
-    val dropDownSelectedIndex:Int = 0,
-    val productName:String = "",
-    val containerWeight:String,
-    val containerWeightValue:String = "",
-    val calories:String = "",
-    val carbohydrates:String = "",
-    val protein:String = "",
-    val fat:String ="",
-    val nutritionSelectedTabIndex:Int = 0,
-    val barcode:String = "",
-    val isLoading:Boolean = false,
-    val isScannerVisible:Boolean = false
+    val dropDownItems: List<String> = emptyList(),
+    val dropDownSelectedIndex: Int = 0,
+    val productName: String = "",
+    val containerWeight: String = "",
+    val containerWeightValue: String = "",
+    val calories: String = "",
+    val carbohydrates: String = "",
+    val protein: String = "",
+    val fat: String = "",
+    val nutritionSelectedTabIndex: Int = 0,
+    val barcode: String = "",
+    val isLoading: Boolean = false,
+    val isScannerVisible: Boolean = false
 )

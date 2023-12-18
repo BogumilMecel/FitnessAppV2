@@ -30,7 +30,7 @@ fun ProductMainSection(
                 .fillMaxWidth()
         )
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
         ProductNutritionSection(
             nutritionData = nutritionData,

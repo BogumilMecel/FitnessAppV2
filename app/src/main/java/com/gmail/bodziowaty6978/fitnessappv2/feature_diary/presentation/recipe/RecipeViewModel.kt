@@ -1,11 +1,12 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.recipe
 
 import androidx.lifecycle.viewModelScope
-import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.NavigationActions
+import androidx.navigation.NavOptions
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.singleton.CurrentDate
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.multiplyBy
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
+import com.gmail.bodziowaty6978.fitnessappv2.destinations.DiaryScreenDestination
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.product.CreatePieChartData
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.recipe.PostRecipeDiaryEntryUseCase
@@ -29,7 +30,7 @@ class RecipeViewModel @Inject constructor(
 
     fun onEvent(event: RecipeEvent) {
         when (event) {
-            is RecipeEvent.ClickedBackArrow -> navigateBack()
+            is RecipeEvent.ClickedBackArrow -> navigateUp()
             is RecipeEvent.ClickedFavorite -> {
                 onFavoriteClicked()
             }
@@ -63,7 +64,10 @@ class RecipeViewModel @Inject constructor(
                     when (resource) {
                         is Resource.Success -> {
                             if (resource.data) {
-                                navigate(NavigationActions.Recipe.recipeToDiary())
+                                navigateTo(
+                                    destination = DiaryScreenDestination,
+                                    navOptions = NavOptions.Builder().setPopUpTo(0, true).build()
+                                )
                             } else {
                                 showSnackbarError(message = resourceProvider.getUnknownErrorString())
                             }

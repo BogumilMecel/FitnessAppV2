@@ -15,6 +15,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -30,12 +31,20 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_prod
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_product.components.NutritionSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_product.components.TextFieldSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.shared.ScannerSection
+import com.ramcosta.composedestinations.annotation.Destination
 
+@Destination(
+    navArgsDelegate = NewProductNavArguments::class
+)
 @Composable
 fun NewProductScreen(
     viewModel: NewProductViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.collectAsState().value
+
+    LaunchedEffect(key1 = true) {
+        viewModel.initData()
+    }
 
     BackHandler(
         enabled = state.isScannerVisible

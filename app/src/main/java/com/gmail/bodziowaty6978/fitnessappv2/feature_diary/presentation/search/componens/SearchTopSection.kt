@@ -30,7 +30,6 @@ import kotlinx.coroutines.launch
 fun SearchTopSection(
     modifier: Modifier,
     searchBarText: String,
-    searchBarPlaceholderText: String,
     mealName: String,
     date: String,
     onEvent: (SearchEvent) -> Unit,
@@ -41,19 +40,19 @@ fun SearchTopSection(
         modifier = modifier
             .fillMaxWidth()
     ) {
-        Row(
+        Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 10.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+                .fillMaxWidth(),
         ) {
-            BackArrow {
+            BackArrow(
+                modifier = Modifier.align(Alignment.CenterStart)
+            ) {
                 onEvent(SearchEvent.ClickedBackArrow)
             }
 
             Column(
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.align(Alignment.Center)
             ) {
                 Text(
                     text = mealName,
@@ -67,8 +66,6 @@ fun SearchTopSection(
                 )
 
             }
-
-            Spacer(modifier = Modifier.width(24.dp))
         }
 
         Spacer(modifier = Modifier.height(5.dp))
@@ -76,7 +73,12 @@ fun SearchTopSection(
         DefaultTextField(
             value = searchBarText,
             placeholder = {
-                Text(text = searchBarPlaceholderText)
+                Text(
+                    text = when (pagerState.currentPage) {
+                        0 -> stringResource(id = R.string.product_name)
+                        else -> stringResource(id = R.string.recipe_name)
+                    }
+                )
             },
             modifier = Modifier
                 .fillMaxWidth()

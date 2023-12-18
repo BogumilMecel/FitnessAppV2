@@ -2,11 +2,12 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.diary
 
 import androidx.lifecycle.viewModelScope
 import com.gmail.bodziowaty6978.fitnessappv2.R
-import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.NavigationActions
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.singleton.CurrentDate
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
+import com.gmail.bodziowaty6978.fitnessappv2.destinations.SearchScreenDestination
+import com.gmail.bodziowaty6978.fitnessappv2.destinations.SummaryScreenDestination
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Meal
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.diary.DeleteDiaryEntry
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.diary.GetDiaryEntries
@@ -50,7 +51,7 @@ class DiaryViewModel @Inject constructor(
             }
 
             is DiaryEvent.ClickedAddProduct -> {
-                navigate(NavigationActions.DiaryScreen.diaryToSearch(event.mealName))
+                navigateTo(SearchScreenDestination(mealName = event.mealName))
             }
 
             is DiaryEvent.ClickedDiaryEntry -> {
@@ -101,7 +102,7 @@ class DiaryViewModel @Inject constructor(
             }
 
             is DiaryEvent.BackPressed -> {
-                navigate(NavigationActions.DiaryScreen.diaryToSummary())
+                navigateTo(SummaryScreenDestination)
             }
         }
     }

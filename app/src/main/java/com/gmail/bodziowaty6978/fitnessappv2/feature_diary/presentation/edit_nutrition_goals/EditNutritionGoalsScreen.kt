@@ -1,6 +1,15 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.edit_nutrition_goals
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
@@ -20,12 +29,16 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.BackArrow
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.CustomBasicTextField
-import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.*
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.TextGrey
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.edit_nutrition_goals.components.MacroElementsSection
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
+@Destination
 @Composable
 fun EditNutritionGoalsScreen(
-    viewModel: EditNutritionGoalsViewModel = hiltViewModel()
+    viewModel: EditNutritionGoalsViewModel = hiltViewModel(),
+    navigator: DestinationsNavigator
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle().value
 
@@ -40,7 +53,6 @@ fun EditNutritionGoalsScreen(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 10.dp)
         ) {
             BackArrow(
                 modifier = Modifier.align(Alignment.CenterStart)
@@ -50,7 +62,7 @@ fun EditNutritionGoalsScreen(
 
             Text(
                 text = stringResource(id = R.string.nutrition_goals),
-                style = MaterialTheme.typography.h3,
+                style = MaterialTheme.typography.h2,
                 modifier = Modifier
                     .align(Alignment.Center)
             )

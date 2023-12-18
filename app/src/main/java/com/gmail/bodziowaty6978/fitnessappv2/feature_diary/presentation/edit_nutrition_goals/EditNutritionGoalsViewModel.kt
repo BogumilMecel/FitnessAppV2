@@ -1,12 +1,12 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.edit_nutrition_goals
 
 import androidx.lifecycle.viewModelScope
-import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.NavigationActions
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.use_case.CalculateNutritionValuesPercentages
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.use_case.SaveNutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.extensions.round
+import com.gmail.bodziowaty6978.fitnessappv2.destinations.AccountScreenDestination
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -72,7 +72,7 @@ class EditNutritionGoalsViewModel @Inject constructor(
             }
 
             is EditNutritionGoalsEvent.BackArrowPressed -> {
-                navigate(NavigationActions.General.navigateUp())
+                navigateUp()
             }
 
             is EditNutritionGoalsEvent.SaveButtonClicked -> {
@@ -93,7 +93,7 @@ class EditNutritionGoalsViewModel @Inject constructor(
                 }
 
                 is Resource.Success -> {
-                    navigate(NavigationActions.EditNutritionGoals.editNutritionGoalsToAccount())
+                    navigateTo(AccountScreenDestination)
                 }
             }
         }
