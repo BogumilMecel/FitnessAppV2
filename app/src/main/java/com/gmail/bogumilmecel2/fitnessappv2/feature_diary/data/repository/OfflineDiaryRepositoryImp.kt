@@ -2,15 +2,18 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.data.repository
 
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseRepository
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
+import com.gmail.bogumilmecel2.fitnessappv2.database.SqlProductQueries
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.dao.UserDiaryItemsDao
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntry
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.toProduct
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.OfflineDiaryRepository
 
 class OfflineDiaryRepositoryImp(
-    private val userDiaryItemsDao: UserDiaryItemsDao
+    private val userDiaryItemsDao: UserDiaryItemsDao,
+    private val productQueries: SqlProductQueries
 ): OfflineDiaryRepository, BaseRepository() {
     override suspend fun getProducts(
         userId: String?,
@@ -117,6 +120,18 @@ class OfflineDiaryRepositoryImp(
     override suspend fun insertRecipeDiaryEntries(recipeDiaryEntries: List<RecipeDiaryEntry>): Resource<Unit> {
         return handleRequest {
             userDiaryItemsDao.insertRecipeDiaryEntries(recipeDiaryEntries)
+        }
+    }
+
+    override suspend fun getOfflineProduct(productId: String): Resource<Product?> {
+        return handleRequest {
+            productQueries.getProduct(productId).executeAsOneOrNull()?.toProduct()
+        }
+    }
+
+    override suspend fun getOfflineRecipe(recipeId: String): Resource<Recipe?> {
+        return handleRequest {
+            userDiaryItemsDao.getRecipe(recipeId).firstOrNull()
         }
     }
 }

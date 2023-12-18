@@ -1,0 +1,21 @@
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.MeasurementUnit;
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues;
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.product.NutritionValuesIn;
+import kotlin.Int;
+import kotlinx.datetime.LocalDateTime;
+
+CREATE TABLE IF NOT EXISTS SqlProduct (
+    id TEXT PRIMARY KEY NOT NULL,
+    name TEXT NOT NULL,
+    container_weight INTEGER AS Int,
+    nutrition_values_in TEXT AS NutritionValuesIn NOT NULL,
+    measurement_unit TEXT AS MeasurementUnit NOT NULL,
+    nutrition_values TEXT AS NutritionValues NOT NULL,
+    barcode TEXT,
+    username TEXT NOT NULL,
+    user_id TEXT NOT NULL,
+    date_created TEXT AS LocalDateTime NOT NULL
+);
+
+getProduct:
+SELECT * FROM SqlProduct WHERE id = :productId LIMIT 1;

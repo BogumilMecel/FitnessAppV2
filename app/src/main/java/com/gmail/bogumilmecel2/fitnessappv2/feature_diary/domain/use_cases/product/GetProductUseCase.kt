@@ -3,10 +3,14 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.prod
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.OfflineDiaryRepository
 
-class GetProductUseCase(private val diaryRepository: DiaryRepository) {
+class GetProductUseCase(
+    private val diaryRepository: DiaryRepository,
+    private val offlineDiaryRepository: OfflineDiaryRepository
+) {
     suspend operator fun invoke(productId: String): Resource<Product?> {
-        val cachedProduct = diaryRepository.getOfflineProduct(productId = productId).data
+        val cachedProduct = offlineDiaryRepository.getOfflineProduct(productId = productId).data
 
         if (cachedProduct != null) {
             return Resource.Success(cachedProduct)

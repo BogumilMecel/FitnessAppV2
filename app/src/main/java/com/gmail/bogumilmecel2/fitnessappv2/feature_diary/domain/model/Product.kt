@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.MeasurementUnit
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
+import com.gmail.bogumilmecel2.fitnessappv2.database.SqlProduct
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.product.NutritionValuesIn
 import com.google.gson.annotations.SerializedName
 import kotlinx.datetime.LocalDateTime
@@ -52,4 +53,17 @@ data class Product(
     @SerializedName("date_created")
     @ColumnInfo(name = "date_created")
     val dateCreated: LocalDateTime
+)
+
+fun SqlProduct.toProduct() = Product(
+    id = id,
+    name = name,
+    containerWeight = container_weight,
+    nutritionValuesIn = nutrition_values_in,
+    measurementUnit = measurement_unit,
+    nutritionValues = nutrition_values,
+    barcode = barcode,
+    username = username,
+    userId = user_id,
+    dateCreated = date_created
 )

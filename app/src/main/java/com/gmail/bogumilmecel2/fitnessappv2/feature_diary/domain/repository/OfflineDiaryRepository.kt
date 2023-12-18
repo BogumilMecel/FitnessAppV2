@@ -44,4 +44,8 @@ interface OfflineDiaryRepository {
     suspend fun insertProductDiaryEntries(productDiaryEntries: List<ProductDiaryEntry>): Resource<Unit>
 
     suspend fun insertRecipeDiaryEntries(recipeDiaryEntries: List<RecipeDiaryEntry>): Resource<Unit>
+
+    suspend fun getOfflineProduct(productId: String): Resource<Product?>
+
+    suspend fun getOfflineRecipe(recipeId: String): Resource<Recipe?>
 }

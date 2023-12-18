@@ -269,16 +269,4 @@ class DiaryRepositoryImp(
             }
         }
     }
-
-    override suspend fun getOfflineProduct(productId: String): Resource<Product?> {
-        return handleRequest {
-            userDiaryItemsDao.getProduct(productId).firstOrNull()
-        }
-    }
-
-    override suspend fun getOfflineRecipe(recipeId: String): Resource<Recipe?> {
-        return handleRequest {
-            userDiaryItemsDao.getRecipe(recipeId).firstOrNull()
-        }
-    }
 }

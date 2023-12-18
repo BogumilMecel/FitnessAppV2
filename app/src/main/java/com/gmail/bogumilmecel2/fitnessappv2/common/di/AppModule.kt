@@ -34,6 +34,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.data.api.DiaryApi
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.data.repository.DiaryRepositoryImp
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.data.repository.OfflineDiaryRepositoryImp
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.dao.UserDiaryItemsDao
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductAdapter
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.OfflineDiaryRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CalculateSkipUseCase
@@ -92,13 +93,21 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideFitnessAppDatabase(@ApplicationContext context: Context): FitnessAppDatabase =
+    fun provideProductAdapter(gson: Gson): ProductAdapter = ProductAdapter(gson)
+
+    @Singleton
+    @Provides
+    fun provideFitnessAppDatabase(
+        @ApplicationContext context: Context,
+        productAdapter: ProductAdapter
+    ): FitnessAppDatabase =
         FitnessAppDatabase(
             driver = AndroidSqliteDriver(
                 schema = FitnessAppDatabase.Schema,
                 context = context,
                 name = "fitness.app.db"
-            )
+            ),
+            SqlProductAdapter = productAdapter()
         )
 
     @Singleton
@@ -287,13 +296,25 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideGetProductUseCase(diaryRepository: DiaryRepository): GetProductUseCase =
-        GetProductUseCase(diaryRepository)
+    fun provideGetProductUseCase(
+        diaryRepository: DiaryRepository,
+        offlineDiaryRepository: OfflineDiaryRepository
+    ): GetProductUseCase =
+        GetProductUseCase(
+            diaryRepository = diaryRepository,
+            offlineDiaryRepository = offlineDiaryRepository
+        )
 
     @Singleton
     @Provides
-    fun provideGetRecipeUseCase(diaryRepository: DiaryRepository): GetRecipeUseCase =
-        GetRecipeUseCase(diaryRepository)
+    fun provideGetRecipeUseCase(
+        diaryRepository: DiaryRepository,
+        offlineDiaryRepository: OfflineDiaryRepository
+    ): GetRecipeUseCase =
+        GetRecipeUseCase(
+            diaryRepository = diaryRepository,
+            offlineDiaryRepository = offlineDiaryRepository
+        )
 
     @Singleton
     @Provides
@@ -370,8 +391,10 @@ object AppModule {
     @Singleton
     @Provides
     fun provideOfflineDiaryRepository(
-        userDiaryItemsDao: UserDiaryItemsDao
+        userDiaryItemsDao: UserDiaryItemsDao,
+        fitnessAppDatabase: FitnessAppDatabase
     ): OfflineDiaryRepository = OfflineDiaryRepositoryImp(
-        userDiaryItemsDao = userDiaryItemsDao
+        userDiaryItemsDao = userDiaryItemsDao,
+        productQueries = fitnessAppDatabase.sqlProductQueries
     )
 }
