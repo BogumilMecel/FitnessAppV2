@@ -31,7 +31,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 fun DiaryScreen(viewModel: DiaryViewModel = hiltViewModel()) {
     val state = viewModel.state.collectAsStateWithLifecycle().value
 
-    ConfigureViewModel(viewModel = viewModel)
+    viewModel.ConfigureViewModel()
 
     BackHandler {
         viewModel.onEvent(DiaryEvent.BackPressed)

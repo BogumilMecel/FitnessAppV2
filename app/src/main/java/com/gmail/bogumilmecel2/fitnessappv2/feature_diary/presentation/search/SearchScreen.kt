@@ -60,7 +60,7 @@ fun SearchScreen(
         SearchTab.values().size
     }
 
-    ConfigureViewModel(viewModel = viewModel)
+    viewModel.ConfigureViewModel()
 
     LaunchedEffect(
         key1 = state.selectedTabIndex,

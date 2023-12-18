@@ -36,7 +36,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 fun NewProductScreen(viewModel: NewProductViewModel = hiltViewModel()) {
     val state = viewModel.state.collectAsState().value
 
-    ConfigureViewModel(viewModel = viewModel)
+    viewModel.ConfigureViewModel()
 
     BackHandler(
         enabled = state.isScannerVisible

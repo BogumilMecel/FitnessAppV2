@@ -55,8 +55,8 @@ import com.ramcosta.composedestinations.annotation.Destination
 fun RecipeScreen(viewModel: RecipeViewModel = hiltViewModel()) {
     val state = viewModel.state.collectAsStateWithLifecycle().value
     val scrollState = rememberScrollState()
-    
-    ConfigureViewModel(viewModel = viewModel)
+
+    viewModel.ConfigureViewModel()
 
     Column(
         modifier = Modifier
