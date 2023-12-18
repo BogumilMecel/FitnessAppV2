@@ -38,12 +38,14 @@ class SearchViewModel @Inject constructor(
 ) {
     private val dateTransferObject =
         SearchScreenDestination.argsFrom(savedStateHandle).dateTransferObject
+    private var startingProductHistory = emptyList<ProductDiaryHistoryItem>()
     private var productHistory = emptyList<ProductDiaryHistoryItem>()
     private var userRecipes = emptyList<Recipe>()
     private var userProducts = emptyList<Product>()
     private var everythingPage = 1
     private var everythingFirstRequest: Boolean = true
     private var everythingJob: Job? = null
+    private var isDataInitialized: Boolean = false
 
     override fun onEvent(event: SearchEvent) {
         when (event) {
@@ -148,9 +150,12 @@ class SearchViewModel @Inject constructor(
     }
 
     fun initializeData() {
-        fetchUserRecipes()
-        fetchUserProducts()
-        fetchHistory()
+        if (!isDataInitialized) {
+            fetchUserRecipes()
+            fetchUserProducts()
+            fetchHistory()
+            isDataInitialized = true
+        }
     }
 
     private fun fetchUserRecipes() {
@@ -180,21 +185,20 @@ class SearchViewModel @Inject constructor(
         everythingJob = viewModelScope.launch {
             setLoader(true)
             if (!everythingFirstRequest) {
-                delay(1000)
+                delay(500)
             }
             diaryRepository.getOnlineDiaryHistory(
                 page = everythingPage,
                 searchText = searchText
             ).handle(
-                finally = {
-                    setLoader(false)
-                }
+                finally = { setLoader(false) }
             ) { productHistoryItems ->
                 if (everythingFirstRequest) {
-                    productHistory = productHistoryItems
+                    startingProductHistory = productHistoryItems
                     everythingFirstRequest = false
                 }
-                createSearchItemParamsFromHistoryItemUseCase(productHistoryItems)
+                productHistory = productHistoryItems
+                createSearchItemParamsFromHistoryItemUseCase()
             }
         }
     }
@@ -207,8 +211,14 @@ class SearchViewModel @Inject constructor(
         when(_state.value.selectedTabIndex) {
             SearchTab.EVERYTHING.ordinal -> {
                 everythingPage = 1
-                productHistory
-                requestHistory(searchText)
+                if (searchText.isEmpty()) {
+                    everythingJob?.cancel()
+                    setLoader(false)
+                    productHistory = startingProductHistory
+                    createSearchItemParamsFromHistoryItemUseCase()
+                } else {
+                    requestHistory(searchText)
+                }
             }
 
             SearchTab.RECIPES.ordinal -> {
@@ -221,14 +231,6 @@ class SearchViewModel @Inject constructor(
 
             else -> {}
         }
-    }
-
-    private fun filterEverythingItems(searchText: String) {
-        createSearchItemParamsFromHistoryItemUseCase(
-            items = productHistory.filter {
-                it.productName.contains(other = searchText, ignoreCase = true)
-            }
-        )
     }
 
     private fun filterUserRecipes(searchText: String) {
@@ -247,10 +249,10 @@ class SearchViewModel @Inject constructor(
         )
     }
 
-    private fun createSearchItemParamsFromHistoryItemUseCase(items: List<ProductDiaryHistoryItem>) {
+    private fun createSearchItemParamsFromHistoryItemUseCase() {
         _state.update {
             it.copy(
-                everythingSearchItems = items.map { item ->
+                everythingSearchItems = productHistory.map { item ->
                     searchDiaryUseCases.createSearchItemParamsFromHistoryItemUseCase(
                         productDiaryHistoryItem = item,
                         onClick = { getProduct(productId = item.productId) },
@@ -305,7 +307,11 @@ class SearchViewModel @Inject constructor(
 
     private fun getProduct(productId: String) {
         viewModelScope.launch {
-            diaryRepository.getProduct(productId = productId).handle { product ->
+            setLoader(true)
+            diaryRepository.getProduct(productId = productId).handle(
+                finally = { setLoader(false) },
+                showSnackbar = false
+            ) { product ->
                 product?.let {
                     navigateToProductScreen(product = it)
                 }

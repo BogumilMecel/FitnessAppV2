@@ -5,5 +5,6 @@ object ApiConstants {
         const val COUNTRY = "country"
         const val CURRENCY = "currency"
         const val TIMEZONE = "timezone"
+        const val DEVICE_ID = "device_id"
     }
 }
