@@ -46,9 +46,9 @@ import com.gmail.bogumilmecel2.ui.components.base.CustomBasicTextField
 import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
 import com.gmail.bogumilmecel2.ui.components.base.IconButtonParams
 import com.gmail.bogumilmecel2.ui.components.base.IconVector
-import com.gmail.bogumilmecel2.ui.components.complex.ForEachSearchList
+import com.gmail.bogumilmecel2.ui.components.complex.ForEachDiaryList
 import com.gmail.bogumilmecel2.ui.components.complex.HeaderRow
-import com.gmail.bogumilmecel2.ui.components.complex.SearchList
+import com.gmail.bogumilmecel2.ui.components.complex.DiaryList
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
@@ -114,7 +114,7 @@ fun NewRecipeScreen(navigator: DestinationsNavigator) {
 
                         Spacer(modifier = Modifier.height(24.dp))
 
-                        SearchList(items = state.searchItems)
+                        DiaryList(items = state.searchItems)
                     }
                 } else if (state.isRecipeSectionVisible) {
 
@@ -208,7 +208,7 @@ fun NewRecipeScreen(navigator: DestinationsNavigator) {
                                 )
 
                                 if (state.isIngredientsListExpanded) {
-                                    ForEachSearchList(items = state.ingredientsItemsParams)
+                                    ForEachDiaryList(items = state.ingredientsItemsParams)
                                 }
 
                                 Divider(

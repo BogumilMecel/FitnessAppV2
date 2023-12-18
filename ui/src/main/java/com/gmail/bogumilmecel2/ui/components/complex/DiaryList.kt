@@ -8,7 +8,7 @@ import com.gmail.bogumilmecel2.ui.components.base.CustomLazyColumn
 import com.gmail.bogumilmecel2.ui.components.base.WidthDivider
 
 @Composable
-fun SearchList(
+fun DiaryList(
     items: List<SearchItemParams>,
     onScrollToEnd: (() -> Unit)? = null,
 ) {
@@ -17,16 +17,16 @@ fun SearchList(
         onScrollToEnd = onScrollToEnd
     ) {
         items(items) { item ->
-            SearchItem(searchItemParams = item)
+            DiaryItem(searchItemParams = item)
             WidthDivider()
         }
     }
 }
 
 @Composable
-fun ForEachSearchList(items: List<SearchItemParams>) {
+fun ForEachDiaryList(items: List<SearchItemParams>) {
     items.forEach {
-        SearchItem(searchItemParams = it)
+        DiaryItem(searchItemParams = it)
         WidthDivider()
     }
 }

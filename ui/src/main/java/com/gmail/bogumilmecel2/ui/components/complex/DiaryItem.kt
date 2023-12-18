@@ -17,7 +17,7 @@ import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun SearchItem(searchItemParams: SearchItemParams) = with(searchItemParams) {
+fun DiaryItem(searchItemParams: SearchItemParams) = with(searchItemParams) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
