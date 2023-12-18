@@ -17,7 +17,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.round
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntry
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
-import com.gmail.bogumilmecel2.ui.theme.LocalColor.DarkGreyElevation9
+import com.gmail.bogumilmecel2.ui.theme.LocalColor.BackgroundQuaternary
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -37,7 +37,7 @@ fun DiaryEntryItem(
                     onItemLongClick()
                 },
             )
-            .background(DarkGreyElevation9),
+            .background(BackgroundQuaternary),
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,

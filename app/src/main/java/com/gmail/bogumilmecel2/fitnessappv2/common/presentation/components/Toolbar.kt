@@ -27,7 +27,7 @@ fun Toolbar(
                 color = Color.White
             )
         },
-        contentColor = FitnessAppTheme.colors.Background,
+        contentColor = FitnessAppTheme.colors.BackgroundPrimary,
         elevation = 0.dp,
         navigationIcon = if (isBackArrowVisible) {
             {

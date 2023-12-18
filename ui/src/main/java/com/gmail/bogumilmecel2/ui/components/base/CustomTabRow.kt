@@ -12,7 +12,7 @@ import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 fun CustomTabRow(
     selectedTabIndex: Int,
     tabs: List<String>,
-    backgroundColor: Color = FitnessAppTheme.colors.Background,
+    backgroundColor: Color = FitnessAppTheme.colors.BackgroundPrimary,
     onTabSelected: (Int) -> Unit
 ) {
     TabRow(

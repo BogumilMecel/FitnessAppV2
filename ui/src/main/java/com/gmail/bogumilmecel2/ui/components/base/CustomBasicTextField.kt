@@ -28,7 +28,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
-import com.gmail.bogumilmecel2.ui.theme.LocalColor.DarkGreyElevation9
+import com.gmail.bogumilmecel2.ui.theme.LocalColor.BackgroundQuaternary
 
 @Composable
 fun CustomBasicTextField(
@@ -55,7 +55,7 @@ fun CustomBasicTextField(
         elevation = 2.dp,
         shape = RoundedCornerShape(15.dp),
         modifier = modifier,
-        backgroundColor = DarkGreyElevation9
+        backgroundColor = BackgroundQuaternary
     ) {
         BasicTextField(
             value = value,

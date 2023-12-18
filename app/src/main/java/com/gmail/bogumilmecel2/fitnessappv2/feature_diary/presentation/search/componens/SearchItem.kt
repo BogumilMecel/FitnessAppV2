@@ -21,7 +21,7 @@ fun SearchItem(searchItemParams: SearchItemParams) = with(searchItemParams) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(color = FitnessAppTheme.colors.BackgroundLight)
+            .background(color = FitnessAppTheme.colors.BackgroundQuaternary)
             .combinedClickable(
                 onClick = onItemClick,
                 onLongClick = onItemLongClick

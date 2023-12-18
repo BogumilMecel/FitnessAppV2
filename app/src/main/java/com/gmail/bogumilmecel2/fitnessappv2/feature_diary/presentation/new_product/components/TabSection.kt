@@ -14,7 +14,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.MeasurementUnit
-import com.gmail.bogumilmecel2.ui.theme.LocalColor.DarkGreyElevation
+import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 
 @Composable
 fun TabSection(
@@ -25,7 +25,7 @@ fun TabSection(
 
     TabRow(
         selectedTabIndex = selectedTabIndex,
-        backgroundColor = DarkGreyElevation,
+        backgroundColor = FitnessAppTheme.colors.BackgroundTertiary,
         contentColor = Color.White,
         modifier = Modifier.clip(RoundedCornerShape(topEnd = 20.dp, topStart = 20.dp))
     ) {

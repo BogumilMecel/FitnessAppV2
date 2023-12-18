@@ -5,7 +5,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValue
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.CalculateNutritionValuesPercentages
 import com.gmail.bogumilmecel2.ui.theme.LocalColor.BlueViolet3
-import com.gmail.bogumilmecel2.ui.theme.LocalColor.DarkGreyElevation2
+import com.gmail.bogumilmecel2.ui.theme.LocalColor.BackgroundTertiary
 import com.gmail.bogumilmecel2.ui.theme.LocalColor.LightGreen3
 import com.gmail.bogumilmecel2.ui.theme.LocalColor.OrangeYellow3
 
@@ -36,7 +36,7 @@ class CreatePieChartData(
 
     private fun getBackgroundSlice() = PieChartData.Slice(
         value = 1f,
-        color = DarkGreyElevation2
+        color = BackgroundTertiary
     )
 
     private fun getColorForNutritionValue(nutritionValue: NutritionValue) = when (nutritionValue) {
