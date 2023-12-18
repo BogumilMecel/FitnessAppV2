@@ -79,7 +79,6 @@ class ProductViewModel @Inject constructor(
                         nutritionValues = _state.value.nutritionData.nutritionValues
                     )
                     if (addingResult is Resource.Success) {
-                        productUseCases.saveProductToHistory(product = event.product)
                         navigator.navigate(NavigationActions.ProductScreen.productToDiary())
                     } else if (addingResult is Resource.Error) {
                         _state.update {

@@ -37,4 +37,9 @@ interface ProductApi {
     suspend fun insertProduct(
         @Body product: Product
     ):Product
+
+    @GET("/products/history")
+    suspend fun getProductHistory(
+        @Header("Authorization") token:String
+    ): List<Product>
 }
