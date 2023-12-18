@@ -8,6 +8,13 @@ data class Meal(
     val diaryEntries:List<DiaryEntryWithId>
 )
 
+fun Meal.updateDiaryEntries(newDiaryEntries:List<DiaryEntryWithId>):Meal{
+    return Meal(
+        mealName = this.mealName,
+        diaryEntries = newDiaryEntries
+    )
+}
+
 fun Meal.sumNutritionValues(
     nutritionType: NutritionType
 ):Double{
