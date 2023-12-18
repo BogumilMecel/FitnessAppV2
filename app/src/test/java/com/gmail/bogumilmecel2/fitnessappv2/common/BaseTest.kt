@@ -1,11 +1,13 @@
 package com.gmail.bogumilmecel2.fitnessappv2.common
 
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.OfflineMode
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.CachedValuesProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.CustomDateUtils
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.toValidInt
 import com.gmail.bogumilmecel2.fitnessappv2.util.MockResourceProvider
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
@@ -24,6 +26,14 @@ open class BaseTest {
     fun mockDateString(value: String) {
         mockkObject(CustomDateUtils)
         every { CustomDateUtils.getCurrentDateString() } returns value
+    }
+
+    fun mockUserId(userId: String = MockConstants.USER_ID) {
+        coEvery { cachedValuesProvider.getUserId() } returns userId
+    }
+
+    fun mockOfflineMode(online: Boolean = true) {
+        coEvery { cachedValuesProvider.getOfflineMode() } returns if (online) OfflineMode.Online else OfflineMode.Offline
     }
 
     fun String.toValidIntOrThrow() = this.toValidInt() ?: throw Exception()

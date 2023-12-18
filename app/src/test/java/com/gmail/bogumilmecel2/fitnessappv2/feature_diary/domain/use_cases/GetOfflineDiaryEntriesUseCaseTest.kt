@@ -1,57 +1,50 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases
 
+import com.gmail.bogumilmecel2.fitnessappv2.common.BaseTest
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.CustomDateUtils
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.DiaryEntriesResponse
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntry
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.OfflineDiaryRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.GetOfflineDiaryEntriesUseCase
+import io.mockk.coEvery
+import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
-import org.junit.Before
 import org.junit.Test
-import org.mockito.Mock
-import org.mockito.Mockito
-import java.util.Date
 import kotlin.test.assertTrue
 
-internal class GetOfflineDiaryEntriesUseCaseTest {
+internal class GetOfflineDiaryEntriesUseCaseTest: BaseTest() {
 
-    @Mock
-    private lateinit var mockDiaryRepository: DiaryRepository
-
-    private lateinit var getOfflineDiaryEntriesUseCase: GetOfflineDiaryEntriesUseCase
-
-    @Before
-    fun setUp() {
-        mockDiaryRepository = Mockito.mock(DiaryRepository::class.java)
-        getOfflineDiaryEntriesUseCase = GetOfflineDiaryEntriesUseCase(diaryRepository = mockDiaryRepository)
-    }
+    private val offlineDiaryRepository = mockk<OfflineDiaryRepository>()
+    private val getOfflineDiaryEntriesUseCase = GetOfflineDiaryEntriesUseCase(
+        offlineDiaryRepository = offlineDiaryRepository
+    )
 
     @Test
-    fun `if called with proper date and repository returns resource success, return resource success`() =
+    fun `Check if all data from repository is returned`() =
         runTest {
-            Mockito.`when`(mockDiaryRepository.getDiaryEntries(Date(System.currentTimeMillis()).toString()))
-                .thenReturn(
-                    Resource.Success(
-                        data = DiaryEntriesResponse()
-                    )
-                )
+            val productDiaryEntries = buildList {
+                repeat(5) {
+                    add(ProductDiaryEntry(id = "$it"))
+                }
+            }
 
-            val result = getOfflineDiaryEntriesUseCase(date = Date(System.currentTimeMillis()).toString())
+            val recipeDiaryEntries = buildList {
+                repeat(5) {
+                    add(RecipeDiaryEntry(id = "$it"))
+                }
+            }
 
-            assertTrue(result is Resource.Success)
-        }
+            coEvery { offlineDiaryRepository.getProductDiaryEntries(date = any()) } returns Resource.Success(productDiaryEntries)
+            coEvery { offlineDiaryRepository.getRecipeDiaryEntries(date = any()) } returns Resource.Success(recipeDiaryEntries)
 
-    @Test
-    fun `if called with proper date and repository returns resource error, return resource error`() =
-        runTest {
-            Mockito.`when`(mockDiaryRepository.getDiaryEntries(Date(System.currentTimeMillis()).toString()))
-                .thenReturn(
-                    Resource.Error(
-                        uiText = "abc"
-                    )
-                )
+            val diaryItems = buildList {
+                addAll(productDiaryEntries)
+                addAll(recipeDiaryEntries)
+            }
 
-            val result = getOfflineDiaryEntriesUseCase(date = Date(System.currentTimeMillis()).toString())
-
-            assertTrue(result is Resource.Error)
+            getOfflineDiaryEntriesUseCase(date = CustomDateUtils.getCurrentDateString()).forEach {
+                assertTrue { diaryItems.contains(it) }
+            }
         }
 }
