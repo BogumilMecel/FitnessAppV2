@@ -8,10 +8,10 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.TAG
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.toValidInt
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.NewRecipeScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.RecipeScreenDestination
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.calculateNutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Ingredient
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.RecipePrice
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_recipe.NewRecipeUseCases
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.CalculateProductNutritionValuesUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_recipe.util.SelectedNutritionType
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.recipe.RecipeEntryData
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,7 +23,8 @@ import javax.inject.Inject
 @HiltViewModel
 class NewRecipeViewModel @Inject constructor(
     private val newRecipeUseCases: NewRecipeUseCases,
-    private val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle,
+    private val calculateProductNutritionValuesUseCase: CalculateProductNutritionValuesUseCase
 ) : BaseViewModel<NewRecipeState, NewRecipeEvent>(
     state = NewRecipeState(
         mealName = NewRecipeScreenDestination.argsFrom(savedStateHandle).mealName,
@@ -254,7 +255,10 @@ class NewRecipeViewModel @Inject constructor(
                             weight = weight,
                             productName = product.name,
                             measurementUnit = product.measurementUnit,
-                            nutritionValues = product.calculateNutritionValues(weight),
+                            nutritionValues = calculateProductNutritionValuesUseCase(
+                                product = product,
+                                weight = weight
+                            ),
                             productId = product.id
                         )
 

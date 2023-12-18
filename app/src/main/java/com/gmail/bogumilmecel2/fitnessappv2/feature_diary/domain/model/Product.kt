@@ -22,10 +22,3 @@ data class Product(
     @ColumnInfo(name = "username") val username: String = "",
     @ColumnInfo(name = "user_id") val userId: String = ""
 )
-
-fun Product.calculateNutritionValues(weight: Int) = NutritionValues(
-    calories = ((nutritionValues.calories).toDouble() / 100.0 * weight.toDouble()).toInt(),
-    carbohydrates = nutritionValues.carbohydrates / 100.0 * weight.toDouble(),
-    protein = nutritionValues.protein / 100.0 * weight.toDouble(),
-    fat = nutritionValues.fat / 100.0 * weight.toDouble(),
-)
