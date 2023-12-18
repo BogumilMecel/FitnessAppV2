@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.util.BottomBarScreen
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
@@ -59,19 +60,15 @@ fun RowScope.AddItem(
         )
 
         this@AddItem.BottomNavigationItem(
-            label = {
-                Text(text = bottomBarScreen.title)
-            },
+            label = { Text(text = stringResource(id = bottomBarScreen.labelResId)) },
             icon = {
                 Icon(
                     imageVector = bottomBarScreen.icon,
-                    contentDescription = bottomBarScreen.title
+                    contentDescription = stringResource(id = bottomBarScreen.labelResId)
                 )
             },
             selected = isSelected,
-            onClick = {
-                onItemClicked()
-            },
+            onClick = onItemClicked,
             selectedContentColor = selectedColor,
             unselectedContentColor = notSelectedColor
         )

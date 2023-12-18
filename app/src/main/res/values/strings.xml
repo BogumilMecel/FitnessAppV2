@@ -13,6 +13,10 @@
     <string name="ask_me_later">Ask me later</string>
     <string name="decline">Decline</string>
 
+    <string name="bottom_nav_summary">Summary</string>
+    <string name="bottom_nav_diary">Diary</string>
+    <string name="bottom_nav_account">Account</string>
+
 <!--    Auth-->
     <string name="email_address">Email Address</string>
     <string name="password">Password</string>

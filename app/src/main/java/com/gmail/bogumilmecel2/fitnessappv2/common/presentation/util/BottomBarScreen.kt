@@ -5,28 +5,31 @@ import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Book
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.AccountScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.DiaryScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.SummaryScreenDestination
 
 sealed class BottomBarScreen(
     val route: String,
-    val title: String,
+    val labelResId: Int,
     val icon: ImageVector
 ) {
-    object Summary : BottomBarScreen(
+    data object Summary : BottomBarScreen(
         route = SummaryScreenDestination.route,
-        title = "Summary",
+        labelResId = R.string.bottom_nav_summary,
         icon = Icons.Default.Home
     )
-    object Diary : BottomBarScreen(
+
+    data object Diary : BottomBarScreen(
         route = DiaryScreenDestination.route,
-        title = "Diary",
+        labelResId = R.string.bottom_nav_diary,
         icon = Icons.Default.Book
     )
-    object Account : BottomBarScreen(
+
+    data object Account : BottomBarScreen(
         route = AccountScreenDestination.route,
-        title = "Account",
+        labelResId = R.string.bottom_nav_account,
         icon = Icons.Default.AccountCircle
     )
 }
