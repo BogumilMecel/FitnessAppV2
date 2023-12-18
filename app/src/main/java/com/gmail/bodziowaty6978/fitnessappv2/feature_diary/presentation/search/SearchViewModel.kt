@@ -1,5 +1,6 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,6 +10,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigator
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.search.SearchDiaryUseCases
+import com.gmail.bodziowaty6978.fitnessappv2.util.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -70,6 +72,7 @@ class SearchViewModel @Inject constructor(
                 }
             }
             is SearchEvent.ClickedSearchItem -> {
+                Log.e(TAG,event.item.toString())
                 navigator.navigate(
                     NavigationActions.SearchScreen.searchToProduct(
                         productWithId = event.item,
@@ -109,7 +112,8 @@ class SearchViewModel @Inject constructor(
                         if (resource.uiText == resourceProvider.getString(R.string.there_is_no_product_with_provided_barcode_do_you_want_to_add_it)) {
                             _searchState.update {
                                 it.copy(
-                                    barcode = event.code
+                                    barcode = event.code,
+                                    isLoading = false
                                 )
                             }
                         } else {

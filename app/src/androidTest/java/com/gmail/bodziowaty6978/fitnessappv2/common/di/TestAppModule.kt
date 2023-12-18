@@ -24,6 +24,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.prod
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.product.SaveProductToHistory
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.search.GetDiaryHistory
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.search.SearchDiaryUseCases
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.search.SearchForProductWithBarcode
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.search.SearchForProducts
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.repository.IntroductionRepository
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.use_cases.CalculateNutritionValues
@@ -160,7 +161,8 @@ object TestAppModule {
     ): SearchDiaryUseCases =
         SearchDiaryUseCases(
             searchForProducts = searchForProducts,
-            getDiaryHistory = GetDiaryHistory(diaryRepository)
+            getDiaryHistory = GetDiaryHistory(diaryRepository),
+            searchForProductWithBarcode = SearchForProductWithBarcode(diaryRepository)
         )
 
     @Singleton
