@@ -1,13 +1,15 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_summary.presentation.components
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -19,6 +21,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.components.DefaultCardBackground
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.presentation.SummaryEvent
 import com.gmail.bogumilmecel2.ui.components.base.CustomIconButton
+import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
 import com.gmail.bogumilmecel2.ui.components.base.IconButtonParams
 import com.gmail.bogumilmecel2.ui.components.base.IconVector
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
@@ -35,20 +38,17 @@ fun WeightSection(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(15.dp),
+                .padding(horizontal = 16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Column(
-                modifier = Modifier
-
-            ) {
+            Column(modifier = Modifier.padding(vertical = 16.dp)) {
                 Text(
                     text = stringResource(id = R.string.weight),
                     style = MaterialTheme.typography.h3
                 )
 
-                Spacer(modifier = Modifier.height(4.dp))
+                HeightSpacer(4.dp)
 
                 if (lastWeightEntry != null) {
                     Text(
@@ -58,9 +58,7 @@ fun WeightSection(
                 }
             }
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 if (weightProgress != null) {
                     Text(
                         text = "${weightProgress}kg",
@@ -70,19 +68,29 @@ fun WeightSection(
                     )
                 }
 
-                Spacer(modifier = Modifier.width(24.dp))
+                HeightSpacer(24.dp)
 
-                CustomIconButton(
-                    params = IconButtonParams(
-                        iconVector = IconVector.Add,
-                        enabled = buttonActive,
-                        onClick = {
-                            onEvent(SummaryEvent.ClickedAddWeightEntryButton)
-                        }
-                    ),
+                val animationSpec = tween<Float>(
+                    durationMillis = 100,
+                    easing = LinearEasing
                 )
 
-                Spacer(modifier = Modifier.width(16.dp))
+                AnimatedVisibility(
+                    visible = buttonActive,
+                    enter = fadeIn(animationSpec = animationSpec),
+                    exit = fadeOut(animationSpec = animationSpec)
+                ) {
+                    CustomIconButton(
+                        params = IconButtonParams(
+                            iconVector = IconVector.Add,
+                            onClick = {
+                                onEvent(SummaryEvent.ClickedAddWeightEntryButton)
+                            }
+                        ),
+                    )
+                }
+
+                HeightSpacer(16.dp)
             }
         }
     }
