@@ -88,9 +88,11 @@ class InsertProductDiaryEntryUseCaseTest: BaseMockkTest() {
         )
         coEvery { calculateProductNutritionValuesUseCase(any(), any()) } returns sampleNutritionValues
         coEvery { diaryRepository.insertProductDiaryEntry(productDiaryEntryPostRequest = expectedRequest) } returns Resource.Success(expectedProductDiaryEntry)
+        coEvery { diaryRepository.cacheProduct(product = MockConstants.Diary.getSampleProduct()) } returns Resource.Success(Unit)
         coEvery { diaryRepository.insertOfflineDiaryEntry(expectedProductDiaryEntry) } returns Resource.Success(Unit)
         assertIs<Resource.Success<Unit>>(callTestedMethod())
         coVerify(exactly = 1) { diaryRepository.insertProductDiaryEntry(productDiaryEntryPostRequest = expectedRequest) }
+        coVerify(exactly = 1) { diaryRepository.cacheProduct(MockConstants.Diary.getSampleProduct()) }
         coVerify(exactly = 1) { diaryRepository.insertOfflineDiaryEntry(diaryItem = expectedProductDiaryEntry) }
     }
 
@@ -102,11 +104,11 @@ class InsertProductDiaryEntryUseCaseTest: BaseMockkTest() {
     }
 
     private suspend fun callTestedMethod(
-        productId: String = MockConstants.Diary.PRODUCT_ID_11,
+        product: Product = MockConstants.Diary.getSampleProduct(),
         weight: String = MockConstants.Diary.CORRECT_PRODUCT_DIARY_ENTRY_WEIGHT_1,
         date: String = MockConstants.MOCK_DATE_2021
     ) = insertProductDiaryEntryUseCase(
-        product = Product(id = productId),
+        product = product,
         weightStringValue = weight,
         date = date,
         mealName = MealName.BREAKFAST
