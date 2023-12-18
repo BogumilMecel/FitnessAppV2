@@ -13,9 +13,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.use_case
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -23,15 +21,12 @@ import javax.inject.Inject
 @HiltViewModel
 class IntroductionViewModel @Inject constructor(
     private val saveIntroductionInformationUseCase: SaveIntroductionInformationUseCase,
-) : BaseViewModel() {
-
-    private val _state = MutableStateFlow(IntroductionState())
-    val state: StateFlow<IntroductionState> = _state
+) : BaseViewModel<IntroductionState, IntroductionEvent>(state = IntroductionState()) {
 
     private val _introductionUiEvent = MutableSharedFlow<IntroductionUiEvent>()
     val introductionUiEvent: SharedFlow<IntroductionUiEvent> = _introductionUiEvent
 
-    fun onEvent(event: IntroductionEvent) {
+    override fun onEvent(event: IntroductionEvent) {
         when (event) {
             is IntroductionEvent.ClickedArrowForward -> {
                 viewModelScope.launch {

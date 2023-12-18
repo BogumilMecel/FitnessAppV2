@@ -16,7 +16,7 @@ import javax.inject.Inject
 class LoadingViewModel @Inject constructor(
     private val loadingRepository: LoadingRepository,
     private val getToken: GetToken,
-) : BaseViewModel() {
+) : BaseViewModel<Unit, Unit>(state = Unit) {
 
     fun checkIfTokenIsPresent() {
         viewModelScope.launch {
@@ -50,4 +50,6 @@ class LoadingViewModel @Inject constructor(
             )
         }
     }
+
+    override fun onEvent(event: Unit) {}
 }

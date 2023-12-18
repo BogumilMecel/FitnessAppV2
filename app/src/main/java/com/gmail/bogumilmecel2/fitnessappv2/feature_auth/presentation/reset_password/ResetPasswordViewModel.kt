@@ -7,8 +7,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.use_case.AuthUse
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.presentation.util.AuthEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -16,12 +14,9 @@ import javax.inject.Inject
 @HiltViewModel
 class ResetPasswordViewModel @Inject constructor(
     private val authUseCases: AuthUseCases,
-) : BaseViewModel() {
+) : BaseViewModel<ResetPasswordState, AuthEvent>(state = ResetPasswordState()) {
 
-    private val _state = MutableStateFlow(ResetPasswordState())
-    val state: StateFlow<ResetPasswordState> = _state
-
-    fun onEvent(event: AuthEvent) {
+    override fun onEvent(event: AuthEvent) {
         when (event) {
             is AuthEvent.EnteredEmail -> {
                 _state.update {

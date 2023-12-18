@@ -16,8 +16,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.recipe.Re
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator.navigate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -25,23 +23,20 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val searchDiaryUseCases: SearchDiaryUseCases,
-    private val savedStateHandle: SavedStateHandle,
-) : BaseViewModel() {
-
-    private val _searchState = MutableStateFlow(
-        SearchState(
-            mealName = SearchScreenDestination.argsFrom(savedStateHandle).mealName,
-            date = SearchScreenDestination.argsFrom(savedStateHandle).date
-        )
+    savedStateHandle: SavedStateHandle,
+) : BaseViewModel<SearchState, SearchEvent>(
+    state = SearchState(
+        mealName = SearchScreenDestination.argsFrom(savedStateHandle).mealName,
+        date = SearchScreenDestination.argsFrom(savedStateHandle).date
     )
-    val searchState: StateFlow<SearchState> = _searchState
-
+) {
+    
     private var productHistory = emptyList<Product>()
 
-    fun onEvent(event: SearchEvent) {
+    override fun onEvent(event: SearchEvent) {
         when (event) {
             is SearchEvent.ClosedScanner -> {
-                _searchState.update {
+                _state.update {
                     it.copy(
                         isScannerVisible = false
                     )
@@ -53,15 +48,15 @@ class SearchViewModel @Inject constructor(
             }
 
             is SearchEvent.ClickedSearch -> {
-                when (searchState.value.currentTabIndex) {
+                when (_state.value.currentTabIndex) {
                     0 -> searchForProducts()
                     1 -> searchForRecipes()
                 }
             }
 
             is SearchEvent.EnteredSearchText -> {
-                _searchState.update {
-                    when (searchState.value.currentTabIndex) {
+                _state.update {
+                    when (_state.value.currentTabIndex) {
                         0 -> it.copy(
                             productSearchBarText = event.text
                         )
@@ -79,8 +74,8 @@ class SearchViewModel @Inject constructor(
                     ProductScreenDestination(
                         entryData = ProductEntryData.Adding(
                             product = event.product,
-                            mealName = _searchState.value.mealName,
-                            date = _searchState.value.date
+                            mealName = _state.value.mealName,
+                            date = _state.value.date
                         ),
                     )
                 )
@@ -89,15 +84,15 @@ class SearchViewModel @Inject constructor(
             is SearchEvent.ClickedNewProduct -> {
                 navigateTo(
                     NewProductScreenDestination(
-                        mealName = _searchState.value.mealName,
-                        barcode = _searchState.value.barcode,
-                        date = _searchState.value.date
+                        mealName = _state.value.mealName,
+                        barcode = _state.value.barcode,
+                        date = _state.value.date
                     )
                 )
             }
 
             is SearchEvent.ClickedScanButton -> {
-                _searchState.update {
+                _state.update {
                     it.copy(
                         isScannerVisible = true,
                         barcode = null
@@ -110,7 +105,7 @@ class SearchViewModel @Inject constructor(
             }
 
             is SearchEvent.ShowedPermissionDialog -> {
-                _searchState.update {
+                _state.update {
                     it.copy(
                         hasPermissionDialogBeenShowed = true
                     )
@@ -118,11 +113,11 @@ class SearchViewModel @Inject constructor(
             }
 
             is SearchEvent.ClickedCreateNewRecipe -> {
-                navigateTo(NewRecipeScreenDestination(mealName = _searchState.value.mealName))
+                navigateTo(NewRecipeScreenDestination(mealName = _state.value.mealName))
             }
 
             is SearchEvent.ClickedProductsTab -> {
-                _searchState.update {
+                _state.update {
                     it.copy(
                         searchBarPlaceholderText = resourceProvider.getString(R.string.product_name),
                         currentTabIndex = 0
@@ -131,7 +126,7 @@ class SearchViewModel @Inject constructor(
             }
 
             is SearchEvent.ClickedRecipesTab -> {
-                _searchState.update {
+                _state.update {
                     it.copy(
                         searchBarPlaceholderText = resourceProvider.getString(R.string.recipe_name),
                         currentTabIndex = 1
@@ -144,7 +139,7 @@ class SearchViewModel @Inject constructor(
                     RecipeScreenDestination(
                         entryData = RecipeEntryData.Adding(
                             recipe = event.recipe,
-                            mealName = _searchState.value.mealName
+                            mealName = _state.value.mealName
                         )
                     )
                 )
@@ -156,7 +151,7 @@ class SearchViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             searchDiaryUseCases.getDiaryHistory().handle { history ->
                 productHistory = history
-                _searchState.update {
+                _state.update {
                     it.copy(
                         productItems = productHistory
                     )
@@ -166,11 +161,11 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun clearItemsIfHistoryIsPresent() {
-        with(_searchState.value) {
+        with(_state.value) {
             when(currentTabIndex) {
                 0 -> {
                     if (productHistory.isNotEmpty()) {
-                        _searchState.update {
+                        _state.update {
                             it.copy(
                                 productItems = productHistory.filter { product ->
                                     product.name.contains(productSearchBarText)
@@ -189,13 +184,13 @@ class SearchViewModel @Inject constructor(
     private fun searchForRecipes() {
         showOrHideLoader()
         viewModelScope.launch {
-            searchDiaryUseCases.searchForRecipes(_searchState.value.recipesSearchBarText)
+            searchDiaryUseCases.searchForRecipes(_state.value.recipesSearchBarText)
                 .handle(
                     finally = {
                         showOrHideLoader(isLoadingVisible = false)
                     }
                 ) { recipes ->
-                    _searchState.update {
+                    _state.update {
                         it.copy(
                             recipes = recipes
                         )
@@ -207,12 +202,12 @@ class SearchViewModel @Inject constructor(
     private fun searchForProducts() {
         showOrHideLoader()
         viewModelScope.launch(Dispatchers.IO) {
-            searchDiaryUseCases.searchForProductsUseCase(_searchState.value.productSearchBarText).handle(
+            searchDiaryUseCases.searchForProductsUseCase(_state.value.productSearchBarText).handle(
                 finally = {
                     showOrHideLoader(isLoadingVisible = false)
                 }
             ) { products ->
-                _searchState.update {
+                _state.update {
                     it.copy(
                         productItems = products
                     )
@@ -222,7 +217,7 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun showOrHideLoader(isLoadingVisible: Boolean = true) {
-        _searchState.update {
+        _state.update {
             it.copy(
                 isLoading = isLoadingVisible,
                 barcode = null
@@ -231,7 +226,7 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun onBarcodeScanned(barcode: String) {
-        _searchState.update {
+        _state.update {
             it.copy(
                 isScannerVisible = false,
                 isLoading = true
@@ -241,7 +236,7 @@ class SearchViewModel @Inject constructor(
             searchDiaryUseCases.searchForProductWithBarcode(barcode).handle(
                 onError = { errorMessage ->
                     if (errorMessage == resourceProvider.getString(R.string.there_is_no_product_with_provided_barcode_do_you_want_to_add_it)) {
-                        _searchState.update {
+                        _state.update {
                             it.copy(
                                 barcode = barcode,
                                 isLoading = false
@@ -257,8 +252,8 @@ class SearchViewModel @Inject constructor(
                         ProductScreenDestination(
                             entryData = ProductEntryData.Adding(
                                 product = product,
-                                mealName = _searchState.value.mealName,
-                                date = _searchState.value.date
+                                mealName = _state.value.mealName,
+                                date = _state.value.date
                             ),
                         )
                     )

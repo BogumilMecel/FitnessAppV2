@@ -9,8 +9,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.round
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.AccountScreenDestination
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -19,12 +17,9 @@ import javax.inject.Inject
 class EditNutritionGoalsViewModel @Inject constructor(
     private val calculateNutritionValuesPercentages: CalculateNutritionValuesPercentages,
     private val saveNutritionValues: SaveNutritionValues
-) : BaseViewModel() {
+) : BaseViewModel<EditNutritionGoalsState, EditNutritionGoalsEvent>(state = EditNutritionGoalsState()) {
 
-    private val _state = MutableStateFlow(EditNutritionGoalsState())
-    val state: StateFlow<EditNutritionGoalsState> = _state
-
-    fun onEvent(event: EditNutritionGoalsEvent) {
+    override fun onEvent(event: EditNutritionGoalsEvent) {
         when (event) {
             is EditNutritionGoalsEvent.EnteredCalories -> {
                 _state.update {

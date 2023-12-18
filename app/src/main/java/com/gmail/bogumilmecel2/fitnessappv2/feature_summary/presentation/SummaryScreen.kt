@@ -26,7 +26,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 fun SummaryScreen(
     viewModel: SummaryViewModel = hiltViewModel()
 ) {
-    val state = viewModel.summaryState.collectAsState().value
+    val state = viewModel.state.collectAsState().value
 
     val activity = (LocalContext.current as? Activity)
 

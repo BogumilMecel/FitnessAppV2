@@ -16,8 +16,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_recip
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.recipe.RecipeEntryData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -26,16 +24,13 @@ import javax.inject.Inject
 class NewRecipeViewModel @Inject constructor(
     private val newRecipeUseCases: NewRecipeUseCases,
     savedStateHandle: SavedStateHandle
-) : BaseViewModel() {
-
-    private val _state = MutableStateFlow(
-        NewRecipeState(
-            mealName = NewRecipeScreenDestination.argsFrom(savedStateHandle).mealName
-        )
+) : BaseViewModel<NewRecipeState, NewRecipeEvent>(
+    state = NewRecipeState(
+        mealName = NewRecipeScreenDestination.argsFrom(savedStateHandle).mealName
     )
-    val state: StateFlow<NewRecipeState> = _state
+) {
 
-    fun onEvent(event: NewRecipeEvent) {
+    override fun onEvent(event: NewRecipeEvent) {
         when (event) {
             is NewRecipeEvent.ClickedTimeArrow -> {
                 _state.update {

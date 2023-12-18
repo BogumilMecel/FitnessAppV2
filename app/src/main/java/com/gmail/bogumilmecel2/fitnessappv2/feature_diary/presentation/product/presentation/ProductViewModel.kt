@@ -12,8 +12,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.produ
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.domain.model.NutritionData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -23,25 +21,21 @@ class ProductViewModel @Inject constructor(
     private val productUseCases: ProductUseCases,
     private val editProductDiaryEntryUseCase: EditProductDiaryEntryUseCase,
     savedStateHandle: SavedStateHandle
-) : BaseViewModel() {
-
-    private val _state = MutableStateFlow(
-        with(ProductScreenDestination.argsFrom(savedStateHandle)) {
-            ProductState(
-                weight = if (entryData is ProductEntryData.Editing) entryData.productDiaryEntry.weight.toString() else "",
-                entryData = entryData,
-                date = entryData.date
-            )
-        }
-    )
-    val state: StateFlow<ProductState> = _state
-
+) : BaseViewModel<ProductState, ProductEvent>(
+    state = with(ProductScreenDestination.argsFrom(savedStateHandle)) {
+        ProductState(
+            weight = if (entryData is ProductEntryData.Editing) entryData.productDiaryEntry.weight.toString() else "",
+            entryData = entryData,
+            date = entryData.date
+        )
+    }
+) {
     init {
         initializeProductData()
         getProductPrice()
     }
 
-    fun onEvent(event: ProductEvent) {
+    override fun onEvent(event: ProductEvent) {
         when (event) {
             is ProductEvent.EnteredWeight -> {
                 viewModelScope.launch(Dispatchers.Default) {
@@ -68,7 +62,7 @@ class ProductViewModel @Inject constructor(
             is ProductEvent.ClickedAddProduct -> {
                 viewModelScope.launch(Dispatchers.IO) {
                     with(_state.value) {
-                        when(entryData) {
+                        when (entryData) {
                             is ProductEntryData.Adding -> {
                                 productUseCases.addDiaryEntry(
                                     product = entryData.product,
@@ -82,6 +76,7 @@ class ProductViewModel @Inject constructor(
                                     )
                                 }
                             }
+
                             is ProductEntryData.Editing -> {
                                 editProductDiaryEntryUseCase(
                                     productDiaryEntry = entryData.productDiaryEntry,
@@ -179,13 +174,14 @@ class ProductViewModel @Inject constructor(
 
     private fun getProductPrice() {
         viewModelScope.launch {
-            productUseCases.getPriceUseCase(productId = _state.value.entryData.product.id).handle { price ->
-                _state.update {
-                    it.copy(
-                        productPrice = price
-                    )
+            productUseCases.getPriceUseCase(productId = _state.value.entryData.product.id)
+                .handle { price ->
+                    _state.update {
+                        it.copy(
+                            productPrice = price
+                        )
+                    }
                 }
-            }
         }
     }
 }
