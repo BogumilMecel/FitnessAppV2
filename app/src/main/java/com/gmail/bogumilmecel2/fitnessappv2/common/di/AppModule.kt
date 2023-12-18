@@ -27,7 +27,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.repository.AuthR
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.use_case.*
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.data.api.DiaryApi
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.data.repository.remote.DiaryRepositoryImp
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.dao.ProductDiaryHistoryDao
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.dao.UserDiaryItemsDao
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CalculateSelectedServingPriceUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CalculateServingPrice
@@ -92,7 +92,7 @@ object AppModule {
     @Provides
     fun provideProductDiaryHistoryDao(
         database: AppDatabase
-    ): ProductDiaryHistoryDao = database.productDiaryHistoryDao()
+    ): UserDiaryItemsDao = database.productDiaryHistoryDao()
 
     @Provides
     @Singleton
@@ -302,10 +302,10 @@ object AppModule {
     @Provides
     fun provideDiaryRepository(
         diaryApi: DiaryApi,
-        productDiaryHistoryDao: ProductDiaryHistoryDao
+        userDiaryItemsDao: UserDiaryItemsDao
     ): DiaryRepository = DiaryRepositoryImp(
         diaryApi = diaryApi,
-        productDiaryHistoryDao = productDiaryHistoryDao
+        userDiaryItemsDao = userDiaryItemsDao
     )
 
     @Singleton
