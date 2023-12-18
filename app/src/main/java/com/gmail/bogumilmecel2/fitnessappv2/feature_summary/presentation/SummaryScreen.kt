@@ -112,19 +112,19 @@ fun SummaryScreen(
                         firstButtonParams = ButtonParams(
                             text = stringResource(id = R.string.accept),
                             onClick = {
-
+                                viewModel.onEvent(SummaryEvent.ClickedAcceptInWeightDialogsQuestion)
                             }
                         ),
                         secondButtonParams = ButtonParams(
                             text = stringResource(id = R.string.decline),
                             onClick = {
-
+                                viewModel.onEvent(SummaryEvent.ClickedDeclineInWeightDialogsQuestion)
                             }
                         ),
                         bottomTextButtonParams = ButtonParams(
                             text = stringResource(id = R.string.ask_me_later),
                             onClick = {
-
+                                viewModel.onEvent(SummaryEvent.ClickedNotNowInWeightDialogsQuestion)
                             }
                         ),
                     )

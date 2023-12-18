@@ -3,6 +3,8 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_weight.data.repository
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.CachedValuesProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseRepository
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
+import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.model.WeightDialogsRequest
+import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.model.WeightDialogsResponse
 import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.data.api.WeightApi
 import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.model.NewWeightEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.model.NewWeightEntryResponse
@@ -29,6 +31,12 @@ class WeighRepositoryImp(
     override suspend fun checkIfShouldAskForWeightDialogs(): Resource<Unit> {
         return handleRequest {
             weightApi.checkIfShouldAskForWeightDialogs()
+        }
+    }
+
+    override suspend fun handleWeightDialogsQuestion(weightDialogsRequest: WeightDialogsRequest): Resource<WeightDialogsResponse> {
+        return handleRequest {
+            weightApi.handleWeightDialogAnswer(weightDialogsRequest = weightDialogsRequest)
         }
     }
 }
