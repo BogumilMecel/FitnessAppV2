@@ -23,7 +23,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.Currency
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.ConfigureViewModel
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.ViewModelLayout
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.presentation.components.PriceSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.presentation.components.ProductMainSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.presentation.components.SubmitNewPriceDialog
@@ -35,7 +35,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Destination(navArgsDelegate = ProductNavArguments::class)
 @Composable
 fun ProductScreen(navigator: DestinationsNavigator) {
-    hiltViewModel<ProductViewModel>().ConfigureViewModel(navigator = navigator) { viewModel ->
+    hiltViewModel<ProductViewModel>().ViewModelLayout(navigator = navigator) { viewModel ->
         val state = viewModel.state.collectAsStateWithLifecycle().value
 
         Scaffold(

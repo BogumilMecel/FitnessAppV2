@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.BackHandler
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.ConfigureViewModel
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.ViewModelLayout
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_product.components.BarcodeSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_product.components.ContainerWeightSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_product.components.NutritionSection
@@ -35,7 +35,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Destination(navArgsDelegate = NewProductNavArguments::class)
 @Composable
 fun NewProductScreen(navigator: DestinationsNavigator) {
-    hiltViewModel<NewProductViewModel>().ConfigureViewModel(navigator = navigator) { viewModel ->
+    hiltViewModel<NewProductViewModel>().ViewModelLayout(navigator = navigator) { viewModel ->
         val state = viewModel.state.collectAsState().value
 
         BackHandler(

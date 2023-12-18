@@ -7,7 +7,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.flow.receiveAsFlow
 
 @Composable
-inline fun <STATE : Any, EVENT : Any, NAV_ARGUMENTS : Any> BaseViewModel<STATE, EVENT, NAV_ARGUMENTS>.ConfigureViewModel(
+inline fun <STATE : Any, EVENT : Any, NAV_ARGUMENTS : Any> BaseViewModel<STATE, EVENT, NAV_ARGUMENTS>.ViewModelLayout(
     navigator: DestinationsNavigator,
     content: @Composable (BaseViewModel<STATE, EVENT, NAV_ARGUMENTS>) -> Unit = {}
 ) {
