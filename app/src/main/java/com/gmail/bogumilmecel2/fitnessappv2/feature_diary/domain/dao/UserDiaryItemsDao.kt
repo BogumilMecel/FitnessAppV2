@@ -23,9 +23,10 @@ interface UserDiaryItemsDao {
     fun getUserProducts(): List<Product>
 
     @Query("SELECT * FROM ProductDiaryHistoryItem ORDER BY ProductDiaryHistoryItem.utc_timestamp DESC LIMIT :limit")
-    fun getDiaryHistory(
-        limit: Int,
-    ): List<ProductDiaryHistoryItem>
+    fun getDiaryHistory(limit: Int): List<ProductDiaryHistoryItem>
+
+    @Query("SELECT * FROM ProductDiaryHistoryItem ORDER BY ProductDiaryHistoryItem.utc_timestamp DESC")
+    fun getDiaryHistory(): List<ProductDiaryHistoryItem>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertDiaryHistoryItems(productDiaryHistoryItems: List<ProductDiaryHistoryItem>)
