@@ -1,19 +1,19 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.use_case
 
+import com.gmail.bogumilmecel2.fitnessappv2.common.BaseTest
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.repository.TokenRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.repository.AuthRepository
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.junit.After
-import org.mockito.Mock
+import io.mockk.mockk
 
+internal class LogInRegisterRequestTest: BaseTest() {
 
-@OptIn(ExperimentalCoroutinesApi::class)
-internal class LogInRegisterRequestTest {
-
-    @Mock
-    private lateinit var authRepository: AuthRepository
-    private lateinit var logInUserUseCase: LogInUserUseCase
-
-    private lateinit var closeable: AutoCloseable
+    private val authRepository = mockk<AuthRepository>()
+    private val tokenRepository = mockk<TokenRepository>()
+    private val logInUserUseCase = LogInUserUseCase(
+        authRepository = authRepository,
+        resourceProvider = resourceProvider,
+        tokenRepository = tokenRepository
+    )
 
 //    @Before
 //    fun setUp() = runTest{
@@ -66,9 +66,4 @@ internal class LogInRegisterRequestTest {
 //
 //        assertTrue(result is CustomResult.Success)
 //    }
-
-    @After
-    fun after(){
-        closeable.close()
-    }
 }

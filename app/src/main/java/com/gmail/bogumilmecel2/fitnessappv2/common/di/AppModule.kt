@@ -14,7 +14,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvi
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.repository.TokenRepository
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.CalculateNutritionValuesPercentages
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.GetUserCurrencyUseCase
-import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.SaveToken
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BarcodeScanner
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.DefaultInterceptor
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.RealBarcodeScanner
@@ -192,15 +191,6 @@ object AppModule {
         authApi: AuthApi
     ): AuthRepository = AuthRepositoryImp(authApi = authApi)
 
-    // TODO: Delete after separating auth use cases
-    @Provides
-    @Singleton
-    fun provideSaveTokenUseCase(
-        tokenRepository: TokenRepository
-    ): SaveToken = SaveToken(
-        tokenRepository = tokenRepository
-    )
-
     @Singleton
     @Provides
     fun provideDiaryRepository(
@@ -331,10 +321,10 @@ object AppModule {
     fun provideLogInUserUseCase(
         authRepository: AuthRepository,
         resourceProvider: ResourceProvider,
-        saveToken: SaveToken
+        tokenRepository: TokenRepository
     ): LogInUserUseCase = LogInUserUseCase(
-        repository = authRepository,
+        authRepository = authRepository,
         resourceProvider = resourceProvider,
-        saveToken = saveToken
+        tokenRepository = tokenRepository
     )
 }
