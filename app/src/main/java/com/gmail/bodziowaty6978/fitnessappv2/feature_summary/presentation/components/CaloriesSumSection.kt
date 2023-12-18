@@ -60,7 +60,7 @@ fun CaloriesSumSection(
             ) {
                 val progress = currentCalories.toFloat()/wantedCalories.toFloat()
                 Text(
-                    text = "${progress*100.0}%",
+                    text = "${(progress*100.0).toInt()}%",
                     style = MaterialTheme.typography.body2
                 )
 

@@ -15,20 +15,19 @@ import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.BlueVi
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.BlueViolet3
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.LightGreen3
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.OrangeYellow2
+import com.gmail.bodziowaty6978.fitnessappv2.common.util.extensions.round
 
 @Composable
 fun ProductNutritionSection(
-    nutritionData: NutritionData
+    nutritionData: NutritionData,
+    modifier: Modifier
 ) {
 
     Card(
         elevation = 3.dp,
-        modifier = Modifier
-            .padding(horizontal = 20.dp, vertical = 10.dp),
+        modifier = modifier,
         shape = RoundedCornerShape(15)
     ) {
-
-
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -77,7 +76,7 @@ fun ProductNutritionSection(
                         )
 
                         Text(
-                            text = "${nutritionValues.carbohydrates}g",
+                            text = "${nutritionValues.carbohydrates.round(2)}g",
                             style = MaterialTheme.typography.body2.copy(
                                 color = LightGreen3
                             )
@@ -100,7 +99,7 @@ fun ProductNutritionSection(
                         )
 
                         Text(
-                            text = "${nutritionValues.protein}g",
+                            text = "${nutritionValues.protein.round(2)}g",
                             style = MaterialTheme.typography.body2.copy(
                                 color = BlueViolet2
                             )
@@ -123,7 +122,7 @@ fun ProductNutritionSection(
                         )
 
                         Text(
-                            text = "${nutritionValues.fat}g",
+                            text = "${nutritionValues.fat.round(2) }g",
                             style = MaterialTheme.typography.body2.copy(
                                 color = OrangeYellow2
                             )

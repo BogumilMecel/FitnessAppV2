@@ -7,6 +7,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.extensions.formatToString
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.data.api.ProductApi
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Price
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.diary_entry.DiaryEntry
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.repository.DiaryRepository
@@ -122,6 +123,20 @@ class DiaryRepositoryImp(
             Log.e(TAG, resource.toString())
             Resource.Success(
                 data = resource
+            )
+        }catch (e:Exception){
+            e.printStackTrace()
+            Resource.Error(resourceProvider.getString(R.string.unknown_error))
+        }
+    }
+
+    override suspend fun addNewPrice(price: Price, productId: Int): Resource<Price> {
+        return try {
+            Resource.Success(
+                data = productApi.addNewPriceForProduct(
+                    price = price,
+                    productId = productId
+                )
             )
         }catch (e:Exception){
             e.printStackTrace()

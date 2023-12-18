@@ -2,6 +2,7 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.repository
 
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Price
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.diary_entry.DiaryEntry
 
@@ -15,4 +16,5 @@ interface DiaryRepository {
     suspend fun editDiaryEntry(diaryEntry: DiaryEntry):CustomResult
     suspend fun saveNewProduct(product: Product):Resource<Product>
     suspend fun getCaloriesSum(date:String, token: String):Resource<Int>
+    suspend fun addNewPrice(price: Price, productId:Int):Resource<Price>
 }

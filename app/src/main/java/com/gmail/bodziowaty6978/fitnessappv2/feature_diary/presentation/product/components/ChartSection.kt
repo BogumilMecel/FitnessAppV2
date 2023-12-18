@@ -12,7 +12,7 @@ import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.formatter.PercentFormatter
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.BlueViolet3
-import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.DarkGreyElevation3
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.DarkGreyElevation
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.LightGreen3
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.OrangeYellow3
 
@@ -21,7 +21,7 @@ fun ChartSection(
     nutritionData: NutritionData,
 ) {
 
-    val backgroundColor = DarkGreyElevation3.toArgb()
+    val backgroundColor = DarkGreyElevation.toArgb()
 
     val colors = listOf<Int>(
         LightGreen3.toArgb(),

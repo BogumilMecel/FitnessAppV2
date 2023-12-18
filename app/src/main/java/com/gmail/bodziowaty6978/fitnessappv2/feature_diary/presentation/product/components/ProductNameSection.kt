@@ -29,11 +29,11 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.
 fun ProductNameSection(
     product: Product,
     onEvent:(ProductEvent) -> Unit,
-    currentWeight:String
+    currentWeight:String,
+    modifier: Modifier
 ) {
     Card(
-        modifier = Modifier
-            .padding(horizontal = 20.dp, vertical = 10.dp),
+        modifier = modifier,
         elevation = 3.dp,
         shape = RoundedCornerShape(15)
     ) {
@@ -94,7 +94,7 @@ fun ProductNameSection(
                             keyboardOptions = KeyboardOptions.Default.copy(
                                 keyboardType = KeyboardType.Number
                             ),
-                            cursorBrush = SolidColor(MaterialTheme.colors.primary)
+                            cursorBrush = SolidColor(MaterialTheme.colors.primary),
                         )
                     }
 

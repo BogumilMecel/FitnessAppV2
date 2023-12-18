@@ -12,7 +12,7 @@ data class Product(
     val unit: String = "g",
     val nutritionValues: NutritionValues = NutritionValues(),
     val barcode: String? = "",
-    val price: Price = Price()
+    val price: Price? = null
 )
 
 
