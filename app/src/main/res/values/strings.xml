@@ -82,7 +82,8 @@
     <string name="new_product_bad_nutrition_values">Please make sure that you have entered nutrition values correctly</string>
 
     <string name="camera_permission_is_required_to_scan_a_product_barcode">Camera permission is required to scan a product barcode</string>
-    <string name="there_is_no_product_with_provided_barcode_do_you_want_to_add_it">There is no product with provided barcode. Do you want to add it?</string>
+    <string name="there_is_no_product_with_provided_barcode_do_you_want_to_add_it">There is no product with provided barcode.</string>
+    <string name="search_add_it_now">Do you want to add it now?</string>
     <string name="diary_serving">%s Serving</string>
     <string name="diary_multiple_serving">%s Servings</string>
 
