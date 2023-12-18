@@ -273,15 +273,10 @@ object ViewModelModule {
     @Provides
     fun provideSummaryUseCases(
         diaryRepository: DiaryRepository,
-        weightRepository: WeightRepository,
         cachedValuesProvider: CachedValuesProvider,
         saveAskForWeightDailyUseCase: SaveAskForWeightDailyUseCase
     ): SummaryUseCases = SummaryUseCases(
         getCaloriesSum = GetCaloriesSum(diaryRepository = diaryRepository),
-        addWeightEntryUseCase = AddWeightEntryUseCase(
-            weightRepository = weightRepository,
-            checkIfWeightIsValidUseCase = CheckIfWeightIsValidUseCase(),
-        ),
         checkIfShouldAskForWeightDialogsUseCase = CheckIfShouldAskForWeightDialogsUseCase(),
         handleWeightDialogsQuestionUseCase = HandleWeightDialogsQuestionUseCase(
             cachedValuesProvider = cachedValuesProvider,
@@ -329,5 +324,16 @@ object ViewModelModule {
         tokenRepository = tokenRepository,
         getUserDiaryAndSaveItLocallyUseCase = GetUserDiaryAndSaveItLocallyUseCase(diaryRepository),
         getUserDiaryEntriesExperimentalUseCase = GetUserDiaryEntriesExperimentalUseCase(diaryRepository)
+    )
+
+    @ViewModelScoped
+    @Provides
+    fun provideAddWeightEntryUseCase(
+        weightRepository: WeightRepository,
+        cachedValuesProvider: CachedValuesProvider,
+    ): AddWeightEntryUseCase = AddWeightEntryUseCase(
+        weightRepository = weightRepository,
+        cachedValuesProvider = cachedValuesProvider,
+        checkIfWeightIsValidUseCase = CheckIfWeightIsValidUseCase()
     )
 }
