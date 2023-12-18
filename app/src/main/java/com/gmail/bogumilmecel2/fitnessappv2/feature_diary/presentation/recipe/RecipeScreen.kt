@@ -22,9 +22,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Equalizer
-import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.SupervisorAccount
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -37,13 +35,14 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.fitnessappv2.R
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.CustomButton
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.DropdownArrow
 import com.gmail.bogumilmecel2.fitnessappv2.components.CustomBasicTextField
 import com.gmail.bogumilmecel2.fitnessappv2.components.DefaultCardBackground
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_recipe.components.RecipePriceSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.presentation.components.ProductNutritionSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.componens.SearchProductItem
+import com.gmail.bogumilmecel2.ui.components.base.ButtonStyle
+import com.gmail.bogumilmecel2.ui.components.base.CustomButton
 import com.gmail.bogumilmecel2.ui.components.base.CustomIconStyle
 import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
 import com.gmail.bogumilmecel2.ui.components.base.IconParams
@@ -234,7 +233,7 @@ fun RecipeScreen(
 
                     CustomButton(
                         modifier = Modifier.fillMaxWidth(),
-                        iconLeft = Icons.Default.Save,
+                        iconLeft = CustomIconStyle.Save,
                         text = stringResource(
                             id = R.string.recipe_save_to,
                             state.mealName
@@ -340,9 +339,9 @@ fun RecipeScreen(
 
             CustomButton(
                 modifier = Modifier.padding(horizontal = 15.dp),
-                iconLeft = Icons.Default.Edit,
+                iconLeft = CustomIconStyle.Edit,
                 text = stringResource(id = R.string.recipe_edit),
-                backgroundColor = MaterialTheme.colors.secondaryVariant
+                buttonStyle = ButtonStyle.ButtonSecondary
             ) {
 
             }

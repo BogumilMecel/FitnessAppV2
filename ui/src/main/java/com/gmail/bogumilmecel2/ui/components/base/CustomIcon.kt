@@ -1,33 +1,27 @@
 package com.gmail.bogumilmecel2.ui.components.base
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.Logout
+import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.unit.dp
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 
 @Composable
 fun CustomIcon(
-    iconParams: IconParams
-) = with(iconParams) {
+    iconStyle: CustomIconStyle,
+    iconPosition: Position = Position.OnBackground
+) = with(iconStyle) {
     androidx.compose.material.Icon(
-        imageVector = iconStyle.imageVector,
-        contentDescription = iconStyle.contentDescription,
-        modifier = Modifier
-            .clip(CircleShape)
-            .then(other = onClick?.let { onClick -> Modifier.clickable(onClick = onClick,) } ?: Modifier)
-            .padding(12.dp),
-        tint = FitnessAppTheme.colors.ContentPrimary
+        imageVector = imageVector,
+        contentDescription = contentDescription,
+        tint = iconPosition.getContentColor()
     )
 }
 
@@ -59,9 +53,26 @@ sealed class CustomIconStyle(
         imageVector = Icons.Default.Add,
         contentDescription = "add"
     )
+    object Logout: CustomIconStyle(
+        imageVector = Icons.Default.Logout,
+        contentDescription = "log out"
+    )
+    object Save: CustomIconStyle(
+        imageVector = Icons.Default.Save,
+        contentDescription = "save"
+    )
+    object Edit: CustomIconStyle(
+        imageVector = Icons.Default.Edit,
+        contentDescription = "edit"
+    )
 }
 
-data class IconParams(
-    val iconStyle: CustomIconStyle,
-    val onClick: (() -> Unit)? = null
-)
+enum class Position {
+    OnPrimary, OnBackground;
+
+    @Composable
+    fun getContentColor() = when(this) {
+        OnPrimary -> FitnessAppTheme.colors.Black
+        OnBackground -> FitnessAppTheme.colors.ContentPrimary
+    }
+}

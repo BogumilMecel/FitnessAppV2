@@ -37,7 +37,7 @@ fun FitnessAppTheme(
                 darkColors(
                     primary = Primary,
                     primaryVariant = LocalColor.OrangeYellow1,
-                    secondary = LocalColor.LightGreen1,
+                    secondary = LocalColor.Secondary,
                     secondaryVariant = LocalColor.BlueViolet1,
                     background = Background,
                     surface = Background,
