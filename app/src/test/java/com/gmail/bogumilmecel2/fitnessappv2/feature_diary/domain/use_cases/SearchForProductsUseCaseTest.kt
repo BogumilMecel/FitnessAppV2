@@ -10,14 +10,11 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito
-import org.robolectric.RobolectricTestRunner
 import kotlin.test.assertEquals
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@RunWith(RobolectricTestRunner::class)
 internal class SearchForProductsUseCaseTest {
 
     @Mock

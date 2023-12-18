@@ -1,7 +1,6 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.use_cases
 
 import com.gmail.bogumilmecel2.fitnessappv2.common.BaseTest
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.model.User
 import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.model.ActivityLevel
@@ -14,16 +13,12 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.kotlin.any
-import org.robolectric.RobolectricTestRunner
-import org.robolectric.RuntimeEnvironment
 import kotlin.test.assertTrue
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@RunWith(RobolectricTestRunner::class)
 internal class SaveIntroductionInformationUseCaseTest : BaseTest() {
 
     private lateinit var saveIntroductionInformationUseCase: SaveIntroductionInformationUseCase
@@ -37,7 +32,7 @@ internal class SaveIntroductionInformationUseCaseTest : BaseTest() {
         mockRepositoryResponse()
 
         saveIntroductionInformationUseCase = SaveIntroductionInformationUseCase(
-            resourceProvider = ResourceProvider(RuntimeEnvironment.getApplication()),
+            resourceProvider = resourceProvider,
             userDataRepository = mockUserDataRepository
         )
     }

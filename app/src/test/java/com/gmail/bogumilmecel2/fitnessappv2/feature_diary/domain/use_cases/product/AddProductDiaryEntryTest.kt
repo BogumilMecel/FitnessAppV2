@@ -3,12 +3,9 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.prod
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.After
-import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.robolectric.RobolectricTestRunner
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@RunWith(RobolectricTestRunner::class)
 internal class AddProductDiaryEntryTest{
 
     @Mock

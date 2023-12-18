@@ -1,7 +1,6 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases
 
 import com.gmail.bogumilmecel2.fitnessappv2.common.BaseTest
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.DiaryEntriesResponse
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
@@ -12,16 +11,12 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito
-import org.robolectric.RobolectricTestRunner
-import org.robolectric.RuntimeEnvironment
 import java.util.*
 import kotlin.test.assertTrue
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@RunWith(RobolectricTestRunner::class)
 internal class GetDiaryEntriesUseCaseTest: BaseTest() {
 
     @Mock
@@ -30,7 +25,6 @@ internal class GetDiaryEntriesUseCaseTest: BaseTest() {
     private lateinit var getDiaryEntriesUseCase: GetDiaryEntriesUseCase
     private lateinit var sortDiaryEntriesUseCase: SortDiaryEntriesUseCase
     private val getDiaryEntriesListFromResponseUseCase = GetDiaryEntriesListFromResponseUseCase()
-    private lateinit var resourceProvider: ResourceProvider
 
     @Before
     fun setUp() {
@@ -41,7 +35,7 @@ internal class GetDiaryEntriesUseCaseTest: BaseTest() {
             sortDiaryEntriesUseCase = sortDiaryEntriesUseCase,
             getDiaryEntriesListFromResponseUseCase = getDiaryEntriesListFromResponseUseCase
         )
-        resourceProvider = ResourceProvider(RuntimeEnvironment.getApplication())
+        resourceProvider = resourceProvider
     }
 
     @Test
