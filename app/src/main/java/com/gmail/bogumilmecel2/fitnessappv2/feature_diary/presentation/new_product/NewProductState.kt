@@ -19,7 +19,8 @@ data class NewProductState(
     val barcode: String = "",
     val isLoading: Boolean = false,
     val isScannerVisible: Boolean = false,
-    val mealName: MealName
+    val mealName: MealName,
+    val date: String
 )
 
 

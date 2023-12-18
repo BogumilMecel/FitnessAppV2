@@ -12,23 +12,32 @@ data class ProductNavArguments(val entryData: ProductEntryData)
 @Serializable
 sealed class ProductEntryData(
     open val product: Product,
-    open val mealName: MealName
+    open val mealName: MealName,
+    open val date: String
 ) {
     @Serializable
     data class Adding(
         @SerialName("meal_name")
         override val mealName: MealName,
         @SerialName("product_data")
-        override val product: Product
+        override val product: Product,
+        @SerialName("display_date")
+        override val date: String
     ) : ProductEntryData(
         mealName = mealName,
-        product = product
+        product = product,
+        date = date
     )
 
     @Serializable
-    data class Editing(val productDiaryEntry: ProductDiaryEntry) : ProductEntryData(
+    data class Editing(
+        val productDiaryEntry: ProductDiaryEntry,
+        @SerialName("display_date")
+        override val date: String
+    ) : ProductEntryData(
         mealName = productDiaryEntry.mealName,
-        product = productDiaryEntry.product
+        product = productDiaryEntry.product,
+        date = date
     )
 
     companion object {

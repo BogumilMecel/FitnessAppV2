@@ -16,4 +16,5 @@ data class SearchState(
     val mealName: MealName = MealName.BREAKFAST,
     val recipes: List<Recipe> = emptyList(),
     val currentTabIndex: Int = 0,
+    val date: String
 )

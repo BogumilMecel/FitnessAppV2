@@ -1,7 +1,6 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product
 
 import com.gmail.bogumilmecel2.fitnessappv2.R
-import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.DateModel
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.MealName
@@ -18,7 +17,8 @@ class AddDiaryEntry(
     suspend operator fun invoke(
         product: Product,
         mealName: MealName,
-        dateModel: DateModel,
+        timestamp: Long,
+        date: String,
         weight: Int?,
     ): Resource<ProductDiaryEntry> {
         return weight?.let {
@@ -29,10 +29,10 @@ class AddDiaryEntry(
             } else {
                 val productDiaryEntryPostRequest = ProductDiaryEntryPostRequest(
                     product = product,
-                    timestamp = dateModel.timestamp,
+                    timestamp = timestamp,
                     weight = it,
                     mealName = mealName,
-                    date = dateModel.date,
+                    date = date,
                 )
 
                 diaryRepository.addProductDiaryEntry(

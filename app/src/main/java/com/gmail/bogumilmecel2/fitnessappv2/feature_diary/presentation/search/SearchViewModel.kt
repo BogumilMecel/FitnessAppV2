@@ -30,7 +30,8 @@ class SearchViewModel @Inject constructor(
 
     private val _searchState = MutableStateFlow(
         SearchState(
-            mealName = SearchScreenDestination.argsFrom(savedStateHandle).mealName
+            mealName = SearchScreenDestination.argsFrom(savedStateHandle).mealName,
+            date = SearchScreenDestination.argsFrom(savedStateHandle).date
         )
     )
     val searchState: StateFlow<SearchState> = _searchState
@@ -78,7 +79,8 @@ class SearchViewModel @Inject constructor(
                     ProductScreenDestination(
                         entryData = ProductEntryData.Adding(
                             product = event.product,
-                            mealName = _searchState.value.mealName
+                            mealName = _searchState.value.mealName,
+                            date = _searchState.value.date
                         ),
                     )
                 )
@@ -88,7 +90,8 @@ class SearchViewModel @Inject constructor(
                 navigateTo(
                     NewProductScreenDestination(
                         mealName = _searchState.value.mealName,
-                        barcode = _searchState.value.barcode
+                        barcode = _searchState.value.barcode,
+                        date = _searchState.value.date
                     )
                 )
             }
@@ -254,7 +257,8 @@ class SearchViewModel @Inject constructor(
                         ProductScreenDestination(
                             entryData = ProductEntryData.Adding(
                                 product = product,
-                                mealName = _searchState.value.mealName
+                                mealName = _searchState.value.mealName,
+                                date = _searchState.value.date
                             ),
                         )
                     )

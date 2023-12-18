@@ -3,13 +3,18 @@ package com.gmail.bogumilmecel2.fitnessappv2.common.util
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavOptions
-import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.CachedValuesProvider
-import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.navigation.NavigationAction
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.navigation.Navigator
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.CachedValuesProvider
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvider
 import com.ramcosta.composedestinations.spec.Direction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.UtcOffset
+import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -74,4 +79,7 @@ open class BaseViewModel @Inject constructor() : ViewModel() {
             }
         )
     }
+
+    fun getCurrentTimestamp() = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+        .toInstant(UtcOffset.ZERO).toEpochMilliseconds()
 }

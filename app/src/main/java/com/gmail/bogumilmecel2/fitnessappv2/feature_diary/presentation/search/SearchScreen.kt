@@ -14,13 +14,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.fitnessappv2.R
-import com.gmail.bogumilmecel2.fitnessappv2.common.data.singleton.CurrentDate
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.BackHandler
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.componens.SearchProductSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.componens.SearchRecipeSection
@@ -88,8 +86,7 @@ fun SearchScreen(
                         else -> state.recipesSearchBarText
                     },
                     mealName = stringResource(id = state.mealName.getDisplayValue()),
-                    date = CurrentDate.dateModel(LocalContext.current).valueToDisplay
-                        ?: CurrentDate.dateModel(LocalContext.current).date,
+                    date = state.date,
                     onEvent = { searchEvent ->
                         viewModel.onEvent(searchEvent)
                     },

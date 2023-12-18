@@ -47,7 +47,12 @@ class DiaryViewModel @Inject constructor(
             }
 
             is DiaryEvent.ClickedAddProduct -> {
-                navigateTo(SearchScreenDestination(mealName = event.mealName))
+                navigateTo(
+                    SearchScreenDestination(
+                        mealName = event.mealName,
+                        date = dateProvider.getLocalDateString()
+                    )
+                )
             }
 
             is DiaryEvent.ClickedDiaryEntry -> {
@@ -185,7 +190,10 @@ class DiaryViewModel @Inject constructor(
                 is ProductDiaryEntry -> {
                     navigateTo(
                         destination = ProductScreenDestination(
-                            entryData = ProductEntryData.Editing(productDiaryEntry = this)
+                            entryData = ProductEntryData.Editing(
+                                productDiaryEntry = this,
+                                date = dateProvider.getLocalDateString()
+                            )
                         )
                     )
                 }

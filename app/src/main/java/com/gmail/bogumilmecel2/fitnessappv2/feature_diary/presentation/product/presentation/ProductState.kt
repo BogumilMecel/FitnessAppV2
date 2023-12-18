@@ -10,5 +10,6 @@ data class ProductState(
     val priceValue: String = "",
     val priceForValue: String = "",
     val isSubmitPriceDialogVisible: Boolean = false,
-    val entryData: ProductEntryData
+    val entryData: ProductEntryData,
+    val date: String
 )
