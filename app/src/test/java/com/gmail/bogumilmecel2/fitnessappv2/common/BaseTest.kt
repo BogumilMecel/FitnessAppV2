@@ -13,7 +13,7 @@ import io.mockk.spyk
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 
-open class BaseMockkTest {
+open class BaseTest {
 
     val mockedDate = "2023-12-12"
     val mockedDate2 = "2022-12-12"

@@ -1,7 +1,7 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.use_cases
 
 import com.gmail.bogumilmecel2.fitnessappv2.R
-import com.gmail.bogumilmecel2.fitnessappv2.common.BaseMockkTest
+import com.gmail.bogumilmecel2.fitnessappv2.common.BaseTest
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.UserInformation
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
@@ -19,7 +19,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import kotlin.test.assertIs
 
-internal class SaveIntroductionInformationUseCaseTest : BaseMockkTest() {
+internal class SaveIntroductionInformationUseCaseTest : BaseTest() {
 
     private val userDataRepository = mockk<UserDataRepository>()
     private val saveIntroductionInformationUseCase = SaveIntroductionInformationUseCase(

@@ -1,13 +1,13 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.use_case
 
-import com.gmail.bogumilmecel2.fitnessappv2.common.BaseMockkTest
+import com.gmail.bogumilmecel2.fitnessappv2.common.BaseTest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.model.User
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.model.WeightDialogsQuestion
 import io.mockk.coEvery
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
-class CheckIfShouldAskForWeightDialogsUseCaseTest : BaseMockkTest() {
+class CheckIfShouldAskForWeightDialogsUseCaseTest : BaseTest() {
 
     private val checkIfShouldAskForWeightDialogsUseCase = CheckIfShouldAskForWeightDialogsUseCase()
 

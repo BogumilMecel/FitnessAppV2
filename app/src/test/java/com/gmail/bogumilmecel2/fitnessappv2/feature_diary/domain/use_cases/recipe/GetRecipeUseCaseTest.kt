@@ -1,6 +1,6 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.recipe
 
-import com.gmail.bogumilmecel2.fitnessappv2.common.BaseMockkTest
+import com.gmail.bogumilmecel2.fitnessappv2.common.BaseTest
 import com.gmail.bogumilmecel2.fitnessappv2.common.MockConstants
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Recipe
@@ -11,7 +11,7 @@ import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
-class GetRecipeUseCaseTest: BaseMockkTest() {
+class GetRecipeUseCaseTest: BaseTest() {
 
     private val diaryRepository = mockk<DiaryRepository>()
     private val getRecipeUseCase = GetRecipeUseCase(diaryRepository = diaryRepository)

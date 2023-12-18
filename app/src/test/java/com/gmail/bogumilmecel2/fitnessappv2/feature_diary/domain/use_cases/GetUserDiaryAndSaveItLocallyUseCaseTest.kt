@@ -1,6 +1,6 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases
 
-import com.gmail.bogumilmecel2.fitnessappv2.common.BaseMockkTest
+import com.gmail.bogumilmecel2.fitnessappv2.common.BaseTest
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.UserDiaryItemsResponse
@@ -13,7 +13,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import kotlin.test.assertIs
 
-class GetUserDiaryAndSaveItLocallyUseCaseTest: BaseMockkTest() {
+class GetUserDiaryAndSaveItLocallyUseCaseTest: BaseTest() {
     private val diaryRepository = mockk<DiaryRepository>()
     private val getUserDiaryAndSaveItLocallyUseCase = GetUserDiaryAndSaveItLocallyUseCase(diaryRepository = diaryRepository)
 
