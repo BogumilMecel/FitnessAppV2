@@ -18,19 +18,18 @@ class PostRecipeDiaryEntryUseCase(
         date: String,
         mealName: MealName
     ): Resource<Unit> {
-        val servingsValue = servingsString.toValidInt()
+        val servingsValue = servingsString.toValidInt() ?: return getServingsResourceError()
+        if (servingsValue <= 0) return getServingsResourceError()
 
-        return if (servingsValue == null || servingsValue <= 0) {
-            Resource.Error(uiText = resourceProvider.getString(R.string.recipe_servings_error))
-        } else {
-            diaryRepository.addRecipeDiaryEntry(
-                recipeDiaryEntryRequest = RecipeDiaryEntryRequest(
-                    recipeId = recipeId,
-                    servings = servingsValue,
-                    date = date,
-                    mealName = mealName
-                )
+        return diaryRepository.addRecipeDiaryEntry(
+            recipeDiaryEntryRequest = RecipeDiaryEntryRequest(
+                recipeId = recipeId,
+                servings = servingsValue,
+                date = date,
+                mealName = mealName
             )
-        }
+        )
     }
+
+    private fun getServingsResourceError() = Resource.Error<Unit>(uiText = resourceProvider.getString(R.string.recipe_servings_error))
 }

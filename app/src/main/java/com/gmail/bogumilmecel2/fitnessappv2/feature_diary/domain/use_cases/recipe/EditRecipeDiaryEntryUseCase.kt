@@ -14,13 +14,8 @@ class EditRecipeDiaryEntryUseCase(private val diaryRepository: DiaryRepository) 
         val servings = newServingsStringValue.toValidInt() ?: return Resource.Error()
         val originalServings = originalServingsStringValue.toValidInt() ?: return Resource.Error()
 
-        if (servings <= 0) {
-            return Resource.Error()
-        }
-
-        if (servings == originalServings) {
-            return Resource.Error()
-        }
+        if (servings <= 0) return Resource.Error()
+        if (servings == originalServings) return Resource.Error()
 
         return diaryRepository.editRecipeDiaryEntry(
             editRecipeDiaryEntryRequest = EditRecipeDiaryEntryRequest(
