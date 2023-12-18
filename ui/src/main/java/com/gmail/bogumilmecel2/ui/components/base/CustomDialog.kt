@@ -66,8 +66,3 @@ fun CustomDialog(
         backgroundColor = FitnessAppTheme.colors.BackgroundLight
     )
 }
-
-data class ButtonParams(
-    val text: String,
-    val onClick: () -> Unit
-)

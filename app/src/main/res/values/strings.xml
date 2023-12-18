@@ -9,6 +9,9 @@
     <string name="kcal_with_value">%s Kcal</string>
 
     <string name="not_available">N/A</string>
+    <string name="accept">Accept</string>
+    <string name="ask_me_later">Ask me later</string>
+    <string name="decline">Decline</string>
 
 <!--    Auth-->
     <string name="email_address">Email Address</string>
@@ -102,6 +105,8 @@
     <!--    summary-->
     <string name="days">%s days in a row</string>
     <string name="summary_weight_dialog_title">What is your today\'s weight</string>
+    <string name="summary_ask_for_weight_dialogs_title">Would you like us to track your weight daily?</string>
+    <string name="summary_ask_for_weight_dialogs_description">You will be automatically asked about your weight every time you log into the app for the first time each day. Later, if you don\'t like it you can turn this off in your account settings</string>
     
 <!--    product-->
     <string name="prices">Prices</string>

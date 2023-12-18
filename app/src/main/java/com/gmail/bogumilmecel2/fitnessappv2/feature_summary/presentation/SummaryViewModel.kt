@@ -42,19 +42,13 @@ class SummaryViewModel @Inject constructor(
                             isWeightPickerLoading = true
                         )
                     }
-                    saveNewWeightEntry(value = event.value)
+                    saveNewWeightEntry(value = _state.value.weightPickerCurrentValue)
                 }
             }
 
             is SummaryEvent.ClickedAddWeightEntryButton -> {
                 viewModelScope.launch {
-                    bottomBarStatusProvider.bottomBarEvent.send(BottomBarEvent.Hide)
-                    _state.update {
-                        it.copy(
-                            bottomSheetContent = SummaryBottomSheetContent.WeightPicker
-                        )
-                    }
-                    uiEvent.send(SummaryUiEvent.ShowBottomSheet)
+                    showBottomBarSheet(bottomSheetContent = SummaryBottomSheetContent.WeightPicker)
                 }
             }
 
@@ -70,10 +64,37 @@ class SummaryViewModel @Inject constructor(
 
     fun initializeData() {
         initBottomBarStatusProvider()
+        checkIfShouldAskForWeightDialogs()
         getLatestLogEntry()
         getCaloriesSum()
         initWeightData()
         initWantedCalories()
+    }
+
+    private fun checkIfShouldAskForWeightDialogs() {
+        viewModelScope.launch {
+            summaryUseCases.checkIfShouldAskForWeightDialogsUseCase(
+                cachedValuesProvider = cachedValuesProvider
+            ).handle(
+                showSnackbar = false
+            ) {
+                showBottomBarSheet(bottomSheetContent = SummaryBottomSheetContent.AskForDailyWeightDialogs)
+            }
+        }
+    }
+
+    private fun showBottomBarSheet(bottomSheetContent: SummaryBottomSheetContent) {
+        viewModelScope.launch {
+            bottomBarStatusProvider.bottomBarEvent.send(BottomBarEvent.Hide)
+            if (_state.value.bottomSheetContent != bottomSheetContent) {
+                _state.update {
+                    it.copy(
+                        bottomSheetContent = bottomSheetContent
+                    )
+                }
+            }
+            uiEvent.send(SummaryUiEvent.ShowBottomSheet)
+        }
     }
 
     private fun initBottomBarStatusProvider() {

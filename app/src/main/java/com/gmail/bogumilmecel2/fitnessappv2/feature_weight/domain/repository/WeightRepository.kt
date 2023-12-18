@@ -9,4 +9,5 @@ interface WeightRepository {
         newWeightEntryRequest: NewWeightEntryRequest,
         timezone: String
     ):Resource<NewWeightEntryResponse>
+    suspend fun checkIfShouldAskForWeightDialogs(): Resource<Unit>
 }

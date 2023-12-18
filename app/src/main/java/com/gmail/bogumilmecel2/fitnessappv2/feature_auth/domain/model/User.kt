@@ -14,5 +14,6 @@ data class User(
     val favoriteUserRecipesIds: List<String>? = null,
     val logStreak: Int = 1,
     val latestWeightEntry: WeightEntry? = null,
-    val weightProgress: String? = null
+    val weightProgress: String? = null,
+    val askedForWeightDialogs: Boolean = false
 )

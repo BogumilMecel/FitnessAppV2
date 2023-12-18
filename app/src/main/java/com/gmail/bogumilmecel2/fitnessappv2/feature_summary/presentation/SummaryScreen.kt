@@ -15,14 +15,18 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.BackHandler
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.presentation.components.CaloriesSumSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.presentation.components.LogStreakSection
-import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.presentation.components.WeightPickerDialog
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.presentation.components.WeightSection
+import com.gmail.bogumilmecel2.ui.components.base.ButtonParams
 import com.gmail.bogumilmecel2.ui.components.base.SheetLayout
+import com.gmail.bogumilmecel2.ui.components.complex.DoubleNumberPicker
+import com.gmail.bogumilmecel2.ui.components.complex.SimpleSheetLayoutContent
 import com.ramcosta.composedestinations.annotation.Destination
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -71,21 +75,59 @@ fun SummaryScreen(
         bottomSheetContent = {
             when (state.bottomSheetContent) {
                 is SummaryBottomSheetContent.WeightPicker -> {
-                    WeightPickerDialog(
-                        onEvent = {
-                            viewModel.onEvent(it)
+                    SimpleSheetLayoutContent(
+                        title = stringResource(id = R.string.summary_weight_dialog_title),
+                        content = {
+                            val startingValue = state.latestWeightEntry?.value ?: 80.0
+
+                            DoubleNumberPicker(
+                                modifier = Modifier,
+                                value = state.weightPickerCurrentValue,
+                                minValue = startingValue - 50.0,
+                                maxValue = startingValue + 50.0,
+                                onValueChange = {
+                                    viewModel.onEvent(SummaryEvent.WeightPickerValueChanged(it))
+                                }
+                            )
                         },
-                        startingValue = state.latestWeightEntry?.value ?: 80.0,
-                        currentValue = state.weightPickerCurrentValue,
-                        isLoading = state.isWeightPickerLoading,
-                        onValueChange = {
-                            viewModel.onEvent(SummaryEvent.WeightPickerValueChanged(it))
-                        }
+                        firstButtonParams = ButtonParams(
+                            text = stringResource(id = R.string.save),
+                            onClick = {
+                                viewModel.onEvent(SummaryEvent.SavedWeightPickerValue)
+                            }
+                        ),
+                        secondButtonParams = ButtonParams(
+                            text = stringResource(id = R.string.cancel),
+                            onClick = {
+                                viewModel.onEvent(SummaryEvent.ClickedBackInWeightPickerDialog)
+                            },
+                        )
                     )
                 }
 
-                is SummaryBottomSheetContent.AskForDailyWeightDialog -> {
+                is SummaryBottomSheetContent.AskForDailyWeightDialogs -> {
+                    SimpleSheetLayoutContent(
+                        title = stringResource(id = R.string.summary_ask_for_weight_dialogs_title),
+                        description = stringResource(id = R.string.summary_ask_for_weight_dialogs_description),
+                        firstButtonParams = ButtonParams(
+                            text = stringResource(id = R.string.accept),
+                            onClick = {
 
+                            }
+                        ),
+                        secondButtonParams = ButtonParams(
+                            text = stringResource(id = R.string.decline),
+                            onClick = {
+
+                            }
+                        ),
+                        bottomTextButtonParams = ButtonParams(
+                            text = stringResource(id = R.string.ask_me_later),
+                            onClick = {
+
+                            }
+                        ),
+                    )
                 }
             }
         },
