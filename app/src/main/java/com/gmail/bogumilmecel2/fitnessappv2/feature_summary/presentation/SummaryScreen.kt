@@ -1,7 +1,6 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_summary.presentation
 
 import android.app.Activity
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,7 +18,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.BackHandler
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.TAG
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.presentation.components.CaloriesSumSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.presentation.components.LogStreakSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.presentation.components.WeightPickerDialog
@@ -37,27 +35,30 @@ fun SummaryScreen(
 ) {
     val state = viewModel.state.collectAsState().value
     val activity = (LocalContext.current as? Activity)
-
-    LaunchedEffect(key1 = true) {
-        viewModel.initializeData()
-    }
-
-    BackHandler {
-        activity?.finish()
-    }
-
     val sheetState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
         skipHalfExpanded = true
     )
 
     LaunchedEffect(key1 = true) {
+        viewModel.initializeData()
+    }
+
+    BackHandler {
+        if (sheetState.currentValue == ModalBottomSheetValue.Expanded) {
+            viewModel.onEvent(SummaryEvent.ClickedBackInWeightPickerDialog)
+        } else {
+            activity?.finish()
+        }
+    }
+
+    LaunchedEffect(key1 = true) {
         viewModel.uiEvent.receiveAsFlow().collectLatest {
-            Log.e(TAG, it.toString())
-            when(it) {
+            when (it) {
                 is SummaryUiEvent.ShowBottomSheet -> {
                     sheetState.show()
                 }
+
                 is SummaryUiEvent.HideBottomSheet -> {
                     sheetState.hide()
                 }
@@ -68,15 +69,21 @@ fun SummaryScreen(
     SheetLayout(
         sheetState = sheetState,
         bottomSheetContent = {
-            when(state.bottomSheetContent) {
+            when (state.bottomSheetContent) {
                 is SummaryBottomSheetContent.WeightPicker -> {
                     WeightPickerDialog(
                         onEvent = {
                             viewModel.onEvent(it)
                         },
-                        startingValue = state.latestWeightEntry?.value ?: 80.0
+                        startingValue = state.latestWeightEntry?.value ?: 80.0,
+                        currentValue = state.weightPickerCurrentValue,
+                        isLoading = state.isWeightPickerLoading,
+                        onValueChange = {
+                            viewModel.onEvent(SummaryEvent.WeightPickerValueChanged(it))
+                        }
                     )
                 }
+
                 is SummaryBottomSheetContent.AskForDailyWeightDialog -> {
 
                 }

@@ -13,6 +13,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.DateHolder
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.repository.TokenRepository
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.*
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.BottomBarStatusProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.DefaultInterceptor
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.RealCachedValuesProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.RealDateHolder
@@ -387,6 +388,10 @@ object AppModule {
     @Provides
     fun provideCheckIfWeightIsValidUseCase(): CheckIfWeightIsValidUseCase =
         CheckIfWeightIsValidUseCase()
+
+    @Singleton
+    @Provides
+    fun provideBottomBarStatusProvider(): BottomBarStatusProvider = BottomBarStatusProvider()
 
     @Singleton
     @Provides

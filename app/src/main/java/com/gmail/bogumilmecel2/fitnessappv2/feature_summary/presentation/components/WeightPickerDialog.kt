@@ -5,11 +5,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableDoubleStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -26,16 +21,11 @@ import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 @Composable
 fun WeightPickerDialog(
     onEvent: (SummaryEvent) -> Unit,
-    startingValue: Double
+    currentValue: Double,
+    isLoading: Boolean,
+    startingValue: Double,
+    onValueChange: (Double) -> Unit
 ) {
-    var currentValue by remember {
-        mutableDoubleStateOf(startingValue)
-    }
-
-    var isLoading by remember {
-        mutableStateOf(false)
-    }
-
     Column(
         modifier = Modifier
             .padding(20.dp),
@@ -54,7 +44,7 @@ fun WeightPickerDialog(
             minValue = startingValue - 50f,
             maxValue = startingValue + 50f,
             onValueChange = {
-                currentValue = it
+                onValueChange(it)
             }
         )
 
@@ -62,12 +52,15 @@ fun WeightPickerDialog(
 
         Column {
             CustomButton(
-                text = stringResource(id = R.string.save),
+                text = if (isLoading) null else stringResource(id = R.string.save),
                 onClick = {
                     onEvent(SummaryEvent.SavedWeightPickerValue(value = currentValue))
                 },
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
+                leftContent = if (isLoading) {
+                    LeftContent.Loading
+                } else null
             )
 
             HeightSpacer(8.dp)
@@ -75,15 +68,11 @@ fun WeightPickerDialog(
             CustomButton(
                 text = stringResource(id = R.string.cancel),
                 onClick = {
-                    isLoading = true
-                    onEvent(SummaryEvent.DismissedWeightPickerDialog)
+                    onEvent(SummaryEvent.ClickedBackInWeightPickerDialog)
                 },
                 modifier = Modifier
                     .fillMaxWidth(),
                 buttonStyle = ButtonStyle.OutlinedPrimaryButton,
-                leftContent = if (isLoading) {
-                    LeftContent.Loading
-                } else null
             )
         }
     }

@@ -2,6 +2,8 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_summary.presentation
 
 import androidx.lifecycle.viewModelScope
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.BottomBarEvent
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.BottomBarStatusProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.CustomDateUtils
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.use_case.SummaryUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,6 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SummaryViewModel @Inject constructor(
     private val summaryUseCases: SummaryUseCases,
+    private val bottomBarStatusProvider: BottomBarStatusProvider
 ) : BaseViewModel<SummaryState, SummaryEvent>(state = SummaryState()) {
 
     val uiEvent = Channel<SummaryUiEvent>()
@@ -22,16 +25,30 @@ class SummaryViewModel @Inject constructor(
         when (event) {
             is SummaryEvent.DismissedWeightPickerDialog -> {
                 viewModelScope.launch {
+                    bottomBarStatusProvider.bottomBarEvent.send(BottomBarEvent.Show)
+                }
+            }
+
+            is SummaryEvent.ClickedBackInWeightPickerDialog -> {
+                viewModelScope.launch {
                     uiEvent.send(SummaryUiEvent.HideBottomSheet)
                 }
             }
 
             is SummaryEvent.SavedWeightPickerValue -> {
-                saveNewWeightEntry(value = event.value)
+                if (!_state.value.isWeightPickerLoading) {
+                    _state.update {
+                        it.copy(
+                            isWeightPickerLoading = true
+                        )
+                    }
+                    saveNewWeightEntry(value = event.value)
+                }
             }
 
             is SummaryEvent.ClickedAddWeightEntryButton -> {
                 viewModelScope.launch {
+                    bottomBarStatusProvider.bottomBarEvent.send(BottomBarEvent.Hide)
                     _state.update {
                         it.copy(
                             bottomSheetContent = SummaryBottomSheetContent.WeightPicker
@@ -40,39 +57,62 @@ class SummaryViewModel @Inject constructor(
                     uiEvent.send(SummaryUiEvent.ShowBottomSheet)
                 }
             }
-        }
-    }
 
-    fun initializeData() {
-        getLatestLogEntry()
-        getCaloriesSum()
-        initWeightData()
-        initWantedCalories()
-    }
-
-    private fun saveNewWeightEntry(value: Double) {
-        viewModelScope.launch {
-            summaryUseCases.addWeightEntryUseCase(value = value).handle(
-                finally = {
-                    uiEvent.send(SummaryUiEvent.HideBottomSheet)
-                }
-            ) {
-                _state.update { state ->
-                    state.copy(
-                        weightProgress = it.weightProgress,
-                        latestWeightEntry = it.latestWeightEntry
+            is SummaryEvent.WeightPickerValueChanged -> {
+                _state.update {
+                    it.copy(
+                        weightPickerCurrentValue = event.value
                     )
                 }
             }
         }
     }
 
+    fun initializeData() {
+        initBottomBarStatusProvider()
+        getLatestLogEntry()
+        getCaloriesSum()
+        initWeightData()
+        initWantedCalories()
+    }
+
+    private fun initBottomBarStatusProvider() {
+        bottomBarStatusProvider.onBottomBarClicked = {
+            onEvent(SummaryEvent.ClickedBackInWeightPickerDialog)
+        }
+    }
+
+    private fun saveNewWeightEntry(value: Double) {
+        viewModelScope.launch {
+            summaryUseCases.addWeightEntryUseCase(value = value).handle(
+                finally = {
+                    _state.update {
+                        it.copy(
+                            isWeightPickerLoading = false
+                        )
+                    }
+                }
+            ) {
+                _state.update { state ->
+                    state.copy(
+                        weightProgress = it.weightProgress,
+                        latestWeightEntry = it.latestWeightEntry,
+                    )
+                }
+
+                uiEvent.send(SummaryUiEvent.HideBottomSheet)
+            }
+        }
+    }
+
     private fun initWeightData() {
         viewModelScope.launch(Dispatchers.IO) {
+            val latestWeightEntry = cachedValuesProvider.getLatestWeightEntry()
             _state.update {
                 it.copy(
-                    latestWeightEntry = cachedValuesProvider.getLatestWeightEntry(),
-                    weightProgress = cachedValuesProvider.getWeightProgress()
+                    latestWeightEntry = latestWeightEntry,
+                    weightProgress = cachedValuesProvider.getWeightProgress(),
+                    weightPickerCurrentValue = latestWeightEntry?.value ?: 80.0
                 )
             }
         }
