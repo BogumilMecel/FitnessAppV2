@@ -38,7 +38,7 @@ interface UserDiaryItemsDao {
         offset: Int
     ): List<Recipe>
 
-    @Query("SELECT * from product WHERE (:userId IS NULL OR user_id = :userId) AND (:searchText IS NULL OR name LIKE '%' || :searchText || '%') ORDER BY utc_timestamp DESC LIMIT :limit OFFSET :offset")
+    @Query("SELECT * from product WHERE (:userId IS NULL OR user_id = :userId) AND (:searchText IS NULL OR name LIKE '%' || :searchText || '%') ORDER BY date_created DESC LIMIT :limit OFFSET :offset")
     fun getProducts(
         searchText: String?,
         userId: String?,
