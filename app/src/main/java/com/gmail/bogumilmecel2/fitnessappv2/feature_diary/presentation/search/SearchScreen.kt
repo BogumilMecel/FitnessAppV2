@@ -112,7 +112,7 @@ fun SearchScreen(
                                     viewModel.onEvent(SearchEvent.ClickedScanButton)
                                 },
                                 onBarcodeAddProductClicked = {
-
+                                    viewModel.onEvent(SearchEvent.ClickedNewProduct)
                                 }
                             )
                         }
