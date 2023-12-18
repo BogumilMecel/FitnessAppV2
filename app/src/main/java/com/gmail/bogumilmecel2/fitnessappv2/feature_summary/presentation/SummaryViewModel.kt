@@ -21,13 +21,14 @@ class SummaryViewModel @Inject constructor(
 ) : BaseViewModel<SummaryState, SummaryEvent>(state = SummaryState()) {
 
     val uiEvent = Channel<SummaryUiEvent>()
+    private var handlingWeightDialogsQuestion: Boolean = false
 
     override fun onEvent(event: SummaryEvent) {
         when (event) {
             is SummaryEvent.DismissedWeightPickerDialog -> {
                 viewModelScope.launch {
                     bottomBarStatusProvider.bottomBarEvent.send(BottomBarEvent.Show)
-                    if (_state.value.bottomSheetContent is SummaryBottomSheetContent.AskForDailyWeightDialogs) {
+                    if (_state.value.bottomSheetContent is SummaryBottomSheetContent.AskForDailyWeightDialogs && !handlingWeightDialogsQuestion) {
                         handleWeightDialogsAnswer(accepted = null)
                         _state.update {
                             it.copy(
@@ -93,15 +94,17 @@ class SummaryViewModel @Inject constructor(
     }
 
     private fun handleWeightDialogsAnswer(accepted: Boolean?) {
+        handlingWeightDialogsQuestion = true
         viewModelScope.launch {
             summaryUseCases.handleWeightDialogsQuestion(
                 accepted = accepted,
                 cachedValuesProvider = cachedValuesProvider
             ).handle(
-                finally = {
+                onError = {
                     uiEvent.send(SummaryUiEvent.HideBottomSheet)
                 }
             ) { shouldShowWeightPicker ->
+                uiEvent.send(SummaryUiEvent.HideBottomSheet)
                 if (shouldShowWeightPicker) {
                     delay(1000)
                     _state.update {
@@ -111,6 +114,7 @@ class SummaryViewModel @Inject constructor(
                     }
                     uiEvent.send(SummaryUiEvent.ShowBottomSheet)
                 }
+                handlingWeightDialogsQuestion = false
             }
         }
     }

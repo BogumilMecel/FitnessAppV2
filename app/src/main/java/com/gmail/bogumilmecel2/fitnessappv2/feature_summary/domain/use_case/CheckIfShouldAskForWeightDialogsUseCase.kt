@@ -9,14 +9,15 @@ class CheckIfShouldAskForWeightDialogsUseCase(
     private val weightRepository: WeightRepository
 ) {
     suspend operator fun invoke(cachedValuesProvider: CachedValuesProvider): Resource<Unit> {
+        val localLastTimeAskedForWeightDialogs = cachedValuesProvider.getLocalLastTimeAskedForWeightDialogs()
+
+        if (localLastTimeAskedForWeightDialogs == CustomDateUtils.getCurrentDateString()) return Resource.Error()
+
         val user = cachedValuesProvider.getUser()
 
-        if (user.weightDialogsAccepted == true) return Resource.Error()
-
-        val lastTimeAsked = cachedValuesProvider.getLastTimeAskedForWeightDialogs()
-
-        if (lastTimeAsked != null &&
-            (lastTimeAsked.lastTimeAsked == CustomDateUtils.getCurrentDateString() || lastTimeAsked.askedCount > 3)) return Resource.Error()
+        if (user.weightDialogs?.accepted == true) return Resource.Error()
+        if (user.weightDialogs?.lastTimeAsked == CustomDateUtils.getCurrentDateString()) return Resource.Error()
+        if ((user.weightDialogs?.askedCount ?: 1) > 3) return Resource.Error()
 
         return weightRepository.checkIfShouldAskForWeightDialogs()
     }
