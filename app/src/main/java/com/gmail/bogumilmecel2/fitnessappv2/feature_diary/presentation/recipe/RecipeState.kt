@@ -11,5 +11,6 @@ data class RecipeState(
     val isIngredientsListExpanded: Boolean = false,
     val isFavorite: Boolean = false,
     val recipePrice: RecipePrice? = null,
-    val servingPrice: Double? = null
+    val servingPrice: Double? = null,
+    val date: String
 )
