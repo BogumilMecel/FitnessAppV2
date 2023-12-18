@@ -5,6 +5,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.MeasurementUnit
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 import io.mockk.every
 
 object MockConstants {
@@ -45,6 +46,14 @@ object MockConstants {
         fun getSampleProduct() = Product(
             id = PRODUCT_ID_11,
             name = PRODUCT_NAME_1,
+            utcTimestamp = TIMESTAMP,
+            nutritionValues = getSampleNutritionValues(),
+            userId = USER_ID
+        )
+
+        fun getSampleRecipe() = Recipe(
+            id = RECIPE_ID_1,
+            name = RECIPE_NAME_1,
             utcTimestamp = TIMESTAMP,
             nutritionValues = getSampleNutritionValues(),
             userId = USER_ID
