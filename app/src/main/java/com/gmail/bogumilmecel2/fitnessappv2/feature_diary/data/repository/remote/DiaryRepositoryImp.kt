@@ -175,4 +175,10 @@ class DiaryRepositoryImp(
             userDiaryItemsDao.insertUserRecipes(userRecipes)
         }
     }
+
+    override suspend fun getLocalUserRecipes(): Resource<List<Recipe>> {
+        return handleRequest {
+            userDiaryItemsDao.getUserRecipes()
+        }
+    }
 }

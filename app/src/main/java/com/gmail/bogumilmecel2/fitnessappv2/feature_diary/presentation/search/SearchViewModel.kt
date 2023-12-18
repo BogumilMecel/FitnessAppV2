@@ -10,6 +10,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.destinations.ProductScreenDestinatio
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.RecipeScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.SearchScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductDiaryHistoryItem
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.SearchDiaryUseCases
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.presentation.ProductEntryData
@@ -25,15 +26,17 @@ import javax.inject.Inject
 class SearchViewModel @Inject constructor(
     private val searchDiaryUseCases: SearchDiaryUseCases,
     private val diaryRepository: DiaryRepository,
-    private val savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle,
 ) : BaseViewModel<SearchState, SearchEvent>(
     state = SearchState(
         mealName = SearchScreenDestination.argsFrom(savedStateHandle).mealName,
         date = SearchScreenDestination.argsFrom(savedStateHandle).dateTransferObject.displayedDate
     )
 ) {
-    private val dateTransferObject = SearchScreenDestination.argsFrom(savedStateHandle).dateTransferObject
+    private val dateTransferObject =
+        SearchScreenDestination.argsFrom(savedStateHandle).dateTransferObject
     private var productHistory = emptyList<ProductDiaryHistoryItem>()
+    private var userRecipes = emptyList<Recipe>()
 
     override fun onEvent(event: SearchEvent) {
         when (event) {
@@ -137,6 +140,31 @@ class SearchViewModel @Inject constructor(
                         )
                     )
                 )
+            }
+        }
+    }
+
+    fun initializeData() {
+        fetchUserRecipes()
+    }
+
+    private fun fetchUserRecipes() {
+        viewModelScope.launch(Dispatchers.IO) {
+            diaryRepository.getLocalUserRecipes().handle { recipes ->
+                userRecipes = recipes
+                _state.update {
+                    it.copy(
+                        myRecipesSearchItems = recipes.map { recipe ->
+                            searchDiaryUseCases.createSearchItemParamsFromRecipeUseCase(
+                                recipe = recipe,
+                                onClick = { onEvent(SearchEvent.ClickedRecipe(recipe)) },
+                                onLongClick = {
+                                    // TODO: Add on long click action to recipe
+                                }
+                            )
+                        }
+                    )
+                }
             }
         }
     }
