@@ -6,7 +6,9 @@ import android.content.SharedPreferences
 import androidx.room.Room
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
+import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 import com.gmail.bogumilmecel2.auth.ValidateAuthDataUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.FitnessAppDatabase
 import com.gmail.bogumilmecel2.fitnessappv2.common.data.AppDatabase
 import com.gmail.bogumilmecel2.fitnessappv2.common.data.connectivity.ConnectivityObserverService
 import com.gmail.bogumilmecel2.fitnessappv2.common.data.navigation.repository.TokenRepositoryImp
@@ -87,6 +89,17 @@ object AppModule {
             klass = AppDatabase::class.java,
             name = AppDatabase.DATABASE_NAME
         ).build()
+
+    @Singleton
+    @Provides
+    fun provideFitnessAppDatabase(@ApplicationContext context: Context): FitnessAppDatabase =
+        FitnessAppDatabase(
+            driver = AndroidSqliteDriver(
+                schema = FitnessAppDatabase.Schema,
+                context = context,
+                name = "fitness.app.db"
+            )
+        )
 
     @Singleton
     @Provides
