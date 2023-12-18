@@ -1,33 +1,38 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search.componens
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.Card
-import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
-import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.AquaBlue
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.DarkGreyElevation6
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.TextGrey
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SearchProductItem(
-    product:Product,
+    weight: Int,
+    unit: String,
+    name:String,
+    calories:Int,
     onItemClick:() -> Unit
 ) {
 
-    Card(
+    Box(
         modifier = Modifier
-            .fillMaxWidth(),
-        shape = RectangleShape,
-        elevation = 6.dp,
-        onClick = {
-            onItemClick()
-        }
+            .fillMaxWidth()
+            .background(DarkGreyElevation6)
+            .clickable {
+                onItemClick()
+            },
     ) {
         Row(
             modifier = Modifier
@@ -39,21 +44,21 @@ fun SearchProductItem(
 
             Column {
                 Text(
-                    text = product.name,
+                    text = name,
                     style = MaterialTheme.typography.body1
                 )
                 Text(
-                    text = "${product.containerWeight}${product.unit}",
+                    text = "${weight}${unit}",
                     style = MaterialTheme.typography.body2.copy(
-                        color = AquaBlue
+                        color = TextGrey
                     )
                 )
             }
 
             Text(
-                text = product.nutritionValues.calories.toString()+" kcal",
+                text = "$calories kcal",
                 style = MaterialTheme.typography.body2.copy(
-                    color = AquaBlue
+                    color = TextGrey
                 )
             )
 

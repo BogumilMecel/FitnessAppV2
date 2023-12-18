@@ -1,12 +1,23 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
+import androidx.compose.material.Card
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
@@ -23,20 +34,20 @@ import androidx.compose.ui.unit.dp
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.TextWhite
-import com.gmail.bodziowaty6978.fitnessappv2.common.util.extensions.round
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Price
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.ProductEvent
 
 @Composable
-fun ProductPriceSection(
+fun PriceSection(
     modifier: Modifier,
     price: Price?,
     nutritionValues: NutritionValues,
     unit: String,
     currency: String,
-    onEvent:(ProductEvent) -> Unit,
-    priceValue:String,
-    priceFor:String
+    priceValue: String,
+    priceFor: String,
+    onPriceValueEntered: (String) -> Unit,
+    onForEntered: (String) -> Unit,
+    onSubmitPriceClicked: () -> Unit
 ) {
     Card(
         modifier = modifier,
@@ -49,46 +60,15 @@ fun ProductPriceSection(
         ) {
             var text = stringResource(id = R.string.submit_new_price)
             var spacerHeight = 4.dp
-            if (price != null){
-                Text(
-                    text = stringResource(id = R.string.prices),
-                    style = MaterialTheme.typography.h3,
-                    modifier = Modifier
-                        .padding(top = 15.dp, start = 15.dp)
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                PriceRow(
-                    name = stringResource(id = R.string.price_for_100_kcal),
-                    value = (price.value / nutritionValues.calories.toDouble() * 100.0).round(2),
-                    currency = price.currency,
-                    index = 1
-                )
-
-                PriceRow(
-                    name = stringResource(id = R.string.price_for_100g_of_carbohydrates),
-                    value = (price.value / nutritionValues.carbohydrates * 100.0).round(2),
-                    currency = price.currency,
-                    index = 2
-                )
-
-                PriceRow(
-                    name = stringResource(id = R.string.price_for_100g_of_protein),
-                    value = (price.value / nutritionValues.protein * 100.0).round(2),
-                    currency = price.currency,
-                    index = 3
-                )
-
-                PriceRow(
-                    name = stringResource(id = R.string.price_for_100g_of_fat),
-                    value = (price.value / nutritionValues.fat * 100.0).round(2),
-                    currency = price.currency,
-                    index = 4
+            if (price != null) {
+                PriceRows(
+                    price = price,
+                    nutritionValues = nutritionValues
                 )
             } else {
                 spacerHeight = 16.dp
-                text = stringResource(id = R.string.no_one_has_entered_price_for_this_product_be_the_first_one_to_do_so)
+                text =
+                    stringResource(id = R.string.no_one_has_entered_price_for_this_product_be_the_first_one_to_do_so)
             }
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -123,7 +103,7 @@ fun ProductPriceSection(
                     BasicTextField(
                         value = priceValue,
                         onValueChange = {
-                            onEvent(ProductEvent.EnteredPriceValue(it))
+                            onPriceValueEntered(it)
                         },
                         modifier = Modifier
                             .width(80.dp)
@@ -153,7 +133,7 @@ fun ProductPriceSection(
                     BasicTextField(
                         value = priceFor,
                         onValueChange = {
-                            onEvent(ProductEvent.EnteredPriceFor(it))
+                            onForEntered(it)
                         },
                         modifier = Modifier
                             .width(80.dp)
@@ -178,7 +158,7 @@ fun ProductPriceSection(
 
                 IconButton(
                     onClick = {
-                        onEvent(ProductEvent.ClickedSubmitNewPrice)
+                        onSubmitPriceClicked()
                     },
                     modifier = Modifier
                         .clip(CircleShape)

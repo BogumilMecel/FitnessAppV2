@@ -5,6 +5,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Price
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.diary_entry.DiaryEntry
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 
 interface DiaryRepository {
     suspend fun getDiaryEntries(timestamp:Long, token:String): Resource<List<DiaryEntry>>
@@ -17,4 +18,5 @@ interface DiaryRepository {
     suspend fun saveNewProduct(product: Product):Resource<Product>
     suspend fun getCaloriesSum(date:String, token: String):Resource<Int>
     suspend fun addNewPrice(price: Price, productId:Int):Resource<Price>
+    suspend fun addNewRecipe(recipe: Recipe, token: String, timestamp: Long): Resource<Recipe>
 }

@@ -18,9 +18,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.singleton.CurrentDate
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.LightRed
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.ProductNameSection
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.ProductNutritionSection
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.ProductPriceSection
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.ProductMainSection
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.PriceSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.ProductTopSection
 
 
@@ -67,7 +66,6 @@ fun ProductScreen(
             )
         }
     ) {
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -76,36 +74,23 @@ fun ProductScreen(
                 mealName = state.mealName,
                 currentDate = CurrentDate.dateModel(LocalContext.current).valueToDisplay
                     ?: CurrentDate.dateModel(LocalContext.current).date,
-                onEvent = {
-                    viewModel.onEvent(it)
+                onBackArrowPressed = {
+                    viewModel.onEvent(ProductEvent.ClickedBackArrow)
                 }
             )
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            ProductNameSection(
-                currentWeight = state.weight,
+            ProductMainSection(
                 product = state.product,
-                onEvent = {
-                    viewModel.onEvent(it)
+                currentWeight = state.weight,
+                onWeightEntered = {
+                    viewModel.onEvent(ProductEvent.EnteredWeight(it))
                 },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 10.dp)
+                nutritionData = state.nutritionData
             )
 
-            Spacer(modifier = Modifier.height(20.dp))
-
-            ProductNutritionSection(
-                nutritionData = state.nutritionData,
-                modifier = Modifier
-                    .padding(horizontal = 10.dp)
-                    .fillMaxWidth()
-            )
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            ProductPriceSection(
+            PriceSection(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 10.dp),
@@ -113,11 +98,17 @@ fun ProductScreen(
                 nutritionValues = state.product.nutritionValues,
                 currency = "zł",
                 unit = state.product.unit,
-                onEvent = {
-                    viewModel.onEvent(it)
-                },
                 priceValue = state.priceValue,
-                priceFor = state.priceForValue
+                priceFor = state.priceForValue,
+                onForEntered = {
+                    viewModel.onEvent(ProductEvent.EnteredPriceFor(it))
+                },
+                onPriceValueEntered = {
+                    viewModel.onEvent(ProductEvent.EnteredPriceValue(it))
+                },
+                onSubmitPriceClicked = {
+                    viewModel.onEvent(ProductEvent.ClickedSubmitNewPrice)
+                }
             )
 
             Spacer(modifier = Modifier.height(20.dp))

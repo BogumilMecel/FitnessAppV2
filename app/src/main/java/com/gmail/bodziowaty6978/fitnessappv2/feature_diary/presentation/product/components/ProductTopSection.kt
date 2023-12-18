@@ -1,6 +1,9 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -18,7 +21,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.
 fun ProductTopSection(
     mealName: String,
     currentDate: String,
-    onEvent: (ProductEvent) -> Unit
+    onBackArrowPressed: () -> Unit
 ) {
 
     Box(
@@ -29,7 +32,7 @@ fun ProductTopSection(
 
         IconButton(
             onClick = {
-                onEvent(ProductEvent.ClickedBackArrow)
+                onBackArrowPressed()
             },
             modifier = Modifier
                 .align(Alignment.CenterStart)
@@ -58,23 +61,5 @@ fun ProductTopSection(
 
         }
 
-    }
-
-
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 20.dp)
-    ) {
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-
-
-        }
     }
 }

@@ -44,6 +44,7 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 fun NavHostGraph(
     navController: NavHostController = rememberNavController(),
     navigator: Navigator,
+//    startDestination: String = Screen.LoadingScreen.route,
 //    startDestination: String = Screen.NewProductScreen.route + "?mealName={mealName}&barcode={barcode}"
     startDestination: String = Screen.NewRecipeScreen.route
 ) {
@@ -171,7 +172,7 @@ fun NavHostGraph(
                 }
 
                 composable(
-                    route = Screen.ProductScreen.route + "?mealName={mealName}" + "&product={product}",
+                    route = Screen.ProductScreen.route + "?mealName={mealName}" + "&product={product}" + "&recipe={recipe}",
                     arguments = listOf(
                         navArgument(
                             name = "mealName"
@@ -182,6 +183,13 @@ fun NavHostGraph(
                         navArgument(
                             name = "product"
                         ) {
+                            type = NavType.StringType
+                            defaultValue = null
+                            nullable = true
+                        },
+                        navArgument(
+                            name = "recipe"
+                        ){
                             type = NavType.StringType
                             defaultValue = null
                             nullable = true

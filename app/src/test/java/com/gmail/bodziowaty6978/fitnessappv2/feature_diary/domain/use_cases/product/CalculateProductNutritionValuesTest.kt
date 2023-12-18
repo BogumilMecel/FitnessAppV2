@@ -5,18 +5,18 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
 import org.junit.Before
 import org.junit.Test
 
-internal class CalculateNutritionValuesTest{
+internal class CalculateProductNutritionValuesTest{
 
-    lateinit var calculateNutritionValues: CalculateNutritionValues
+    lateinit var calculateProductNutritionValues: CalculateProductNutritionValues
 
     @Before
     fun setUp(){
-        calculateNutritionValues = CalculateNutritionValues()
+        calculateProductNutritionValues = CalculateProductNutritionValues()
     }
 
     @Test
     fun randomValues1_CorrectNewValues(){
-        val newValues = calculateNutritionValues(
+        val newValues = calculateProductNutritionValues(
             weight = 100,
             product = Product(
                 nutritionValues = NutritionValues(
@@ -35,7 +35,7 @@ internal class CalculateNutritionValuesTest{
 
     @Test
     fun randomValues2_CorrectNewValues(){
-        val newValues = calculateNutritionValues(
+        val newValues = calculateProductNutritionValues(
             weight = 170,
             product = Product(
                 nutritionValues = NutritionValues(
@@ -54,7 +54,7 @@ internal class CalculateNutritionValuesTest{
 
     @Test
     fun randomValues3_CorrectNewValues(){
-        val newValues = calculateNutritionValues(
+        val newValues = calculateProductNutritionValues(
             weight = 60,
             product = Product(
                 nutritionValues = NutritionValues(

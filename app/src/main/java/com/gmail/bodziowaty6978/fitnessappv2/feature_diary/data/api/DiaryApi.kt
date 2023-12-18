@@ -3,9 +3,10 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.data.api
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Price
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.diary_entry.DiaryEntry
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 import retrofit2.http.*
 
-interface ProductApi {
+interface DiaryApi {
 
     @GET("/diaryEntries")
     suspend fun getDiaryEntries(
@@ -56,4 +57,11 @@ interface ProductApi {
         @Body price: Price,
         @Path("productId") productId:Int
     ): Price
+
+    @POST("/recipes")
+    suspend fun addNewRecipe(
+        @Body recipe: Recipe,
+        @Header("Authorization") token:String,
+        @Query("timestamp") timestamp:Long,
+    ) : Recipe
 }

@@ -1,7 +1,14 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
@@ -23,14 +30,13 @@ import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.BlueVi
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.TextGrey
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.TextWhite
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.ProductEvent
 
 @Composable
 fun ProductNameSection(
     product: Product,
-    onEvent:(ProductEvent) -> Unit,
-    currentWeight:String,
-    modifier: Modifier
+    currentWeight: String,
+    modifier: Modifier,
+    onWeightEntered: (String) -> Unit
 ) {
     Card(
         modifier = modifier,
@@ -46,12 +52,9 @@ fun ProductNameSection(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(15.dp),
-                verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-
                 Column {
-
                     Text(
                         text = stringResource(id = R.string.product_name),
                         style = MaterialTheme.typography.h3
@@ -72,7 +75,6 @@ fun ProductNameSection(
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-
                     Card(
                         elevation = 10.dp,
                         shape = RoundedCornerShape(25)
@@ -80,7 +82,7 @@ fun ProductNameSection(
                         BasicTextField(
                             value = currentWeight,
                             onValueChange = {
-                                onEvent(ProductEvent.EnteredWeight(it, product))
+                                onWeightEntered(it)
                             },
                             modifier = Modifier
                                 .width(80.dp)
@@ -118,10 +120,10 @@ fun ProductNameSection(
                     .padding(bottom = 15.dp)
             ) {
 
-                for(i in 50..200 step 50){
+                for (i in 50..200 step 50) {
                     OutlinedButton(
                         onClick = {
-                            onEvent(ProductEvent.EnteredWeight(value = i.toString(), product = product))
+                            onWeightEntered(i.toString())
                         },
                         border = BorderStroke(1.dp, BlueViolet3),
                         shape = RoundedCornerShape(25),

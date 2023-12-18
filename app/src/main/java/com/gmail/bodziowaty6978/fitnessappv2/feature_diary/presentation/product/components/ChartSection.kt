@@ -1,6 +1,8 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components
 
 import android.graphics.Color
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -18,6 +20,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.Orange
 
 @Composable
 fun ChartSection(
+    modifier: Modifier,
     nutritionData: NutritionData,
 ) {
 
@@ -32,70 +35,75 @@ fun ChartSection(
         backgroundColor,
     )
 
-    AndroidView(
-        modifier = Modifier.size(100.dp),
-        factory = { context ->
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.Center
+    ) {
+        AndroidView(
+            modifier = Modifier.size(100.dp),
+            factory = { context ->
 
-        PieChart(context).apply {
-            setBackgroundColor(backgroundColor)
-            setUsePercentValues(true)
-            description.isEnabled = false
-            dragDecelerationFrictionCoef = 0.95f
+                PieChart(context).apply {
+                    setBackgroundColor(backgroundColor)
+                    setUsePercentValues(true)
+                    description.isEnabled = false
+                    dragDecelerationFrictionCoef = 0.95f
 
-            extraRightOffset = 5F
+                    extraRightOffset = 5F
 
-            isDrawHoleEnabled = true
+                    isDrawHoleEnabled = true
 
-            minAngleForSlices = 5F
+                    minAngleForSlices = 5F
 
-            setTransparentCircleColor(Color.WHITE)
-            setTransparentCircleAlpha(110)
+                    setTransparentCircleColor(Color.WHITE)
+                    setTransparentCircleAlpha(110)
 
-            isClickable = false
-            isFocusable = false
-            isContextClickable = false
+                    isClickable = false
+                    isFocusable = false
+                    isContextClickable = false
 
-            holeRadius = 82f
-            setHoleColor(backgroundColor)
+                    holeRadius = 82f
+                    setHoleColor(backgroundColor)
 
-            setCenterTextColor(Color.WHITE)
-            setCenterTextSize(16F)
-            transparentCircleRadius = 0F
-            centerTextRadiusPercent = 90F
+                    setCenterTextColor(Color.WHITE)
+                    setCenterTextSize(16F)
+                    transparentCircleRadius = 0F
+                    centerTextRadiusPercent = 90F
 
-            setDrawCenterText(true)
+                    setDrawCenterText(true)
 
-            setEntryLabelColor(Color.WHITE)
-            setEntryLabelTextSize(0f)
+                    setEntryLabelColor(Color.WHITE)
+                    setEntryLabelTextSize(0f)
 
-            val legend = this.legend
-            legend.apply {
-                isEnabled = false
-                textColor = Color.WHITE
-                textSize = 10F
+                    val legend = this.legend
+                    legend.apply {
+                        isEnabled = false
+                        textColor = Color.WHITE
+                        textSize = 10F
 
+                    }
+
+                }
+            },
+            update = {
+                val data = nutritionData.pieEntries
+
+                val calories = nutritionData.nutritionValues.calories
+
+                val dataSet = PieDataSet(data, "")
+                dataSet.colors = colors
+
+                val pieData = PieData(dataSet).apply {
+                    setDrawValues(false)
+                    setValueFormatter(PercentFormatter(it))
+                    setValueTextColor(Color.WHITE)
+                    setValueTextSize(10f)
+                }
+
+                it.centerText = "$calories kcal"
+                it.data = pieData
+                it.invalidate()
             }
-
-        }
-    },
-        update = {
-            val data = nutritionData.pieEntries
-
-            val calories = nutritionData.nutritionValues.calories
-
-            val dataSet = PieDataSet(data, "")
-            dataSet.colors = colors
-
-            val pieData = PieData(dataSet).apply {
-                setDrawValues(false)
-                setValueFormatter(PercentFormatter(it))
-                setValueTextColor(Color.WHITE)
-                setValueTextSize(10f)
-            }
-
-            it.centerText = "$calories kcal"
-            it.data = pieData
-            it.invalidate()
-        }
-    )
+        )
+    }
 }

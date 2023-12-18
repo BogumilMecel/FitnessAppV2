@@ -15,6 +15,10 @@ data class Product(
     val price: Price? = null
 )
 
+fun Product.calculateCalories(weight: Int): Int{
+    return ((nutritionValues.calories).toDouble()/100.0*weight.toDouble()).toInt()
+}
+
 
 
 

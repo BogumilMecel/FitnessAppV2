@@ -135,15 +135,16 @@
 
 <!--    recipe-->
     <string name="add_recipe">Create recipe</string>
+    <string name="recipe_name">Recipe name</string>
     <string name="filter_recipes">Filter recipes</string>
-
     <string name="products">Products</string>
     <string name="recipes">Recipes</string>
-    <string name="recipe_name">Recipe name</string>
     <string name="add_image">Add image</string>
     <string name="time">Time</string>
     <string name="difficulty">Difficulty</string>
     <string name="servings">Servings</string>
+    <string name="empty_recipe_ingredients">Please make sure there are at least 2 ingredients in your recipe.</string>
+    <string name="bad_recipe_name">Please make sure your recipe\'s name is at least 4 characters long</string>
 
 
     <string name="sedentary">Sedentary</string>
