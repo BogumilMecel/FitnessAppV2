@@ -27,28 +27,28 @@ class GetRecipesAndSaveOfflineUseCaseTest : BaseTest() {
     }
 
     @Test
-    fun `Check if offline diary repository returns resource error when getting latest product, resource error is returned`() =
+    fun `Check if offline diary repository returns resource error when getting latest recipe, resource error is returned`() =
         runTest {
             mockData(getOfflineRecipesResource = Resource.Error())
             callTestedMethod().assertIsError()
         }
 
     @Test
-    fun `Check if diary repository returns error when getting products, resource error is returned`() =
+    fun `Check if diary repository returns error when getting recipes, resource error is returned`() =
         runTest {
             mockData(getOnlineRecipesResource = Resource.Error())
             callTestedMethod().assertIsError()
         }
 
     @Test
-    fun `Check if offline diary repository returns resource error when inserting products, resource error is returned`() =
+    fun `Check if offline diary repository returns resource error when inserting recipes, resource error is returned`() =
         runTest {
             mockData(insertingResource = Resource.Error())
             callTestedMethod().assertIsError()
         }
 
     @Test
-    fun `Check if offline diary repository returns resource success when inserting products, resource success is returned`() =
+    fun `Check if offline diary repository returns resource success when inserting recipes, resource success is returned`() =
         runTest {
             mockData()
             callTestedMethod().assertIsSuccess()
