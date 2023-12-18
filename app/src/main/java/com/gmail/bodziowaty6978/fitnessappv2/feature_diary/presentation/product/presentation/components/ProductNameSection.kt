@@ -24,8 +24,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.gmail.bodziowaty6978.fitnessappv2.R
-import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.CustomBasicTextField
-import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.DefaultCardBackground
+import com.gmail.bodziowaty6978.fitnessappv2.components.CustomBasicTextField
+import com.gmail.bodziowaty6978.fitnessappv2.components.DefaultCardBackground
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.BlueViolet3
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.DarkGreyElevation
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.TextGrey

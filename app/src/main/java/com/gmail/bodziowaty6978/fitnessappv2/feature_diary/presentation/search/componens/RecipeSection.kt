@@ -18,7 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
-import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.DefaultCardBackground
+import com.gmail.bodziowaty6978.fitnessappv2.components.DefaultCardBackground
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.HeightSpacer
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.TextGrey
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.Recipe

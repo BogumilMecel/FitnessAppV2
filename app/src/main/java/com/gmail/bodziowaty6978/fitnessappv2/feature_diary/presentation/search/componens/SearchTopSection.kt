@@ -13,8 +13,8 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.gmail.bodziowaty6978.fitnessappv2.R
-import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.BackArrow
-import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.CustomBasicTextField
+import com.gmail.bodziowaty6978.fitnessappv2.components.BackArrow
+import com.gmail.bodziowaty6978.fitnessappv2.components.CustomBasicTextField
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.DarkGreyElevation1
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.TextGrey
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.TextWhite

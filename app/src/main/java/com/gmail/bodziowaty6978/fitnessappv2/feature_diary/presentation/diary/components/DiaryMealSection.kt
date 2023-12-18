@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.DiaryItem
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValues
-import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.DefaultCardBackground
+import com.gmail.bodziowaty6978.fitnessappv2.components.DefaultCardBackground
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.OrangeYellow1
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.MealName
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.diary.DiaryEvent

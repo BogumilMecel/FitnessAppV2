@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bodziowaty6978.fitnessappv2.R
-import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.BackArrow
+import com.gmail.bodziowaty6978.fitnessappv2.components.BackArrow
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_recipe.components.RecipeSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_recipe.components.SearchForProductSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.presentation.components.ProductMainSection

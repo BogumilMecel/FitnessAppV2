@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.gmail.bodziowaty6978.fitnessappv2.R
-import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.DefaultCardBackground
+import com.gmail.bodziowaty6978.fitnessappv2.components.DefaultCardBackground
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.PieChartWithMiddleText
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.domain.model.NutritionData
 

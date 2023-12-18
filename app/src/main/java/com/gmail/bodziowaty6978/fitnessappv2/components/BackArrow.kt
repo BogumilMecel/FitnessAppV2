@@ -1,4 +1,4 @@
-package com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components
+package com.gmail.bodziowaty6978.fitnessappv2.components
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -15,7 +15,6 @@ fun BackArrow(
     modifier: Modifier = Modifier,
     onBackArrowPressed:() -> Unit
 ) {
-
     IconButton(
         modifier = modifier,
         onClick = {
@@ -30,5 +29,4 @@ fun BackArrow(
                 .padding(4.dp)
         )
     }
-
 }

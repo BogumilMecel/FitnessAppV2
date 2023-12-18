@@ -28,7 +28,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.BackHandler
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.CustomButton
-import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.DefaultCardBackground
+import com.gmail.bodziowaty6978.fitnessappv2.components.DefaultCardBackground
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.PieChartWithMiddleText
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.BlueViolet3
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.LightGreen3

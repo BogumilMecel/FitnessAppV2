@@ -14,7 +14,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.CustomBasicTextField
+import com.gmail.bodziowaty6978.fitnessappv2.components.CustomBasicTextField
 
 @Composable
 fun TextQuestion(
