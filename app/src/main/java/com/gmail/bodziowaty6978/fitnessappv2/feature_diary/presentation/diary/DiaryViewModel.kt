@@ -18,8 +18,10 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.diar
 import com.gmail.bodziowaty6978.fitnessappv2.util.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -34,33 +36,29 @@ class DiaryViewModel @Inject constructor(
     private val getToken: GetToken
 ) : ViewModel() {
 
+    private val _errorState = Channel<String>()
+    val errorState = _errorState.receiveAsFlow()
 
-    private val _state = MutableStateFlow(
-        DiaryState(
-            meals = listOf(
-                Meal(
-                    mealName = resourceProvider.getString(R.string.breakfast),
-                    diaryEntries = emptyList()
-                ),
-                Meal(
-                    mealName = resourceProvider.getString(R.string.lunch),
-                    diaryEntries = emptyList()
-                ),
-                Meal(
-                    mealName = resourceProvider.getString(R.string.dinner),
-                    diaryEntries = emptyList()
-                ),
-                Meal(
-                    mealName = resourceProvider.getString(R.string.supper),
-                    diaryEntries = emptyList()
-                ),
-            ),
-        )
-    )
+    private val _state = MutableStateFlow(DiaryState())
     val state:StateFlow<DiaryState> = _state
 
     init{
+        initMeals()
         getDiaryEntries()
+    }
+
+    private fun initMeals(){
+        val mealNames = resourceProvider.getStringArray(R.array.meal_names)
+        _state.update {
+            it.copy(
+                meals = mealNames.map {mealName ->
+                    Meal(
+                        mealName = mealName,
+                        diaryEntries = emptyList()
+                    )
+                }
+            )
+        }
     }
 
     fun onEvent(event: DiaryEvent) {
@@ -102,7 +100,7 @@ class DiaryViewModel @Inject constructor(
                     viewModelScope.launch(Dispatchers.IO) {
                         val result = deleteDiaryEntry(diaryEntry.id)
                         if (result is CustomResult.Error) {
-                            onError(result.message)
+                            _errorState.send(result.message)
                         } else {
                             _state.update {
                                 it.copy(
@@ -137,8 +135,6 @@ class DiaryViewModel @Inject constructor(
                 timestamp = currentDate.timestamp,
                 mealNames = resourceProvider.getStringArray(R.array.meal_names).toList()
             )
-            Log.e(TAG, resource.toString())
-
             when (resource) {
                 is Resource.Success -> {
                     val data = resource.data
@@ -151,23 +147,12 @@ class DiaryViewModel @Inject constructor(
                     }
                 }
                 is Resource.Error -> {
-                    onError(resource.uiText)
+                    resource.uiText?.let {error ->
+                        _errorState.send(error)
+                    }
+
                 }
             }
-        }
-    }
-
-    private fun onError(errorMessage: String?) {
-        _state.update {
-            it.copy(
-                errorMessage = errorMessage
-            )
-        }
-
-        _state.update {
-            it.copy(
-                lastErrorMessage = errorMessage
-            )
         }
     }
 }

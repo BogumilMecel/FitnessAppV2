@@ -62,13 +62,9 @@ fun SearchScreen(
         }
     }
 
-    LaunchedEffect(key1 = state) {
-        viewModel.searchState.collect {
-            it.errorMessage?.let { error ->
-                if (error != state.lastErrorMessage) {
-                    scaffoldState.snackbarHostState.showSnackbar(error)
-                }
-            }
+    LaunchedEffect(key1 = true) {
+        viewModel.errorState.collect {error ->
+            scaffoldState.snackbarHostState.showSnackbar(error)
         }
     }
 

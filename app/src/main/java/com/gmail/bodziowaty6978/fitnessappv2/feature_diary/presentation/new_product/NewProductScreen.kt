@@ -17,13 +17,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.BackArrow
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.BackHandler
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.diary.components.HorizontalProgressIndicator
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_product.components.BarcodeSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_product.components.ContainerWeightSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_product.components.NutritionSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_product.components.TextFieldSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.shared.ScannerSection
-import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun NewProductScreen(
@@ -33,12 +31,8 @@ fun NewProductScreen(
     val scaffoldState = rememberScaffoldState()
 
     LaunchedEffect(key1 = true) {
-        viewModel.state.collectLatest {
-            it.errorMessage?.let { message ->
-                if (message != state.lastErrorMessage) {
-                    scaffoldState.snackbarHostState.showSnackbar(message)
-                }
-            }
+        viewModel.errorState.collect {
+            scaffoldState.snackbarHostState.showSnackbar(it)
         }
     }
 
@@ -54,19 +48,17 @@ fun NewProductScreen(
         Scaffold(
             scaffoldState = scaffoldState,
             floatingActionButton = {
-                if (!state.isLoading) {
-                    FloatingActionButton(
-                        onClick = {
+                FloatingActionButton(
+                    onClick = {
+                        if (!state.isLoading) {
                             viewModel.onEvent(NewProductEvent.ClickedSaveButton)
                         }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Save,
-                            contentDescription = "Save"
-                        )
                     }
-                } else {
-                    HorizontalProgressIndicator()
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Save,
+                        contentDescription = "Save"
+                    )
                 }
             }
         ) {

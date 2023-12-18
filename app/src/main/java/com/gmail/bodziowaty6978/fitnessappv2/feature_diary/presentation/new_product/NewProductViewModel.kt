@@ -14,8 +14,10 @@ import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.new_product.SaveNewProduct
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -36,8 +38,12 @@ class NewProductViewModel @Inject constructor(
     )
     val state: StateFlow<NewProductState> = _state
 
+    private val _errorState = Channel<String>()
+    val errorState = _errorState.receiveAsFlow()
+
     init{
-        savedStateHandle.get<String>("barcode")?.let { barcode ->
+        val barcode = savedStateHandle.get<String>("barcode")
+        if (barcode!=null&&barcode!="null"){
             _state.update {
                 it.copy(
                     barcode = barcode
@@ -174,13 +180,22 @@ class NewProductViewModel @Inject constructor(
                     )
 
                     if(resource is Resource.Error){
-                        onError(resource.uiText)
+                        if (resource.uiText != null) {
+                            _errorState.send(resource.uiText)
+                        }
                     }else{
                         savedStateHandle.get<String>("mealName")?.let {
-//                            navigator.navigate(
-//                                NavigationActions.NewProductScreen.newProductToProduct(it, Pr)
-//                            )
+                            resource.data?.let { product ->
+                                navigator.navigate(
+                                    NavigationActions.NewProductScreen.newProductToProduct(it, product)
+                                )
+                            }
                         }
+                    }
+                    _state.update {
+                        it.copy(
+                            isLoading = false
+                        )
                     }
                 }
             }
@@ -208,20 +223,4 @@ class NewProductViewModel @Inject constructor(
             }
         }
     }
-
-    private fun onError(message:String?){
-        _state.update {
-            it.copy(
-                isLoading = false,
-                errorMessage = message
-            )
-        }
-
-        _state.update {
-            it.copy(
-                lastErrorMessage = message
-            )
-        }
-    }
-
 }

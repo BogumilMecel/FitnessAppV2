@@ -11,8 +11,10 @@ import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.search.SearchDiaryUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -24,6 +26,9 @@ class SearchViewModel @Inject constructor(
     private val resourceProvider: ResourceProvider,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
+
+    private val _errorState = Channel<String>()
+    val errorState = _errorState.receiveAsFlow()
 
     private val _searchState = MutableStateFlow<SearchState>(SearchState())
     val searchState: StateFlow<SearchState> = _searchState
@@ -99,6 +104,7 @@ class SearchViewModel @Inject constructor(
                     )
                 }?: onError(resourceProvider.getString(R.string.unknown_error))
 
+
             }
             is SearchEvent.ClickedScanButton -> {
                 _searchState.update {
@@ -130,13 +136,13 @@ class SearchViewModel @Inject constructor(
                         }
                     } else {
                         savedStateHandle.get<String>("mealName")?.let { mealName ->
-                            resource.data?.let { productWithId ->
-//                                navigator.navigate(
-//                                    NavigationActions.SearchScreen.searchToProduct(
-//                                        productWithId = productWithId,
-//                                        mealName = mealName
-//                                    )
-//                                )
+                            resource.data?.let { product ->
+                                navigator.navigate(
+                                    NavigationActions.SearchScreen.searchToProduct(
+                                        product = product,
+                                        mealName = mealName,
+                                    )
+                                )
                             } ?: onError(resourceProvider.getString(R.string.unknown_error))
                         } ?: onError(resourceProvider.getString(R.string.unknown_error))
                     }
@@ -164,16 +170,10 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun onError(errorMessage: String?) {
-        _searchState.update {
-            it.copy(
-                isLoading = false,
-                errorMessage = errorMessage
-            )
-        }
-        _searchState.update {
-            it.copy(
-                lastErrorMessage = errorMessage
-            )
+        if (errorMessage != null) {
+            viewModelScope.launch {
+                _errorState.send(errorMessage)
+            }
         }
     }
 }
