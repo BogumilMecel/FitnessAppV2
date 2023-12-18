@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.UtcOffset
 import kotlinx.datetime.toInstant
@@ -25,7 +26,8 @@ class RealDateProvider : DateProvider {
     }
 
     private val _currentDate: MutableStateFlow<Long> = MutableStateFlow(
-        Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).toInstant(UtcOffset.ZERO).toEpochMilliseconds()
+        Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+            .toInstant(UtcOffset.ZERO).toEpochMilliseconds()
     )
     override val currentDate: StateFlow<Long> = _currentDate
 
@@ -35,12 +37,15 @@ class RealDateProvider : DateProvider {
                 isToday() -> {
                     resourceProvider.getString(R.string.today)
                 }
+
                 isYesterday() -> {
                     resourceProvider.getString(R.string.yesterday)
                 }
+
                 isTomorrow() -> {
                     resourceProvider.getString(R.string.tomorrow)
                 }
+
                 else -> {
                     Locale.getDefault().getCorrectFormat().format(
                         Date(_currentDate.value)
@@ -49,6 +54,9 @@ class RealDateProvider : DateProvider {
             }
         }
     }
+
+    override fun getLocalDateString() = Instant.fromEpochMilliseconds(_currentDate.value)
+        .toLocalDateTime(TimeZone.currentSystemDefault()).date.toString()
 
     override fun addDay() {
         _currentDate.update {
@@ -69,11 +77,14 @@ class RealDateProvider : DateProvider {
     private fun Long.isToday() = DateUtils.isToday(this)
 
     private fun Locale.getCorrectFormat(): SimpleDateFormat {
-        val pattern = when(country) {
+        val pattern = when (country) {
             "US" -> US_DATE_PATTERN
             else -> EU_DATE_PATTERN
         }
 
-        return SimpleDateFormat(pattern, this)
+        return SimpleDateFormat(
+            pattern,
+            this
+        )
     }
 }
