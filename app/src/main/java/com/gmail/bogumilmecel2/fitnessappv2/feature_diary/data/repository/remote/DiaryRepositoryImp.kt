@@ -3,7 +3,6 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.data.repository.remot
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.Currency
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseRepository
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.RealResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.data.api.DiaryApi
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.DeleteDiaryEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.DiaryEntriesResponse
@@ -23,8 +22,8 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.Diar
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.RecipePriceRequest
 
 class DiaryRepositoryImp(
-    private val diaryApi: DiaryApi, private val realResourceProvider: RealResourceProvider
-) : DiaryRepository, BaseRepository(realResourceProvider) {
+    private val diaryApi: DiaryApi
+) : DiaryRepository, BaseRepository() {
 
     override suspend fun getDiaryEntries(date: String): Resource<DiaryEntriesResponse> {
         return handleRequest {
