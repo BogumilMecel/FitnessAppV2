@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
 data class Product(
     val id:String = "",
     val name: String = "",
-    val containerWeight: Int = 0,
+    val containerWeight: Int? = null,
     val timestamp:Long = System.currentTimeMillis(),
     val nutritionValuesIn: NutritionValuesIn = NutritionValuesIn.HUNDRED_GRAMS,
     val measurementUnit: MeasurementUnit = MeasurementUnit.GRAMS,
