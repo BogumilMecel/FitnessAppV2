@@ -107,7 +107,9 @@ fun SearchTopSection(
                 selected = pagerState.currentPage == 0,
                 onClick = {
                     onEvent(SearchEvent.ClickedProductsTab)
-                    scope.launch { pagerState.scrollToPage(0) }
+                    scope.launch {
+                        pagerState.animateScrollToPage(0)
+                    }
                 }
             )
 
@@ -123,7 +125,9 @@ fun SearchTopSection(
                 selected = pagerState.currentPage == 1,
                 onClick = {
                     onEvent(SearchEvent.ClickedRecipesTab)
-                    scope.launch { pagerState.scrollToPage(1) }
+                    scope.launch {
+                        pagerState.animateScrollToPage(1)
+                    }
                 }
             )
         }
