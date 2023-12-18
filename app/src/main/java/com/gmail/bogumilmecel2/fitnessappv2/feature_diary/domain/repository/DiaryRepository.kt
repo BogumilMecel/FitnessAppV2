@@ -35,8 +35,8 @@ interface DiaryRepository {
     suspend fun getRecipe(recipeId: String): Resource<Recipe?>
     suspend fun deleteDiaryEntry(deleteDiaryEntryRequest: DeleteDiaryEntryRequest): Resource<Unit>
     suspend fun deleteOfflineDiaryEntry(diaryItem: DiaryItem): Resource<Unit>
-    suspend fun editProductDiaryEntry(productDiaryEntry: ProductDiaryEntry): Resource<Unit>
-    suspend fun editRecipeDiaryEntry(recipeDiaryEntry: RecipeDiaryEntry): Resource<Unit>
+    suspend fun editProductDiaryEntry(productDiaryEntry: ProductDiaryEntry): Resource<ProductDiaryEntry>
+    suspend fun editRecipeDiaryEntry(recipeDiaryEntry: RecipeDiaryEntry): Resource<RecipeDiaryEntry>
     suspend fun saveNewProduct(newProductRequest: NewProductRequest): Resource<Product>
     suspend fun getProduct(productId: String): Resource<Product?>
     suspend fun getCaloriesSum(date: String): Resource<Int>
