@@ -145,7 +145,7 @@
 <!--    Summary weight-->
     <string name="weight">Weight</string>
 
-    <string name="account_daily_weight_description">We will ask you about your weight automatically everyday when you log into the app for the first time a day</string>
+    <string name="account_daily_weight_description">You will be automatically asked about your weight every time you log into the app for the first time each day</string>
 
     <!--    recipe-->
     <string name="add_recipe">Create recipe</string>
