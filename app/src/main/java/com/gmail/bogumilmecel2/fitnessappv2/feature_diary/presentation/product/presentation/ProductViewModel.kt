@@ -75,7 +75,7 @@ class ProductViewModel @Inject constructor(
                                     product = entryData.product,
                                     mealName = entryData.mealName,
                                     weight = weight.toIntOrNull(),
-                                    dateModel = CurrentDate.dateModel(realResourceProvider = realResourceProvider)
+                                    dateModel = CurrentDate.dateModel(resourceProvider = resourceProvider)
                                 ).handle {
                                     navigateWithPopUp(
                                         destination = DiaryScreenDestination
@@ -120,7 +120,7 @@ class ProductViewModel @Inject constructor(
                                     priceValue = ""
                                 )
                             }
-                            showSnackbarError(realResourceProvider.getString(R.string.successfully_submitted_new_price))
+                            showSnackbarError(resourceProvider.getString(R.string.successfully_submitted_new_price))
                         }
                     }
                 }

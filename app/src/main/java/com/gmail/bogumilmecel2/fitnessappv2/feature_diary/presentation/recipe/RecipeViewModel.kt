@@ -93,7 +93,7 @@ class RecipeViewModel @Inject constructor(
                     }
                     is RecipeEntryData.Adding -> {
                         postRecipeDiaryEntryUseCase(
-                            dateModel = CurrentDate.dateModel(realResourceProvider = realResourceProvider),
+                            dateModel = CurrentDate.dateModel(resourceProvider = resourceProvider),
                             mealName = _state.value.entryData.mealName,
                             recipe = _state.value.entryData.recipe,
                             servingsString = _state.value.servings

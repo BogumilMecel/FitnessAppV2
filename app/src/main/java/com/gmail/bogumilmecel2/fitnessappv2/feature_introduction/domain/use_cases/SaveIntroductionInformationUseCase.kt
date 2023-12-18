@@ -1,7 +1,7 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.use_cases
 
 import com.gmail.bogumilmecel2.fitnessappv2.R
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.RealResourceProvider
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.ResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.toValidDouble
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.toValidInt
@@ -16,7 +16,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.reposito
 
 class SaveIntroductionInformationUseCase(
     private val userDataRepository: UserDataRepository,
-    private val realResourceProvider: RealResourceProvider,
+    private val resourceProvider: ResourceProvider,
 ) {
 
     suspend operator fun invoke(
@@ -34,11 +34,11 @@ class SaveIntroductionInformationUseCase(
         val weightValue = weight.toValidDouble()
 
         return if (ageValue == null || (ageValue < 0 || ageValue > 100)) {
-            Resource.Error(uiText = realResourceProvider.getString(R.string.please_make_sure_you_have_entered_your_age))
+            Resource.Error(uiText = resourceProvider.getString(R.string.please_make_sure_you_have_entered_your_age))
         } else if (heightValue == null || (heightValue < 0 || heightValue > 250)) {
-            Resource.Error(uiText = realResourceProvider.getString(R.string.introduction_height_error))
+            Resource.Error(uiText = resourceProvider.getString(R.string.introduction_height_error))
         } else if (weightValue == null || (weightValue < 0 || weightValue > 500)) {
-            Resource.Error(uiText = realResourceProvider.getString(R.string.please_make_sure_you_have_entered_your_age))
+            Resource.Error(uiText = resourceProvider.getString(R.string.please_make_sure_you_have_entered_your_age))
         } else {
             userDataRepository.saveUserInformation(
                 introductionRequest = IntroductionRequest(

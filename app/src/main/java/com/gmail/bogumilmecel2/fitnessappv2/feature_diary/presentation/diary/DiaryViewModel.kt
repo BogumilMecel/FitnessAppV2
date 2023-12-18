@@ -180,7 +180,7 @@ class DiaryViewModel @Inject constructor(
     }
 
     private fun getDiaryEntries() {
-        val currentDate = CurrentDate.dateModel(realResourceProvider = realResourceProvider)
+        val currentDate = CurrentDate.dateModel(resourceProvider = resourceProvider)
         viewModelScope.launch(Dispatchers.IO) {
             getDiaryEntriesUseCase(date = currentDate.date).handle { diaryEntries ->
                 _state.update {

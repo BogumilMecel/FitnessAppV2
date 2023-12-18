@@ -1,7 +1,7 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases
 
 import com.gmail.bogumilmecel2.fitnessappv2.common.BaseTest
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.RealResourceProvider
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.DiaryEntriesResponse
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
@@ -30,7 +30,7 @@ internal class GetDiaryEntriesUseCaseTest: BaseTest() {
     private lateinit var getDiaryEntriesUseCase: GetDiaryEntriesUseCase
     private lateinit var sortDiaryEntriesUseCase: SortDiaryEntriesUseCase
     private val getDiaryEntriesListFromResponseUseCase = GetDiaryEntriesListFromResponseUseCase()
-    private lateinit var realResourceProvider: RealResourceProvider
+    private lateinit var resourceProvider: ResourceProvider
 
     @Before
     fun setUp() {
@@ -41,7 +41,7 @@ internal class GetDiaryEntriesUseCaseTest: BaseTest() {
             sortDiaryEntriesUseCase = sortDiaryEntriesUseCase,
             getDiaryEntriesListFromResponseUseCase = getDiaryEntriesListFromResponseUseCase
         )
-        realResourceProvider = RealResourceProvider(RuntimeEnvironment.getApplication())
+        resourceProvider = ResourceProvider(RuntimeEnvironment.getApplication())
     }
 
     @Test

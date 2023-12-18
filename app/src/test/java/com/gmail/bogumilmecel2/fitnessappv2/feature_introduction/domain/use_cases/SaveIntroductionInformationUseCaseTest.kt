@@ -1,7 +1,7 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.use_cases
 
 import com.gmail.bogumilmecel2.fitnessappv2.common.BaseTest
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.RealResourceProvider
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.model.User
 import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.model.ActivityLevel
@@ -37,7 +37,7 @@ internal class SaveIntroductionInformationUseCaseTest : BaseTest() {
         mockRepositoryResponse()
 
         saveIntroductionInformationUseCase = SaveIntroductionInformationUseCase(
-            realResourceProvider = RealResourceProvider(RuntimeEnvironment.getApplication()),
+            resourceProvider = ResourceProvider(RuntimeEnvironment.getApplication()),
             userDataRepository = mockUserDataRepository
         )
     }

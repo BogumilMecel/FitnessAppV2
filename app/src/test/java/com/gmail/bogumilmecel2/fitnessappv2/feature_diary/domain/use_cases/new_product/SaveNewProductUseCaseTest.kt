@@ -2,7 +2,7 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_
 
 import com.gmail.bogumilmecel2.fitnessappv2.common.BaseTest
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.MeasurementUnit
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.RealResourceProvider
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.product.NutritionValuesIn
@@ -41,7 +41,7 @@ internal class SaveNewProductUseCaseTest: BaseTest() {
         )
         saveNewProductUseCase = SaveNewProductUseCase(
             diaryRepository = mockDiaryRepository,
-            realResourceProvider = RealResourceProvider(RuntimeEnvironment.getApplication())
+            resourceProvider = ResourceProvider(RuntimeEnvironment.getApplication())
         )
     }
 

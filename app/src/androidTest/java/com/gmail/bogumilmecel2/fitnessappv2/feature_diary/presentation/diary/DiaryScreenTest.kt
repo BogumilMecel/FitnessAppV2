@@ -13,7 +13,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.di.AppModule
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.MainActivity
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.FitnessAppV2Theme
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.util.BottomBarScreen
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.RealResourceProvider
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.ResourceProvider
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
@@ -36,7 +36,7 @@ internal class DiaryScreenTest{
     @Before
     fun setUp(){
         hiltRule.inject()
-        mealNames = RealResourceProvider(composeRule.activity).getStringArray(R.array.meal_names)
+        mealNames = ResourceProvider(composeRule.activity).getStringArray(R.array.meal_names)
         composeRule.setContent {
             val navController = rememberNavController()
             FitnessAppV2Theme {
