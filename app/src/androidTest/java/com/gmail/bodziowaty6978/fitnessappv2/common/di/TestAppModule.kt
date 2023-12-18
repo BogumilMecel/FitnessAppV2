@@ -1,10 +1,10 @@
 package com.gmail.bodziowaty6978.fitnessappv2.common.di
 
 import android.app.Application
+import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.ComposeCustomNavigator
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.UserInformation
-import com.gmail.bodziowaty6978.fitnessappv2.common.navigation.navigator.ComposeCustomNavigator
-import com.gmail.bodziowaty6978.fitnessappv2.common.navigation.navigator.Navigator
+import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigator
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.domain.repository.AuthRepository
@@ -31,12 +31,15 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.use_cas
 import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
 import dagger.Provides
-import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import dagger.hilt.testing.TestInstallIn
 import javax.inject.Singleton
 
 @Module
-@InstallIn(SingletonComponent::class)
+@TestInstallIn(
+    components = [SingletonComponent::class],
+    replaces = [AppModule::class]
+)
 object TestAppModule {
 
     @Singleton

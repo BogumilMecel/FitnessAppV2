@@ -1,4 +1,4 @@
-package com.gmail.bodziowaty6978.fitnessappv2.common.navigation
+package com.gmail.bodziowaty6978.fitnessappv2.common.presentation.navigation
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -14,7 +14,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.gmail.bodziowaty6978.fitnessappv2.common.navigation.navigator.Navigator
+import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigator
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.BottomBar
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.util.BottomBarScreen
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.util.Screen

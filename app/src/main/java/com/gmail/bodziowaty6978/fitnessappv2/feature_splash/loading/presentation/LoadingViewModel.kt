@@ -2,8 +2,8 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_splash.loading.presentatio
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.gmail.bodziowaty6978.fitnessappv2.common.navigation.NavigationActions
-import com.gmail.bodziowaty6978.fitnessappv2.common.navigation.navigator.Navigator
+import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.NavigationActions
+import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigator
 import com.gmail.bodziowaty6978.fitnessappv2.util.TAG
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel

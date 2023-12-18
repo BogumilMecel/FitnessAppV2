@@ -4,11 +4,11 @@ import android.app.Application
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.room.Room
+import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.ComposeCustomNavigator
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.room.AppRoomDatabase
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.UserInformation
-import com.gmail.bodziowaty6978.fitnessappv2.common.navigation.navigator.ComposeCustomNavigator
-import com.gmail.bodziowaty6978.fitnessappv2.common.navigation.navigator.Navigator
+import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigator
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.datastoreInformation
 import com.gmail.bodziowaty6978.fitnessappv2.datastoreNutrition

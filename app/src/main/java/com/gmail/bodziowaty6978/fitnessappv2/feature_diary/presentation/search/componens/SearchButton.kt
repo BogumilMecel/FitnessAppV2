@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 fun SearchButton(
     text: String,
     icon: @Composable () -> Unit,
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     color: Color,
     onClick: () -> Unit
 ) {

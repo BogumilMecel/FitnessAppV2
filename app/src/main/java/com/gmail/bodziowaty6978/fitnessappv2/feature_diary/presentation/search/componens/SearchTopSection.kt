@@ -13,13 +13,12 @@ import androidx.compose.ui.unit.dp
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.BackArrow
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.DefaultTextField
-import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.TextFieldState
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.TextGrey
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search.SearchEvent
 
 @Composable
 fun SearchTopSection(
-    searchState:TextFieldState,
+    searchBarText:String,
     mealName: String,
     date: String,
     onEvent: (SearchEvent) -> Unit
@@ -61,9 +60,9 @@ fun SearchTopSection(
         Spacer(modifier = Modifier.height(5.dp))
 
         DefaultTextField(
-            value = searchState.text,
+            value = searchBarText,
             placeholder = {
-                Text(text = searchState.hint)
+                Text(text = stringResource(id = R.string.product_name))
             },
             modifier = Modifier
                 .fillMaxWidth()

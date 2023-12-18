@@ -75,6 +75,7 @@
     <string name="average_weight">Average weight</string>
     <string name="please_make_product_name_is_not_empty">Please make sure product name is not empty</string>
     <string name="please_make_sure_the_product_name_is_not_longer_than_24_characters_and_not_shorter_than_3">Please make sure the product name is not longer than 24 characters and not shorter than 3</string>
+    <string name="camera_permission_is_required_for_this_feature_to_be_available">Camera permission required for this feature to be available</string>
 
     <string-array name="units">
         <item>g</item>
