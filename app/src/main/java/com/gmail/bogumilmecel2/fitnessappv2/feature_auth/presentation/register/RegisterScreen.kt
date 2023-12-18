@@ -26,18 +26,22 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.Toolbar
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.ConfigureViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.TestTags
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.presentation.util.AuthEvent
 import com.gmail.bogumilmecel2.ui.components.base.CustomBasicTextField
 import com.gmail.bogumilmecel2.ui.components.base.CustomButton
 import com.gmail.bogumilmecel2.ui.components.base.IconVector
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Composable
 @Destination
 fun RegisterScreen(
-    viewModel: RegisterViewModel = hiltViewModel()
+    viewModel: RegisterViewModel = hiltViewModel(),
+    navigator: DestinationsNavigator
 ) {
+    viewModel.ConfigureViewModel(navigator = navigator)
     val state = viewModel.state.collectAsStateWithLifecycle().value
 
     Scaffold(

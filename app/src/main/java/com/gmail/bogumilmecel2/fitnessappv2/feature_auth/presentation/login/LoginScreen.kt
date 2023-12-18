@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.fitnessappv2.R
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.ConfigureViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.TestTags
 import com.gmail.bogumilmecel2.fitnessappv2.components.defaultRoundedCornerShape
 import com.gmail.bogumilmecel2.ui.components.base.CustomBasicTextField
@@ -29,12 +30,15 @@ import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
 import com.gmail.bogumilmecel2.ui.components.base.IconVector
 import com.gmail.bogumilmecel2.ui.components.complex.HeaderRow
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Composable
 @Destination
 fun LoginScreen(
-    viewModel: LoginViewModel = hiltViewModel()
+    viewModel: LoginViewModel = hiltViewModel(),
+    navigator: DestinationsNavigator
 ) {
+    viewModel.ConfigureViewModel(navigator = navigator)
     val state = viewModel.state.collectAsStateWithLifecycle().value
 
     Box(modifier = Modifier.fillMaxSize()) {

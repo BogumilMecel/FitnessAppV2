@@ -45,6 +45,7 @@ import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @OptIn(
     ExperimentalFoundationApi::class,
@@ -53,14 +54,15 @@ import com.ramcosta.composedestinations.annotation.Destination
 @Destination(navArgsDelegate = SearchNavArguments::class)
 @Composable
 fun SearchScreen(
-    viewModel: SearchViewModel = hiltViewModel()
+    viewModel: SearchViewModel = hiltViewModel(),
+    navigator: DestinationsNavigator
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle().value
     val pagerState = rememberPagerState(initialPage = SearchTab.EVERYTHING.ordinal) {
         SearchTab.values().size
     }
 
-    viewModel.ConfigureViewModel()
+    viewModel.ConfigureViewModel(navigator = navigator)
 
     LaunchedEffect(
         key1 = state.selectedTabIndex,

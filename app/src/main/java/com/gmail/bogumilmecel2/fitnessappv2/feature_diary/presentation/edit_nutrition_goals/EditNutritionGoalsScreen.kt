@@ -31,15 +31,17 @@ import com.gmail.bogumilmecel2.ui.components.base.CustomBasicTextField
 import com.gmail.bogumilmecel2.ui.components.complex.HeaderRow
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Destination
 @Composable
 fun EditNutritionGoalsScreen(
-    viewModel: EditNutritionGoalsViewModel = hiltViewModel()
+    viewModel: EditNutritionGoalsViewModel = hiltViewModel(),
+    navigator: DestinationsNavigator
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle().value
 
-    viewModel.ConfigureViewModel()
+    viewModel.ConfigureViewModel(navigator = navigator)
 
     Column(
         modifier = Modifier

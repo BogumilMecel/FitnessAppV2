@@ -2,11 +2,9 @@ package com.gmail.bogumilmecel2.fitnessappv2.common.di
 
 import android.app.Application
 import com.gmail.bogumilmecel2.fitnessappv2.common.MockCachedValuesProvider
-import com.gmail.bogumilmecel2.fitnessappv2.common.data.navigation.ComposeCustomNavigator
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.Currency
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.DiaryItem
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
-import com.gmail.bogumilmecel2.fitnessappv2.common.domain.navigation.Navigator
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.CachedValuesProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.DateHolder
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvider
@@ -73,9 +71,6 @@ import javax.inject.Singleton
     replaces = [AppModule::class]
 )
 object TestAppModule {
-    @Singleton
-    @Provides
-    fun provideNavigator(): Navigator = ComposeCustomNavigator()
 
     @Provides
     @Singleton

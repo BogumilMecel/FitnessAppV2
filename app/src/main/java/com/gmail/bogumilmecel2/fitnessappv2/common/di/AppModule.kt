@@ -7,9 +7,7 @@ import androidx.room.Room
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import com.gmail.bogumilmecel2.fitnessappv2.common.data.AppDatabase
-import com.gmail.bogumilmecel2.fitnessappv2.common.data.navigation.ComposeCustomNavigator
 import com.gmail.bogumilmecel2.fitnessappv2.common.data.navigation.repository.TokenRepositoryImp
-import com.gmail.bogumilmecel2.fitnessappv2.common.domain.navigation.Navigator
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.CachedValuesProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.DateHolder
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvider
@@ -59,9 +57,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
-    @Singleton
-    @Provides
-    fun provideNavigator(): Navigator = ComposeCustomNavigator()
 
     @Provides
     @Singleton

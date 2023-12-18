@@ -12,11 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import com.gmail.bogumilmecel2.fitnessappv2.NavGraphs
 import com.gmail.bogumilmecel2.fitnessappv2.common.data.singleton.TokenStatus
-import com.gmail.bogumilmecel2.fitnessappv2.common.domain.navigation.NavigationAction
-import com.gmail.bogumilmecel2.fitnessappv2.common.domain.navigation.Navigator
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.BottomBar
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.CustomSnackbar
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.ErrorUtils
@@ -41,8 +38,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 )
 @Composable
 fun NavHostGraph(
-    navController: NavHostController = rememberNavController(),
-    navigator: Navigator,
+    navController: NavHostController,
     startDestination: Destination = SplashScreenDestination,
 ) {
     val currentDestination = navController.currentBackStackEntryAsState().value?.destination?.route
@@ -55,40 +51,15 @@ fun NavHostGraph(
 
     val scaffoldState = rememberScaffoldState()
 
-    LaunchedEffect(true) {
-        navigator.navActions.receiveAsFlow().collect {
-            it?.let {
-                if (it.direction.route == "navigate_up") {
-                    navController.navigateUp()
-                } else if (it.navOptions.popUpToRoute == "pop_up" && navController.currentDestination?.route != null) {
-                    navController.navigate(it.direction.route) {
-                        navController.currentDestination?.route?.let { currentRoute ->
-                            popUpTo(currentRoute) {
-                                inclusive = true
-                            }
-                        }
-                    }
-                } else {
-                    navController.navigate(
-                        it.direction.route,
-                        it.navOptions
-                    )
-                }
-            }
-        }
-    }
-
     LaunchedEffect(key1 = true) {
         TokenStatus.tokenStatus.receiveAsFlow().collect {
             if (it == TokenStatus.Status.UNAVAILABLE) {
-                navigator.navigate(
-                    navAction = NavigationAction(
-                        direction = LoginScreenDestination,
-                        navOptions = NavOptions.Builder().setPopUpTo(
-                            0,
-                            true
-                        ).build()
-                    )
+                navController.navigate(
+                    route = LoginScreenDestination.route,
+                    navOptions = NavOptions.Builder().setPopUpTo(
+                        0,
+                        true
+                    ).build(),
                 )
             }
         }

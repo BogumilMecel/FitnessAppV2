@@ -4,16 +4,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavOptions
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.navigation.NavigationAction
-import com.gmail.bogumilmecel2.fitnessappv2.common.domain.navigation.Navigator
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.CachedValuesProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvider
 import com.ramcosta.composedestinations.spec.Direction
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-abstract class BaseViewModel<STATE : Any, EVENT : Any, NAV_ARGUMENTS: Any>(
+abstract class BaseViewModel<STATE : Any, EVENT : Any, NAV_ARGUMENTS : Any>(
     state: STATE,
     val navArguments: NAV_ARGUMENTS
 ) : ViewModel() {
@@ -21,8 +21,7 @@ abstract class BaseViewModel<STATE : Any, EVENT : Any, NAV_ARGUMENTS: Any>(
     protected val _state = MutableStateFlow(state)
     val state: StateFlow<STATE> = _state
 
-    @Inject
-    lateinit var navigator: Navigator
+    val navigationDestination: Channel<NavigationAction> = Channel()
 
     @Inject
     lateinit var cachedValuesProvider: CachedValuesProvider
@@ -70,15 +69,14 @@ abstract class BaseViewModel<STATE : Any, EVENT : Any, NAV_ARGUMENTS: Any>(
     protected fun navigateTo(
         destination: Direction,
         navOptions: NavOptions = NavOptions.Builder().build()
-    ) =
-        viewModelScope.launch {
-            navigator.navigate(
-                NavigationAction(
-                    direction = destination,
-                    navOptions = navOptions
-                )
+    ) = viewModelScope.launch {
+        navigationDestination.send(
+            NavigationAction(
+                direction = destination,
+                navOptions = navOptions
             )
-        }
+        )
+    }
 
     protected fun navigateUp() {
         navigateTo(

@@ -30,13 +30,17 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_produ
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.shared.ScannerSection
 import com.gmail.bogumilmecel2.ui.components.complex.HeaderRow
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Destination(navArgsDelegate = NewProductNavArguments::class)
 @Composable
-fun NewProductScreen(viewModel: NewProductViewModel = hiltViewModel()) {
+fun NewProductScreen(
+    viewModel: NewProductViewModel = hiltViewModel(),
+    navigator: DestinationsNavigator
+) {
     val state = viewModel.state.collectAsState().value
 
-    viewModel.ConfigureViewModel()
+    viewModel.ConfigureViewModel(navigator = navigator)
 
     BackHandler(
         enabled = state.isScannerVisible

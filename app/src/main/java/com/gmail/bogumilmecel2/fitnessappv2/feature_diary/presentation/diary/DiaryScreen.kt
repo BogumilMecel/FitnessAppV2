@@ -25,13 +25,17 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.diary.com
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.shared.ProductItemDialog
 import com.gmail.bogumilmecel2.ui.theme.LocalColor.BackgroundSecondary
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Destination
 @Composable
-fun DiaryScreen(viewModel: DiaryViewModel = hiltViewModel()) {
+fun DiaryScreen(
+    viewModel: DiaryViewModel = hiltViewModel(),
+    navigator: DestinationsNavigator
+) {
     val state = viewModel.state.collectAsStateWithLifecycle().value
 
-    viewModel.ConfigureViewModel()
+    viewModel.ConfigureViewModel(navigator = navigator)
 
     BackHandler {
         viewModel.onEvent(DiaryEvent.BackPressed)
