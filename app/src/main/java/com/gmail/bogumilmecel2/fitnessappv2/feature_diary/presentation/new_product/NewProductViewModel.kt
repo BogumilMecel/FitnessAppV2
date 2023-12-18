@@ -129,9 +129,10 @@ class NewProductViewModel @Inject constructor(
                         ).handle { product ->
                             navigateWithPopUp(
                                 destination = ProductScreenDestination(
-                                    mealName = _state.value.mealName,
-                                    product = product,
-                                    entryData = ProductEntryData.Adding,
+                                    entryData = ProductEntryData.Adding(
+                                        mealName = mealName,
+                                        product = product,
+                                    ),
                                 )
                             )
                         }

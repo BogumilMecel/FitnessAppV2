@@ -161,12 +161,7 @@ class DiaryViewModel @Inject constructor(
                 is ProductDiaryEntry -> {
                     navigateTo(
                         destination = ProductScreenDestination(
-                            mealName = mealName,
-                            product = product,
-                            entryData = ProductEntryData.Editing(
-                                weight = weight.toString(),
-                                productDiaryEntryId = id
-                            )
+                            entryData = ProductEntryData.Editing(productDiaryEntry = this)
                         )
                     )
                 }

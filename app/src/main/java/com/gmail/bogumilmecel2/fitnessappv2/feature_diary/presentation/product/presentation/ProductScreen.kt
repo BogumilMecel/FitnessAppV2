@@ -70,11 +70,11 @@ fun ProductScreen(
     ) { paddingValues ->
         if (state.isSubmitPriceDialogVisible) {
             SubmitNewPriceDialog(
-                productName = state.product.name,
+                productName = state.entryData.product.name,
                 price = state.priceValue,
                 forValue = state.priceForValue,
                 currency = Currency.PLN,
-                measurementUnit = state.product.measurementUnit,
+                measurementUnit = state.entryData.product.measurementUnit,
                 onEvent = {
                     viewModel.onEvent(it)
                 }
@@ -87,7 +87,7 @@ fun ProductScreen(
                 .padding(paddingValues.calculateBottomPadding())
         ) {
             HeaderRow(
-                middlePrimaryText = stringResource(id = state.mealName.getDisplayValue()),
+                middlePrimaryText = stringResource(id = state.entryData.mealName.getDisplayValue()),
                 middleSecondaryText = CurrentDate.dateModel(LocalContext.current).valueToDisplay
                     ?: CurrentDate.dateModel(LocalContext.current).date,
                 onBackPressed = {
@@ -99,7 +99,7 @@ fun ProductScreen(
 
             ProductMainSection(
                 modifier = Modifier.padding(horizontal = 15.dp),
-                product = state.product,
+                product = state.entryData.product,
                 currentWeight = state.weight,
                 onWeightEntered = {
                     viewModel.onEvent(ProductEvent.EnteredWeight(it))

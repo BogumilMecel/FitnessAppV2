@@ -126,6 +126,16 @@ object AppModule {
 
     @Singleton
     @Provides
+    fun provideEditProductDiaryEntryUseCase(
+        diaryRepository: DiaryRepository,
+        resourceProvider: ResourceProvider
+    ): EditProductDiaryEntryUseCase = EditProductDiaryEntryUseCase(
+        diaryRepository = diaryRepository,
+        resourceProvider = resourceProvider
+    )
+
+    @Singleton
+    @Provides
     fun provideCustomSharedPreferencesUtils(
         @ApplicationContext context: Context,
         gson: Gson
