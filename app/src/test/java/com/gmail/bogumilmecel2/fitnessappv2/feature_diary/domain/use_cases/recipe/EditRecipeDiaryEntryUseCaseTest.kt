@@ -3,7 +3,6 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.reci
 import com.gmail.bogumilmecel2.fitnessappv2.common.BaseMockkTest
 import com.gmail.bogumilmecel2.fitnessappv2.common.MockConstants
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.toValidInt
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.EditRecipeDiaryEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 import io.mockk.coEvery
@@ -59,8 +58,8 @@ class EditRecipeDiaryEntryUseCaseTest : BaseMockkTest() {
     fun `Check if new servings are the same as original, resource error is returned`() = runTest {
         assertIs<Resource.Error<Unit>>(
             callTestedMethod(
-                newServings = MockConstants.Diary.CORRECT_RECIPE_SERVINGS_2,
-                originalServings = MockConstants.Diary.CORRECT_RECIPE_SERVINGS_2
+                newServings = MockConstants.Diary.CORRECT_RECIPE_SERVINGS_3,
+                originalServings = MockConstants.Diary.CORRECT_RECIPE_SERVINGS_3
             )
         )
     }
@@ -79,7 +78,7 @@ class EditRecipeDiaryEntryUseCaseTest : BaseMockkTest() {
             diaryRepository.editRecipeDiaryEntry(
                 editRecipeDiaryEntryRequest = EditRecipeDiaryEntryRequest(
                     recipeDiaryEntryId = MockConstants.Diary.RECIPE_DIARY_ENTRY_ID_41,
-                    newServings = MockConstants.Diary.CORRECT_RECIPE_SERVINGS_2.toValidInt() ?: throw Exception()
+                    newServings = MockConstants.Diary.CORRECT_RECIPE_SERVINGS_3.toValidIntOrThrow()
                 )
             )
         }
@@ -87,8 +86,8 @@ class EditRecipeDiaryEntryUseCaseTest : BaseMockkTest() {
 
     private suspend fun callTestedMethod(
         recipeDiaryEntryId: String = MockConstants.Diary.RECIPE_DIARY_ENTRY_ID_41,
-        newServings: String = MockConstants.Diary.CORRECT_RECIPE_SERVINGS_2,
-        originalServings: String = MockConstants.Diary.CORRECT_RECIPE_SERVINGS_1
+        newServings: String = MockConstants.Diary.CORRECT_RECIPE_SERVINGS_3,
+        originalServings: String = MockConstants.Diary.CORRECT_RECIPE_SERVINGS_2
     ) = editRecipeDiaryEntryUseCase(
         recipeDiaryEntryId = recipeDiaryEntryId,
         newServingsStringValue = newServings,

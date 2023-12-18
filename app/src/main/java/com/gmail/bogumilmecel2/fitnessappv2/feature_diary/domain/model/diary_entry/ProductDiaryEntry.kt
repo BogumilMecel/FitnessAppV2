@@ -11,7 +11,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ProductDiaryEntry(
-    override val id: String,
+    override val id: String = "",
     override val nutritionValues: NutritionValues = NutritionValues(),
     override val utcTimestamp: Long = 0,
     override val userId: String = "",
