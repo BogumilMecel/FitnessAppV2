@@ -34,6 +34,12 @@ class DiaryRepositoryImp(
         }
     }
 
+    override suspend fun getDiaryEntriesExperimental(): Resource<DiaryEntriesResponse> {
+        return handleRequest {
+            diaryApi.getDiaryEntriesExperimental()
+        }
+    }
+
     override suspend fun searchForProducts(searchText: String): Resource<List<Product>> {
         return handleRequest {
             diaryApi.searchForProducts(searchText = searchText)
@@ -198,6 +204,27 @@ class DiaryRepositoryImp(
         return handleRequest {
             userDiaryItemsDao.deleteUserProducts()
             userDiaryItemsDao.deleteUserRecipes()
+        }
+    }
+
+    override suspend fun getOfflineDiaryEntries(date: String): Resource<DiaryEntriesResponse> {
+        return handleRequest {
+            DiaryEntriesResponse(
+                productDiaryEntries = userDiaryItemsDao.getProductDiaryEntries(date),
+                recipeDiaryEntries = userDiaryItemsDao.getRecipeDiaryEntries(date)
+            )
+        }
+    }
+
+    override suspend fun getDiaryEntriesCount(): Resource<Int> {
+        return handleRequest {
+            userDiaryItemsDao.getRecipeDiaryEntryCount() + userDiaryItemsDao.getProductDiaryEntryCount()
+        }
+    }
+
+    override suspend fun getDiaryEntriesComplete(): Resource<DiaryEntriesResponse> {
+        return handleRequest {
+            diaryApi.getDiaryEntriesComplete()
         }
     }
 }
