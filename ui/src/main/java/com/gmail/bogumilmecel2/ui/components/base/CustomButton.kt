@@ -1,4 +1,4 @@
-package com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components
+package com.gmail.bogumilmecel2.ui.components.base
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
@@ -8,30 +8,28 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedButton
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import com.gmail.bogumilmecel2.ui.components.base.WidthSpacer
 
 @Composable
 fun CustomButton(
     modifier: Modifier = Modifier,
-    buttonStyle: ButtonStyle = ButtonStyle.Button,
+    buttonType: ButtonType = ButtonType.Button,
     backgroundColor: Color = MaterialTheme.colors.primary,
     contentColor: Color = MaterialTheme.colors.onPrimary,
-    iconLeft: ImageVector? = null,
+    iconLeft: IconParams? = null,
     text: String,
     onClick: () -> Unit
 ) {
-    when (buttonStyle) {
-        is ButtonStyle.OutlinedButton -> {
+    val shape = RoundedCornerShape(15.dp)
+
+    when (buttonType) {
+        is ButtonType.OutlinedButton -> {
             OutlinedButton(
                 modifier = modifier,
                 onClick = {
@@ -40,10 +38,10 @@ fun CustomButton(
                 colors = ButtonDefaults.outlinedButtonColors(
                     backgroundColor = backgroundColor,
                 ),
-                shape = RoundedCornerShape(15.dp),
+                shape = shape,
                 border = BorderStroke(
                     width = 1.dp,
-                    color = buttonStyle.borderColor
+                    color = buttonType.borderColor
                 )
             ) {
                 ButtonContent(
@@ -54,7 +52,7 @@ fun CustomButton(
             }
         }
 
-        is ButtonStyle.Button -> {
+        is ButtonType.Button -> {
             Button(
                 modifier = modifier,
                 onClick = {
@@ -63,7 +61,7 @@ fun CustomButton(
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = backgroundColor
                 ),
-                shape = RoundedCornerShape(15.dp)
+                shape = shape
             ) {
                 ButtonContent(
                     iconLeft = iconLeft,
@@ -77,9 +75,8 @@ fun CustomButton(
 
 @Composable
 private fun ButtonContent(
-    iconLeft: ImageVector?,
+    iconLeft: IconParams?,
     text: String,
-    contentColor: Color
 ) {
     Row(
         modifier = Modifier
@@ -89,24 +86,23 @@ private fun ButtonContent(
         horizontalArrangement = Arrangement.Center
     ) {
         iconLeft?.let {
-            Icon(
-                imageVector = iconLeft,
-                contentDescription = text,
-                tint = contentColor
+            CustomIcon(
+                iconParams = it
             )
         }
 
         WidthSpacer(width = 8.dp)
 
-        Text(
-            text = text.uppercase(),
-            style = MaterialTheme.typography.button,
-            color = contentColor
+        CustomText(
+            text = text,
+            fitnessAppTextStyle = FitnessAppTextStyle.ButtonOnPrimary
         )
     }
 }
 
-sealed interface ButtonStyle {
-    data class OutlinedButton(val borderColor: Color) : ButtonStyle
-    object Button : ButtonStyle
+sealed interface ButtonType {
+    data class OutlinedButton(val borderColor: Color) : ButtonType
+    object Button : ButtonType
 }
+
+sealed class ButtonStyle()

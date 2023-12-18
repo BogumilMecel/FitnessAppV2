@@ -32,7 +32,7 @@ fun HeaderRow(
         onBackPressed?.let {
             CustomIcon(
                 iconParams = IconParams(
-                    iconStyle = CustomIconStyle.BackIcon,
+                    iconStyle = CustomIconStyle.Back,
                     onClick = {
                         onBackPressed()
                     }
