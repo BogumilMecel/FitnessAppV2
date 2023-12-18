@@ -29,7 +29,7 @@ fun CustomText(
 @Composable
 fun FitnessAppTextStyle.getTextStyle(): TextStyle {
     return when (this) {
-        is FitnessAppTextStyle.ButtonOnPrimary, FitnessAppTextStyle.ButtonOnSurface -> FitnessAppTheme.typography.Button
+        is FitnessAppTextStyle.Button -> FitnessAppTheme.typography.Button
 
         is FitnessAppTextStyle.HeaderSmall -> FitnessAppTheme.typography.HeaderSmall
 
@@ -51,20 +51,14 @@ fun FitnessAppTextStyle.getTextStyle(): TextStyle {
 }
 
 sealed class FitnessAppTextStyle(
-    val color: FitnessAppColor = FitnessAppColor.ContentWhite,
+    open val color: FitnessAppColor = FitnessAppColor.ContentWhite,
     val upperCase: Boolean = false,
     val capitalize: Boolean = true
 ) {
-    object ButtonOnPrimary : FitnessAppTextStyle(
-        upperCase = true,
-        color = FitnessAppColor.Black
+    data class Button(override val color: FitnessAppColor) : FitnessAppTextStyle(
+        color = color,
+        upperCase = true
     )
-
-    object ButtonOnSurface : FitnessAppTextStyle(
-        upperCase = true,
-        color = FitnessAppColor.Primary
-    )
-
     object HeaderSmall : FitnessAppTextStyle()
     object ParagraphSecondaryMedium : FitnessAppTextStyle(color = FitnessAppColor.ContentSecondary)
     object ParagraphSecondaryLarge : FitnessAppTextStyle(color = FitnessAppColor.ContentSecondary)

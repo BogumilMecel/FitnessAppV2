@@ -90,7 +90,7 @@ fun ContainerWeightSection(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = stringResource(id = state.selectedMeasurementUnit.getDisplayValue()),
+                    text = stringResource(id = state.selectedMeasurementUnit.getStringRes()),
                     style = MaterialTheme.typography.body1,
                     modifier = Modifier
                         .padding(horizontal = 15.dp, vertical = 15.dp)
@@ -115,10 +115,10 @@ fun ContainerWeightSection(
                                 onEvent(NewProductEvent.SelectedMeasurementUnit(item))
                             },
                             modifier = Modifier
-                                .testTag(stringResource(id = item.getDisplayValue()) + "DROPDOWN_MENU_ITEM")
+                                .testTag(stringResource(id = item.getStringRes()) + "DROPDOWN_MENU_ITEM")
                         ) {
                             Text(
-                                text = stringResource(id = item.getDisplayValue()),
+                                text = stringResource(id = item.getStringRes()),
                                 style = MaterialTheme.typography.body1
                             )
                         }

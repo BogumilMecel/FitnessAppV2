@@ -133,7 +133,7 @@ fun SubmitNewPriceDialog(
                     WidthSpacer(width = 4.dp)
 
                     Text(
-                        text = stringResource(id = measurementUnit.getDisplayValue()),
+                        text = stringResource(id = measurementUnit.getStringRes()),
                         style = MaterialTheme.typography.body2.copy(
                             color = FitnessAppTheme.colors.ContentSecondary
                         )

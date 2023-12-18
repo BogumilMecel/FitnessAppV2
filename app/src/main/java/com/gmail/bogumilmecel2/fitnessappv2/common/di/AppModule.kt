@@ -23,6 +23,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.data.repository.remote
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CalculateSelectedServingPriceUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CalculateServingPrice
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GenerateDiaryItemDialogTitleUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetPriceUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetRecipePriceFromIngredientsUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.*
@@ -106,6 +107,22 @@ object AppModule {
         val client = OkHttpClient.Builder().addInterceptor(defaultInterceptor)
         return client.build()
     }
+
+    @Singleton
+    @Provides
+    fun provideGenerateDiaryItemDialogTitleUseCase(
+        resourceProvider: ResourceProvider
+    ): GenerateDiaryItemDialogTitleUseCase = GenerateDiaryItemDialogTitleUseCase(
+        resourceProvider = resourceProvider
+    )
+
+    @Singleton
+    @Provides
+    fun provideCreateLongClickedDiaryItemParamsUseCase(
+        generateDiaryItemDialogTitleUseCase: GenerateDiaryItemDialogTitleUseCase
+    ): CreateLongClickedDiaryItemParamsUseCase = CreateLongClickedDiaryItemParamsUseCase(
+        generateDiaryItemDialogTitleUseCase = generateDiaryItemDialogTitleUseCase
+    )
 
     @Singleton
     @Provides

@@ -80,7 +80,7 @@ fun RecipeListSection(
                 state.ingredients.forEach { ingredient ->
                     SearchProductItem(
                         name = ingredient.productName,
-                        unit = stringResource(id = ingredient.measurementUnit.getDisplayValue()),
+                        unit = stringResource(id = ingredient.measurementUnit.getStringRes()),
                         calories = ingredient.nutritionValues.calories,
                         weight = ingredient.weight,
                         onItemLongClick = {

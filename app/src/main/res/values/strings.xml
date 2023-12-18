@@ -7,7 +7,6 @@
     <string name="kg">kg</string>
 
     <string name="kcal_with_value">%s Kcal</string>
-    <string name="value_with_short_grams">%sg</string>
 
     <string name="not_available">N/A</string>
 
@@ -67,6 +66,7 @@
     <string name="in_100ml">In 100 ml</string>
     <string name="container_weight">Container weight</string>
     <string name="average_weight">Average weight</string>
+    <string name="what_would_you_like_to_do">What would you like to do</string>
 
     <string name="new_product_empty_name">Please make sure product name is not empty</string>
     <string name="new_product_wrong_name_length_short">Please make sure that the product name is not shorter than 3 characters</string>
@@ -81,6 +81,8 @@
 
     <string name="measurement_unit_gram">g</string>
     <string name="measurement_unit_milliliter">ml</string>
+    <string name="measurement_unit_gram_with_value">%sg</string>
+    <string name="measurement_unit_milliliter_with_value">%sml</string>
 
     <string name="currency_pln">zł</string>
     <string name="currency_usd">$</string>

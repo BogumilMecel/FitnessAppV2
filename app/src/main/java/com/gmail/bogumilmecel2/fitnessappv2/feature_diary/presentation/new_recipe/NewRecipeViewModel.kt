@@ -171,6 +171,7 @@ class NewRecipeViewModel @Inject constructor(
                     )
                 }
             }
+
             is NewRecipeEvent.LongClickedIngredient -> {
                 _state.update {
                     it.copy(
@@ -188,7 +189,7 @@ class NewRecipeViewModel @Inject constructor(
                 }
             }
 
-            is NewRecipeEvent.ClickedConfirmButtonOnDeleteIngredientDialog -> {
+            is NewRecipeEvent.ClickedDeleteInIngredientDialog -> {
                 _state.value.longClickedIngredient?.let { ingredient ->
                     _state.update {
                         it.copy(
@@ -196,6 +197,7 @@ class NewRecipeViewModel @Inject constructor(
                             isDeleteIngredientDialogVisible = false
                         )
                     }
+                    fetchPrices()
                 }
             }
         }
@@ -237,7 +239,7 @@ class NewRecipeViewModel @Inject constructor(
                         )
 
                         val newIngredientsList = _state.value.ingredients.toMutableList()
-                        newIngredientsList.removeIf{ it.productId == newIngredient.productId }
+                        newIngredientsList.removeIf { it.productId == newIngredient.productId }
 
                         _state.update {
                             it.copy(
@@ -257,20 +259,32 @@ class NewRecipeViewModel @Inject constructor(
 
     private fun fetchPrices() {
         viewModelScope.launch {
-            newRecipeUseCases.getRecipePriceFromIngredientsUseCase(ingredients = _state.value.ingredients).handle(
-                showSnackbar = false
-            ) { response ->
-                _state.update {
-                    it.copy(
-                        recipePrice = response?.let {
-                            RecipePrice(
-                                totalPrice = response.totalPrice,
-                                shouldShowPriceWarning = response.shouldShowPriceWarning
+            with(_state.value.ingredients) {
+                if (this.isNotEmpty()) {
+                    newRecipeUseCases.getRecipePriceFromIngredientsUseCase(
+                        ingredients = this
+                    ).handle(
+                        showSnackbar = false
+                    ) { response ->
+                        _state.update {
+                            it.copy(
+                                recipePrice = response?.let {
+                                    RecipePrice(
+                                        totalPrice = response.totalPrice,
+                                        shouldShowPriceWarning = response.shouldShowPriceWarning
+                                    )
+                                }
                             )
                         }
-                    )
+                        updateRecipeServingPrice()
+                    }
+                } else {
+                    _state.update {
+                        it.copy(
+                            recipePrice = null
+                        )
+                    }
                 }
-                updateRecipeServingPrice()
             }
         }
     }
@@ -305,7 +319,7 @@ class NewRecipeViewModel @Inject constructor(
         }
     }
 
-    private fun updateRecipeNutritionData(servings: Int) = with(_state.value){
+    private fun updateRecipeNutritionData(servings: Int) = with(_state.value) {
         _state.update {
             it.copy(
                 nutritionData = it.nutritionData.copy(

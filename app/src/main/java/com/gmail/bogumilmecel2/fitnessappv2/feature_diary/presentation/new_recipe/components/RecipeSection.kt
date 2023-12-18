@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_recipe.NewRecipeEvent
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_recipe.NewRecipeState
-import com.gmail.bogumilmecel2.ui.components.base.CustomDialog
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.shared.ProductItemDialog
 import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
 import com.gmail.bogumilmecel2.ui.components.complex.HeaderRow
 
@@ -30,14 +30,16 @@ fun RecipeSection(
     ) {
         if (state.isDeleteIngredientDialogVisible) {
             state.longClickedIngredient?.let {
-                CustomDialog(
-                    title = stringResource(id = R.string.new_recipe_delete_ingredient_title, it.productName),
-                    confirmButtonText = stringResource(id = R.string.delete),
+                ProductItemDialog(
+                    title = "${it.productName} (${stringResource(id = it.measurementUnit.getStringResWithValue(), it.weight)})",
+                    onDeleteButtonClicked = {
+                        onEvent(NewRecipeEvent.ClickedDeleteInIngredientDialog)
+                    },
+                    onEditButtonClicked = {
+
+                    },
                     onDismissRequest = {
                         onEvent(NewRecipeEvent.DismissedDeleteIngredientDialog)
-                    },
-                    onConfirmButtonClicked = {
-                        onEvent(NewRecipeEvent.ClickedConfirmButtonOnDeleteIngredientDialog)
                     }
                 )
             }
