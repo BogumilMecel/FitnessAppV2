@@ -1,0 +1,14 @@
+CREATE TABLE IF NOT EXISTS recipe (
+    id TEXT PRIMARY KEY NOT NULL,
+    name TEXT NOT NULL,
+    ingredients BLOB NOT NULL,
+    utc_timestamp INTEGER NOT NULL,
+    image_url TEXT,
+    nutrition_values BLOB NOT NULL,
+    time_required TEXT NOT NULL,
+    difficulty TEXT NOT NULL,
+    servings INTEGER NOT NULL,
+    is_public INTEGER NOT NULL,
+    username TEXT NOT NULL,
+    user_id TEXT NOT NULL
+);

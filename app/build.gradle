@@ -7,6 +7,7 @@ plugins {
     id 'kotlinx-serialization'
     id 'com.google.devtools.ksp' version '1.9.0-1.0.13'
     id("de.mannodermaus.android-junit5") version "1.9.3.0"
+    id("app.cash.sqldelight") version "2.0.1"
 }
 
 android {
@@ -173,6 +174,8 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
     androidTestImplementation "androidx.navigation:navigation-testing:2.7.5"
 
+    implementation("app.cash.sqldelight:android-driver:2.0.1")
+
     def room_version = "2.6.0"
 
     implementation "androidx.room:room-runtime:$room_version"
@@ -186,4 +189,12 @@ kapt {
 
 kotlin.sourceSets.configureEach {
     languageSettings.optIn("kotlin.RequiresOptIn")
+}
+
+sqldelight {
+    databases {
+        create("FitnessAppDatabase") {
+            packageName.set("com.gmail.bogumilmecel2.fitnessappv2")
+        }
+    }
 }

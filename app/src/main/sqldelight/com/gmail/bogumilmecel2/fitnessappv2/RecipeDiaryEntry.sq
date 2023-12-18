@@ -1,0 +1,13 @@
+CREATE TABLE IF NOT EXISTS recipe_diary_entry (
+    id TEXT PRIMARY KEY NOT NULL,
+    nutrition_values BLOB NOT NULL,
+    utc_timestamp INTEGER NOT NULL,
+    user_id TEXT NOT NULL,
+    date TEXT NOT NULL,
+    meal_name TEXT NOT NULL,
+    edited_utc_timestamp INTEGER NOT NULL,
+    recipe_name TEXT NOT NULL,
+    recipe_id TEXT NOT NULL,
+    servings INTEGER NOT NULL,
+    deleted INTEGER NOT NULL
+);
