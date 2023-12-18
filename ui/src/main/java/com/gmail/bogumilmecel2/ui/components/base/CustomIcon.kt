@@ -11,6 +11,8 @@ import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
+import com.gmail.bogumilmecel2.ui.R
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 
 @Composable
@@ -20,50 +22,50 @@ fun CustomIcon(
 ) = with(iconStyle) {
     androidx.compose.material.Icon(
         imageVector = imageVector,
-        contentDescription = contentDescription,
+        contentDescription = stringResource(id = iconStyle.contentDescriptionId),
         tint = iconPosition.getContentColor()
     )
 }
 
 sealed class CustomIconStyle(
     val imageVector: ImageVector,
-    val contentDescription: String
+    val contentDescriptionId: Int
 ) {
     object Heart: CustomIconStyle(
         imageVector = Icons.Default.FavoriteBorder,
-        contentDescription = "favorite"
+        contentDescriptionId = R.string.favorite
     )
     object HeartFilled: CustomIconStyle(
         imageVector = Icons.Filled.Favorite,
-        contentDescription = "favorite filled"
+        contentDescriptionId = R.string.favorite_filled
     )
     object Back: CustomIconStyle(
         imageVector = Icons.Default.ArrowBack,
-        contentDescription = "back"
+        contentDescriptionId = R.string.back
     )
     object Search: CustomIconStyle(
         imageVector = Icons.Default.Search,
-        contentDescription = "search"
+        contentDescriptionId = R.string.search
     )
     object Cancel: CustomIconStyle(
         imageVector = Icons.Default.Search,
-        contentDescription = "cancel"
+        contentDescriptionId = R.string.cancel
     )
     object Add: CustomIconStyle(
         imageVector = Icons.Default.Add,
-        contentDescription = "add"
+        contentDescriptionId = R.string.add
     )
     object Logout: CustomIconStyle(
         imageVector = Icons.Default.Logout,
-        contentDescription = "log out"
+        contentDescriptionId = R.string.log_out
     )
     object Save: CustomIconStyle(
         imageVector = Icons.Default.Save,
-        contentDescription = "save"
+        contentDescriptionId = R.string.save
     )
     object Edit: CustomIconStyle(
         imageVector = Icons.Default.Edit,
-        contentDescription = "edit"
+        contentDescriptionId = R.string.edit
     )
 }
 

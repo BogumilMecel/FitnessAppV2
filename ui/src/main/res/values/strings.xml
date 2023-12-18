@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<!--    Icon descriptions ↓ ↓ ↓-->
+    <string name="favorite">Favorite icon</string>
+    <string name="favorite_filled">Filled favorite icon</string>
+    <string name="back">Back icon</string>
+    <string name="search">Search icon</string>
+    <string name="cancel">Cancel icon</string>
+    <string name="add">Add icon</string>
+    <string name="log_out">Log out icon</string>
+    <string name="save">Save icon</string>
+    <string name="edit">Edit icon</string>
+<!--    Icon description ↑ ↑ ↑-->
+</resources>
