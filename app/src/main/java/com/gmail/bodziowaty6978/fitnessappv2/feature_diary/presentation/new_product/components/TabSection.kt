@@ -1,14 +1,17 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_product.components
 
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.MeasurementUnit
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.DarkGreyElevation
@@ -24,6 +27,7 @@ fun TabSection(
         selectedTabIndex = selectedTabIndex,
         backgroundColor = DarkGreyElevation,
         contentColor = Color.White,
+        modifier = Modifier.clip(RoundedCornerShape(topEnd = 20.dp, topStart = 20.dp))
     ) {
         Tab(
             selected = selectedTabIndex == 0,

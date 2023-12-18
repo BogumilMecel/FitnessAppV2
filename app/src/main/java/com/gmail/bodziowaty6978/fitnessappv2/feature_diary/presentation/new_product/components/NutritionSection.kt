@@ -7,10 +7,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Card
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -19,6 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.gmail.bodziowaty6978.fitnessappv2.R
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.DefaultCardBackground
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_product.NewProductEvent
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_product.NewProductState
 
@@ -27,14 +26,7 @@ fun NutritionSection(
     state:NewProductState,
     onEvent:(NewProductEvent) -> Unit,
 ) {
-
-    Card(
-        shape = RoundedCornerShape(5),
-        elevation = 3.dp,
-        modifier = Modifier
-            .padding(horizontal = 15.dp)
-    ) {
-
+    DefaultCardBackground(modifier = Modifier.padding(horizontal = 15.dp)) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()

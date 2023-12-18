@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
@@ -26,6 +25,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.gmail.bodziowaty6978.fitnessappv2.R
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.DefaultCardBackground
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.BlueViolet3
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.TextGrey
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.TextWhite
@@ -38,12 +38,7 @@ fun ProductNameSection(
     modifier: Modifier,
     onWeightEntered: (String) -> Unit
 ) {
-    Card(
-        modifier = modifier,
-        elevation = 3.dp,
-        shape = RoundedCornerShape(15)
-    ) {
-
+    DefaultCardBackground(modifier = modifier,) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -75,10 +70,7 @@ fun ProductNameSection(
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Card(
-                        elevation = 10.dp,
-                        shape = RoundedCornerShape(25)
-                    ) {
+                    DefaultCardBackground() {
                         BasicTextField(
                             value = currentWeight,
                             onValueChange = {

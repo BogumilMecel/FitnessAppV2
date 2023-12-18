@@ -15,7 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.DarkGreyElevation9
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.DarkGreyElevation6
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.TextGrey
 
 @Composable
@@ -25,7 +25,7 @@ fun SearchProductItem(
     name: String,
     calories: Int,
     onItemClick: (() -> Unit)? = null,
-    background: Color = DarkGreyElevation9
+    background: Color = DarkGreyElevation6
 ) {
 
     Box(

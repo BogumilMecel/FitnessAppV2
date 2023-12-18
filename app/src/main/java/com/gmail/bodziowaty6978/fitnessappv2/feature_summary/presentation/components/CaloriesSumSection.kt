@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
 import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -19,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.gmail.bodziowaty6978.fitnessappv2.R
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.DefaultCardBackground
 
 @Composable
 fun CaloriesSumSection(
@@ -27,11 +26,7 @@ fun CaloriesSumSection(
     modifier: Modifier
 ) {
 
-    Card(
-        modifier = modifier,
-        shape = RoundedCornerShape(15.dp),
-        elevation = 3.dp
-    ) {
+    DefaultCardBackground(modifier = modifier) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
