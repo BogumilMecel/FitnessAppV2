@@ -4,17 +4,23 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.CachedValuesP
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseRepository
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.data.api.WeightApi
+import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.model.NewWeightEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.model.NewWeightEntryResponse
-import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.model.WeightEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.repository.WeightRepository
 
 class WeighRepositoryImp(
     private val weightApi: WeightApi,
     private val cachedValuesProvider: CachedValuesProvider
 ) : WeightRepository, BaseRepository() {
-    override suspend fun addWeightEntry(weightEntry: WeightEntry): Resource<NewWeightEntryResponse> {
+    override suspend fun addWeightEntry(
+        newWeightEntryRequest: NewWeightEntryRequest,
+        timezone: String
+    ): Resource<NewWeightEntryResponse> {
         return handleRequest {
-            val response = weightApi.addWeightEntry(weightEntry = weightEntry)
+            val response = weightApi.addWeightEntry(
+                newWeightEntryRequest = newWeightEntryRequest,
+                timezone = timezone
+            )
             cachedValuesProvider.updateWeightInfo(
                 weightProgress = response.weightProgress,
                 latestWeightEntry = response.latestWeightEntry

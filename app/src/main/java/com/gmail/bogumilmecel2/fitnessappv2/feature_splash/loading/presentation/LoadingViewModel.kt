@@ -3,7 +3,7 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_splash.loading.presentation
 import androidx.lifecycle.viewModelScope
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.GetToken
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.DateUtils
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.CustomDateUtils
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.IntroductionScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.LoginScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.SummaryScreenDestination
@@ -32,7 +32,7 @@ class LoadingViewModel @Inject constructor(
 
     private suspend fun authenticateUser() {
         val authenticationResource = loadingRepository.authenticateUser(
-            timezoneId = DateUtils.getCurrentTimezoneId()
+            timezoneId = CustomDateUtils.getCurrentTimezoneId()
         )
         authenticationResource.data?.let { user ->
             if (user.nutritionValues != null && user.userInformation != null) {

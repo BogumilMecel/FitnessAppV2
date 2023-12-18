@@ -53,7 +53,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.use_case.*
 import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.data.api.WeightApi
 import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.data.repository.WeighRepositoryImp
 import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.repository.WeightRepository
-import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.use_case.AddWeightEntry
+import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.use_case.AddWeightEntryUseCase
 import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
@@ -387,7 +387,7 @@ object AppModule {
         weightRepository: WeightRepository,
     ): SummaryUseCases = SummaryUseCases(
         getCaloriesSum = GetCaloriesSum(diaryRepository = diaryRepository),
-        addWeightEntry = AddWeightEntry(weightRepository = weightRepository),
+        addWeightEntryUseCase = AddWeightEntryUseCase(weightRepository = weightRepository),
     )
 
     @Singleton

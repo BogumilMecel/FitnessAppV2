@@ -2,6 +2,7 @@ package com.gmail.bogumilmecel2.fitnessappv2.common.util
 
 import android.content.SharedPreferences
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.Country
+import kotlinx.datetime.TimeZone
 import okhttp3.Interceptor
 import okhttp3.Response
 
@@ -14,6 +15,7 @@ class DefaultInterceptor(
             request.addHeader("Authorization", "Bearer $it")
         }
         request.addHeader(ApiConstants.Headers.COUNTRY, Country.POLAND.shortName)
+        request.addHeader(ApiConstants.Headers.TIMEZONE, TimeZone.currentSystemDefault().id)
 
         val response = chain.proceed(request.build())
 
