@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.TextFieldState
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
-import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.destinations.RegisterScreenDestination
 import com.gmail.bodziowaty6978.fitnessappv2.destinations.ResetPasswordScreenDestination
@@ -66,13 +65,10 @@ class LoginViewModel @Inject constructor(
             else -> {
                 viewModelScope.launch(Dispatchers.IO) {
                     _isLoading.value = true
-                    val resource = authUseCases.logInUser(
+                    authUseCases.logInUser(
                         email = _emailState.value.text,
                         password = _passwordState.value.text
-                    )
-                    if (resource is CustomResult.Error) {
-                        showSnackbarError(resource.message)
-                    } else {
+                    ).handle {
                         navigateWithPopUp(
                             destination = SplashScreenDestination
                         )

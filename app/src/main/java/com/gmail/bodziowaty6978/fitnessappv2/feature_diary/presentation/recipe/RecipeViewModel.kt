@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.singleton.CurrentDate
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.multiplyBy
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
-import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.destinations.DiaryScreenDestination
 import com.gmail.bodziowaty6978.fitnessappv2.destinations.RecipeScreenDestination
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.product.CreatePieChartData
@@ -59,27 +58,15 @@ class RecipeViewModel @Inject constructor(
 
             is RecipeEvent.ClickedSaveRecipeDiaryEntry -> {
                 viewModelScope.launch {
-                    val resource = postRecipeDiaryEntryUseCase(
+                    postRecipeDiaryEntryUseCase(
                         dateModel = CurrentDate.dateModel(resourceProvider = resourceProvider),
                         mealName = _state.value.mealName,
                         recipe = _state.value.recipe,
                         servingsString = _state.value.portions
-                    )
-
-                    when (resource) {
-                        is Resource.Success -> {
-                            if (resource.data) {
-                                navigateWithPopUp(
-                                    destination = DiaryScreenDestination
-                                )
-                            } else {
-                                showSnackbarError(message = resourceProvider.getUnknownErrorString())
-                            }
-                        }
-
-                        is Resource.Error -> {
-                            showSnackbarError(message = resource.uiText)
-                        }
+                    ).handle {
+                        navigateWithPopUp(
+                            destination = DiaryScreenDestination
+                        )
                     }
                 }
             }

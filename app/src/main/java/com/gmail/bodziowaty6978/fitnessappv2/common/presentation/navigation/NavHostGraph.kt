@@ -45,7 +45,10 @@ fun NavHostGraph(
                 if (it.direction.route == "navigate_up") {
                     navController.navigateUp()
                 } else {
-                    navController.navigate(it.direction.route, it.navOptions)
+                    navController.navigate(
+                        it.direction.route,
+                        it.navOptions
+                    )
                 }
             }
         }
@@ -82,7 +85,10 @@ fun NavHostGraph(
                 .padding(paddingValues),
             color = MaterialTheme.colors.background
         ) {
-            DestinationsNavHost(navGraph = NavGraphs.root, navController = navController)
+            DestinationsNavHost(
+                navGraph = NavGraphs.root,
+                navController = navController
+            )
         }
     }
 

@@ -3,7 +3,6 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_account.presentation
 import androidx.lifecycle.viewModelScope
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
-import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
 import com.gmail.bodziowaty6978.fitnessappv2.destinations.EditNutritionGoalsScreenDestination
 import com.gmail.bodziowaty6978.fitnessappv2.destinations.LoginScreenDestination
 import com.gmail.bodziowaty6978.fitnessappv2.feature_account.domain.use_case.DeleteToken
@@ -64,11 +63,8 @@ class AccountViewModel @Inject constructor(
 
     private fun logOut() {
         viewModelScope.launch {
-            val result = deleteToken()
-            if (result is CustomResult.Success) {
+            deleteToken().handle {
                 navigateWithPopUp(LoginScreenDestination)
-            } else if (result is CustomResult.Error) {
-                showSnackbarError(result.message)
             }
         }
     }

@@ -14,7 +14,7 @@ class PostRecipeDiaryEntryUseCase(
         servingsString: String,
         dateModel: DateModel,
         mealName: String
-    ): Resource<Boolean> {
+    ): Resource<Unit> {
         val servingsValue = servingsString.toIntOrNull()
 
         return if (servingsValue == null) {

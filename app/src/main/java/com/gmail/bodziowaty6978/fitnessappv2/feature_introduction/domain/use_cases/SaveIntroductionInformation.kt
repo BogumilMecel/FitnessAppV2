@@ -3,7 +3,6 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.use_ca
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.UserInformation
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.use_case.SaveNutritionValues
-import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.repository.UserDataRepository
@@ -18,44 +17,56 @@ class SaveIntroductionInformation(
 
     suspend operator fun invoke(
         answers: Map<IntroductionExpectedQuestionAnswer, String>
-    ): CustomResult {
-        var customResult: CustomResult = CustomResult.Success
+    ): Resource<Unit> {
+        var resource: Resource<Unit> = Resource.Success(Unit)
         val gender = answers[IntroductionExpectedQuestionAnswer.Gender]!!.toInt()
         val currentWeight =
-            answers[IntroductionExpectedQuestionAnswer.CurrentWeight]!!.replace(",", ".")
+            answers[IntroductionExpectedQuestionAnswer.CurrentWeight]!!.replace(
+                ",",
+                "."
+            )
                 .toDoubleOrNull()
         val height =
-            answers[IntroductionExpectedQuestionAnswer.Height]!!.replace(",", ".").toDoubleOrNull()
+            answers[IntroductionExpectedQuestionAnswer.Height]!!.replace(
+                ",",
+                "."
+            ).toDoubleOrNull()
         val workType = answers[IntroductionExpectedQuestionAnswer.TypeOfWork]!!.toInt()
         val workoutsInWeek =
             answers[IntroductionExpectedQuestionAnswer.HowOftenDoYouTrain]!!.toInt()
         val activityInDay = answers[IntroductionExpectedQuestionAnswer.ActivityDuringADay]!!.toInt()
         val wantedWeight =
-            answers[IntroductionExpectedQuestionAnswer.DesiredWeight]!!.replace(",", ".")
+            answers[IntroductionExpectedQuestionAnswer.DesiredWeight]!!.replace(
+                ",",
+                "."
+            )
                 .toDoubleOrNull()
-        val age = answers[IntroductionExpectedQuestionAnswer.Age]!!.replace(",", ".").toIntOrNull()
+        val age = answers[IntroductionExpectedQuestionAnswer.Age]!!.replace(
+            ",",
+            "."
+        ).toIntOrNull()
 
         if (currentWeight == null || currentWeight <= 0) {
-            customResult = CustomResult.Error(
-                message = resourceProvider.getString(R.string.please_make_sure_you_have_entered_your_weight)
+            resource = Resource.Error(
+                uiText = resourceProvider.getString(R.string.please_make_sure_you_have_entered_your_weight)
             )
         }
         if (wantedWeight == null || wantedWeight <= 0) {
-            customResult = CustomResult.Error(
-                message = resourceProvider.getString(R.string.please_make_sure_you_have_entered_your_desired_weight)
+            resource = Resource.Error(
+                uiText = resourceProvider.getString(R.string.please_make_sure_you_have_entered_your_desired_weight)
             )
         }
         if (height == null || height <= 0) {
-            customResult = CustomResult.Error(
-                message = resourceProvider.getString(R.string.please_make_sure_you_have_entered_your_age)
+            resource = Resource.Error(
+                uiText = resourceProvider.getString(R.string.please_make_sure_you_have_entered_your_age)
             )
         }
         if (age == null || age <= 0) {
-            customResult = CustomResult.Error(
-                message = resourceProvider.getString(R.string.please_make_sure_you_have_entered_your_age)
+            resource = Resource.Error(
+                uiText = resourceProvider.getString(R.string.please_make_sure_you_have_entered_your_age)
             )
         }
-        if (customResult !is CustomResult.Error) {
+        if (resource !is Resource.Error) {
             val nutritionValues = calculateNutritionValues(
                 gender,
                 currentWeight!!,
@@ -79,11 +90,11 @@ class SaveIntroductionInformation(
                     currentWeight = currentWeight,
                 )
             )
-            customResult =
-                if (nutritionResource is Resource.Success) CustomResult.Success else CustomResult.Error(
+            resource =
+                if (nutritionResource is Resource.Success) Resource.Success(Unit) else Resource.Error(
                     resourceProvider.getUnknownErrorString()
                 )
         }
-        return customResult
+        return resource
     }
 }

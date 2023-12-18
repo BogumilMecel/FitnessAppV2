@@ -2,7 +2,6 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_auth.data.repository
 
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseRepository
-import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.data.api.AuthApi
@@ -19,35 +18,20 @@ class AuthRepositoryImp(
     override suspend fun logInUser(
         loginRequest: LoginRequest
     ): Resource<TokenResponse> {
-        return try {
-            Resource.Success(data = authApi.signIn(request = loginRequest))
-        } catch (e: Exception) {
-            handleExceptionWithResource(exception = e)
+        return handleRequest {
+            authApi.signIn(request = loginRequest)
         }
     }
 
     override suspend fun registerUser(
-        username: String,
-        email: String,
-        password: String,
-    ): CustomResult {
-        return try {
-            val wasAcknowledged = authApi.registerUser(
-                RegisterRequest(
-                    username = username,
-                    email = email,
-                    password = password
-                )
-            )
-            return if (wasAcknowledged) CustomResult.Success else handleExceptionWithCustomResult(
-                exception = Exception()
-            )
-        } catch (e: Exception) {
-            handleExceptionWithCustomResult(exception = e)
+        registerRequest: RegisterRequest
+    ): Resource<Boolean> {
+        return handleRequest {
+            authApi.registerUser(request = registerRequest)
         }
     }
 
-    override suspend fun sendPasswordResetEmail(email: String): CustomResult {
-        return CustomResult.Error(resourceProvider.getString(R.string.unknown_error))
+    override suspend fun sendPasswordResetEmail(email: String): Resource<Boolean> {
+        return Resource.Error(resourceProvider.getString(R.string.unknown_error))
     }
 }

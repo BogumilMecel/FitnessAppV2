@@ -8,7 +8,7 @@ class SearchForProductWithBarcode(
     private val diaryRepository: DiaryRepository
 ) {
 
-    suspend operator fun invoke(barcode:String):Resource<Product>{
+    suspend operator fun invoke(barcode:String):Resource<Product?>{
         return diaryRepository.searchForProductWithBarcode(barcode)
     }
 }

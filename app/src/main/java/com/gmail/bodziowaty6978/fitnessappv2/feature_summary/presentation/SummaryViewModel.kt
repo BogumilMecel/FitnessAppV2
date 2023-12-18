@@ -55,11 +55,10 @@ class SummaryViewModel @Inject constructor(
 
     private fun saveNewWeightEntry(value: Double) {
         viewModelScope.launch {
-            val resource = summaryUseCases.addWeightEntry(value = value)
-            if (resource.second == true) {
+            summaryUseCases.addWeightEntry(value = value).handle {
                 _state.update { state ->
                     state.weightEntries.toMutableList().apply {
-                        add(resource.first)
+                        add(it)
                         setWeightEntries(weightEntries = this)
                     }
                     state.copy(

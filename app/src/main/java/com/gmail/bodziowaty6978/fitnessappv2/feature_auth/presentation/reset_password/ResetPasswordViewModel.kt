@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.TextFieldState
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
-import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.destinations.LoginScreenDestination
 import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.domain.use_case.AuthUseCases
@@ -47,17 +46,10 @@ class ResetPasswordViewModel @Inject constructor(
             else -> {
                 viewModelScope.launch(Dispatchers.IO) {
                     _isLoading.value = true
-                    val result = authUseCases.resetPasswordWithEmail(
+                    authUseCases.resetPasswordWithEmail(
                         email = _emailState.value.text
-                    )
-                    when (result) {
-                        is CustomResult.Success -> {
-                            showSnackbarError("Successfully sent an email")
-                        }
-
-                        is CustomResult.Error -> {
-                            showSnackbarError(result.message)
-                        }
+                    ).handle {
+                        showSnackbarError("Successfully sent an email")
                     }
                     _isLoading.value = false
                 }

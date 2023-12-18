@@ -5,7 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
-import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.destinations.SummaryScreenDestination
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.model.Question
@@ -105,11 +104,7 @@ class IntroductionViewModel @Inject constructor(
 
             is IntroductionEvent.FinishIntroduction -> {
                 viewModelScope.launch(Dispatchers.IO) {
-                    val result =
-                        saveIntroductionInformation(answers = _introductionAnswerState.value)
-                    if (result is CustomResult.Error) {
-                        showSnackbarError(message = result.message)
-                    } else {
+                    saveIntroductionInformation(answers = _introductionAnswerState.value).handle {
                         navigateWithPopUp(
                             destination = SummaryScreenDestination
                         )

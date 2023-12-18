@@ -16,31 +16,25 @@ class UserDataRepositoryImp(
     private val customSharedPreferencesUtils: CustomSharedPreferencesUtils
 ) : UserDataRepository, BaseRepository(resourceProvider) {
 
-    override suspend fun saveNutritionValues(nutritionValues: NutritionValues): Resource<Boolean> {
-        return try {
-            val wereAcknowledged =
-                userDataApi.saveNutritionValues(nutritionValues = nutritionValues)
-            if (wereAcknowledged) {
-                customSharedPreferencesUtils.saveWantedNutritionValues(nutritionValues)
-                Resource.Success(true)
-            } else Resource.Error(resourceProvider.getUnknownErrorString())
-        } catch (e: Exception) {
-            handleExceptionWithResource(exception = e)
+    override suspend fun saveNutritionValues(nutritionValues: NutritionValues): Resource<Unit> {
+        return handleRequest {
+            userDataApi.saveNutritionValues(nutritionValues = nutritionValues).let {
+                if (it) {
+                    customSharedPreferencesUtils.saveWantedNutritionValues(nutritionValues)
+                }
+            }
         }
     }
 
     override suspend fun saveUserInformation(
         userInformation: UserInformation
-    ): Resource<Boolean> {
-        return try {
-            val wereAcknowledged =
-                userDataApi.saveUserInformation(userInformation = userInformation)
-            if (wereAcknowledged) {
-                customSharedPreferencesUtils.saveUserInformation(userInformation)
-                Resource.Success(true)
-            } else Resource.Error(resourceProvider.getUnknownErrorString())
-        } catch (e: Exception) {
-            handleExceptionWithResource(exception = e)
+    ): Resource<Unit> {
+        return handleRequest {
+            userDataApi.saveUserInformation(userInformation = userInformation).let {
+                if (it) {
+                    customSharedPreferencesUtils.saveUserInformation(userInformation)
+                }
+            }
         }
     }
 }

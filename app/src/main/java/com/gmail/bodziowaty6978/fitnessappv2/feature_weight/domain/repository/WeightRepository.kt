@@ -5,5 +5,5 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_weight.domain.model.WeightE
 
 interface WeightRepository {
     suspend fun getLatestWeightEntries():Resource<List<WeightEntry>>
-    suspend fun addWeightEntry(weightEntry: WeightEntry):Resource<Boolean>
+    suspend fun addWeightEntry(weightEntry: WeightEntry):Resource<WeightEntry>
 }
