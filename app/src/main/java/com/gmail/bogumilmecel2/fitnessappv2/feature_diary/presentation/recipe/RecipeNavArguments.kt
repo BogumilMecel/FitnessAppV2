@@ -1,5 +1,6 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.recipe
 
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.DateTransferObject
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.MealName
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntry
@@ -14,7 +15,7 @@ data class RecipeNavArguments(
 sealed class RecipeEntryData(
     open val recipe: Recipe,
     open val mealName: MealName,
-    open val date: String
+    open val dateTransferObject: DateTransferObject
 ) {
     @Serializable
     data class Adding(
@@ -23,19 +24,23 @@ sealed class RecipeEntryData(
         @SerialName("recipe_data")
         override val recipe: Recipe,
         @SerialName("current_date")
-        override val date: String
+        override val dateTransferObject: DateTransferObject
     ) : RecipeEntryData(
         mealName = mealName,
         recipe = recipe,
-        date = date
+        dateTransferObject = dateTransferObject
     )
 
     @Serializable
     data class Editing(
-        val recipeDiaryEntry: RecipeDiaryEntry
+        val recipeDiaryEntry: RecipeDiaryEntry,
+        val displayedDate: String
     ) : RecipeEntryData(
         mealName = recipeDiaryEntry.mealName,
         recipe = recipeDiaryEntry.recipe,
-        date = recipeDiaryEntry.date
+        dateTransferObject = DateTransferObject(
+            displayedDate = displayedDate,
+            realDate = recipeDiaryEntry.date
+        )
     )
 }

@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.NewProductScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.ProductScreenDestination
+import com.gmail.bogumilmecel2.fitnessappv2.destinations.SearchScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.product.NutritionValuesIn
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_product.SaveNewProductUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.presentation.ProductEntryData
@@ -17,12 +18,12 @@ import javax.inject.Inject
 @HiltViewModel
 class NewProductViewModel @Inject constructor(
     private val saveNewProductUseCase: SaveNewProductUseCase,
-    savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle
 ) : BaseViewModel<NewProductState, NewProductEvent>(
     state = NewProductState(
         mealName = NewProductScreenDestination.argsFrom(savedStateHandle).mealName,
         barcode = NewProductScreenDestination.argsFrom(savedStateHandle).barcode ?: "",
-        date = NewProductScreenDestination.argsFrom(savedStateHandle).date
+        date = NewProductScreenDestination.argsFrom(savedStateHandle).dateTransferObject.displayedDate
     )
 ) {
 
@@ -128,7 +129,7 @@ class NewProductViewModel @Inject constructor(
                                     entryData = ProductEntryData.Adding(
                                         mealName = mealName,
                                         product = product,
-                                        date = date
+                                        dateTransferObject = SearchScreenDestination.argsFrom(savedStateHandle).dateTransferObject
                                     ),
                                 )
                             )

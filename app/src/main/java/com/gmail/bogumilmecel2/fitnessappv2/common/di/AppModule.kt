@@ -6,16 +6,16 @@ import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import com.gmail.bogumilmecel2.fitnessappv2.common.data.navigation.ComposeCustomNavigator
-import com.gmail.bogumilmecel2.fitnessappv2.common.data.repository.TokenRepositoryImp
+import com.gmail.bogumilmecel2.fitnessappv2.common.data.navigation.repository.TokenRepositoryImp
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.navigation.Navigator
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.CachedValuesProvider
-import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.DateProvider
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.DateHolder
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.repository.TokenRepository
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.*
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.DefaultInterceptor
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.RealCachedValuesProvider
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.RealDateProvider
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.RealDateHolder
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.RealResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.feature_account.domain.use_case.DeleteToken
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.data.api.AuthApi
@@ -148,7 +148,7 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideDateProvider(): DateProvider = RealDateProvider()
+    fun provideDateProvider(): DateHolder = RealDateHolder()
 
     @Singleton
     @Provides
