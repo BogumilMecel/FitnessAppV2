@@ -2,12 +2,10 @@ package com.gmail.bogumilmecel2.ui.components.complex
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.gmail.bogumilmecel2.ui.components.base.CustomLazyColumn
-import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
+import com.gmail.bogumilmecel2.ui.components.base.WidthDivider
 
 @Composable
 fun SearchList(
@@ -20,7 +18,7 @@ fun SearchList(
     ) {
         items(items) { item ->
             SearchItem(searchItemParams = item)
-            SearchListDivider()
+            WidthDivider()
         }
     }
 }
@@ -29,15 +27,6 @@ fun SearchList(
 fun ForEachSearchList(items: List<SearchItemParams>) {
     items.forEach {
         SearchItem(searchItemParams = it)
-        SearchListDivider()
+        WidthDivider()
     }
-}
-
-@Composable
-private fun SearchListDivider() {
-    HorizontalDivider(
-        thickness = 1.dp,
-        modifier = Modifier.fillMaxWidth(),
-        color = FitnessAppTheme.colors.BackgroundQuaternary
-    )
 }

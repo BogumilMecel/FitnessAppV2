@@ -8,8 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Text
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,6 +25,7 @@ import com.gmail.bogumilmecel2.ui.components.base.CustomIconButton
 import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
 import com.gmail.bogumilmecel2.ui.components.base.IconButtonParams
 import com.gmail.bogumilmecel2.ui.components.base.IconVector
+import com.gmail.bogumilmecel2.ui.components.base.WidthDivider
 import com.gmail.bogumilmecel2.ui.components.base.WidthSpacer
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 import com.gmail.bogumilmecel2.ui.theme.LocalColor.BlueViolet3
@@ -64,7 +64,7 @@ fun PriceSection(
             }
 
             productPrice?.let {
-                HorizontalDivider()
+                WidthDivider()
 
                 Row(
                     modifier = Modifier
@@ -134,7 +134,7 @@ fun PriceSection(
                 )
             }
 
-            HorizontalDivider()
+            WidthDivider()
 
             Row(
                 modifier = Modifier

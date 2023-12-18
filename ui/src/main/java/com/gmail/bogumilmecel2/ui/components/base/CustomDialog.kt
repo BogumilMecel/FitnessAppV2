@@ -52,7 +52,7 @@ fun CustomDialog(
         Surface(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
-            color = FitnessAppTheme.colors.BackgroundQuaternary,
+            color = FitnessAppTheme.colors.BackgroundTertiary,
         ) {
             Column {
                 Text(
