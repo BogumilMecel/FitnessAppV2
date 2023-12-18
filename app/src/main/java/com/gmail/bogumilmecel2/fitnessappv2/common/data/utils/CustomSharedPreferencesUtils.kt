@@ -39,9 +39,6 @@ class CustomSharedPreferencesUtils(
             true
         } ?: false
     }
-    fun getUserId() = getUser()?.id ?: ""
-    fun getUsername() = getUser()?.username ?: ""
-    fun getFavoriteRecipesIds() = getUser()?.favoriteUserRecipesIds ?: emptyList()
     fun getLatestWeightEntry() = getUser()?.latestWeightEntry
     fun getWeightProgress() = getUser()?.weightProgress
     fun getLatestLogEntry() = getUser()?.latestLogEntry ?: LogEntry()
