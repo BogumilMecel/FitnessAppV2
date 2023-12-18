@@ -19,6 +19,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.common.domain.use_case.SaveToken
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.datastoreInformation
 import com.gmail.bodziowaty6978.fitnessappv2.datastoreNutrition
+import com.gmail.bodziowaty6978.fitnessappv2.feature_account.domain.use_case.DeleteToken
 import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.data.api.AuthApi
 import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.data.repository.AuthRepositoryImp
 import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.domain.repository.AuthRepository
@@ -136,10 +137,18 @@ object AppModule {
     @Singleton
     @Provides
     fun provideTokenRepository(
-        sharedPreferences: SharedPreferences
+        sharedPreferences: SharedPreferences,
+        resourceProvider: ResourceProvider
     ): TokenRepository = TokenRepositoryImp(
-        sharedPreferences = sharedPreferences
+        sharedPreferences = sharedPreferences,
+        resourceProvider = resourceProvider
     )
+
+    @Singleton
+    @Provides
+    fun provideDeleteToken(
+        tokenRepository: TokenRepository
+    ): DeleteToken = DeleteToken(tokenRepository = tokenRepository)
 
     @Singleton
     @Provides

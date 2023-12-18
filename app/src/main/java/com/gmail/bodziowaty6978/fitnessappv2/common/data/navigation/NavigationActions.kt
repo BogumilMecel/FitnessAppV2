@@ -86,37 +86,17 @@ object NavigationActions {
 
     //Summary
     object SummaryScreen {
-        fun summaryToDiary() = object : NavigationAction {
-            override val destination: String = BottomBarScreen.Diary.route
-        }
-
-        fun summaryToAccount() = object : NavigationAction {
-            override val destination: String = BottomBarScreen.Account.route
-        }
     }
 
     //Account
     object AccountScreen {
-        fun accountToDiary() = object : NavigationAction {
-            override val destination: String = BottomBarScreen.Diary.route
-        }
-
-        fun accountToSummary() = object : NavigationAction {
-            override val destination: String = BottomBarScreen.Summary.route
+        fun accountToLogin() = object : NavigationAction {
+            override val destination: String = AuthScreen.LoginAuthScreen.route
         }
     }
 
     //Diary
     object DiaryScreen {
-        fun diaryToAccount() = object : NavigationAction {
-            override val destination: String = BottomBarScreen.Account.route
-
-        }
-
-        fun diaryToSummary() = object : NavigationAction {
-            override val destination: String = BottomBarScreen.Summary.route
-        }
-
         fun diaryToSearch(mealName: String) = object : NavigationAction {
             override val destination: String = Screen.SearchScreen.route + "?mealName=$mealName"
         }

@@ -11,7 +11,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -20,7 +19,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.DarkGreyElevation3
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.Grey
-import com.gmail.bodziowaty6978.fitnessappv2.datastoreNutrition
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.diary.components.CalendarSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.diary.components.DiaryMealSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.diary.components.NutritionBottomSection
@@ -31,8 +29,6 @@ fun DiaryScreen(
     viewModel: DiaryViewModel = hiltViewModel(),
     paddingValues: PaddingValues
 ) {
-    val context = LocalContext.current
-
     val state = viewModel.state.collectAsStateWithLifecycle().value
     val scaffoldState = rememberScaffoldState()
 
@@ -53,6 +49,8 @@ fun DiaryScreen(
                 AlertDialog(
                     backgroundColor = DarkGreyElevation3,
                     shape = RoundedCornerShape(10),
+                    modifier = Modifier
+                        .padding(horizontal = 10.dp),
                     onDismissRequest = {
                         viewModel.onEvent(DiaryEvent.DismissedDialog)
                     },
@@ -149,6 +147,4 @@ fun DiaryScreen(
             )
         }
     }
-
-
 }

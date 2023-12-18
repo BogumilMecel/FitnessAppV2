@@ -82,6 +82,7 @@ fun ProductScreen(
             Spacer(modifier = Modifier.height(10.dp))
 
             ProductMainSection(
+                modifier = Modifier.padding(horizontal = 15.dp),
                 product = state.product,
                 currentWeight = state.weight,
                 onWeightEntered = {
@@ -95,7 +96,7 @@ fun ProductScreen(
             PriceSection(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 10.dp),
+                    .padding(horizontal = 15.dp),
                 price = state.product.price,
                 nutritionValues = state.product.nutritionValues,
                 currency = "zł",
