@@ -45,9 +45,9 @@ data class RecipeDiaryEntry(
     @Composable
     override fun getDisplayValue() = pluralStringResource(
         id = R.plurals.servings,
-        count = servings
+        count = servings,
+        servings
     )
 
     override fun getDiaryEntryType() = DiaryEntryType.RECIPE
 }
-
