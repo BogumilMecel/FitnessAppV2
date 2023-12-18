@@ -99,7 +99,7 @@ fun SummaryScreen(viewModel: SummaryViewModel = hiltViewModel()) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 16.dp)
+            .padding(horizontal = 10.dp)
     ) {
         LogStreakSection(
             modifier = Modifier

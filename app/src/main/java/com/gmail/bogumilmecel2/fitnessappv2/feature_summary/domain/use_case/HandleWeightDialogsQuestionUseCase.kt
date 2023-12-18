@@ -3,33 +3,27 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.use_case
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.CachedValuesProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.CustomDateUtils
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
-import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.model.WeightDialogsRequest
-import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.repository.WeightRepository
+import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.model.WeightDialogsQuestion
 
 class HandleWeightDialogsQuestionUseCase(
-    private val weightRepository: WeightRepository,
-    private val cachedValuesProvider: CachedValuesProvider
+    private val cachedValuesProvider: CachedValuesProvider,
+    private val saveAskForWeightDaily: SaveAskForWeightDailyUseCase
 ) {
     suspend operator fun invoke(accepted: Boolean?): Resource<Unit> {
-        val resource = weightRepository.handleWeightDialogsQuestion(
-            weightDialogsRequest = WeightDialogsRequest(
-                accepted = accepted
+        if (accepted == null) {
+            val weightDialogsQuestion = cachedValuesProvider.getLocalWeightDialogsQuestion()
+            cachedValuesProvider.updateLocalWeightDialogsQuestion(
+                weightDialogsQuestion = WeightDialogsQuestion(
+                    askedCount = weightDialogsQuestion?.askedCount?.plus(1) ?: 1,
+                    lastTimeAsked = CustomDateUtils.getCurrentDateString()
+                )
             )
-        )
-
-        cachedValuesProvider.updateLocalLastTimeAskedForWeightDialogs(
-            date = CustomDateUtils.getCurrentDateString()
-        )
-
-        return when (resource) {
-            is Resource.Success -> {
-                cachedValuesProvider.updateWeightDialogs(weightDialogs = resource.data)
-                Resource.Success(Unit)
-            }
-
-            is Resource.Error -> {
-                Resource.Error()
-            }
+            return Resource.Error()
         }
+
+        return saveAskForWeightDaily(
+            accepted = accepted,
+            cachedValuesProvider = cachedValuesProvider
+        )
     }
 }

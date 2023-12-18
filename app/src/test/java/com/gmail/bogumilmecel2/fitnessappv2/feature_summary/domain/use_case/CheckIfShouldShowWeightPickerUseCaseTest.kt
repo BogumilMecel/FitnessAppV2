@@ -3,7 +3,6 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.use_case
 import com.gmail.bogumilmecel2.fitnessappv2.common.BaseMockkTest
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.model.User
-import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.model.WeightDialogs
 import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.model.WeightEntry
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -24,13 +23,13 @@ class CheckIfShouldShowWeightPickerUseCaseTest : BaseMockkTest() {
 
     @Test
     fun `Check if weight dialogs are set to false, resource error is returned`() = runTest {
-        mockData(user = mockUser(weightDialogsAccepted = false))
+        mockData(user = mockUser(askForWeightDaily = false))
         assertIs<Resource.Error<Unit>>(checkIfShouldShowWeightPickerUseCase())
     }
 
     @Test
     fun `Check if weight dialogs are set to null, resource error is returned`() = runTest {
-        mockData(user = mockUser(weightDialogsAccepted = null))
+        mockData(user = mockUser(askForWeightDaily = null))
         assertIs<Resource.Error<Unit>>(checkIfShouldShowWeightPickerUseCase())
     }
 
@@ -63,10 +62,10 @@ class CheckIfShouldShowWeightPickerUseCaseTest : BaseMockkTest() {
     }
 
     private fun mockUser(
-        weightDialogsAccepted: Boolean? = true,
+        askForWeightDaily: Boolean? = true,
         latestWeightEntryDate: String = mockedDate2
     ) = User(
-        weightDialogs = WeightDialogs(accepted = weightDialogsAccepted),
+        askForWeightDaily = askForWeightDaily,
         latestWeightEntry = WeightEntry(date = latestWeightEntryDate)
     )
 }

@@ -6,7 +6,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.UserInformation
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.CachedValuesProvider
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.model.User
-import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.model.WeightDialogs
+import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.model.WeightDialogsQuestion
 import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.model.WeightEntry
 import com.google.gson.Gson
 
@@ -71,24 +71,24 @@ class RealCachedValuesProvider(
         )
     }
 
-    override suspend fun updateWeightDialogs(weightDialogs: WeightDialogs) {
+    override suspend fun updateAskForWeightDaily(accepted: Boolean) {
         saveUser(
             user = getUser().copy(
-                weightDialogs = weightDialogs
+                askForWeightDaily = accepted
             )
         )
     }
 
-    override suspend fun updateLocalLastTimeAskedForWeightDialogs(date: String) {
+    override suspend fun updateLocalWeightDialogsQuestion(weightDialogsQuestion: WeightDialogsQuestion) {
         saveItemToJson(
-            item = date,
+            item = weightDialogsQuestion,
             key = WEIGHT_DIALOGS
         )
     }
 
-    override suspend fun getLocalLastTimeAskedForWeightDialogs() = getItemFromJson(
+    override suspend fun getLocalWeightDialogsQuestion() = getItemFromJson(
         key = WEIGHT_DIALOGS,
-        clazz = String::class.java
+        clazz = WeightDialogsQuestion::class.java
     )
 
     override suspend fun getLocalLastTimeShowedWeightPicker() = getItemFromJson(

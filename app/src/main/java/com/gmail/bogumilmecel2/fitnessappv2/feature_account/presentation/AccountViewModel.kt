@@ -1,7 +1,6 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_account.presentation
 
 import androidx.lifecycle.viewModelScope
-import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.EditNutritionGoalsScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.LoginScreenDestination
@@ -22,6 +21,7 @@ class AccountViewModel @Inject constructor(
 
     override fun configureOnStart() {
         getWantedNutritionValues()
+        getWeightDialogsData()
     }
 
     override fun onEvent(event: AccountEvent) {
@@ -37,23 +37,55 @@ class AccountViewModel @Inject constructor(
             is AccountEvent.BackPressed -> {
                 navigateUp()
             }
+
+            is AccountEvent.AskForWeightDailyClicked -> {
+                handleAskForWeightDaily(event.checked)
+            }
         }
     }
 
     private fun getWantedNutritionValues() {
         viewModelScope.launch {
-            initializeProductData(cachedValuesProvider.getWantedNutritionValues())
+            with(cachedValuesProvider.getWantedNutritionValues()) {
+                _state.update {
+                    it.copy(
+                        nutritionData = NutritionData(
+                            nutritionValues = this,
+                            pieChartData = useCases.createPieChartDataUseCase(nutritionValues = this)
+                        ),
+                    )
+                }
+            }
         }
     }
 
-    private fun initializeProductData(wantedNutritionValues: NutritionValues) {
+    private fun handleAskForWeightDaily(accepted: Boolean) {
+        changeAskForWeightDaily(accepted = accepted)
+        viewModelScope.launch {
+            useCases.saveAskForWeightDailyUseCase(
+                accepted = accepted,
+                cachedValuesProvider = cachedValuesProvider
+            ).handle(
+                onError = { changeAskForWeightDaily(accepted = !accepted) }
+            ) {}
+        }
+    }
+
+    private fun changeAskForWeightDaily(accepted: Boolean) {
         _state.update {
             it.copy(
-                nutritionData = NutritionData(
-                    nutritionValues = wantedNutritionValues,
-                    pieChartData = useCases.createPieChartDataUseCase(nutritionValues = wantedNutritionValues)
-                ),
+                askForWeightDaily = accepted,
             )
+        }
+    }
+
+    private fun getWeightDialogsData() {
+        viewModelScope.launch {
+            _state.update {
+                it.copy(
+                    askForWeightDaily = cachedValuesProvider.getUser().askForWeightDaily == true
+                )
+            }
         }
     }
 
