@@ -137,6 +137,7 @@
     <string name="recipe_ingredients">Ingredients</string>
     <string name="recipe_save_to">Save to %s</string>
     <string name="recipe_edit">Edit recipe</string>
+    <string name="recipe_servings_error">Please make sure you have entered correct servings value</string>
 
     <string name="new_recipe_public">Should recipe be public</string>
     <string name="new_recipe_public_des">Everybody will be able to see it and you will not be able to delete it</string>
