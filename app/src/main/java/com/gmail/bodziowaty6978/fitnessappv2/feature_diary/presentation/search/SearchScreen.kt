@@ -24,7 +24,6 @@ import com.gmail.bodziowaty6978.fitnessappv2.common.data.singleton.CurrentDate
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.BackHandler
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.Beige1
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.BlueViolet3
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.diary.components.HorizontalProgressIndicator
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search.componens.BottomSearchAddItem
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search.componens.SearchButton
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search.componens.SearchProductItem
@@ -53,11 +52,21 @@ fun SearchScreen(
         viewModel.initializeHistory()
     }
 
-    val cameraPermissionErrorMessage = stringResource(id = R.string.camera_permission_is_required_for_this_feature_to_be_available)
+    val cameraPermissionErrorMessage = stringResource(id = R.string.camera_permission_is_required_to_scan_a_product_barcode)
 
     LaunchedEffect(key1 = cameraPermissionState){
         if(cameraPermissionState.status is PermissionStatus.Denied&&searchState.hasPermissionDialogBeenShowed){
             scaffoldState.snackbarHostState.showSnackbar(cameraPermissionErrorMessage)
+        }
+    }
+
+    LaunchedEffect(key1 = searchState){
+        viewModel.searchState.collect{
+            it.errorMessage?.let { error ->
+                if (error!=searchState.lastErrorMessage){
+                    scaffoldState.snackbarHostState.showSnackbar(error)
+                }
+            }
         }
     }
 
@@ -96,7 +105,7 @@ fun SearchScreen(
                     BottomSearchAddItem(
                         modifier = Modifier.weight(1F),
                         onClick = {
-                            viewModel.onEvent(SearchEvent.ClickedNewProduct(mealName = mealName))
+                            viewModel.onEvent(SearchEvent.ClickedNewProduct)
                         },
                         name = stringResource(id = R.string.product),
                         color = BlueViolet3
@@ -186,7 +195,7 @@ fun SearchScreen(
                             modifier = Modifier
                                 .align(Alignment.Center)
                         ) {
-                            HorizontalProgressIndicator()
+                            CircularProgressIndicator()
 
                             Spacer(modifier = Modifier.width(4.dp))
 
@@ -211,12 +220,34 @@ fun SearchScreen(
                                 }
                             }
                         }
-                    } else if (searchState.errorMessage != null) {
-                        Text(
-                            text = searchState.errorMessage,
+                    }else if(searchState.barcode!=null){
+                        Column(
                             modifier = Modifier
                                 .align(Alignment.Center)
-                        )
+                        ) {
+
+                            Text(
+                                text = stringResource(id = R.string.there_is_no_product_with_provided_barcode_do_you_want_to_add_it),
+                                modifier = Modifier
+                                    .padding(horizontal = 40.dp),
+                                style = MaterialTheme.typography.h1
+                            )
+
+                            Spacer(modifier = Modifier.height(4.dp))
+
+                            Button(
+                                onClick = {
+                                    viewModel.onEvent(SearchEvent.ClickedNewProduct)
+                                }
+                            ) {
+                                Text(
+                                    text = stringResource(id = R.string.add),
+                                    style = MaterialTheme.typography.button
+                                )
+
+                            }
+
+                        }
                     }
                 }
             }

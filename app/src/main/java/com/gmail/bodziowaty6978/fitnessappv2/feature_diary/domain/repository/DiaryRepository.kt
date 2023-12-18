@@ -13,6 +13,8 @@ interface DiaryRepository {
 
     suspend fun searchForProducts(productName:String) : Resource<List<ProductWithId>>
 
+    suspend fun searchForProductWithBarcode(barcode:String):Resource<ProductWithId>
+
     suspend fun getLocalProductHistory():Resource<List<ProductWithId>>
 
     suspend fun saveProductToHistory(productWithId: ProductWithId):CustomResult
