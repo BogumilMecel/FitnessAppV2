@@ -2,6 +2,7 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.data.repository.remot
 
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.Currency
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.DiaryItem
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseRepository
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.data.api.DiaryApi
@@ -120,9 +121,12 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun getCaloriesSum(date: String): Resource<Int> {
+    override suspend fun getDiaryEntriesNutritionValues(date: String): Resource<List<NutritionValues>> {
         return handleRequest {
-            diaryApi.getCaloriesSum(date = date).caloriesSum
+            buildList {
+                addAll(userDiaryItemsDao.getProductDiaryEntriesNutritionValues(date))
+                addAll(userDiaryItemsDao.getRecipeDiaryEntriesNutritionValues(date))
+            }
         }
     }
 

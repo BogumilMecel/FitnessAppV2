@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Recipe
@@ -70,4 +71,10 @@ interface UserDiaryItemsDao {
         date: String,
         diaryEntriesIds: List<String>
     )
+
+    @Query("SELECT nutrition_values FROM productdiaryentry WHERE date = :date")
+    fun getProductDiaryEntriesNutritionValues(date: String): List<NutritionValues>
+
+    @Query("SELECT nutrition_values FROM recipediaryentry WHERE date = :date")
+    fun getRecipeDiaryEntriesNutritionValues(date: String): List<NutritionValues>
 }

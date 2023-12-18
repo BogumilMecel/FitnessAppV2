@@ -217,13 +217,10 @@ class SummaryViewModel @Inject constructor(
     }
 
     private fun getCaloriesSum() {
-        viewModelScope.launch {
-            val caloriesSum = summaryUseCases.getCaloriesSum(
-                date = CustomDateUtils.getCurrentDateString()
-            )
+        viewModelScope.launch(Dispatchers.IO) {
             _state.update {
                 it.copy(
-                    caloriesSum = caloriesSum
+                    caloriesSum = summaryUseCases.getCaloriesSum(date = CustomDateUtils.getCurrentDateString())
                 )
             }
         }

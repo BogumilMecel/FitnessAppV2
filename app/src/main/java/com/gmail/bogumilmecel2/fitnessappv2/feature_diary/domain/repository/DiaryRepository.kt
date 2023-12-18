@@ -2,6 +2,7 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository
 
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.Currency
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.DiaryItem
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.DeleteDiaryEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.DiaryEntriesResponse
@@ -44,7 +45,7 @@ interface DiaryRepository {
     suspend fun editRecipeDiaryEntry(recipeDiaryEntry: RecipeDiaryEntry): Resource<RecipeDiaryEntry>
     suspend fun saveNewProduct(newProductRequest: NewProductRequest): Resource<Product>
     suspend fun getProduct(productId: String): Resource<Product?>
-    suspend fun getCaloriesSum(date: String): Resource<Int>
+    suspend fun getDiaryEntriesNutritionValues(date: String): Resource<List<NutritionValues>>
     suspend fun getPrice(productId: String, currency: Currency): Resource<ProductPrice?>
     suspend fun getRecipePriceFromIngredients(
         recipePriceRequest: RecipePriceRequest,

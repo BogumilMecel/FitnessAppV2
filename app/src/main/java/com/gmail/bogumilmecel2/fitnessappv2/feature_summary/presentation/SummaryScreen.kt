@@ -35,9 +35,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 @OptIn(ExperimentalMaterialApi::class)
 @Destination
 @Composable
-fun SummaryScreen(
-    viewModel: SummaryViewModel = hiltViewModel()
-) {
+fun SummaryScreen(viewModel: SummaryViewModel = hiltViewModel()) {
     ConfigureViewModel(viewModel = viewModel)
     val state = viewModel.state.collectAsState().value
     val activity = (LocalContext.current as? Activity)
