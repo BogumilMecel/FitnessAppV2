@@ -1,10 +1,10 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_recipe
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.addAndReturnList
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.removeAndReturnList
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.TAG
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.toValidInt
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.NewRecipeScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.RecipeScreenDestination
@@ -30,6 +30,7 @@ class NewRecipeViewModel @Inject constructor(
         date = NewRecipeScreenDestination.argsFrom(savedStateHandle).dateTransferObject.displayedDate,
     )
 ) {
+    private val ingredients = mutableListOf<Ingredient>()
 
     override fun onEvent(event: NewRecipeEvent) {
         when (event) {
@@ -188,15 +189,34 @@ class NewRecipeViewModel @Inject constructor(
 
             is NewRecipeEvent.ClickedDeleteInIngredientDialog -> {
                 _state.value.longClickedIngredient?.let { ingredient ->
+                    ingredients.remove(ingredient)
                     _state.update {
                         it.copy(
-                            ingredients = it.ingredients.removeAndReturnList(element = ingredient),
                             isDeleteIngredientDialogVisible = false
                         )
                     }
+                    createRecipeIngredientsParams()
                     fetchPrices()
                 }
             }
+        }
+    }
+
+    private fun createRecipeIngredientsParams() {
+        _state.update {
+            it.copy(
+                ingredientsItemsParams = ingredients.map { ingredient ->
+                    newRecipeUseCases.createSearchItemParamsFromIngredientUseCase(
+                        ingredient = ingredient,
+                        onClick = {
+                            // TODO: Add action for onclick ingredient
+                        },
+                        onLongClick = {
+                            onEvent(NewRecipeEvent.LongClickedIngredient(ingredient))
+                        }
+                    )
+                }
+            )
         }
     }
 
@@ -204,7 +224,7 @@ class NewRecipeViewModel @Inject constructor(
         viewModelScope.launch {
             with(_state.value) {
                 newRecipeUseCases.addNewRecipe(
-                    ingredients = ingredients,
+                    ingredients = this@NewRecipeViewModel.ingredients,
                     time = selectedTime,
                     servings = servings,
                     difficulty = selectedDifficulty,
@@ -238,17 +258,11 @@ class NewRecipeViewModel @Inject constructor(
                             productId = product.id
                         )
 
-                        val newIngredientsList = _state.value.ingredients.toMutableList()
-                        newIngredientsList.removeIf { it.productId == newIngredient.productId }
+                        ingredients.removeIf { it.productId == newIngredient.productId }
+                        ingredients.add(newIngredient)
 
-                        _state.update {
-                            it.copy(
-                                ingredients = newIngredientsList.addAndReturnList(element = newIngredient)
-                            )
-                        }
-
+                        createRecipeIngredientsParams()
                         fetchPrices()
-
                         changeState(isRecipeSectionVisible = true)
                     }
                 }
@@ -259,31 +273,29 @@ class NewRecipeViewModel @Inject constructor(
 
     private fun fetchPrices() {
         viewModelScope.launch {
-            with(_state.value.ingredients) {
-                if (this.isNotEmpty()) {
-                    newRecipeUseCases.getRecipePriceFromIngredientsUseCase(
-                        ingredients = this
-                    ).handle(
-                        showSnackbar = false
-                    ) { response ->
-                        _state.update {
-                            it.copy(
-                                recipePrice = response?.let {
-                                    RecipePrice(
-                                        totalPrice = response.totalPrice,
-                                        shouldShowPriceWarning = response.shouldShowPriceWarning
-                                    )
-                                }
-                            )
-                        }
-                        updateRecipeServingPrice()
-                    }
-                } else {
+            if (ingredients.isNotEmpty()) {
+                newRecipeUseCases.getRecipePriceFromIngredientsUseCase(
+                    ingredients = ingredients
+                ).handle(
+                    showSnackbar = false
+                ) { response ->
                     _state.update {
                         it.copy(
-                            recipePrice = null
+                            recipePrice = response?.let {
+                                RecipePrice(
+                                    totalPrice = response.totalPrice,
+                                    shouldShowPriceWarning = response.shouldShowPriceWarning
+                                )
+                            }
                         )
                     }
+                    updateRecipeServingPrice()
+                }
+            } else {
+                _state.update {
+                    it.copy(
+                        recipePrice = null
+                    )
                 }
             }
         }
@@ -319,7 +331,7 @@ class NewRecipeViewModel @Inject constructor(
         }
     }
 
-    private fun updateRecipeNutritionData(servings: Int) = with(_state.value) {
+    private fun updateRecipeNutritionData(servings: Int) {
         _state.update {
             it.copy(
                 nutritionData = it.nutritionData.copy(
@@ -353,9 +365,20 @@ class NewRecipeViewModel @Inject constructor(
             ).handle { products ->
                 _state.update {
                     it.copy(
-                        searchItems = products
+                        searchItems = products.map { product ->
+                            newRecipeUseCases.createSearchItemParamsFromProductUseCase(
+                                product = product,
+                                onClick = {
+                                    onEvent(NewRecipeEvent.ClickedProduct(product))
+                                },
+                                onLongClick = {
+                                    // TODO: Add on long click for product
+                                }
+                            )
+                        }
                     )
                 }
+                Log.e(TAG, _state.value.searchItems.toString())
             }
         }
     }

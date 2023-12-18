@@ -38,7 +38,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetRe
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.*
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_recipe.AddNewRecipe
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_recipe.CalculateRecipeNutritionValues
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_recipe.NewRecipeUseCases
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.*
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.recipe.EditRecipeDiaryEntryUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.recipe.PostRecipeDiaryEntryUseCase
@@ -353,26 +352,6 @@ object AppModule {
     ): GetRecipePriceFromIngredientsUseCase = GetRecipePriceFromIngredientsUseCase(
         diaryRepository = diaryRepository,
         getUserCurrencyUseCase = getUserCurrencyUseCase
-    )
-
-    @Singleton
-    @Provides
-    fun provideNewRecipeUseCases(
-        addNewRecipe: AddNewRecipe,
-        calculateRecipeNutritionValues: CalculateRecipeNutritionValues,
-        createPieChartData: CreatePieChartData,
-        searchForProductsUseCase: SearchForProductsUseCase,
-        calculateProductNutritionValuesUseCase: CalculateProductNutritionValuesUseCase,
-        getRecipePriceFromIngredientsUseCase: GetRecipePriceFromIngredientsUseCase,
-        calculateServingPrice: CalculateServingPrice
-    ): NewRecipeUseCases = NewRecipeUseCases(
-        addNewRecipe = addNewRecipe,
-        calculateRecipeNutritionValues = calculateRecipeNutritionValues,
-        createPieChartData = createPieChartData,
-        searchForProductsUseCase = searchForProductsUseCase,
-        calculateProductNutritionValuesUseCase = calculateProductNutritionValuesUseCase,
-        getRecipePriceFromIngredientsUseCase = getRecipePriceFromIngredientsUseCase,
-        calculateServingPrice = calculateServingPrice
     )
 
     @Singleton

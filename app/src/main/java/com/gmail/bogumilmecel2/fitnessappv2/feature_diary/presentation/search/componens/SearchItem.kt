@@ -4,7 +4,6 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,8 +17,8 @@ import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun SearchItem(searchItemParams: SearchItemParams) = with(searchItemParams){
-    Box(
+fun SearchItem(searchItemParams: SearchItemParams) = with(searchItemParams) {
+    Row(
         modifier = Modifier
             .fillMaxWidth()
             .background(color = FitnessAppTheme.colors.BackgroundLight)
@@ -27,34 +26,31 @@ fun SearchItem(searchItemParams: SearchItemParams) = with(searchItemParams){
                 onClick = onItemClick,
                 onLongClick = onItemLongClick
             )
+            .padding(
+                vertical = 10.dp,
+                horizontal = 16.dp
+            ),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 10.dp, horizontal = 16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-
-            Column {
-                Text(
-                    text = name,
-                    style = FitnessAppTheme.typography.ParagraphLarge
-                )
-
-                Text(
-                    text = textBelowName,
-                    style = FitnessAppTheme.typography.ParagraphMedium,
-                    color = FitnessAppTheme.colors.ContentSecondary
-                )
-            }
+        Column {
+            Text(
+                text = name,
+                style = FitnessAppTheme.typography.ParagraphLarge
+            )
 
             Text(
-                text = endText,
+                text = textBelowName,
                 style = FitnessAppTheme.typography.ParagraphMedium,
                 color = FitnessAppTheme.colors.ContentSecondary
             )
         }
+
+        Text(
+            text = endText,
+            style = FitnessAppTheme.typography.ParagraphMedium,
+            color = FitnessAppTheme.colors.ContentSecondary
+        )
     }
 }
 
