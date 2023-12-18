@@ -3,9 +3,7 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_summary.presentation
 import androidx.lifecycle.viewModelScope
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.singleton.CurrentDate
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
-import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.domain.use_case.SummaryUseCases
-import com.gmail.bodziowaty6978.fitnessappv2.feature_weight.domain.model.WeightEntry
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -49,52 +47,39 @@ class SummaryViewModel @Inject constructor(
     fun initializeData() {
         getLatestLogEntry()
         getCaloriesSum()
-        getLatestWeightEntries()
+        initWeightData()
         initWantedCalories()
     }
 
     private fun saveNewWeightEntry(value: Double) {
         viewModelScope.launch {
-            summaryUseCases.addWeightEntry(value = value).handle {
-                _state.update { state ->
-                    state.weightEntries.toMutableList().apply {
-                        add(it)
-                        setWeightEntries(weightEntries = this)
+            summaryUseCases.addWeightEntry(value = value).handle(
+                finally = {
+                    _state.update {
+                        it.copy(
+                            isWeightPickerVisible = false
+                        )
                     }
+                }
+            ) {
+                _state.update { state ->
                     state.copy(
-                        isWeightPickerVisible = false,
+                        weightProgress = it.weightProgress,
+                        latestWeightEntry = it.latestWeightEntry
                     )
                 }
             }
+        }
+    }
+
+    private fun initWeightData() {
+        viewModelScope.launch(Dispatchers.IO) {
             _state.update {
                 it.copy(
-                    isWeightPickerVisible = false
+                    latestWeightEntry = sharedPreferencesUtils.getLatestWeightEntry(),
+                    weightProgress = sharedPreferencesUtils.getWeightProgress()
                 )
             }
-        }
-    }
-
-    private fun getLatestWeightEntries() {
-        viewModelScope.launch(Dispatchers.IO) {
-            when (val resource = summaryUseCases.getLatestWeightEntries()) {
-                is Resource.Success -> {
-                    setWeightEntries(resource.data)
-                }
-
-                is Resource.Error -> {
-                    showSnackbarError(message = resource.uiText)
-                }
-            }
-        }
-    }
-
-    private fun setWeightEntries(weightEntries: List<WeightEntry>) {
-        _state.update { state ->
-            state.copy(
-                weightEntries = weightEntries,
-                weightProgress = summaryUseCases.calculateWeightProgress(weightEntries.toMutableList()),
-                latestWeightEntry = weightEntries.sortedByDescending { it.timestamp }.getOrNull(0)
-            )
         }
     }
 

@@ -46,8 +46,6 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_weight.data.api.WeightApi
 import com.gmail.bodziowaty6978.fitnessappv2.feature_weight.data.repository.WeighRepositoryImp
 import com.gmail.bodziowaty6978.fitnessappv2.feature_weight.domain.repository.WeightRepository
 import com.gmail.bodziowaty6978.fitnessappv2.feature_weight.domain.use_case.AddWeightEntry
-import com.gmail.bodziowaty6978.fitnessappv2.feature_weight.domain.use_case.CalculateWeightProgress
-import com.gmail.bodziowaty6978.fitnessappv2.feature_weight.domain.use_case.GetLatestWeightEntries
 import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
@@ -332,8 +330,6 @@ object AppModule {
     ): SummaryUseCases = SummaryUseCases(
         getCaloriesSum = GetCaloriesSum(diaryRepository = diaryRepository),
         addWeightEntry = AddWeightEntry(weightRepository = weightRepository),
-        getLatestWeightEntries = GetLatestWeightEntries(weightRepository = weightRepository),
-        calculateWeightProgress = CalculateWeightProgress()
     )
 
     @Singleton

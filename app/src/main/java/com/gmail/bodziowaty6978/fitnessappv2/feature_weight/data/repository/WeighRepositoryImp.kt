@@ -5,6 +5,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseRepository
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.feature_weight.data.api.WeightApi
+import com.gmail.bodziowaty6978.fitnessappv2.feature_weight.domain.model.NewWeightEntryResponse
 import com.gmail.bodziowaty6978.fitnessappv2.feature_weight.domain.model.WeightEntry
 import com.gmail.bodziowaty6978.fitnessappv2.feature_weight.domain.repository.WeightRepository
 
@@ -13,18 +14,11 @@ class WeighRepositoryImp(
     resourceProvider: ResourceProvider,
     private val customSharedPreferencesUtils: CustomSharedPreferencesUtils
 ) : WeightRepository, BaseRepository(resourceProvider) {
-    override suspend fun getLatestWeightEntries(): Resource<List<WeightEntry>> {
+    override suspend fun addWeightEntry(weightEntry: WeightEntry): Resource<NewWeightEntryResponse> {
         return handleRequest {
-            customSharedPreferencesUtils.getWeightEntries()
-        }
-    }
-
-    override suspend fun addWeightEntry(weightEntry: WeightEntry): Resource<WeightEntry> {
-        return handleRequest {
-            if (weightApi.addWeightEntry(weightEntry = weightEntry)) {
-                customSharedPreferencesUtils.updateLatestWeightEntries(weightEntry = weightEntry)
-            }
-            weightEntry
+            val response = weightApi.addWeightEntry(weightEntry = weightEntry)
+            customSharedPreferencesUtils.updateWeightInfo(newWeightEntryResponse = response)
+            response
         }
     }
 }
