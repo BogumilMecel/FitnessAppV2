@@ -21,22 +21,18 @@ class LoginViewModel @Inject constructor(
     private val authUseCases: AuthUseCases
 ) : BaseViewModel() {
 
-    private val _emailState = mutableStateOf(
-        TextFieldState(
-            hint = resourceProvider.getString(R.string.email_address)
-        )
-    )
+    private val _emailState = mutableStateOf(TextFieldState())
     val emailState: State<TextFieldState> = _emailState
 
-    private val _passwordState = mutableStateOf(
-        TextFieldState(
-            hint = resourceProvider.getString(R.string.password)
-        )
-    )
+    private val _passwordState = mutableStateOf(TextFieldState())
     val passwordState: State<TextFieldState> = _passwordState
 
     private val _isLoading = mutableStateOf(false)
     val isLoading: State<Boolean> = _isLoading
+
+    init {
+        initializeHints()
+    }
 
     fun onEvent(event: AuthEvent) {
         when (event) {
@@ -77,4 +73,8 @@ class LoginViewModel @Inject constructor(
         }
     }
 
+    private fun initializeHints() {
+        _passwordState.value = TextFieldState(hint = resourceProvider.getString(R.string.password))
+        _emailState.value = TextFieldState(hint = resourceProvider.getString(R.string.email_address))
+    }
 }

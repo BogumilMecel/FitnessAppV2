@@ -1,8 +1,8 @@
 package com.gmail.bogumilmecel2.fitnessappv2.common.di
 
 import android.app.Application
-import android.content.SharedPreferences
 import com.gmail.bogumilmecel2.fitnessappv2.common.data.navigation.ComposeCustomNavigator
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.CachedValuesProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.Currency
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.ResourceProvider
@@ -13,7 +13,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.GetToken
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.GetUserCurrencyUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.SaveNutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.SaveToken
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.RealResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.feature_account.domain.use_case.DeleteToken
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.model.AuthenticationRequest
@@ -72,6 +71,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.model.In
 import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.repository.UserDataRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.use_cases.SaveIntroductionInformationUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_splash.domain.repository.LoadingRepository
+import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.model.LogEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.use_case.GetCaloriesSum
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.use_case.SummaryUseCases
 import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.model.NewWeightEntryResponse
@@ -97,7 +97,14 @@ object TestAppModule {
 
     @Provides
     @Singleton
-    fun provideResourceProvider(app: Application): ResourceProvider = RealResourceProvider(app)
+    fun provideResourceProvider(app: Application): ResourceProvider = object : ResourceProvider {
+        override fun getString(stringResId: Int, vararg args: Any) = ""
+
+        override fun getPluralString(pluralResId: Int, quantity: Int) = ""
+
+        override fun mockString(stringResId: Int, value: String) {
+        }
+    }
 
     @Singleton
     @Provides
@@ -342,10 +349,38 @@ object TestAppModule {
 
     @Singleton
     @Provides
+    fun provideCachedValuesProvider(): CachedValuesProvider = object : CachedValuesProvider {
+        override suspend fun getWantedNutritionValues() = NutritionValues()
+
+        override suspend fun saveWantedNutritionValues(nutritionValues: NutritionValues) {
+        }
+
+        override suspend fun getWeightProgress() = ""
+
+        override suspend fun updateWeightInfo(
+            weightProgress: String?,
+            latestWeightEntry: WeightEntry?
+        ) {
+        }
+
+        override suspend fun getLatestLogEntry() = LogEntry()
+
+        override suspend fun getLatestWeightEntry() = null
+
+        override suspend fun getUser() = null
+
+        override suspend fun getUserCurrency() = Currency.PLN
+
+        override suspend fun saveUser(user: User) {
+        }
+    }
+
+    @Singleton
+    @Provides
     fun provideGetUserCurrencyUseCase(
-        sharedPreferences: SharedPreferences
+        cachedValuesProvider: CachedValuesProvider
     ): GetUserCurrencyUseCase = GetUserCurrencyUseCase(
-        sharedPreferences = sharedPreferences
+        cachedValuesProvider = cachedValuesProvider
     )
 
     @Singleton
