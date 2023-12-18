@@ -1,7 +1,6 @@
 package com.gmail.bodziowaty6978.fitnessappv2.common.presentation.navigation
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -37,7 +36,6 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search.S
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.presentation.IntroductionScreen
 import com.gmail.bodziowaty6978.fitnessappv2.feature_splash.loading.presentation.SplashScreen
 import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.presentation.SummaryScreen
-import com.gmail.bodziowaty6978.fitnessappv2.util.TAG
 
 @RequiresApi(Build.VERSION_CODES.N)
 @Composable
@@ -70,13 +68,7 @@ fun NavHostGraph(
             if (it.destination == "navigateUp") {
                 navController.navigateUp()
             } else {
-                try {
-                    Log.e(TAG,navController.toString())
-                    navController.navigate(it.destination, it.navOptions)
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    scaffoldState.snackbarHostState.showSnackbar(e.message.toString())
-                }
+                navController.navigate(it.destination, it.navOptions)
             }
         }
     }
@@ -164,10 +156,9 @@ fun NavHostGraph(
                             defaultValue = "Breakfast"
                         }
                     )
-                ) { backStackEntry ->
+                ) {
                     bottomNavigationState = false
-                    val mealName = backStackEntry.arguments?.getString("mealName")
-                    SearchScreen(mealName!!)
+                    SearchScreen()
                 }
 
                 composable(
@@ -185,16 +176,14 @@ fun NavHostGraph(
                         navController.previousBackStackEntry?.arguments?.getParcelable<ProductWithId>(
                             "productWithId"
                         )
-                    val mealName = it.arguments?.getString("mealName")
                     if (productWithId != null) {
-                        ProductScreen(productWithId = productWithId, mealName = mealName!!)
+                        ProductScreen(productWithId = productWithId)
                     } else {
                         ProductScreen(
                             productWithId = ProductWithId(
                                 product = Product(),
                                 productId = ""
-                            ),
-                            mealName = mealName!!
+                            )
                         )
                     }
 
@@ -211,8 +200,7 @@ fun NavHostGraph(
                         }
                     )
                 ) {
-                    val mealName = it.arguments?.getString("mealName")
-                    NewProductScreen(mealName = mealName!!)
+                    NewProductScreen()
                 }
             }
         }

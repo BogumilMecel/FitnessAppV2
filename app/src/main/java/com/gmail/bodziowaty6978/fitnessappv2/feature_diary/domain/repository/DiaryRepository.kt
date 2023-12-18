@@ -25,5 +25,5 @@ interface DiaryRepository {
 
     suspend fun editDiaryEntry(diaryEntryWithId: DiaryEntryWithId):CustomResult
 
-    suspend fun saveNewProduct(product: Product):CustomResult
+    suspend fun saveNewProduct(product: Product):Resource<String>
 }

@@ -14,4 +14,5 @@ data class DiaryEntry(
     val time:Long = System.currentTimeMillis(),
     val weight: Int = 0,
     val unit: String = "g",
-    val nutritionValues: NutritionValues = NutritionValues()):Parcelable
+    val nutritionValues: NutritionValues = NutritionValues()
+):Parcelable
