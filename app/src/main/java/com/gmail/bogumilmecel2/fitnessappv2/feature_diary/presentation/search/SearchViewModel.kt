@@ -168,7 +168,9 @@ class SearchViewModel @Inject constructor(
 
     private fun fetchUserRecipes() {
         viewModelScope.launch(Dispatchers.IO) {
-            diaryRepository.getLocalUserRecipes().handle { recipes ->
+            diaryRepository.getLocalUserRecipes(
+                userId = cachedValuesProvider.getUserId()
+            ).handle { recipes ->
                 userRecipes = recipes
                 createSearchItemParamsFromRecipeUseCase(items = recipes)
             }
@@ -177,7 +179,9 @@ class SearchViewModel @Inject constructor(
 
     private fun fetchUserProducts() {
         viewModelScope.launch(Dispatchers.IO) {
-            diaryRepository.getLocalUserProducts().handle { products ->
+            diaryRepository.getLocalUserProducts(
+                userId = cachedValuesProvider.getUserId()
+            ).handle { products ->
                 userProducts = products
                 createMyProductsSearchItemParamsFromProductUseCase(items = products)
             }

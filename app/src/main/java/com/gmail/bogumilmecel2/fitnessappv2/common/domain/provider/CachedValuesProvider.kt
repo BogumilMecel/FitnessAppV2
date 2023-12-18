@@ -20,6 +20,7 @@ interface CachedValuesProvider {
     suspend fun getUser(): User
     suspend fun getUserCurrency(): Currency
     suspend fun saveUser(user: User)
+    suspend fun getUserId(): String
     suspend fun updateWeightDialogs(weightDialogs: WeightDialogs)
     suspend fun updateLocalLastTimeAskedForWeightDialogs(date: String)
     suspend fun getLocalLastTimeAskedForWeightDialogs(): String?
