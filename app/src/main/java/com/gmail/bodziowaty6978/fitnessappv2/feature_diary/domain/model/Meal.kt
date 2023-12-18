@@ -5,7 +5,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.util.Nut
 
 data class Meal(
     val mealName:String,
-    val diaryEntries:List<DiaryEntryWithId>
+    val diaryEntries:List<DiaryEntry>
 )
 
 fun Meal.sumNutritionValues(
@@ -14,7 +14,7 @@ fun Meal.sumNutritionValues(
     val sum = when(nutritionType){
         is NutritionType.Calories -> {
             this.diaryEntries.sumOf {
-                it.diaryEntry.nutritionValues.calories
+                it.nutritionValues.calories
             }
         }
         is NutritionType.Carbs -> {

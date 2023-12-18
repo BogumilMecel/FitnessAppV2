@@ -2,49 +2,36 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.data.repository.remo
 
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.room.dao.ProductDao
-import com.gmail.bodziowaty6978.fitnessappv2.common.util.Constants
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.DiaryEntry
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.DiaryEntryWithId
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.data.api.ProductApi
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.ProductWithId
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.diary_entry.DiaryEntry
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.repository.DiaryRepository
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
-import kotlinx.coroutines.tasks.await
 
 class DiaryRepositoryImp(
-    private val firebaseFirestore:FirebaseFirestore,
+    private val productApi:ProductApi,
     private val productDao: ProductDao,
-    private val userId:String?,
     private val resourceProvider: ResourceProvider
 ): DiaryRepository {
 
-    private val userCollection = firebaseFirestore.collection(Constants.FIRESTORE_USER_COLLECTION)
-    private val productCollection = firebaseFirestore.collection(Constants.FIRESTORE_PRODUCT_COLLECTION)
-    private val journalCollection = userCollection.document(userId!!).collection(Constants.FIRESTORE_JOURNAL_COLLECTION)
-
-    override suspend fun getDiaryEntries(date: String): Resource<List<DiaryEntryWithId>> {
+    override suspend fun getDiaryEntries(timestamp: Long, token:String): Resource<List<DiaryEntry>> {
         return try {
-            val query = userCollection.document(userId!!).collection("journal").whereEqualTo("date", date)
-                .orderBy("time", Query.Direction.DESCENDING)
-                .get().await().documents
-
-            val mappedEntries = query.map {
-                DiaryEntryWithId(it.id,it.toObject(DiaryEntry::class.java)!!)
-            }
-            Resource.Success(mappedEntries)
+            val entries = productApi.getDiaryEntries(
+                timestamp = timestamp,
+                token = token
+            )
+            Resource.Success(entries)
         }catch (e:Exception){
             e.printStackTrace()
             Resource.Error(uiText = e.message.toString(), data = emptyList())
         }
     }
 
-    override suspend fun saveProductToHistory(productWithId: ProductWithId): CustomResult {
+    override suspend fun saveProductToHistory(product: Product): CustomResult {
         return try {
-            productDao.saveProductToHistory(productWithId = productWithId)
+            productDao.saveProductToHistory(productWithId = product)
             CustomResult.Success
         }catch (e:Exception){
             e.printStackTrace()
@@ -52,7 +39,7 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun getLocalProductHistory(): Resource<List<ProductWithId>> {
+    override suspend fun getLocalProductHistory(): Resource<List<Product>> {
         return try {
             val result = productDao.getHistory()
             Resource.Success(data = result)
@@ -62,66 +49,68 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun searchForProducts(productName: String): Resource<List<ProductWithId>> {
+    override suspend fun searchForProducts(searchText: String): Resource<List<Product>> {
         return try {
-            val query = productCollection.whereArrayContains("searchKeywords",productName).limit(20).get().await()
-            val mappedQuery = query.map { querySnapshot ->
-                ProductWithId(querySnapshot.id,querySnapshot.toObject(Product::class.java))
-            }
-            return Resource.Success(data = mappedQuery)
+            val items = productApi.searchForProducts(
+                searchText = searchText
+            )
+            return Resource.Success(data = items)
         }catch (e:Exception){
             e.printStackTrace()
             Resource.Error(uiText = e.message.toString(), data = emptyList())
         }
     }
 
-    override suspend fun searchForProductWithBarcode(barcode: String): Resource<ProductWithId> {
+    override suspend fun searchForProductWithBarcode(barcode: String): Resource<Product> {
         return try {
-            val items = productCollection.whereEqualTo("barcode",barcode).get().await().map {
-                ProductWithId(it.id,it.toObject(Product::class.java))
-            }
-            if (items.isEmpty()){
-                Resource.Error(uiText = resourceProvider.getString(R.string.there_is_no_product_with_provided_barcode_do_you_want_to_add_it))
-            }else{
-                Resource.Success(data = items[0])
-            }
+            val product = productApi.searchForProductWithBarcode(
+                barcode = barcode
+            )
+            if (product==null) Resource.Error(uiText = resourceProvider.getString(R.string.there_is_no_product_with_provided_barcode_do_you_want_to_add_it)) else Resource.Success(data = product)
         }catch (e:Exception){
             e.printStackTrace()
             Resource.Error(uiText = resourceProvider.getString(R.string.unknown_error))
         }
     }
 
-    override suspend fun addDiaryEntry(diaryEntry: DiaryEntry): CustomResult {
+    override suspend fun addDiaryEntry(diaryEntry: DiaryEntry, token: String): Resource<DiaryEntry> {
         return try {
-            journalCollection.add(diaryEntry)
-            CustomResult.Success
+            val newDiaryEntry = productApi.insertDiaryEntry(
+                diaryEntry = diaryEntry,
+                token = token
+            )
+            Resource.Success(data = newDiaryEntry)
         }catch (e:Exception){
             e.printStackTrace()
-            CustomResult.Error(resourceProvider.getString(R.string.unknown_error))
+            Resource.Error(resourceProvider.getString(R.string.unknown_error))
         }
     }
 
-    override suspend fun saveNewProduct(product: Product): Resource<String> {
+    override suspend fun saveNewProduct(product: Product): Resource<Product> {
         return try {
-            val query = productCollection.add(product).await()
-            Resource.Success(data = query.id)
+            val newProduct = productApi.insertProduct(
+                product = product
+            )
+            Resource.Success(data = newProduct)
         }catch (e:Exception){
             e.printStackTrace()
             Resource.Error(uiText = resourceProvider.getString(R.string.unknown_error))
         }
     }
 
-    override suspend fun deleteDiaryEntry(diaryEntryId: String): CustomResult {
+    override suspend fun deleteDiaryEntry(diaryEntryId: Int): CustomResult {
         return try {
-            journalCollection.document(diaryEntryId).delete()
-            CustomResult.Success
+            val wasDeleted = productApi.deleteDiaryEntry(
+                entryId = diaryEntryId
+            )
+            if (wasDeleted) CustomResult.Success else CustomResult.Error(message = resourceProvider.getString(R.string.unknown_error))
         }catch (e:Exception){
             e.printStackTrace()
             CustomResult.Error(message = resourceProvider.getString(R.string.unknown_error))
         }
     }
 
-    override suspend fun editDiaryEntry(diaryEntryWithId: DiaryEntryWithId): CustomResult {
+    override suspend fun editDiaryEntry(diaryEntry: DiaryEntry): CustomResult {
         TODO("Not yet implemented")
     }
 }

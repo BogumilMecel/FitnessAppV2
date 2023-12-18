@@ -131,12 +131,12 @@ class SearchViewModel @Inject constructor(
                     } else {
                         savedStateHandle.get<String>("mealName")?.let { mealName ->
                             resource.data?.let { productWithId ->
-                                navigator.navigate(
-                                    NavigationActions.SearchScreen.searchToProduct(
-                                        productWithId = productWithId,
-                                        mealName = mealName
-                                    )
-                                )
+//                                navigator.navigate(
+//                                    NavigationActions.SearchScreen.searchToProduct(
+//                                        productWithId = productWithId,
+//                                        mealName = mealName
+//                                    )
+//                                )
                             } ?: onError(resourceProvider.getString(R.string.unknown_error))
                         } ?: onError(resourceProvider.getString(R.string.unknown_error))
                     }

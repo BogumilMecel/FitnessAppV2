@@ -6,7 +6,6 @@ import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigation
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.util.BottomBarScreen
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.util.Screen
 import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.presentation.util.AuthScreen
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.ProductWithId
 
 object NavigationActions {
 
@@ -142,8 +141,8 @@ object NavigationActions {
             productWithId:ProductWithId
         ) = object :NavigationAction{
             override val destination: String = Screen.ProductScreen.route + "?mealName=$mealName"
-            override val parcelableArguments: Map<String, Parcelable>
-                get() = mapOf(Pair("productWithId",productWithId),Pair("ProductWithId",productWithId))
+//            override val parcelableArguments: Map<String, Parcelable>
+//                get() = mapOf(Pair("productWithId",productWithId),Pair("ProductWithId",productWithId))
         }
     }
 }

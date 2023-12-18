@@ -28,7 +28,6 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.presentation.register.
 import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.presentation.reset_password.ResetPasswordScreen
 import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.presentation.util.AuthScreen
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.ProductWithId
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.diary.DiaryScreen
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_product.NewProductScreen
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.ProductScreen
@@ -172,10 +171,10 @@ fun NavHostGraph(
                         }
                     )
                 ) {
-                    val productWithId =
-                        navController.previousBackStackEntry?.arguments?.getParcelable<ProductWithId>(
-                            "productWithId"
-                        )
+                    val productWithId = ProductWithId(productId = "1", product = Product())
+//                        navController.previousBackStackEntry?.arguments?.getParcelable<ProductWithId>(
+//                            "productWithId"
+//                        )
                     if (productWithId != null) {
                         ProductScreen(productWithId = productWithId)
                     } else {

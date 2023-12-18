@@ -21,7 +21,7 @@ import org.robolectric.RuntimeEnvironment
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(RobolectricTestRunner::class)
-internal class RegisterUserTest{
+internal class RegisterAuthRequestTest{
 
     @Mock
     private lateinit var authRepository: AuthRepository
