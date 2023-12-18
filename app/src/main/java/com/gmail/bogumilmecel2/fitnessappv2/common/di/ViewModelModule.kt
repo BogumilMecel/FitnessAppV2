@@ -1,5 +1,6 @@
 package com.gmail.bogumilmecel2.fitnessappv2.common.di
 
+import com.gmail.bogumilmecel2.auth.ValidateRegisterDataUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.CachedValuesProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.repository.TokenRepository
@@ -306,11 +307,12 @@ object ViewModelModule {
     fun provideRegisterUseCases(
         authRepository: AuthRepository,
         resourceProvider: ResourceProvider,
-        logInUserUseCase: LogInUserUseCase
+        logInUserUseCase: LogInUserUseCase,
     ): RegisterUseCases = RegisterUseCases(
         registerUserUseCase = RegisterUserUseCase(
-            repository = authRepository,
-            resourceProvider = resourceProvider
+            authRepository = authRepository,
+            resourceProvider = resourceProvider,
+            validateRegisterDataUseCase = ValidateRegisterDataUseCase()
         ),
         logInUserUseCase = logInUserUseCase
     )
