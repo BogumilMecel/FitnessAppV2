@@ -17,6 +17,12 @@ interface UserDiaryItemsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertUserRecipes(userRecipes: List<Recipe>)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertProductDiaryEntries(productDiaryEntries: List<ProductDiaryEntry>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertRecipeDiaryEntries(recipeDiaryEntries: List<RecipeDiaryEntry>)
+
     @Query("SELECT * from recipe")
     fun getUserRecipes(): List<Recipe>
 
