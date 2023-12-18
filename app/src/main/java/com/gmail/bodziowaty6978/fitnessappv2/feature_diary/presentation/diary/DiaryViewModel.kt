@@ -18,6 +18,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.util.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -32,7 +33,7 @@ class DiaryViewModel @Inject constructor(
 ) : ViewModel() {
 
 
-    var state = MutableStateFlow(
+    private val _state = MutableStateFlow(
         DiaryState(
             meals = listOf(
                 Meal(
@@ -54,7 +55,7 @@ class DiaryViewModel @Inject constructor(
             ),
         )
     )
-        private set
+    val state:StateFlow<DiaryState> = _state
 
     init{
         getDiaryEntries()
@@ -72,7 +73,7 @@ class DiaryViewModel @Inject constructor(
 
             }
             is DiaryEvent.LongClickedDiaryEntry -> {
-                state.update {
+                _state.update {
                     it.copy(
                         longClickedDiaryEntryWithId = event.diaryEntryWithId,
                         isDialogShowed = true
@@ -81,32 +82,32 @@ class DiaryViewModel @Inject constructor(
 
             }
             is DiaryEvent.CollectedWantedNutritionValues -> {
-                state.update {
+                _state.update {
                     it.copy(
                         wantedNutritionValues = event.nutritionValues
                     )
                 }
             }
             is DiaryEvent.DismissedDialog -> {
-                state.update {
+                _state.update {
                     it.copy(
                         isDialogShowed = false
                     )
                 }
             }
             is DiaryEvent.ClickedDeleteInDialog -> {
-                state.value.longClickedDiaryEntryWithId?.let { diaryEntryWithId ->
+                _state.value.longClickedDiaryEntryWithId?.let { diaryEntryWithId ->
                     viewModelScope.launch(Dispatchers.IO) {
                         val result = deleteDiaryEntry(diaryEntryWithId.id)
                         if (result is CustomResult.Error) {
                             onError(result.message)
                         } else {
-                            state.update {
+                            _state.update {
                                 it.copy(
                                     isDialogShowed = false,
                                     meals = updateDiaryEntriesListAfterDelete(
                                         diaryEntryId = diaryEntryWithId.id,
-                                        meals = state.value.meals
+                                        meals = _state.value.meals
                                     )
                                 )
                             }
@@ -134,7 +135,7 @@ class DiaryViewModel @Inject constructor(
                 is Resource.Success -> {
                     val data = resource.data
                     data?.let { meals ->
-                        state.update {
+                        _state.update {
                             it.copy(
                                 meals = meals
                             )
@@ -149,13 +150,13 @@ class DiaryViewModel @Inject constructor(
     }
 
     private fun onError(errorMessage: String?) {
-        state.update {
+        _state.update {
             it.copy(
                 errorMessage = errorMessage
             )
         }
 
-        state.update {
+        _state.update {
             it.copy(
                 lastErrorMessage = errorMessage
             )
