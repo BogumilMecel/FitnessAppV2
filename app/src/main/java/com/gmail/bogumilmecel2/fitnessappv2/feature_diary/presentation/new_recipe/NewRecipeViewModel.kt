@@ -3,6 +3,8 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_reci
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.addAndReturnList
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.removeAndReturnList
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.toValidInt
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.NewRecipeScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.RecipeScreenDestination
@@ -169,6 +171,13 @@ class NewRecipeViewModel @Inject constructor(
                     )
                 }
             }
+            is NewRecipeEvent.ClickedIngredient -> {
+                _state.update {
+                    it.copy(
+                        ingredients = it.ingredients.removeAndReturnList(element = event.ingredient)
+                    )
+                }
+            }
         }
     }
 
@@ -199,15 +208,22 @@ class NewRecipeViewModel @Inject constructor(
             with(_state.value) {
                 selectedProduct?.let { product ->
                     productWeight.toIntOrNull()?.let { weight ->
-                        val ingredient = Ingredient(
+                        val newIngredient = Ingredient(
                             weight = weight,
                             productName = product.name,
                             measurementUnit = product.measurementUnit,
                             nutritionValues = product.calculateNutritionValues(weight),
                             productId = product.id
                         )
-                        ingredients.removeIf { it.productId == ingredient.productId }
-                        ingredients.add(ingredient)
+
+                        val newIngredientsList = _state.value.ingredients.toMutableList()
+                        newIngredientsList.removeIf{ it.productId == newIngredient.productId }
+
+                        _state.update {
+                            it.copy(
+                                ingredients = newIngredientsList.addAndReturnList(element = newIngredient)
+                            )
+                        }
 
                         fetchPrices()
 

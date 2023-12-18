@@ -26,8 +26,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.gmail.bogumilmecel2.fitnessappv2.R
-import com.gmail.bogumilmecel2.fitnessappv2.components.DefaultCardBackground
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.DropdownArrow
+import com.gmail.bogumilmecel2.fitnessappv2.components.DefaultCardBackground
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_recipe.NewRecipeEvent
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_recipe.NewRecipeState
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.componens.SearchProductItem
@@ -84,8 +84,9 @@ fun RecipeListSection(
                         calories = ingredient.nutritionValues.calories,
                         weight = ingredient.weight,
                         onItemClick = {
-
-                        })
+                            onEvent(NewRecipeEvent.ClickedIngredient(ingredient = ingredient))
+                        }
+                    )
                 }
             }
 

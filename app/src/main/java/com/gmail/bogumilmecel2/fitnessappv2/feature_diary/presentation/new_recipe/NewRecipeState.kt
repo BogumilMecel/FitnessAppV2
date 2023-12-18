@@ -21,7 +21,7 @@ data class NewRecipeState(
     val servings: String = "1",
     val name: String = "",
     val mealName: MealName,
-    val ingredients: MutableList<Ingredient> = mutableListOf(),
+    val ingredients: List<Ingredient> = listOf(),
     val prices: MutableMap<Ingredient, ProductPrice> = mutableMapOf(),
     val isSearchSectionVisible: Boolean = false,
     val searchItems: List<Product> = emptyList(),
