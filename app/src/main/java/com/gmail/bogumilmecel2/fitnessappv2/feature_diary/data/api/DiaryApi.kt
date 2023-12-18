@@ -2,6 +2,8 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.data.api
 
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.Currency
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.ApiConstants
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.ApiConstants.Query.PAGE
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.ApiConstants.Query.SEARCH_TEXT
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.DeleteDiaryEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.DiaryEntriesResponse
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
@@ -49,9 +51,10 @@ interface DiaryApi {
         @Body deleteDiaryEntryRequest: DeleteDiaryEntryRequest
     )
 
-    @GET("/products/{searchText}")
+    @GET("/products/{$SEARCH_TEXT}")
     suspend fun searchForProducts(
-        @Path("searchText") searchText: String
+        @Path(SEARCH_TEXT) searchText: String,
+        @Query(PAGE) page: Int
     ): List<Product>
 
     @GET("/diaryEntries/{barcode}")
