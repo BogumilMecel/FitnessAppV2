@@ -58,4 +58,16 @@ interface UserDiaryItemsDao {
 
     @Query("DELETE FROM recipediaryentry WHERE id = :recipeDiaryEntryId")
     fun deleteRecipeDiaryEntry(recipeDiaryEntryId: String)
+
+    @Query("DELETE FROM productdiaryentry WHERE date = :date AND id NOT IN (:diaryEntriesIds)")
+    fun deleteProductDiaryEntries(
+        date: String,
+        diaryEntriesIds: List<String>
+    )
+
+    @Query("DELETE FROM recipediaryentry WHERE date = :date AND id NOT IN (:diaryEntriesIds)")
+    fun deleteRecipeDiaryEntries(
+        date: String,
+        diaryEntriesIds: List<String>
+    )
 }

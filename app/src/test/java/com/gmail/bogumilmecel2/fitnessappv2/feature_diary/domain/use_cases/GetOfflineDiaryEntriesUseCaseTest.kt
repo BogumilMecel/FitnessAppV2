@@ -4,7 +4,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.BaseTest
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.DiaryEntriesResponse
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.GetDiaryEntriesUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.GetOfflineDiaryEntriesUseCase
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
@@ -13,17 +13,17 @@ import org.mockito.Mockito
 import java.util.Date
 import kotlin.test.assertTrue
 
-internal class GetDiaryEntriesUseCaseTest: BaseTest() {
+internal class GetOfflineDiaryEntriesUseCaseTest: BaseTest() {
 
     @Mock
     private lateinit var mockDiaryRepository: DiaryRepository
 
-    private lateinit var getDiaryEntriesUseCase: GetDiaryEntriesUseCase
+    private lateinit var getOfflineDiaryEntriesUseCase: GetOfflineDiaryEntriesUseCase
 
     @Before
     fun setUp() {
         mockDiaryRepository = Mockito.mock(DiaryRepository::class.java)
-        getDiaryEntriesUseCase = GetDiaryEntriesUseCase(diaryRepository = mockDiaryRepository)
+        getOfflineDiaryEntriesUseCase = GetOfflineDiaryEntriesUseCase(diaryRepository = mockDiaryRepository)
     }
 
     @Test
@@ -36,7 +36,7 @@ internal class GetDiaryEntriesUseCaseTest: BaseTest() {
                     )
                 )
 
-            val result = getDiaryEntriesUseCase(date = Date(System.currentTimeMillis()).toString())
+            val result = getOfflineDiaryEntriesUseCase(date = Date(System.currentTimeMillis()).toString())
 
             assertTrue(result is Resource.Success)
         }
@@ -51,7 +51,7 @@ internal class GetDiaryEntriesUseCaseTest: BaseTest() {
                     )
                 )
 
-            val result = getDiaryEntriesUseCase(date = Date(System.currentTimeMillis()).toString())
+            val result = getOfflineDiaryEntriesUseCase(date = Date(System.currentTimeMillis()).toString())
 
             assertTrue(result is Resource.Error)
         }
