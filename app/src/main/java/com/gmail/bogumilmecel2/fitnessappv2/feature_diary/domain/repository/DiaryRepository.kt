@@ -11,23 +11,16 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductDi
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductPrice
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.RecipePriceResponse
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.UserDiaryItemsResponse
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntryPostRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.product.NewPriceRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.product.NewProductRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.NewRecipeRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Recipe
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.RecipePriceRequest
 
 interface DiaryRepository {
     suspend fun getDiaryEntries(date: String): Resource<DiaryEntriesResponse>
-    suspend fun getDiaryEntries(
-        latestProductDiaryEntryTimestamp: Long?,
-        latestRecipeDiaryEntryTimestamp: Long?
-    ): Resource<DiaryEntriesResponse>
-
     suspend fun searchForProducts(searchText: String): Resource<List<Product>>
     suspend fun searchForProductWithBarcode(barcode: String): Resource<Product?>
     suspend fun searchForRecipes(searchText: String): Resource<List<Recipe>>
@@ -57,15 +50,10 @@ interface DiaryRepository {
         page: Int,
         searchText: String?
     ): Resource<List<ProductDiaryHistoryItem>>
-
     suspend fun getUserDiaryItems(): Resource<UserDiaryItemsResponse>
     suspend fun insertUserProductsLocally(userProducts: List<Product>): Resource<Unit>
     suspend fun insertUserRecipesLocally(userRecipes: List<Recipe>): Resource<Unit>
     suspend fun getLocalUserRecipes(): Resource<List<Recipe>>
     suspend fun getLocalUserProducts(): Resource<List<Product>>
     suspend fun clearLocalData(): Resource<Unit>
-    suspend fun getLocalDiaryEntries(): Resource<DiaryEntriesResponse>
-    suspend fun insertLocalDiaryEntries(diaryEntriesResponse: DiaryEntriesResponse): Resource<Unit>
-    suspend fun getLatestProductDiaryEntry(): Resource<ProductDiaryEntry?>
-    suspend fun getLatestRecipeDiaryEntry(): Resource<RecipeDiaryEntry?>
 }
