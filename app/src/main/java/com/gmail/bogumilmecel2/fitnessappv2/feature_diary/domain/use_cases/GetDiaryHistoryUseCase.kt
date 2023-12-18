@@ -11,8 +11,8 @@ class GetDiaryHistoryUseCase(private val diaryRepository: DiaryRepository) {
         searchText: String?
     ): Resource<List<ProductDiaryEntry>> {
         return diaryRepository.getOfflineDiaryEntries(
-            limit = ApiConstants.DEFAULT_OFFLINE_PAGE_SIZE * page,
-            offset = (ApiConstants.DEFAULT_OFFLINE_PAGE_SIZE * page) - ApiConstants.DEFAULT_OFFLINE_PAGE_SIZE,
+            limit = ApiConstants.DEFAULT_OFFLINE_PAGE_SIZE,
+            offset = (ApiConstants.DEFAULT_OFFLINE_PAGE_SIZE * (page - 1)),
             searchText = searchText.orEmpty()
         )
     }

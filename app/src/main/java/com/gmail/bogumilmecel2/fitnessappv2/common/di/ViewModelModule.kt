@@ -13,6 +13,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetDi
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetRecipePriceFromIngredientsUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetUserDiaryAndSaveItLocallyUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetUserDiaryEntriesExperimentalUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.ShouldDisplayNextPageUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.CreateLongClickedDiaryItemParamsUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.DeleteDiaryEntryUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.DiaryUseCases
@@ -138,7 +139,8 @@ object ViewModelModule {
             createSearchItemParamsFromProductDiaryEntryUseCase = CreateSearchItemParamsFromProductDiaryEntryUseCase(resourceProvider),
             getDiaryHistoryUseCase = GetDiaryHistoryUseCase(diaryRepository),
             getProductUseCase = getProductUseCase,
-            getRecipeUseCase = getRecipeUseCase
+            getRecipeUseCase = getRecipeUseCase,
+            shouldDisplayNextPageUseCase = ShouldDisplayNextPageUseCase()
         )
 
     @ViewModelScoped

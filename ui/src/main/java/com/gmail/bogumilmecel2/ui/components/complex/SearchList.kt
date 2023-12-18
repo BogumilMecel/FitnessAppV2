@@ -2,7 +2,7 @@ package com.gmail.bogumilmecel2.ui.components.complex
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -35,7 +35,7 @@ fun ForEachSearchList(items: List<SearchItemParams>) {
 
 @Composable
 private fun SearchListDivider() {
-    Divider(
+    HorizontalDivider(
         thickness = 1.dp,
         modifier = Modifier.fillMaxWidth(),
         color = FitnessAppTheme.colors.BackgroundQuaternary
