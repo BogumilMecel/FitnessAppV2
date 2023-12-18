@@ -83,7 +83,7 @@ class SearchViewModel @Inject constructor(
                 savedStateHandle.get<String>("mealName")?.let { mealName ->
                     navigator.navigate(
                         NavigationActions.SearchScreen.searchToProduct(
-                            productWithId = event.item,
+                            product = event.item,
                             mealName = mealName
                         )
                     )

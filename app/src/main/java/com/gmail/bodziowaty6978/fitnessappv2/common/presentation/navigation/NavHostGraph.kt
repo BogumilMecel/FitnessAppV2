@@ -186,7 +186,7 @@ fun NavHostGraph(
                     } ?: Product()
 
                     ProductScreen(
-                        product = Gson().fromJson(productString, Product::class.java)
+                        product = product
                     )
                 }
 

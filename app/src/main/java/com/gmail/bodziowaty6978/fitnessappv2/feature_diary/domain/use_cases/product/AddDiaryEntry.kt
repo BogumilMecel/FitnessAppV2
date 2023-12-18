@@ -33,7 +33,8 @@ class AddDiaryEntry(
                     product = product,
                     timeStamp = dateModel.timestamp,
                     weight = it,
-                    mealName = mealName
+                    mealName = mealName,
+                    date = dateModel.date
                 )
 
                 val token = getToken()
