@@ -13,7 +13,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.MealName
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.CreateLongClickedDiaryItemParamsUseCase
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.DeleteDiaryEntry
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.DeleteDiaryEntryUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.GetDiaryEntriesUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.SumNutritionValuesUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.GetProductUseCase
@@ -29,7 +29,7 @@ import javax.inject.Inject
 @HiltViewModel
 class DiaryViewModel @Inject constructor(
     private val getDiaryEntriesUseCase: GetDiaryEntriesUseCase,
-    private val deleteDiaryEntry: DeleteDiaryEntry,
+    private val deleteDiaryEntryUseCase: DeleteDiaryEntryUseCase,
     private val sumNutritionValuesUseCase: SumNutritionValuesUseCase,
     private val createLongClickedDiaryItemParamsUseCase: CreateLongClickedDiaryItemParamsUseCase,
     private val getProductUseCase: GetProductUseCase,
@@ -74,7 +74,7 @@ class DiaryViewModel @Inject constructor(
                 viewModelScope.launch(Dispatchers.IO) {
                     with(_state.value) {
                         longClickedDiaryItemParams?.let { diaryItemParams ->
-                            deleteDiaryEntry(diaryItemParams.longClickedDiaryItem).handle(
+                            deleteDiaryEntryUseCase(diaryItemParams.longClickedDiaryItem).handle(
                                 finally = { hideDiaryEntryDialog() }
                             ) { getDiaryEntries() }
                         }

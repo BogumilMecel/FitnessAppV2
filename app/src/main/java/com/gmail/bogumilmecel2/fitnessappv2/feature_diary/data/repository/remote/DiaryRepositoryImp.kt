@@ -253,4 +253,18 @@ class DiaryRepositoryImp(
             }
         }
     }
+
+    override suspend fun deleteOfflineDiaryEntry(diaryItem: DiaryItem): Resource<Unit> {
+        return handleRequest {
+            when(diaryItem) {
+                is ProductDiaryEntry -> {
+                    userDiaryItemsDao.deleteProductDiaryEntry(diaryItem.id)
+                }
+
+                is RecipeDiaryEntry -> {
+                    userDiaryItemsDao.deleteRecipeDiaryEntry(diaryItem.id)
+                }
+            }
+        }
+    }
 }
