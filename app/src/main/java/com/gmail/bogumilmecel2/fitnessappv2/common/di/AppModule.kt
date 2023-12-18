@@ -32,6 +32,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_r
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_recipe.CalculateRecipeNutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_recipe.NewRecipeUseCases
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.*
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.recipe.EditRecipeDiaryEntryUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.recipe.PostRecipeDiaryEntryUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.GetDiaryHistory
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.SearchDiaryUseCases
@@ -130,6 +131,16 @@ object AppModule {
         diaryRepository: DiaryRepository,
         resourceProvider: ResourceProvider
     ): EditProductDiaryEntryUseCase = EditProductDiaryEntryUseCase(
+        diaryRepository = diaryRepository,
+        resourceProvider = resourceProvider
+    )
+
+    @Singleton
+    @Provides
+    fun provideEditRecipeDiaryEntryUseCase(
+        diaryRepository: DiaryRepository,
+        resourceProvider: ResourceProvider
+    ): EditRecipeDiaryEntryUseCase = EditRecipeDiaryEntryUseCase(
         diaryRepository = diaryRepository,
         resourceProvider = resourceProvider
     )
