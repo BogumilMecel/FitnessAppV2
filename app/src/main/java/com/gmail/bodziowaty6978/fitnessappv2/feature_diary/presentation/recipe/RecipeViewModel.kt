@@ -9,7 +9,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.destinations.DiaryScreenDestination
 import com.gmail.bodziowaty6978.fitnessappv2.destinations.RecipeScreenDestination
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.product.CreatePieChartData
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.recipe.PostRecipeDiaryEntryUseCase
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.NutritionData
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.domain.model.NutritionData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -95,7 +95,7 @@ class RecipeViewModel @Inject constructor(
             _state.update {
                 it.copy(
                     nutritionData = NutritionData(
-                        pieEntries = createPieChartData(nutritionValues = recipeNutritionValues)
+                        pieChartData = createPieChartData(nutritionValues = recipeNutritionValues)
                     ),
                 )
             }

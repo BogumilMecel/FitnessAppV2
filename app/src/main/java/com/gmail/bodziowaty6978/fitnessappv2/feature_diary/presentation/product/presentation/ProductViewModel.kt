@@ -1,4 +1,4 @@
-package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product
+package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.presentation
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
@@ -10,7 +10,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.destinations.DiaryScreenDestination
 import com.gmail.bodziowaty6978.fitnessappv2.destinations.ProductScreenDestination
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.product.ProductUseCases
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.NutritionData
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.domain.model.NutritionData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -128,7 +128,7 @@ class ProductViewModel @Inject constructor(
             it.copy(
                 nutritionData = NutritionData(
                     nutritionValues = product.nutritionValues,
-                    pieEntries = productUseCases.createPieChartData(nutritionValues = product.nutritionValues)
+                    pieChartData = productUseCases.createPieChartData(nutritionValues = product.nutritionValues)
                 ),
             )
         }

@@ -25,7 +25,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.BackArrow
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_recipe.components.RecipeSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_recipe.components.SearchForProductSection
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.ProductMainSection
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.presentation.components.ProductMainSection
 import com.ramcosta.composedestinations.annotation.Destination
 
 @Destination(navArgsDelegate = NewRecipeNavArguments::class)

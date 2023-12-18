@@ -29,11 +29,11 @@ import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.BackHandler
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.ButtonWithIcon
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.DefaultCardBackground
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.PieChartWithMiddleText
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.BlueViolet3
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.LightGreen3
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.OrangeYellow3
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.TextGrey
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.ChartSection
 import com.ramcosta.composedestinations.annotation.Destination
 
 @Destination
@@ -98,11 +98,11 @@ fun AccountScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                 ) {
-
-                    ChartSection(
+                    
+                    PieChartWithMiddleText(
+                        pieChartData = state.nutritionData.pieChartData,
+                        middleText = stringResource(id = R.string.kcal_with_value, state.nutritionData.nutritionValues.calories),
                         modifier = Modifier.size(128.dp),
-                        nutritionData = state.nutritionData,
-                        isCircleTextVisible = true
                     )
 
                     Column {

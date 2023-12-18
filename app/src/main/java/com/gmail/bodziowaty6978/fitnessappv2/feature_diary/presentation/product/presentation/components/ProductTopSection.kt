@@ -1,4 +1,4 @@
-package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components
+package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.presentation.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column

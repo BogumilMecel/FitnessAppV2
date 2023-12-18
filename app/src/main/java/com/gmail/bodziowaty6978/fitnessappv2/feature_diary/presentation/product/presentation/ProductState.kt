@@ -1,8 +1,8 @@
-package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product
+package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.presentation
 
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.MealName
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.NutritionData
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.domain.model.NutritionData
 
 data class ProductState(
     val product: Product,

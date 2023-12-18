@@ -1,4 +1,4 @@
-package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product
+package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.presentation
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -25,9 +25,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.singleton.CurrentDate
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.LightRed
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.PriceSection
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.ProductMainSection
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.ProductTopSection
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.presentation.components.PriceSection
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.presentation.components.ProductMainSection
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.presentation.components.ProductTopSection
 import com.ramcosta.composedestinations.annotation.Destination
 
 @Destination(
