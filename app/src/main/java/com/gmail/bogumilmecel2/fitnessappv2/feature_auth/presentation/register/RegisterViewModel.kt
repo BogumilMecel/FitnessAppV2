@@ -64,7 +64,7 @@ class RegisterViewModel @Inject constructor(
                             confirmPassword = confirmPassword,
                             username = username
                         ).handle {
-                            authUseCases.logInUser(
+                            authUseCases.logInUserUseCase(
                                 email = email,
                                 password = password
                             ).handle {

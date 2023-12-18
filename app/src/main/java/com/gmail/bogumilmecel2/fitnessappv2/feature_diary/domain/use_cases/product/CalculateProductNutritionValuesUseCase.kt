@@ -5,7 +5,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.round
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
 
 class CalculateProductNutritionValuesUseCase {
-
     operator fun invoke(weight: Int, product: Product): NutritionValues = with(product.nutritionValues) {
         return NutritionValues(
             calories = (calories.toDouble() / 100.0 * weight).toInt(),

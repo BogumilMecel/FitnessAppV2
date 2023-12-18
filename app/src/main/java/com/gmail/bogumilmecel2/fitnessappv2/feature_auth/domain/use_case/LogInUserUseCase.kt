@@ -8,7 +8,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.model.LoginRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.repository.AuthRepository
 
-class LogInUser(
+class LogInUserUseCase(
     private val repository: AuthRepository,
     private val resourceProvider: ResourceProvider,
     private val saveToken: SaveToken

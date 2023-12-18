@@ -7,7 +7,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.toValidInt
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.DiaryScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.ProductScreenDestination
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.EditProductDiaryEntryUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.ProductUseCases
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.domain.model.NutritionData
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +18,6 @@ import javax.inject.Inject
 @HiltViewModel
 class ProductViewModel @Inject constructor(
     private val productUseCases: ProductUseCases,
-    private val editProductDiaryEntryUseCase: EditProductDiaryEntryUseCase,
     savedStateHandle: SavedStateHandle
 ) : BaseViewModel<ProductState, ProductEvent, ProductNavArguments>(
     state = ProductState(),
@@ -35,7 +33,7 @@ class ProductViewModel @Inject constructor(
                 date = entryData.dateTransferObject.displayedDate,
                 nutritionData = NutritionData(
                     nutritionValues = entryData.product.nutritionValues,
-                    pieChartData = productUseCases.createPieChartData(nutritionValues = entryData.product.nutritionValues)
+                    pieChartData = productUseCases.createPieChartDataUseCase(nutritionValues = entryData.product.nutritionValues)
                 )
             )
         }
@@ -85,7 +83,7 @@ class ProductViewModel @Inject constructor(
                             }
 
                             is ProductEntryData.Editing -> {
-                                editProductDiaryEntryUseCase(
+                                productUseCases.editProductDiaryEntryUseCase(
                                     productDiaryEntry = entryData.productDiaryEntry,
                                     product = entryData.product,
                                     newWeightStringValue = weight,

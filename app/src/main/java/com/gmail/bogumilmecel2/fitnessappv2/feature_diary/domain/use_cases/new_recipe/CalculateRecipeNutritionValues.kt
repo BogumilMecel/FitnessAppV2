@@ -4,7 +4,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Ingredient
 
 class CalculateRecipeNutritionValues {
-
     operator fun invoke(servings:Int, ingredients:List<Ingredient>): NutritionValues {
         val caloriesSum = ingredients.sumOf { it.nutritionValues.calories } / servings
         val carbohydratesSum = ingredients.sumOf { it.nutritionValues.carbohydrates } / servings

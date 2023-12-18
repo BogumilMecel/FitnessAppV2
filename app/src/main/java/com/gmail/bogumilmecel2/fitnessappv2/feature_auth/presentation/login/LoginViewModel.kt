@@ -53,7 +53,7 @@ class LoginViewModel @Inject constructor(
                         it.copy(isLoading = true)
                     }
                     with(_state.value) {
-                        authUseCases.logInUser(
+                        authUseCases.logInUserUseCase(
                             email = email,
                             password = password
                         ).handle {

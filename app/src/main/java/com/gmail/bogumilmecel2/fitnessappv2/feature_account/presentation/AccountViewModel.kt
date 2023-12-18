@@ -5,8 +5,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.EditNutritionGoalsScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.LoginScreenDestination
-import com.gmail.bogumilmecel2.fitnessappv2.feature_account.domain.use_case.DeleteToken
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.CreatePieChartData
+import com.gmail.bogumilmecel2.fitnessappv2.feature_account.domain.use_case.AccountUseCases
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.domain.model.NutritionData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.update
@@ -15,8 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AccountViewModel @Inject constructor(
-    private val deleteToken: DeleteToken,
-    private val createPieChartData: CreatePieChartData
+    private val useCases: AccountUseCases
 ) : BaseViewModel<AccountState, AccountEvent, Unit>(
     state = AccountState(),
     navArguments = Unit
@@ -53,7 +51,7 @@ class AccountViewModel @Inject constructor(
             it.copy(
                 nutritionData = NutritionData(
                     nutritionValues = wantedNutritionValues,
-                    pieChartData = createPieChartData(nutritionValues = wantedNutritionValues)
+                    pieChartData = useCases.createPieChartDataUseCase(nutritionValues = wantedNutritionValues)
                 ),
             )
         }
@@ -61,7 +59,7 @@ class AccountViewModel @Inject constructor(
 
     private fun logOut() {
         viewModelScope.launch {
-            deleteToken().handle {
+            useCases.deleteTokenUseCase().handle {
                 navigateWithPopUp(LoginScreenDestination)
             }
         }

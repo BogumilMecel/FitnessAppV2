@@ -1,6 +1,16 @@
 package com.gmail.bogumilmecel2.fitnessappv2.common.di
 
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.CachedValuesProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvider
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.repository.TokenRepository
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.CalculateNutritionValuesPercentages
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.CheckIfWeightIsValidUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.GetToken
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.GetUserCurrencyUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.SaveNutritionValues
+import com.gmail.bogumilmecel2.fitnessappv2.feature_account.domain.use_case.AccountUseCases
+import com.gmail.bogumilmecel2.fitnessappv2.feature_account.domain.use_case.DeleteTokenUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_account.domain.use_case.EditNutritionGoalUseCases
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CalculateSelectedServingPriceUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CalculateServingPrice
@@ -8,8 +18,8 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.Creat
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CreateSearchItemParamsFromProductDiaryEntryUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CreateSearchItemParamsFromProductUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CreateSearchItemParamsFromRecipeUseCase
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GenerateDiaryItemDialogTitleUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetDiaryHistoryUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetPriceUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetRecipePriceFromIngredientsUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetUserDiaryAndSaveItLocallyUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetUserDiaryEntriesExperimentalUseCase
@@ -25,8 +35,12 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_r
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_recipe.CalculateRecipeNutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_recipe.NewRecipeUseCases
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.CalculateProductNutritionValuesUseCase
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.CreatePieChartData
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.CreatePieChartDataUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.EditProductDiaryEntryUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.GetProductUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.InsertProductDiaryEntryUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.ProductUseCases
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.SubmitNewPriceUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.recipe.CalculateRecipeNutritionValuesForServingsUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.recipe.EditRecipeDiaryEntryUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.recipe.GetRecipeUseCase
@@ -36,6 +50,15 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.searc
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.SearchForProductWithBarcode
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.SearchForProductsUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.SearchForRecipes
+import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.repository.UserDataRepository
+import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.use_cases.SaveIntroductionInformationUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.use_case.CheckIfShouldAskForWeightDialogsUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.use_case.CheckIfShouldShowWeightPickerUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.use_case.GetCaloriesSum
+import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.use_case.HandleWeightDialogsQuestionUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.use_case.SummaryUseCases
+import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.repository.WeightRepository
+import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.use_case.AddWeightEntryUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -73,23 +96,25 @@ object ViewModelModule {
     @ViewModelScoped
     @Provides
     fun provideNewRecipeUseCases(
-        addNewRecipe: AddNewRecipe,
-        calculateRecipeNutritionValues: CalculateRecipeNutritionValues,
-        createPieChartData: CreatePieChartData,
+        createPieChartDataUseCase: CreatePieChartDataUseCase,
         searchForProductsUseCase: SearchForProductsUseCase,
         calculateProductNutritionValuesUseCase: CalculateProductNutritionValuesUseCase,
         getRecipePriceFromIngredientsUseCase: GetRecipePriceFromIngredientsUseCase,
-        calculateServingPrice: CalculateServingPrice,
         createSearchItemParamsFromIngredientUseCase: CreateSearchItemParamsFromIngredientUseCase,
-        createSearchItemParamsFromProductUseCase: CreateSearchItemParamsFromProductUseCase
+        createSearchItemParamsFromProductUseCase: CreateSearchItemParamsFromProductUseCase,
+        diaryRepository: DiaryRepository,
+        resourceProvider: ResourceProvider
     ): NewRecipeUseCases = NewRecipeUseCases(
-        addNewRecipe = addNewRecipe,
-        calculateRecipeNutritionValues = calculateRecipeNutritionValues,
-        createPieChartData = createPieChartData,
+        addNewRecipe = AddNewRecipe(
+            diaryRepository = diaryRepository,
+            resourceProvider = resourceProvider
+        ),
+        calculateRecipeNutritionValues = CalculateRecipeNutritionValues(),
+        createPieChartDataUseCase = createPieChartDataUseCase,
         searchForProductsUseCase = searchForProductsUseCase,
         calculateProductNutritionValuesUseCase = calculateProductNutritionValuesUseCase,
         getRecipePriceFromIngredientsUseCase = getRecipePriceFromIngredientsUseCase,
-        calculateServingPrice = calculateServingPrice,
+        calculateServingPrice = CalculateServingPrice(),
         createSearchItemParamsFromIngredientUseCase = createSearchItemParamsFromIngredientUseCase,
         createSearchItemParamsFromProductUseCase = createSearchItemParamsFromProductUseCase
     )
@@ -98,21 +123,20 @@ object ViewModelModule {
     @Provides
     fun provideRecipeUseCases(
         createSearchItemParamsFromIngredientUseCase: CreateSearchItemParamsFromIngredientUseCase,
-        createPieChartData: CreatePieChartData,
+        createPieChartDataUseCase: CreatePieChartDataUseCase,
         diaryRepository: DiaryRepository,
         resourceProvider: ResourceProvider,
         getRecipePriceFromIngredientsUseCase: GetRecipePriceFromIngredientsUseCase,
-        calculateSelectedServingPriceUseCase: CalculateSelectedServingPriceUseCase,
         calculateRecipeNutritionValuesForServingsUseCase: CalculateRecipeNutritionValuesForServingsUseCase
     ): RecipeUseCases = RecipeUseCases(
-        createPieChartData = createPieChartData,
+        createPieChartDataUseCase = createPieChartDataUseCase,
         postRecipeDiaryEntryUseCase = PostRecipeDiaryEntryUseCase(
             diaryRepository = diaryRepository,
             resourceProvider = resourceProvider,
             calculateRecipeNutritionValuesForServingsUseCase = calculateRecipeNutritionValuesForServingsUseCase
         ),
         getRecipePriceFromIngredientsUseCase = getRecipePriceFromIngredientsUseCase,
-        calculateSelectedServingPriceUseCase = calculateSelectedServingPriceUseCase,
+        calculateSelectedServingPriceUseCase = CalculateSelectedServingPriceUseCase(),
         editRecipeDiaryEntryUseCase = EditRecipeDiaryEntryUseCase(
             diaryRepository = diaryRepository,
             calculateRecipeNutritionValuesForServingsUseCase = calculateRecipeNutritionValuesForServingsUseCase
@@ -156,11 +180,95 @@ object ViewModelModule {
         deleteDiaryEntryUseCase = DeleteDiaryEntryUseCase(diaryRepository = diaryRepository),
         sumNutritionValuesUseCase = SumNutritionValuesUseCase(),
         createLongClickedDiaryItemParamsUseCase = CreateLongClickedDiaryItemParamsUseCase(
-            generateDiaryItemDialogTitleUseCase = GenerateDiaryItemDialogTitleUseCase(
-                resourceProvider = resourceProvider
-            )
+            resourceProvider = resourceProvider
         ),
         getProductUseCase = getProductUseCase,
         getRecipeUseCase = getRecipeUseCase
+    )
+
+    @ViewModelScoped
+    @Provides
+    fun provideProductUseCases(
+        diaryRepository: DiaryRepository,
+        resourceProvider: ResourceProvider,
+        createPieChartDataUseCase: CreatePieChartDataUseCase,
+        getUserCurrencyUseCase: GetUserCurrencyUseCase,
+        calculateProductNutritionValuesUseCase: CalculateProductNutritionValuesUseCase
+    ): ProductUseCases =
+        ProductUseCases(
+            calculateProductNutritionValuesUseCase = CalculateProductNutritionValuesUseCase(),
+            createPieChartDataUseCase = createPieChartDataUseCase,
+            insertProductDiaryEntryUseCase = InsertProductDiaryEntryUseCase(
+                diaryRepository = diaryRepository,
+                resourceProvider = resourceProvider,
+                calculateProductNutritionValuesUseCase = calculateProductNutritionValuesUseCase
+            ),
+            submitNewPriceUseCase = SubmitNewPriceUseCase(
+                diaryRepository = diaryRepository,
+                resourceProvider = resourceProvider,
+                getUserCurrencyUseCase = getUserCurrencyUseCase
+            ),
+            getPriceUseCase = GetPriceUseCase(
+                diaryRepository = diaryRepository,
+                getUserCurrency = getUserCurrencyUseCase
+            ),
+            editProductDiaryEntryUseCase = EditProductDiaryEntryUseCase(
+                diaryRepository = diaryRepository,
+                calculateProductNutritionValuesUseCase = calculateProductNutritionValuesUseCase
+            )
+        )
+
+    @ViewModelScoped
+    @Provides
+    fun provideAccountUseCases(
+        tokenRepository: TokenRepository,
+        createPieChartDataUseCase: CreatePieChartDataUseCase
+    ): AccountUseCases = AccountUseCases(
+        deleteTokenUseCase = DeleteTokenUseCase(tokenRepository = tokenRepository),
+        createPieChartDataUseCase = createPieChartDataUseCase
+    )
+
+    @ViewModelScoped
+    @Provides
+    fun provideGetTokenUseCase(tokenRepository: TokenRepository): GetToken = GetToken(
+        tokenRepository = tokenRepository
+    )
+
+    @ViewModelScoped
+    @Provides
+    fun provideEditNutritionGoalsUseCases(userDataRepository: UserDataRepository): EditNutritionGoalUseCases =
+        EditNutritionGoalUseCases(
+            calculateNutritionValuesPercentages = CalculateNutritionValuesPercentages(),
+            saveNutritionValues = SaveNutritionValues(userDataRepository = userDataRepository),
+        )
+
+    @ViewModelScoped
+    @Provides
+    fun provideSaveInformationUseCase(
+        userDataRepository: UserDataRepository,
+        resourceProvider: ResourceProvider,
+    ): SaveIntroductionInformationUseCase = SaveIntroductionInformationUseCase(
+        userDataRepository = userDataRepository,
+        resourceProvider = resourceProvider
+    )
+
+    @ViewModelScoped
+    @Provides
+    fun provideSummaryUseCases(
+        diaryRepository: DiaryRepository,
+        weightRepository: WeightRepository,
+        cachedValuesProvider: CachedValuesProvider
+    ): SummaryUseCases = SummaryUseCases(
+        getCaloriesSum = GetCaloriesSum(diaryRepository = diaryRepository),
+        addWeightEntryUseCase = AddWeightEntryUseCase(
+            weightRepository = weightRepository,
+            checkIfWeightIsValidUseCase = CheckIfWeightIsValidUseCase(),
+        ),
+        checkIfShouldAskForWeightDialogsUseCase = CheckIfShouldAskForWeightDialogsUseCase(weightRepository),
+        handleWeightDialogsQuestionUseCase = HandleWeightDialogsQuestionUseCase(
+            weightRepository = weightRepository,
+            cachedValuesProvider = cachedValuesProvider
+        ),
+        checkIfShouldShowWeightPickerUseCase = CheckIfShouldShowWeightPickerUseCase(cachedValuesProvider)
     )
 }

@@ -3,10 +3,10 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.reci
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CalculateSelectedServingPriceUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CreateSearchItemParamsFromIngredientUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetRecipePriceFromIngredientsUseCase
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.CreatePieChartData
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.CreatePieChartDataUseCase
 
 data class RecipeUseCases(
-    val createPieChartData: CreatePieChartData,
+    val createPieChartDataUseCase: CreatePieChartDataUseCase,
     val postRecipeDiaryEntryUseCase: PostRecipeDiaryEntryUseCase,
     val getRecipePriceFromIngredientsUseCase: GetRecipePriceFromIngredientsUseCase,
     val calculateSelectedServingPriceUseCase: CalculateSelectedServingPriceUseCase,

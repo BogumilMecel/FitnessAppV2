@@ -390,7 +390,7 @@ class NewRecipeViewModel @Inject constructor(
             _state.update {
                 it.copy(
                     nutritionData = it.nutritionData.copy(
-                        pieChartData = newRecipeUseCases.createPieChartData(nutritionValues = product.nutritionValues)
+                        pieChartData = newRecipeUseCases.createPieChartDataUseCase(nutritionValues = product.nutritionValues)
                     )
                 )
             }

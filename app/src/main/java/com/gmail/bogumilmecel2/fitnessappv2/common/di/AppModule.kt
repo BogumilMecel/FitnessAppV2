@@ -20,7 +20,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.util.DefaultInterceptor
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.RealCachedValuesProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.RealDateHolder
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.RealResourceProvider
-import com.gmail.bogumilmecel2.fitnessappv2.feature_account.domain.use_case.DeleteToken
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.data.api.AuthApi
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.data.repository.AuthRepositoryImp
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.repository.AuthRepository
@@ -29,25 +28,17 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.data.api.DiaryApi
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.data.repository.remote.DiaryRepositoryImp
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.dao.UserDiaryItemsDao
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CalculateSelectedServingPriceUseCase
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CalculateServingPrice
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CreateSearchItemParamsFromIngredientUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CreateSearchItemParamsFromProductUseCase
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GenerateDiaryItemDialogTitleUseCase
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetPriceUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetRecipePriceFromIngredientsUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.*
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_recipe.AddNewRecipe
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_recipe.CalculateRecipeNutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.*
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.recipe.CalculateRecipeNutritionValuesForServingsUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.recipe.GetRecipeUseCase
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.recipe.PostRecipeDiaryEntryUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.SearchForProductsUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.data.api.UserDataApi
 import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.data.repository.UserDataRepositoryImp
 import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.repository.UserDataRepository
-import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.use_cases.SaveIntroductionInformationUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_splash.data.api.LoadingApi
 import com.gmail.bogumilmecel2.fitnessappv2.feature_splash.data.repository.LoadingRepositoryImp
 import com.gmail.bogumilmecel2.fitnessappv2.feature_splash.domain.repository.LoadingRepository
@@ -55,7 +46,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.use_case.*
 import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.data.api.WeightApi
 import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.data.repository.WeighRepositoryImp
 import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.repository.WeightRepository
-import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.use_case.AddWeightEntryUseCase
 import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
@@ -136,32 +126,6 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideGenerateDiaryItemDialogTitleUseCase(
-        resourceProvider: ResourceProvider
-    ): GenerateDiaryItemDialogTitleUseCase = GenerateDiaryItemDialogTitleUseCase(
-        resourceProvider = resourceProvider
-    )
-
-    @Singleton
-    @Provides
-    fun provideCreateLongClickedDiaryItemParamsUseCase(
-        generateDiaryItemDialogTitleUseCase: GenerateDiaryItemDialogTitleUseCase
-    ): CreateLongClickedDiaryItemParamsUseCase = CreateLongClickedDiaryItemParamsUseCase(
-        generateDiaryItemDialogTitleUseCase = generateDiaryItemDialogTitleUseCase
-    )
-
-    @Singleton
-    @Provides
-    fun provideEditProductDiaryEntryUseCase(
-        diaryRepository: DiaryRepository,
-        calculateProductNutritionValuesUseCase: CalculateProductNutritionValuesUseCase
-    ): EditProductDiaryEntryUseCase = EditProductDiaryEntryUseCase(
-        diaryRepository = diaryRepository,
-        calculateProductNutritionValuesUseCase = calculateProductNutritionValuesUseCase
-    )
-
-    @Singleton
-    @Provides
     fun provideDateProvider(): DateHolder = RealDateHolder()
 
     @Singleton
@@ -216,38 +180,13 @@ object AppModule {
         sharedPreferences: SharedPreferences
     ): TokenRepository = TokenRepositoryImp(sharedPreferences = sharedPreferences)
 
-    @Singleton
-    @Provides
-    fun providePostRecipeDiaryEntryUseCase(
-        diaryRepository: DiaryRepository,
-        resourceProvider: ResourceProvider,
-        calculateRecipeNutritionValuesForServingsUseCase: CalculateRecipeNutritionValuesForServingsUseCase
-    ): PostRecipeDiaryEntryUseCase = PostRecipeDiaryEntryUseCase(
-        diaryRepository = diaryRepository,
-        resourceProvider = resourceProvider,
-        calculateRecipeNutritionValuesForServingsUseCase = calculateRecipeNutritionValuesForServingsUseCase
-    )
-
-    @Singleton
-    @Provides
-    fun provideDeleteToken(
-        tokenRepository: TokenRepository
-    ): DeleteToken = DeleteToken(tokenRepository = tokenRepository)
-
-    @Singleton
-    @Provides
-    fun provideGetTokenUseCase(
-        tokenRepository: TokenRepository
-    ): GetToken = GetToken(
-        tokenRepository = tokenRepository
-    )
-
     @Provides
     @Singleton
     fun provideAuthRepository(
         authApi: AuthApi
     ): AuthRepository = AuthRepositoryImp(authApi = authApi)
 
+    // TODO: Delete after separating auth use cases
     @Provides
     @Singleton
     fun provideSaveTokenUseCase(
@@ -258,47 +197,24 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideCalculateNutritionValuesFromNutritionValuesUseCase(): SumNutritionValuesUseCase =
-        SumNutritionValuesUseCase()
-
-    @Provides
-    @Singleton
     fun provideAuthUseCases(
         authRepository: AuthRepository,
         resourceProvider: ResourceProvider,
         saveToken: SaveToken
     ): AuthUseCases = AuthUseCases(
-        logInUser = LogInUser(
+        logInUserUseCase = LogInUserUseCase(
             repository = authRepository,
             resourceProvider = resourceProvider,
             saveToken = saveToken
         ),
-
         registerUser = RegisterUser(
             repository = authRepository,
             resourceProvider = resourceProvider,
         ),
-
         resetPasswordWithEmail = ResetPasswordWithEmail(
             repository = authRepository,
             resourceProvider = resourceProvider
         ),
-
-        )
-
-    @Singleton
-    @Provides
-    fun provideSaveNutritionValues(userDataRepository: UserDataRepository): SaveNutritionValues =
-        SaveNutritionValues(userDataRepository)
-
-    @Provides
-    @Singleton
-    fun provideSaveInformationUseCase(
-        userDataRepository: UserDataRepository,
-        resourceProvider: ResourceProvider,
-    ): SaveIntroductionInformationUseCase = SaveIntroductionInformationUseCase(
-        userDataRepository = userDataRepository,
-        resourceProvider = resourceProvider
     )
 
     @Singleton
@@ -313,30 +229,10 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideAddNewRecipe(
-        diaryRepository: DiaryRepository,
-        resourceProvider: ResourceProvider
-    ): AddNewRecipe = AddNewRecipe(
-        diaryRepository = diaryRepository,
-        resourceProvider = resourceProvider
-    )
-
-    @Singleton
-    @Provides
     fun provideGetUserCurrencyUseCase(
         cachedValuesProvider: CachedValuesProvider
     ): GetUserCurrencyUseCase = GetUserCurrencyUseCase(
         cachedValuesProvider = cachedValuesProvider
-    )
-
-    @Singleton
-    @Provides
-    fun provideGetPriceUseCase(
-        diaryRepository: DiaryRepository,
-        getUserCurrencyUseCase: GetUserCurrencyUseCase
-    ): GetPriceUseCase = GetPriceUseCase(
-        diaryRepository = diaryRepository,
-        getUserCurrency = getUserCurrencyUseCase
     )
 
     @Singleton
@@ -356,14 +252,7 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideCalculateRecipeNutritionValues(): CalculateRecipeNutritionValues =
-        CalculateRecipeNutritionValues()
-
-    @Singleton
-    @Provides
-    fun provideWeightApi(
-        retrofit: Retrofit
-    ): WeightApi = retrofit.create(WeightApi::class.java)
+    fun provideWeightApi(retrofit: Retrofit): WeightApi = retrofit.create(WeightApi::class.java)
 
     @Singleton
     @Provides
@@ -377,33 +266,7 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideCheckIfWeightIsValidUseCase(): CheckIfWeightIsValidUseCase =
-        CheckIfWeightIsValidUseCase()
-
-    @Singleton
-    @Provides
     fun provideBottomBarStatusProvider(): BottomBarStatusProvider = BottomBarStatusProvider()
-
-    @Singleton
-    @Provides
-    fun provideSummaryUseCases(
-        diaryRepository: DiaryRepository,
-        weightRepository: WeightRepository,
-        checkIfWeightIsValidUseCase: CheckIfWeightIsValidUseCase,
-        cachedValuesProvider: CachedValuesProvider
-    ): SummaryUseCases = SummaryUseCases(
-        getCaloriesSum = GetCaloriesSum(diaryRepository = diaryRepository),
-        addWeightEntryUseCase = AddWeightEntryUseCase(
-            weightRepository = weightRepository,
-            checkIfWeightIsValidUseCase = checkIfWeightIsValidUseCase,
-        ),
-        checkIfShouldAskForWeightDialogsUseCase = CheckIfShouldAskForWeightDialogsUseCase(weightRepository),
-        handleWeightDialogsQuestionUseCase = HandleWeightDialogsQuestionUseCase(
-            weightRepository = weightRepository,
-            cachedValuesProvider = cachedValuesProvider
-        ),
-        checkIfShouldShowWeightPickerUseCase = CheckIfShouldShowWeightPickerUseCase(cachedValuesProvider)
-    )
 
     @Singleton
     @Provides
@@ -446,11 +309,6 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideCalculateSelectedServingPriceUseCase(): CalculateSelectedServingPriceUseCase =
-        CalculateSelectedServingPriceUseCase()
-
-    @Singleton
-    @Provides
     fun provideCalculateNutritionValuesPercentagesUseCase(): CalculateNutritionValuesPercentages =
         CalculateNutritionValuesPercentages()
 
@@ -468,37 +326,5 @@ object AppModule {
     @Provides
     fun provideCreatePieChartData(
         calculateNutritionValuesPercentages: CalculateNutritionValuesPercentages
-    ): CreatePieChartData = CreatePieChartData(calculateNutritionValuesPercentages)
-
-    @Singleton
-    @Provides
-    fun provideCalculateServingPriceUseCase(): CalculateServingPrice = CalculateServingPrice()
-
-    @Singleton
-    @Provides
-    fun provideProductUseCases(
-        diaryRepository: DiaryRepository,
-        resourceProvider: ResourceProvider,
-        createPieChartData: CreatePieChartData,
-        getUserCurrencyUseCase: GetUserCurrencyUseCase,
-        calculateProductNutritionValuesUseCase: CalculateProductNutritionValuesUseCase
-    ): ProductUseCases =
-        ProductUseCases(
-            calculateProductNutritionValuesUseCase = CalculateProductNutritionValuesUseCase(),
-            createPieChartData = createPieChartData,
-            insertProductDiaryEntryUseCase = InsertProductDiaryEntryUseCase(
-                diaryRepository = diaryRepository,
-                resourceProvider = resourceProvider,
-                calculateProductNutritionValuesUseCase = calculateProductNutritionValuesUseCase
-            ),
-            submitNewPriceUseCase = SubmitNewPriceUseCase(
-                diaryRepository = diaryRepository,
-                resourceProvider = resourceProvider,
-                getUserCurrencyUseCase = getUserCurrencyUseCase
-            ),
-            getPriceUseCase = GetPriceUseCase(
-                diaryRepository = diaryRepository,
-                getUserCurrency = getUserCurrencyUseCase
-            )
-        )
+    ): CreatePieChartDataUseCase = CreatePieChartDataUseCase(calculateNutritionValuesPercentages)
 }
