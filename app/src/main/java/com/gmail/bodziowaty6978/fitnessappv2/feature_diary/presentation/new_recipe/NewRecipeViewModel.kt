@@ -49,7 +49,15 @@ class NewRecipeViewModel @Inject constructor(
                 }
             }
             is NewRecipeEvent.ClickedBackArrow -> {
-                navigator.navigate(NavigationActions.General.navigateUp())
+                if (_state.value.isSearchSectionVisible){
+                    _state.update {
+                        it.copy(
+                            isSearchSectionVisible = false
+                        )
+                    }
+                }else{
+                    navigator.navigate(NavigationActions.General.navigateUp())
+                }
             }
             is NewRecipeEvent.SelectedDifficulty -> {
                 _state.update {
@@ -81,6 +89,16 @@ class NewRecipeViewModel @Inject constructor(
                         name = event.value,
                     )
                 }
+            }
+            is NewRecipeEvent.ClickedAddNewIngredient -> {
+                _state.update {
+                    it.copy(
+                        isSearchSectionVisible = true
+                    )
+                }
+            }
+            is NewRecipeEvent.ClickedProduct -> {
+
             }
         }
     }

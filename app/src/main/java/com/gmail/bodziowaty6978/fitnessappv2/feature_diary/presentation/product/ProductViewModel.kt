@@ -11,6 +11,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigator
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.product.ProductUseCases
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.NutritionData
 import com.gmail.bodziowaty6978.fitnessappv2.util.TAG
@@ -38,12 +39,13 @@ class ProductViewModel @Inject constructor(
 
     private val _state = MutableStateFlow(ProductState(
         product = savedStateHandle.get<String>("product")?.let { productString ->
-            val product = Gson().fromJson(productString, Product::class.java)
-            Log.e(TAG, product.toString())
-            product
+            Gson().fromJson(productString, Product::class.java)
         } ?: kotlin.run {
             navigator.navigate(NavigationActions.General.navigateUp())
             Product()
+        },
+        recipe = savedStateHandle.get<String>("recipe")?.let { recipeString ->
+            Gson().fromJson(recipeString, Recipe::class.java)
         }
     ))
     val state:StateFlow<ProductState> = _state
