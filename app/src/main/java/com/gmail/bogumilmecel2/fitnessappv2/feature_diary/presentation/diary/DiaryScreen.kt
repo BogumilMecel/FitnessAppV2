@@ -92,17 +92,13 @@ fun DiaryScreen(viewModel: DiaryViewModel = hiltViewModel()) {
 
                 LazyColumn {
                     items(MealName.values()) { mealName ->
-                        state.diaryEntries[mealName]?.let { meal ->
-                            DiaryMealSection(
-                                mealName = mealName,
-                                diaryEntries = meal.diaryEntries,
-                                nutritionValues = meal.nutritionValues,
-                                wantedNutritionValues = state.wantedTotalNutritionValues,
-                                onEvent = { event ->
-                                    viewModel.onEvent(event)
-                                }
-                            )
-                        }
+                        DiaryMealSection(
+                            mealName = mealName,
+                            diaryEntries = state.diaryEntries[mealName]?.diaryEntries,
+                            nutritionValues = state.diaryEntries[mealName]?.nutritionValues,
+                            wantedNutritionValues = state.wantedTotalNutritionValues,
+                            onEvent = { event -> viewModel.onEvent(event) }
+                        )
                     }
                 }
             }
