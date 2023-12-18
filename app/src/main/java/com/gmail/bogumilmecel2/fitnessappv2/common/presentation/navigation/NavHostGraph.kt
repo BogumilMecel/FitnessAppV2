@@ -2,22 +2,13 @@ package com.gmail.bogumilmecel2.fitnessappv2.common.presentation.navigation
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.ModalBottomSheetLayout
-import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -28,10 +19,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.navigation.NavigationA
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.navigation.Navigator
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.BottomBar
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.CustomSnackbar
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.BottomSheetContent
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.BottomSheetContentProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.ErrorUtils
-import com.gmail.bogumilmecel2.fitnessappv2.components.defaultRoundedCornerShapeValue
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.AccountScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.Destination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.DiaryScreenDestination
@@ -45,12 +33,10 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.ramcosta.composedestinations.DestinationsNavHost
 import kotlinx.coroutines.flow.receiveAsFlow
 
-@OptIn(ExperimentalMaterialApi::class,)
 @Composable
 fun NavHostGraph(
     navController: NavHostController = rememberNavController(),
     navigator: Navigator,
-    bottomSheetContentProvider: BottomSheetContentProvider,
     startDestination: Destination = SplashScreenDestination
 ) {
     val currentDestination = navController.currentBackStackEntryAsState().value?.destination?.route
@@ -113,64 +99,28 @@ fun NavHostGraph(
         }
     }
 
-    var bottomSheetContent by remember {
-        mutableStateOf<BottomSheetContent?>(null)
-    }
-
-    val sheetState = androidx.compose.material.rememberModalBottomSheetState(
-        initialValue = ModalBottomSheetValue.Hidden,
-        skipHalfExpanded = true,
-        confirmValueChange = {
-            if (it == ModalBottomSheetValue.Hidden) {
-                bottomSheetContent?.onBottomSheetClosed?.invoke()
-                bottomSheetContent = null
+    Scaffold(
+        bottomBar = {
+            if (bottomBarScreens.contains(currentDestination)) {
+                BottomBar(navController = navController)
             }
-            true
-        }
-    )
-
-    LaunchedEffect(key1 = true) {
-        bottomSheetContentProvider.content.receiveAsFlow().collect {
-            bottomSheetContent = it
-            sheetState.show()
-        }
-    }
-
-    ModalBottomSheetLayout(
-        sheetContent = {
-            bottomSheetContent?.content?.invoke()
         },
-        sheetState = sheetState,
-        sheetShape = RoundedCornerShape(
-            topStart = defaultRoundedCornerShapeValue(),
-            topEnd = defaultRoundedCornerShapeValue()
-        ),
-        scrimColor = FitnessAppTheme.colors.ContentPrimary.copy(alpha = 0.15f),
-        sheetElevation = 2.dp
-    ) {
-        Scaffold(
-            bottomBar = {
-                if (bottomBarScreens.contains(currentDestination)) {
-                    BottomBar(navController = navController)
-                }
-            },
-            scaffoldState = scaffoldState,
-            snackbarHost = { hostState ->
-                CustomSnackbar(snackbarHostState = hostState)
-            }
-        ) { paddingValues ->
-            Surface(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues),
-                color = MaterialTheme.colors.background
-            ) {
-                DestinationsNavHost(
-                    navGraph = NavGraphs.root,
-                    navController = navController,
-                    startRoute = startDestination
-                )
-            }
+        scaffoldState = scaffoldState,
+        snackbarHost = { hostState ->
+            CustomSnackbar(snackbarHostState = hostState)
+        }
+    ) { paddingValues ->
+        Surface(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues),
+            color = MaterialTheme.colors.background
+        ) {
+            DestinationsNavHost(
+                navGraph = NavGraphs.root,
+                navController = navController,
+                startRoute = startDestination
+            )
         }
     }
 }

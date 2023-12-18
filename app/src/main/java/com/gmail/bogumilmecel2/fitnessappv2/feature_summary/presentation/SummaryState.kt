@@ -5,9 +5,14 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.model.WeightEn
 data class SummaryState(
     val logStreak: Int? = null,
     val caloriesSum: Int? = null,
-    val isWeightPickerVisible: Boolean = false,
+    val bottomSheetContent: SummaryBottomSheetContent = SummaryBottomSheetContent.WeightPicker,
     val isAskForWeightPermissionDialogVisible: Boolean = false,
     val weightProgress: String? = null,
     val latestWeightEntry: WeightEntry? = null,
-    val wantedCalories: Int = 0
+    val wantedCalories: Int = 0,
 )
+
+sealed interface SummaryBottomSheetContent {
+    object WeightPicker: SummaryBottomSheetContent
+    object AskForDailyWeightDialog: SummaryBottomSheetContent
+}

@@ -13,9 +13,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.DateHolder
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.repository.TokenRepository
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.*
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.BottomSheetContentProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.DefaultInterceptor
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.RealBottomSheetContentProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.RealCachedValuesProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.RealDateHolder
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.RealResourceProvider
@@ -374,11 +372,6 @@ object AppModule {
     fun provideWeightApi(
         retrofit: Retrofit
     ): WeightApi = retrofit.create(WeightApi::class.java)
-
-    @Singleton
-    @Provides
-    fun provideBottomSheetContentProvider(): BottomSheetContentProvider =
-        RealBottomSheetContentProvider()
 
     @Singleton
     @Provides
