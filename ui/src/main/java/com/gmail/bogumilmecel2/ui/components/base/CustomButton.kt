@@ -20,7 +20,7 @@ import com.gmail.bogumilmecel2.ui.theme.FitnessAppColor
 fun CustomButton(
     modifier: Modifier = Modifier,
     buttonStyle: ButtonStyle = ButtonStyle.PrimaryButton,
-    iconLeft: CustomIconStyle? = null,
+    iconLeft: IconVector? = null,
     text: String,
     onClick: () -> Unit
 ) = with(buttonStyle) {
@@ -73,7 +73,7 @@ fun CustomButton(
 
 @Composable
 private fun ButtonContent(
-    iconLeft: CustomIconStyle?,
+    iconLeft: IconVector?,
     text: String,
     contentColor: FitnessAppColor
 ) {

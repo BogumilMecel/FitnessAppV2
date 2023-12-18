@@ -10,7 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.gmail.bogumilmecel2.ui.components.base.CustomIconButton
-import com.gmail.bogumilmecel2.ui.components.base.CustomIconStyle
+import com.gmail.bogumilmecel2.ui.components.base.IconVector
 import com.gmail.bogumilmecel2.ui.components.base.CustomText
 import com.gmail.bogumilmecel2.ui.components.base.FitnessAppTextStyle
 import com.gmail.bogumilmecel2.ui.components.base.IconParams
@@ -33,7 +33,7 @@ fun HeaderRow(
         onBackPressed?.let {
             CustomIconButton(
                 iconParams = IconParams(
-                    iconStyle = CustomIconStyle.Back,
+                    iconStyle = IconVector.Back,
                     onClick = {
                         onBackPressed()
                     },

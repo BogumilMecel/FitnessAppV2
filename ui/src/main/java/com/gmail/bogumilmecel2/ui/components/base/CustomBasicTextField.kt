@@ -40,7 +40,7 @@ fun CustomBasicTextField(
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     textAlign: TextAlign = TextAlign.Start,
     visualTransformation: VisualTransformation = VisualTransformation.None,
-    leadingIcon: CustomIconStyle? = null
+    leadingIcon: IconVector? = null
 ) {
     val textPadding = PaddingValues(
         start = 12.dp,
