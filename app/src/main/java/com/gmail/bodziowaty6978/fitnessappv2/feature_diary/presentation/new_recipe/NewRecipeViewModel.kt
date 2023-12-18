@@ -84,4 +84,7 @@ class NewRecipeViewModel @Inject constructor(
             }
         }
     }
+    private fun updateNutritionData(){
+
+    }
 }

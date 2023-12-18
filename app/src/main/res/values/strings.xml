@@ -141,6 +141,9 @@
     <string name="recipes">Recipes</string>
     <string name="recipe_name">Recipe name</string>
     <string name="add_image">Add image</string>
+    <string name="time">Time</string>
+    <string name="difficulty">Difficulty</string>
+    <string name="servings">Servings</string>
 
 
     <string name="sedentary">Sedentary</string>
