@@ -1,48 +1,49 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.data.repository
 
-import androidx.datastore.core.DataStore
+import com.gmail.bodziowaty6978.fitnessappv2.common.data.utils.CustomSharedPreferencesUtils
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.UserInformation
-import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
+import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
+import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
+import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.data.api.IntroductionApi
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.repository.IntroductionRepository
 
 
 class IntroductionRepositoryImp(
-    private val informationDatastore : DataStore<UserInformation>,
-    private val nutritionDatastore : DataStore<NutritionValues>
+    private val introductionApi: IntroductionApi,
+    private val customSharedPreferencesUtils: CustomSharedPreferencesUtils,
+    private val resourceProvider: ResourceProvider
 ): IntroductionRepository {
 
-    override suspend fun saveIntroductionInformation(
-        userInformation: UserInformation,
+    override suspend fun saveNutritionValues(
+        token: String,
         nutritionValues: NutritionValues
-    ): CustomResult {
+    ): Resource<NutritionValues> {
         return try {
-            informationDatastore.updateData {
-                it.copy(
-                    activityInADay = userInformation.activityInADay,
-                    typeOfWork = userInformation.typeOfWork,
-                    workoutInAWeek = userInformation.workoutInAWeek,
-                    gender = userInformation.gender,
-                    height = userInformation.height,
-                    currentWeight = userInformation.currentWeight,
-                    wantedWeight = userInformation.wantedWeight,
-                    age = userInformation.age,
-                )
-            }
-
-            nutritionDatastore.updateData {
-                it.copy(
-                    calories = nutritionValues.calories,
-                    carbohydrates = nutritionValues.carbohydrates,
-                    protein = nutritionValues.protein,
-                    fat = nutritionValues.fat,
-                )
-            }
-
-            CustomResult.Success
+            val savedNutritionValues = introductionApi.saveNutritionValues(
+                nutritionValues = nutritionValues, token = token
+            )
+            customSharedPreferencesUtils.saveWantedNutritionValues(savedNutritionValues)
+            Resource.Success(savedNutritionValues)
         }catch (e:Exception){
-            CustomResult.Error(e.message.toString())
+            e.printStackTrace()
+            Resource.Error(resourceProvider.getUnknownErrorString())
         }
+    }
 
+    override suspend fun saveUserInformation(
+        token: String,
+        userInformation: UserInformation
+    ): Resource<UserInformation> {
+        return try {
+            val savedUserInformation = introductionApi.saveUserInformation(
+                userInformation = userInformation, token = token
+            )
+            customSharedPreferencesUtils.saveUserInformation(userInformation)
+            Resource.Success(savedUserInformation)
+        }catch (e:Exception){
+            e.printStackTrace()
+            Resource.Error(resourceProvider.getUnknownErrorString())
+        }
     }
 }

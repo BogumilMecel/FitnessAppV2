@@ -97,7 +97,7 @@ object TestAppModule {
     @Provides
     @Singleton
     fun provideIntroductionRepository(): IntroductionRepository = object : IntroductionRepository {
-        override suspend fun saveIntroductionInformation(
+        override suspend fun saveNutritionValues(
             userInformation: UserInformation,
             nutritionValues: NutritionValues
         ): CustomResult {

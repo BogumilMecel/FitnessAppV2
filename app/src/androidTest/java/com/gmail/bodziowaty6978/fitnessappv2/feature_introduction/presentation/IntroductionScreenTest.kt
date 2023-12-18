@@ -13,7 +13,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.MainActivity
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.FitnessAppV2Theme
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.util.Screen
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.presentation.util.IntroductionExpectedQuestionAnswer
-import com.gmail.bodziowaty6978.fitnessappv2.util.TAG
+import com.gmail.bodziowaty6978.fitnessappv2.common.util.extensions.TAG
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules

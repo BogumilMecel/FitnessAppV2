@@ -8,5 +8,5 @@ data class DiaryState(
     val meals:List<Meal> = emptyList(),
     val wantedNutritionValues:NutritionValues = NutritionValues(),
     val isDialogShowed:Boolean = false,
-    val longClickedDiaryEntry:DiaryEntry? = null
+    val longClickedDiaryEntry:DiaryEntry? = null,
 )

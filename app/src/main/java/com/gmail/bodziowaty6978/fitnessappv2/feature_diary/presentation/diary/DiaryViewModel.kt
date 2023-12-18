@@ -8,14 +8,15 @@ import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.NavigationAc
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.singleton.CurrentDate
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigator
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.use_case.GetToken
+import com.gmail.bodziowaty6978.fitnessappv2.common.domain.use_case.GetWantedNutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
+import com.gmail.bodziowaty6978.fitnessappv2.common.util.extensions.TAG
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Meal
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.diary.DeleteDiaryEntry
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.diary.GetDiaryEntries
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.diary.UpdateDiaryEntriesListAfterDelete
-import com.gmail.bodziowaty6978.fitnessappv2.util.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -33,25 +34,27 @@ class DiaryViewModel @Inject constructor(
     private val updateDiaryEntriesListAfterDelete: UpdateDiaryEntriesListAfterDelete,
     private val resourceProvider: ResourceProvider,
     private val navigator: Navigator,
-    private val getToken: GetToken
+    private val getToken: GetToken,
+    private val getWantedNutritionValues: GetWantedNutritionValues
 ) : ViewModel() {
 
     private val _errorState = Channel<String>()
     val errorState = _errorState.receiveAsFlow()
 
     private val _state = MutableStateFlow(DiaryState())
-    val state:StateFlow<DiaryState> = _state
+    val state: StateFlow<DiaryState> = _state
 
-    init{
+    init {
         initMeals()
         getDiaryEntries()
+        initWantedNutritionValues()
     }
 
-    private fun initMeals(){
+    private fun initMeals() {
         val mealNames = resourceProvider.getStringArray(R.array.meal_names)
         _state.update {
             it.copy(
-                meals = mealNames.map {mealName ->
+                meals = mealNames.map { mealName ->
                     Meal(
                         mealName = mealName,
                         diaryEntries = emptyList()
@@ -66,12 +69,15 @@ class DiaryViewModel @Inject constructor(
             is DiaryEvent.ChangedDate -> {
                 getDiaryEntries()
             }
+
             is DiaryEvent.ClickedAddProduct -> {
                 navigator.navigate(NavigationActions.DiaryScreen.diaryToSearch(event.mealName))
             }
+
             is DiaryEvent.ClickedDiaryEntry -> {
 
             }
+
             is DiaryEvent.LongClickedDiaryEntry -> {
                 _state.update {
                     it.copy(
@@ -81,13 +87,7 @@ class DiaryViewModel @Inject constructor(
                 }
 
             }
-            is DiaryEvent.CollectedWantedNutritionValues -> {
-                _state.update {
-                    it.copy(
-                        wantedNutritionValues = event.nutritionValues
-                    )
-                }
-            }
+
             is DiaryEvent.DismissedDialog -> {
                 _state.update {
                     it.copy(
@@ -95,6 +95,7 @@ class DiaryViewModel @Inject constructor(
                     )
                 }
             }
+
             is DiaryEvent.ClickedDeleteInDialog -> {
                 _state.value.longClickedDiaryEntry?.let { diaryEntry ->
                     viewModelScope.launch(Dispatchers.IO) {
@@ -111,13 +112,23 @@ class DiaryViewModel @Inject constructor(
                                     )
                                 )
                             }
-                            Log.e(TAG,_state.value.meals.toString())
                         }
                     }
                 }
             }
+
             is DiaryEvent.ClickedEditInDialog -> {
 
+            }
+        }
+    }
+
+    private fun initWantedNutritionValues() {
+        viewModelScope.launch {
+            _state.update {
+                it.copy(
+                    wantedNutritionValues = getWantedNutritionValues()
+                )
             }
         }
     }
@@ -146,8 +157,9 @@ class DiaryViewModel @Inject constructor(
                         }
                     }
                 }
+
                 is Resource.Error -> {
-                    resource.uiText?.let {error ->
+                    resource.uiText?.let { error ->
                         _errorState.send(error)
                     }
 

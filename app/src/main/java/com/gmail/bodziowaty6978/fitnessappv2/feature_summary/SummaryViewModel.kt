@@ -4,12 +4,13 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.singleton.CurrentDate
+import com.gmail.bodziowaty6978.fitnessappv2.common.domain.use_case.GetWantedNutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
+import com.gmail.bodziowaty6978.fitnessappv2.common.util.extensions.TAG
 import com.gmail.bodziowaty6978.fitnessappv2.feature_log.domain.use_case.SummaryUseCases
 import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.presentation.SummaryEvent
 import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.presentation.SummaryState
-import com.gmail.bodziowaty6978.fitnessappv2.util.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -23,7 +24,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SummaryViewModel @Inject constructor(
     private val summaryUseCases: SummaryUseCases,
-    private val resourceProvider: ResourceProvider
+    private val resourceProvider: ResourceProvider,
+    private val getWantedNutritionValues: GetWantedNutritionValues
 ) : ViewModel() {
 
     private val _errorState = Channel<String>()
@@ -36,6 +38,7 @@ class SummaryViewModel @Inject constructor(
         getLatestLogEntry()
         getCaloriesSum()
         getLatestWeightEntries()
+        initWantedCalories()
     }
 
     fun onEvent(event: SummaryEvent) {
@@ -47,9 +50,11 @@ class SummaryViewModel @Inject constructor(
                     )
                 }
             }
+
             is SummaryEvent.SavedWeightPickerValue -> {
                 saveNewWeightEntry(value = event.value)
             }
+
             is SummaryEvent.ClickedAddWeightEntryButton -> {
                 _state.update {
                     it.copy(
@@ -60,12 +65,12 @@ class SummaryViewModel @Inject constructor(
         }
     }
 
-    private fun saveNewWeightEntry(value: Double){
+    private fun saveNewWeightEntry(value: Double) {
         viewModelScope.launch {
             val resource = summaryUseCases.addWeightEntry(
                 value = value
             )
-            when(resource){
+            when (resource) {
                 is Resource.Success -> {
                     resource.data?.let { newEntry ->
                         _state.update { state ->
@@ -73,7 +78,7 @@ class SummaryViewModel @Inject constructor(
                                 add(newEntry)
                                 toList()
                             }
-                            Log.e(TAG,newEntriesList.toString())
+                            Log.e(TAG, newEntriesList.toString())
                             state.copy(
                                 isWeightPickerVisible = false,
                                 weightEntries = newEntriesList,
@@ -86,6 +91,7 @@ class SummaryViewModel @Inject constructor(
                         Log.e(TAG, _state.value.weightProgress.toString())
                     }
                 }
+
                 is Resource.Error -> {
 
                 }
@@ -103,7 +109,7 @@ class SummaryViewModel @Inject constructor(
             when (val resource = summaryUseCases.getLatestWeightEntries()) {
                 is Resource.Success -> {
                     resource.data?.let { entries ->
-                        if (entries.isNotEmpty()){
+                        if (entries.isNotEmpty()) {
                             _state.update { state ->
                                 state.copy(
                                     weightEntries = entries,
@@ -114,6 +120,7 @@ class SummaryViewModel @Inject constructor(
 
                     }
                 }
+
                 is Resource.Error -> {
                     resource.uiText?.let {
                         _errorState.send(it)
@@ -123,11 +130,22 @@ class SummaryViewModel @Inject constructor(
         }
     }
 
+    private fun initWantedCalories() {
+        viewModelScope.launch {
+            _state.update {
+                it.copy(
+                    wantedCalories = getWantedNutritionValues().calories
+                )
+            }
+        }
+
+    }
+
     private fun getLatestLogEntry() {
         viewModelScope.launch(Dispatchers.IO) {
             var logStreak = 1
             val resource = summaryUseCases.getLatestLogEntry()
-            if (resource is Resource.Success){
+            if (resource is Resource.Success) {
                 resource.data?.let { logEntry ->
                     val checkResource = summaryUseCases.checkLatestLogEntry(
                         logEntry = logEntry

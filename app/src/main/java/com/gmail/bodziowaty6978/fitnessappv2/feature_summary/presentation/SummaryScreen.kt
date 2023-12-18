@@ -1,17 +1,19 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_summary.presentation
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValues
-import com.gmail.bodziowaty6978.fitnessappv2.datastoreNutrition
 import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.SummaryViewModel
 import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.presentation.components.CaloriesSumSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.presentation.components.LogStreakSection
@@ -24,8 +26,6 @@ fun SummaryScreen(
 ) {
     val state = viewModel.summaryState.collectAsState().value
     val scaffoldState = rememberScaffoldState()
-
-    val wantedCalories = LocalContext.current.datastoreNutrition.data.collectAsState(initial = NutritionValues()).value.calories
 
     LaunchedEffect(key1 = true){
         viewModel.errorState.collect{
@@ -62,7 +62,7 @@ fun SummaryScreen(
 
             CaloriesSumSection(
                 currentCalories = state.caloriesSum ?: 0,
-                wantedCalories = wantedCalories,
+                wantedCalories = state.wantedCalories,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 15.dp)

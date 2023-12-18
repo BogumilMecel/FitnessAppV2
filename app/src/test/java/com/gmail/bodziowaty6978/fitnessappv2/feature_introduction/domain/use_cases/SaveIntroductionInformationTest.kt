@@ -34,7 +34,7 @@ internal class SaveIntroductionInformationTest {
     fun setUp() = runTest{
         closeable = MockitoAnnotations.openMocks(this)
         mockIntroductionRepository = Mockito.mock(IntroductionRepository::class.java)
-        Mockito.`when`(mockIntroductionRepository.saveIntroductionInformation(
+        Mockito.`when`(mockIntroductionRepository.saveNutritionValues(
             any(),
             any()
         )).thenReturn(CustomResult.Success)

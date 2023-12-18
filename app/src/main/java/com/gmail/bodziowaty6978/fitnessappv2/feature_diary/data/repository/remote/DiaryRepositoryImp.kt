@@ -1,6 +1,5 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.data.repository.remote
 
-import android.util.Log
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
@@ -12,7 +11,6 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.diary_entry.DiaryEntry
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.repository.DiaryRepository
-import com.gmail.bodziowaty6978.fitnessappv2.util.TAG
 import java.util.Date
 
 class DiaryRepositoryImp(
@@ -22,7 +20,6 @@ class DiaryRepositoryImp(
 
     override suspend fun getDiaryEntries(timestamp: Long, token:String): Resource<List<DiaryEntry>> {
         return try {
-            Log.e(TAG, Date(timestamp).formatToString())
             val entries = diaryApi.getDiaryEntries(
                 date = Date(timestamp).formatToString(),
                 token = token

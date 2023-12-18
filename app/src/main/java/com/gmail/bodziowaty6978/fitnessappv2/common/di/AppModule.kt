@@ -8,11 +8,13 @@ import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.ComposeCustomNavigator
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.repository.TokenRepositoryImp
+import com.gmail.bodziowaty6978.fitnessappv2.common.data.utils.CustomSharedPreferencesUtils
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.UserInformation
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigator
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.repository.TokenRepository
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.use_case.GetToken
+import com.gmail.bodziowaty6978.fitnessappv2.common.domain.use_case.GetWantedNutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.use_case.SaveToken
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.datastoreInformation
@@ -39,6 +41,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.sear
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.search.SearchDiaryUseCases
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.search.SearchForProductWithBarcode
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.search.SearchForProducts
+import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.data.api.IntroductionApi
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.data.repository.IntroductionRepositoryImp
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.repository.IntroductionRepository
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.use_cases.CalculateNutritionValues
@@ -56,6 +59,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_weight.domain.repository.We
 import com.gmail.bodziowaty6978.fitnessappv2.feature_weight.domain.use_case.AddWeightEntry
 import com.gmail.bodziowaty6978.fitnessappv2.feature_weight.domain.use_case.CalculateWeightProgress
 import com.gmail.bodziowaty6978.fitnessappv2.feature_weight.domain.use_case.GetLatestWeightEntries
+import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -199,16 +203,6 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideIntroductionRepository(
-        informationDatastore: DataStore<UserInformation>,
-        nutritionDatastore: DataStore<NutritionValues>,
-    ): IntroductionRepository = IntroductionRepositoryImp(
-        informationDatastore = informationDatastore,
-        nutritionDatastore = nutritionDatastore
-    )
-
-    @Provides
-    @Singleton
     fun provideCalculateNutritionValuesUseCase(): CalculateNutritionValues =
         CalculateNutritionValues()
 
@@ -217,11 +211,13 @@ object AppModule {
     fun provideSaveInformationUseCase(
         introductionRepository: IntroductionRepository,
         resourceProvider: ResourceProvider,
-        calculateNutritionValues: CalculateNutritionValues
+        calculateNutritionValues: CalculateNutritionValues,
+        getToken: GetToken
     ): SaveIntroductionInformation = SaveIntroductionInformation(
         introductionRepository = introductionRepository,
         resourceProvider = resourceProvider,
-        calculateNutritionValues = calculateNutritionValues
+        calculateNutritionValues = calculateNutritionValues,
+        getToken = getToken
     )
 
     @Singleton
@@ -411,12 +407,50 @@ object AppModule {
 
     @Singleton
     @Provides
+    fun provideGson():Gson = Gson()
+
+    @Provides
+    @Singleton
+    fun provideSharedPreferencesUtils(
+        @ApplicationContext context: Context,
+        gson: Gson
+    ):CustomSharedPreferencesUtils = CustomSharedPreferencesUtils(
+        sharedPreferences = context.getSharedPreferences("fitness_app", Context.MODE_PRIVATE),
+        gson = gson
+    )
+
+    @Singleton
+    @Provides
+    fun provideIntroductionApi(retrofit: Retrofit):IntroductionApi = retrofit.create(IntroductionApi::class.java)
+
+    @Singleton
+    @Provides
+    fun provideGetWantedNutritionValuesUseCase(
+        customSharedPreferencesUtils: CustomSharedPreferencesUtils
+    ): GetWantedNutritionValues = GetWantedNutritionValues(customSharedPreferencesUtils)
+
+    @Singleton
+    @Provides
+    fun provideIntroductionRepository(
+        introductionApi: IntroductionApi,
+        customSharedPreferencesUtils: CustomSharedPreferencesUtils,
+        resourceProvider: ResourceProvider
+    ): IntroductionRepository = IntroductionRepositoryImp(
+        introductionApi = introductionApi,
+        customSharedPreferencesUtils = customSharedPreferencesUtils,
+        resourceProvider = resourceProvider
+    )
+
+    @Singleton
+    @Provides
     fun provideLoadingRepository(
         loadingApi: LoadingApi,
-        resourceProvider: ResourceProvider
+        resourceProvider: ResourceProvider,
+        customSharedPreferencesUtils: CustomSharedPreferencesUtils
     ): LoadingRepository = LoadingRepositoryImp(
         loadingApi = loadingApi,
-        resourceProvider = resourceProvider
+        resourceProvider = resourceProvider,
+        customSharedPreferencesUtils = customSharedPreferencesUtils
     )
 
     @Singleton

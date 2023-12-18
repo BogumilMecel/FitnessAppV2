@@ -18,8 +18,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.singleton.CurrentDate
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.LightRed
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.ProductMainSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.PriceSection
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.ProductMainSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.ProductTopSection
 
 
@@ -89,6 +89,8 @@ fun ProductScreen(
                 },
                 nutritionData = state.nutritionData
             )
+
+            Spacer(modifier = Modifier.height(20.dp))
 
             PriceSection(
                 modifier = Modifier

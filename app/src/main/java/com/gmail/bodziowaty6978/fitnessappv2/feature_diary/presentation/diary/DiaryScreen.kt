@@ -4,12 +4,13 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -17,7 +18,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bodziowaty6978.fitnessappv2.R
-import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValues
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.DarkGreyElevation3
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.Grey
 import com.gmail.bodziowaty6978.fitnessappv2.datastoreNutrition
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.diary.components.CalendarSection
@@ -35,17 +36,9 @@ fun DiaryScreen(
     val state = viewModel.state.collectAsStateWithLifecycle().value
     val scaffoldState = rememberScaffoldState()
 
-    val wantedNutritionValues = LocalContext.current.datastoreNutrition.data.collectAsState(initial = NutritionValues()).value
-
     LaunchedEffect(key1 = true) {
         viewModel.errorState.collect {
             scaffoldState.snackbarHostState.showSnackbar(it)
-        }
-    }
-
-    LaunchedEffect(key1 = true) {
-        context.datastoreNutrition.data.collect {
-            viewModel.onEvent(DiaryEvent.CollectedWantedNutritionValues(it))
         }
     }
 
@@ -58,6 +51,8 @@ fun DiaryScreen(
         ) {
             if (state.isDialogShowed) {
                 AlertDialog(
+                    backgroundColor = DarkGreyElevation3,
+                    shape = RoundedCornerShape(10),
                     onDismissRequest = {
                         viewModel.onEvent(DiaryEvent.DismissedDialog)
                     },
@@ -73,7 +68,10 @@ fun DiaryScreen(
                                 modifier = Modifier
                                     .weight(1F)
                                     .padding(horizontal = 10.dp, vertical = 10.dp),
-                                border = BorderStroke(1.dp, MaterialTheme.colors.primary)
+                                border = BorderStroke(1.dp, MaterialTheme.colors.primary),
+                                colors = ButtonDefaults.outlinedButtonColors(
+                                    backgroundColor = Color.Transparent
+                                )
                             ) {
                                 Text(
                                     text = stringResource(id = R.string.delete).uppercase(),
@@ -144,7 +142,7 @@ fun DiaryScreen(
             }
             NutritionBottomSection(
                 meals = state.meals,
-                wantedNutritionValues = wantedNutritionValues,
+                wantedNutritionValues = state.wantedNutritionValues,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .background(Grey)

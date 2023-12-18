@@ -1,6 +1,5 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,7 +13,6 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.product.ProductUseCases
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.NutritionData
-import com.gmail.bodziowaty6978.fitnessappv2.util.TAG
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -86,9 +84,7 @@ class ProductViewModel @Inject constructor(
                             )
                         }
                     }
-
                 }
-                Log.e("huj",_state.value.recipe.toString())
             }
             is ProductEvent.ClickedAddProduct -> {
                 viewModelScope.launch(Dispatchers.IO) {
@@ -96,10 +92,8 @@ class ProductViewModel @Inject constructor(
                         product = _state.value.product,
                         mealName = _state.value.mealName,
                         weight = _state.value.weight.toIntOrNull(),
-                        dateModel = CurrentDate.dateModel(resourceProvider = resourceProvider),
-                        nutritionValues = _state.value.nutritionData.nutritionValues
+                        dateModel = CurrentDate.dateModel(resourceProvider = resourceProvider)
                     )
-                    Log.e(TAG, addingResult.toString())
                     if (addingResult is Resource.Success) {
                         navigator.navigate(NavigationActions.ProductScreen.productToDiary())
                     } else if (addingResult is Resource.Error) {

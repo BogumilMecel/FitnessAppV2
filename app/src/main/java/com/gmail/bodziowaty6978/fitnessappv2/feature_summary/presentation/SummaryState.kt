@@ -8,5 +8,6 @@ data class SummaryState(
     val isWeightPickerVisible: Boolean = false,
     val isAskForWeightPermissionDialogVisible: Boolean = false,
     val weightProgress: String? = null,
-    val weightEntries: List<WeightEntry> = emptyList()
+    val weightEntries: List<WeightEntry> = emptyList(),
+    val wantedCalories: Int = 0
 )
