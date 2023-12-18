@@ -93,7 +93,8 @@ class IntroductionViewModel @Inject constructor(
                             typeOfWork = typeOfWork,
                             activityLevel = activityLevel,
                             trainingFrequency = trainingFrequency,
-                            desiredWeight = desiredWeight
+                            desiredWeight = desiredWeight,
+                            cachedValuesProvider = cachedValuesProvider
                         ).handle {
                             navigateWithPopUp(
                                 destination = SummaryScreenDestination
