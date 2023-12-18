@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import androidx.room.Room
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
+import com.gmail.bogumilmecel2.auth.ValidateAuthDataUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.common.data.AppDatabase
 import com.gmail.bogumilmecel2.fitnessappv2.common.data.navigation.repository.TokenRepositoryImp
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.CachedValuesProvider
@@ -318,13 +319,19 @@ object AppModule {
 
     @Singleton
     @Provides
+    fun provideValidateAuthDataUseCase(): ValidateAuthDataUseCase = ValidateAuthDataUseCase()
+
+    @Singleton
+    @Provides
     fun provideLogInUserUseCase(
         authRepository: AuthRepository,
         resourceProvider: ResourceProvider,
-        tokenRepository: TokenRepository
+        tokenRepository: TokenRepository,
+        validateAuthDataUseCase: ValidateAuthDataUseCase
     ): LogInUserUseCase = LogInUserUseCase(
         authRepository = authRepository,
         resourceProvider = resourceProvider,
-        tokenRepository = tokenRepository
+        tokenRepository = tokenRepository,
+        validateAuthDataUseCase = validateAuthDataUseCase
     )
 }

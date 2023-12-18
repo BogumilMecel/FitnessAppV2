@@ -21,36 +21,35 @@ class RegisterUserUseCase(
     ): Resource<Unit> {
         if (confirmPassword != password) return Resource.Error(resourceProvider.getString(R.string.please_make_sure_both_passwords_are_the_same))
 
-        validateAuthDataUseCase(
+        val validationResult = validateAuthDataUseCase(
             username = username,
             email = email,
             password = password
-        ).run {
-            println(this)
-            return when (this) {
-                ValidateAuthDataUseCase.Result.EmptyFields ->
-                    Resource.Error(resourceProvider.getString(R.string.please_make_sure_all_fields_are_filled_in_correctly))
+        )
 
-                ValidateAuthDataUseCase.Result.EmailLengthInvalid ->
-                    Resource.Error(resourceProvider.getString(R.string.register_email_length_invalid))
+        when (validationResult) {
+            ValidateAuthDataUseCase.Result.EmptyFields ->
+                return Resource.Error(resourceProvider.getString(R.string.empty_fields_error))
 
-                ValidateAuthDataUseCase.Result.PasswordLengthInvalid ->
-                    Resource.Error(resourceProvider.getString(R.string.please_make_sure_your_password_is_at_least_6_characters_and_is_not_longer_than_24_characters))
+            ValidateAuthDataUseCase.Result.EmailLengthInvalid ->
+                return Resource.Error(resourceProvider.getString(R.string.register_email_length_invalid))
 
-                ValidateAuthDataUseCase.Result.UsernameLengthInvalid ->
-                    Resource.Error(resourceProvider.getString(R.string.register_username_length_invalid))
+            ValidateAuthDataUseCase.Result.PasswordLengthInvalid ->
+                return Resource.Error(resourceProvider.getString(R.string.register_password_length_invalid))
 
-                ValidateAuthDataUseCase.Result.InvalidEmail ->
-                    Resource.Error(resourceProvider.getString(R.string.please_make_sure_you_have_entered_correct_email))
+            ValidateAuthDataUseCase.Result.UsernameLengthInvalid ->
+                return Resource.Error(resourceProvider.getString(R.string.register_username_length_invalid))
 
-                ValidateAuthDataUseCase.Result.Success -> authRepository.registerUser(
-                    registerRequest = RegisterRequest(
-                        username = username,
-                        email = email,
-                        password = password
-                    )
+            ValidateAuthDataUseCase.Result.InvalidEmail ->
+                return Resource.Error(resourceProvider.getString(R.string.please_make_sure_you_have_entered_correct_email))
+
+            ValidateAuthDataUseCase.Result.Success -> return authRepository.registerUser(
+                registerRequest = RegisterRequest(
+                    username = username,
+                    email = email,
+                    password = password
                 )
-            }
+            )
         }
     }
 }

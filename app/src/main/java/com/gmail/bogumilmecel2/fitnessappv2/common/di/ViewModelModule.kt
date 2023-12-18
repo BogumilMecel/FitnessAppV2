@@ -308,11 +308,12 @@ object ViewModelModule {
         authRepository: AuthRepository,
         resourceProvider: ResourceProvider,
         logInUserUseCase: LogInUserUseCase,
+        validateAuthDataUseCase: ValidateAuthDataUseCase
     ): RegisterUseCases = RegisterUseCases(
         registerUserUseCase = RegisterUserUseCase(
             authRepository = authRepository,
             resourceProvider = resourceProvider,
-            validateAuthDataUseCase = ValidateAuthDataUseCase()
+            validateAuthDataUseCase = validateAuthDataUseCase
         ),
         logInUserUseCase = logInUserUseCase
     )

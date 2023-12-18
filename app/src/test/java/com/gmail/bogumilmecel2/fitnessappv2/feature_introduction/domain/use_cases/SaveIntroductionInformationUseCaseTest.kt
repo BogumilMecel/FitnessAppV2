@@ -30,7 +30,7 @@ internal class SaveIntroductionInformationUseCaseTest : BaseTest() {
     @Test
     fun `if called with empty weight, return resource error with correct text`() = runTest {
         callWithCorrectValues(weight = "")
-            .assertIsError(resourceProvider.getString(R.string.please_make_sure_all_fields_are_filled_in_correctly))
+            .assertIsError(resourceProvider.getString(R.string.empty_fields_error))
     }
 
     @Test
@@ -49,13 +49,13 @@ internal class SaveIntroductionInformationUseCaseTest : BaseTest() {
     @Test
     fun `if called with incorrect weight, return resource error with correct text`() = runTest {
         callWithCorrectValues(weight = "abc")
-            .assertIsError(resourceProvider.getString(R.string.please_make_sure_all_fields_are_filled_in_correctly))
+            .assertIsError(resourceProvider.getString(R.string.empty_fields_error))
     }
 
     @Test
     fun `if called with empty height, return resource error with correct text`() = runTest {
         callWithCorrectValues(height = "")
-            .assertIsError(resourceProvider.getString(R.string.please_make_sure_all_fields_are_filled_in_correctly))
+            .assertIsError(resourceProvider.getString(R.string.empty_fields_error))
     }
 
     @Test
@@ -74,13 +74,13 @@ internal class SaveIntroductionInformationUseCaseTest : BaseTest() {
     @Test
     fun `if called with incorrect height, return resource error with correct text`() = runTest {
         callWithCorrectValues(height = "abc")
-            .assertIsError(resourceProvider.getString(R.string.please_make_sure_all_fields_are_filled_in_correctly))
+            .assertIsError(resourceProvider.getString(R.string.empty_fields_error))
     }
 
     @Test
     fun `if called with empty age, return resource error with correct text`() = runTest {
         callWithCorrectValues(age = "")
-            .assertIsError(resourceProvider.getString(R.string.please_make_sure_all_fields_are_filled_in_correctly))
+            .assertIsError(resourceProvider.getString(R.string.empty_fields_error))
     }
 
     @Test
@@ -98,7 +98,7 @@ internal class SaveIntroductionInformationUseCaseTest : BaseTest() {
     @Test
     fun `if called with incorrect age, return resource error`() = runTest {
         callWithCorrectValues(age = "abc")
-            .assertIsError(resourceProvider.getString(R.string.please_make_sure_all_fields_are_filled_in_correctly))
+            .assertIsError(resourceProvider.getString(R.string.empty_fields_error))
     }
 
     @Test

@@ -44,7 +44,7 @@ internal class LoginScreenTest : BaseAndroidTest() {
     fun checkIfSnackbarIsVisibleWhenAllFieldsAreEmpty() {
         performButtonClickAndAssertSnackbarDisplayed(
             buttonTestTag = TestTags.PRIMARY_BUTTON,
-            snackbarText = getString(R.string.please_make_sure_all_fields_are_filled_in_correctly)
+            snackbarText = getString(R.string.empty_fields_error)
         )
     }
 
