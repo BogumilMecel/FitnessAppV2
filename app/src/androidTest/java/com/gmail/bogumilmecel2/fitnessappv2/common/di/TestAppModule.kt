@@ -16,9 +16,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.util.BarcodeScanner
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.RealDateHolder
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.RealResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
-import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.model.LoginRequest
-import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.model.RegisterRequest
-import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.model.TokenResponse
+import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.data.repository.MockAuthRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.model.User
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.repository.AuthRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.use_case.LogInUserUseCase
@@ -63,7 +61,6 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
-import kotlinx.coroutines.delay
 import javax.inject.Singleton
 
 @Module
@@ -116,22 +113,8 @@ object TestAppModule {
 
     @Provides
     @Singleton
-    fun provideAuthRepository(): AuthRepository = object : AuthRepository {
-        override suspend fun logInUser(loginRequest: LoginRequest): Resource<TokenResponse> {
-            delay(1000)
-            return Resource.Error()
-        }
+    fun provideAuthRepository(): AuthRepository = MockAuthRepository()
 
-        override suspend fun registerUser(registerRequest: RegisterRequest): Resource<Boolean> {
-            TODO("Not yet implemented")
-        }
-
-        override suspend fun sendPasswordResetEmail(email: String): Resource<Boolean> {
-            TODO("Not yet implemented")
-        }
-    }
-
-    // TODO: Delete after separating auth use cases
     @Provides
     @Singleton
     fun provideSaveTokenUseCase(

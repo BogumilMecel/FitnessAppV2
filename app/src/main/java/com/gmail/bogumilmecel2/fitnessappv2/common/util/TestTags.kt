@@ -18,4 +18,5 @@ object TestTags {
     const val PASSWORD = "password"
     const val FORGOT_PASSWORD = "forgot_password"
     const val REGISTER_BUTTON = "register_button"
+    const val LOGIN_BUTTON = "login_button"
 }
