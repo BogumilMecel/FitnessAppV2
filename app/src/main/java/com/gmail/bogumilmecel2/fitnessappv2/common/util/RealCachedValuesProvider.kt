@@ -19,6 +19,7 @@ class RealCachedValuesProvider(
         const val USER_KEY = "user"
         const val CURRENCY = "currency"
         const val WEIGHT_DIALOGS = "weight_dialogs"
+        const val WEIGHT_PICKER = "weight_picker"
     }
 
     override suspend fun getWantedNutritionValues() =
@@ -87,6 +88,18 @@ class RealCachedValuesProvider(
         key = WEIGHT_DIALOGS,
         clazz = String::class.java
     )
+
+    override suspend fun getLocalLastTimeShowedWeightPicker() = getItemFromJson(
+        key = WEIGHT_PICKER,
+        clazz = String::class.java
+    )
+
+    override suspend fun setLocalLastTimeShowedWeightPicker(date: String) {
+        saveItemToJson(
+            item = date,
+            key = WEIGHT_PICKER
+        )
+    }
 
     override suspend fun updateUserInformation(userInformation: UserInformation) {
         saveUser(
