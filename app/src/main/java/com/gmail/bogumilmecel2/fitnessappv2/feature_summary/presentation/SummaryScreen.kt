@@ -43,7 +43,7 @@ fun SummaryScreen(
             onEvent = {
                 viewModel.onEvent(it)
             },
-            startingValue = 100.0
+            startingValue = 100.0f
         )
     }
 
