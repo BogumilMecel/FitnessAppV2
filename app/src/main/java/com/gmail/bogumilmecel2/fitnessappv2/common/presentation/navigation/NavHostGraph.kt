@@ -3,7 +3,6 @@ package com.gmail.bogumilmecel2.fitnessappv2.common.presentation.navigation
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.rememberScaffoldState
@@ -129,7 +128,7 @@ fun NavHostGraph(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues),
-            color = MaterialTheme.colors.background
+            color = FitnessAppTheme.colors.BackgroundPrimary
         ) {
             DestinationsNavHost(
                 navGraph = NavGraphs.root,
