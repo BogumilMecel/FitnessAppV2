@@ -11,6 +11,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Re
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.recipe.RecipeUseCases
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.domain.model.NutritionData
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -67,7 +68,7 @@ class RecipeViewModel @Inject constructor(
     }
 
     private fun handleSaveButtonClicked() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             with(_state.value) {
                 when(entryData) {
                     is RecipeEntryData.Editing -> {

@@ -5,6 +5,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.BaseMockkTest
 import com.gmail.bogumilmecel2.fitnessappv2.common.MockConstants
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.MealName
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntryPostRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 import io.mockk.coEvery
@@ -71,9 +72,21 @@ class InsertProductDiaryEntryUseCaseTest: BaseMockkTest() {
             date = MockConstants.MOCK_DATE_2021,
             mealName = MealName.BREAKFAST,
         )
-        coEvery { diaryRepository.insertProductDiaryEntry(productDiaryEntryPostRequest = expectedRequest) } returns Resource.Success(Unit)
+        val expectedProductDiaryEntry = ProductDiaryEntry(
+            productId = MockConstants.Diary.PRODUCT_ID_11,
+            weight = MockConstants.Diary.CORRECT_PRODUCT_DIARY_ENTRY_WEIGHT_1.toValidIntOrThrow(),
+            date = MockConstants.MOCK_DATE_2021,
+            mealName = MealName.BREAKFAST,
+        )
+        coEvery {
+            diaryRepository.insertProductDiaryEntry(productDiaryEntryPostRequest = expectedRequest)
+        } returns Resource.Success(
+            data = expectedProductDiaryEntry
+        )
+        coEvery { diaryRepository.insertOfflineDiaryEntry(expectedProductDiaryEntry) } returns Resource.Success(Unit)
         assertIs<Resource.Success<Unit>>(callTestedMethod())
         coVerify(exactly = 1) { diaryRepository.insertProductDiaryEntry(productDiaryEntryPostRequest = expectedRequest) }
+        coVerify(exactly = 1) { diaryRepository.insertOfflineDiaryEntry(diaryItem = expectedProductDiaryEntry) }
     }
 
     private fun checkErrorMessage(resource: Resource.Error<Unit>) {

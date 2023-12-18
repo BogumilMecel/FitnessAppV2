@@ -12,11 +12,13 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductPr
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductPriceResponse
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.RecipePriceResponse
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.UserDiaryItemsResponse
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntryPostRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.product.NewPriceRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.product.NewProductRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.NewRecipeRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Recipe
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.RecipePriceRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.model.CaloriesSumResponse
@@ -38,12 +40,12 @@ interface DiaryApi {
     @POST("/diaryEntries/product")
     suspend fun insertProductDiaryEntry(
         @Body productDiaryEntryPostRequest: ProductDiaryEntryPostRequest
-    )
+    ): ProductDiaryEntry
 
     @POST("/diaryEntries/recipe")
     suspend fun insertRecipeDiaryEntry(
         @Body recipeDiaryEntryRequest: RecipeDiaryEntryRequest
-    ): Boolean
+    ): RecipeDiaryEntry
 
     @HTTP(
         method = "DELETE",

@@ -5,6 +5,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.BaseMockkTest
 import com.gmail.bogumilmecel2.fitnessappv2.common.MockConstants
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.MealName
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 import io.mockk.coEvery
@@ -59,21 +60,38 @@ class PostRecipeDiaryEntryUseCaseTest : BaseMockkTest() {
 
     @Test
     fun `Check if data is correct and repository returns resource error, resource error is returned`() = runTest {
-        coEvery { diaryRepository.addRecipeDiaryEntry(recipeDiaryEntryRequest = any()) } returns Resource.Error()
+        coEvery { diaryRepository.insertRecipeDiaryEntry(recipeDiaryEntryRequest = any()) } returns Resource.Error()
         assertIs<Resource.Error<Unit>>(callTestedMethod())
     }
 
     @Test
     fun `Check if data is correct and repository returns resource success, resource success is returned`() = runTest {
         val expectedRequest = RecipeDiaryEntryRequest(
-            recipeId = MockConstants.Diary.RECIPE_DIARY_ENTRY_ID_41,
+            recipeId = MockConstants.Diary.RECIPE_ID_1,
             servings = MockConstants.Diary.CORRECT_RECIPE_SERVINGS_2.toValidIntOrThrow(),
             date = MockConstants.MOCK_DATE_2021,
             mealName = MealName.BREAKFAST,
         )
-        coEvery { diaryRepository.addRecipeDiaryEntry(recipeDiaryEntryRequest = expectedRequest) } returns Resource.Success(Unit)
+        val expectedRecipeDiaryEntry = RecipeDiaryEntry(
+            recipeId = MockConstants.Diary.RECIPE_ID_1,
+            servings = MockConstants.Diary.CORRECT_RECIPE_SERVINGS_2.toValidIntOrThrow(),
+            date = MockConstants.MOCK_DATE_2021,
+            mealName = MealName.BREAKFAST,
+        )
+        coEvery {
+            diaryRepository.insertRecipeDiaryEntry(recipeDiaryEntryRequest = expectedRequest)
+        } returns Resource.Success(
+            data = RecipeDiaryEntry(
+                recipeId = MockConstants.Diary.RECIPE_ID_1,
+                servings = MockConstants.Diary.CORRECT_RECIPE_SERVINGS_2.toValidIntOrThrow(),
+                date = MockConstants.MOCK_DATE_2021,
+                mealName = MealName.BREAKFAST,
+            )
+        )
+        coEvery { diaryRepository.insertOfflineDiaryEntry(expectedRecipeDiaryEntry) } returns Resource.Success(Unit)
         assertIs<Resource.Success<Unit>>(callTestedMethod())
-        coVerify(exactly = 1) { diaryRepository.addRecipeDiaryEntry(recipeDiaryEntryRequest = expectedRequest) }
+        coVerify(exactly = 1) { diaryRepository.insertRecipeDiaryEntry(recipeDiaryEntryRequest = expectedRequest) }
+        coVerify(exactly = 1) { diaryRepository.insertOfflineDiaryEntry(expectedRecipeDiaryEntry) }
     }
 
     private fun checkErrorMessage(resource: Resource.Error<Unit>) {
@@ -84,7 +102,7 @@ class PostRecipeDiaryEntryUseCaseTest : BaseMockkTest() {
     }
 
     private suspend fun callTestedMethod(
-        recipeDiaryEntryId: String = MockConstants.Diary.RECIPE_DIARY_ENTRY_ID_41,
+        recipeDiaryEntryId: String = MockConstants.Diary.RECIPE_ID_1,
         servings: String = MockConstants.Diary.CORRECT_RECIPE_SERVINGS_2,
         date: String = MockConstants.MOCK_DATE_2021
     ) = postRecipeDiaryEntryUseCase(
