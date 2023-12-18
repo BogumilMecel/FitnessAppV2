@@ -13,8 +13,14 @@ class CreateSearchItemParamsFromHistoryItemUseCase(private val resourceProvider:
     ): SearchItemParams = with(productDiaryHistoryItem) {
         return SearchItemParams(
             name = productName,
-            textBelowName = resourceProvider.getString(R.string.measurement_unit_gram_with_value, productDiaryHistoryItem.weight),
-            endText = resourceProvider.getString(R.string.kcal_with_value, nutritionValues.calories),
+            textBelowName = resourceProvider.getString(
+                measurementUnit.getStringResWithValue(),
+                weight
+            ),
+            endText = resourceProvider.getString(
+                R.string.kcal_with_value,
+                nutritionValues.calories
+            ),
             onItemClick = onClick,
             onItemLongClick = onLongClick
         )
