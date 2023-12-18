@@ -1,6 +1,8 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_summary.presentation.components
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
@@ -14,10 +16,10 @@ import com.gmail.bodziowaty6978.fitnessappv2.R
 
 @Composable
 fun LogStreakSection(
-    streak:Int?,
+    streak: Int,
     modifier: Modifier
 ) {
-    
+
     Card(
         modifier = modifier,
         shape = RoundedCornerShape(15)
@@ -31,12 +33,12 @@ fun LogStreakSection(
                 style = MaterialTheme.typography.h3
             )
 
-            streak?.let {
-                Text(
-                    text = String.format(stringResource(id = R.string.days), streak),
-                    style = MaterialTheme.typography.body2
-                )
-            }
+            Spacer(modifier = Modifier.height(4.dp))
+
+            Text(
+                text = String.format(stringResource(id = R.string.days), streak),
+                style = MaterialTheme.typography.body2
+            )
         }
     }
 }

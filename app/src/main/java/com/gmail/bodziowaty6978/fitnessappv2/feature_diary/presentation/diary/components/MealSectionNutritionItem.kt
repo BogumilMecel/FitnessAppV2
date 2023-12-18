@@ -26,7 +26,7 @@ fun MealSectionNutritionItem(
         verticalAlignment = Alignment.CenterVertically
     ) {
         HorizontalProgressIndicator(
-            progress = (currentValue.toDouble()/wantedValue.toDouble()*100.0).toFloat()
+            progress = if (wantedValue.toFloat()>0.0f) (currentValue.toFloat()/wantedValue.toFloat()*100.0f) else 0.0f
         )
         
         Spacer(modifier = Modifier.width(6.dp))

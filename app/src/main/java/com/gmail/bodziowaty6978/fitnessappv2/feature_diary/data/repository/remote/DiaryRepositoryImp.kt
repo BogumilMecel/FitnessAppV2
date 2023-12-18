@@ -112,4 +112,20 @@ class DiaryRepositoryImp(
     override suspend fun editDiaryEntry(diaryEntry: DiaryEntry): CustomResult {
         TODO("Not yet implemented")
     }
+
+    override suspend fun getCaloriesSum(date: String, token: String): Resource<Int> {
+        return try {
+            val resource = productApi.getCaloriesSum(
+                date = date,
+                token = "Bearer $token"
+            ).sum()
+            Log.e(TAG, resource.toString())
+            Resource.Success(
+                data = resource
+            )
+        }catch (e:Exception){
+            e.printStackTrace()
+            Resource.Error(resourceProvider.getString(R.string.unknown_error))
+        }
+    }
 }

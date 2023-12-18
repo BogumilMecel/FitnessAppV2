@@ -43,4 +43,10 @@ interface ProductApi {
     suspend fun getProductHistory(
         @Header("Authorization") token:String
     ): List<Product>
+
+    @GET("/diaryEntries/calories")
+    suspend fun getCaloriesSum(
+        @Query("date") date:String,
+        @Header("Authorization") token:String
+    ):List<Int>
 }
