@@ -27,7 +27,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.gmail.bogumilmecel2.fitnessappv2.R
-import com.gmail.bogumilmecel2.fitnessappv2.components.CustomBasicTextField
+import com.gmail.bogumilmecel2.ui.components.base.CustomBasicTextField
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_product.NewProductEvent
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_product.NewProductState
 import com.gmail.bogumilmecel2.ui.theme.LocalColor.LightGrey

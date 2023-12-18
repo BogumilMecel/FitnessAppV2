@@ -24,9 +24,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.gmail.bogumilmecel2.fitnessappv2.R
-import com.gmail.bogumilmecel2.fitnessappv2.components.CustomBasicTextField
 import com.gmail.bogumilmecel2.fitnessappv2.components.DefaultCardBackground
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
+import com.gmail.bogumilmecel2.ui.components.base.CustomBasicTextField
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 import com.gmail.bogumilmecel2.ui.theme.LocalColor.BlueViolet3
 import com.gmail.bogumilmecel2.ui.theme.LocalColor.DarkGreyElevation
@@ -38,7 +38,7 @@ fun ProductNameSection(
     modifier: Modifier,
     onWeightEntered: (String) -> Unit
 ) {
-    DefaultCardBackground(modifier = modifier,) {
+    DefaultCardBackground(modifier = modifier) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -82,10 +82,7 @@ fun ProductNameSection(
                                     horizontal = 8.dp
                                 )
                                 .testTag(stringResource(id = R.string.WEIGHT_TEXT_FIELD)),
-                            textStyle = MaterialTheme.typography.body1.copy(
-                                color = FitnessAppTheme.colors.ContentPrimary,
-                                textAlign = TextAlign.End
-                            ),
+                            textAlign = TextAlign.End,
                             singleLine = true,
                             keyboardOptions = KeyboardOptions.Default.copy(
                                 keyboardType = KeyboardType.Number
@@ -118,7 +115,10 @@ fun ProductNameSection(
                         onClick = {
                             onWeightEntered(i.toString())
                         },
-                        border = BorderStroke(1.dp, BlueViolet3),
+                        border = BorderStroke(
+                            1.dp,
+                            BlueViolet3
+                        ),
                         shape = RoundedCornerShape(25),
                         colors = ButtonDefaults.outlinedButtonColors(
                             backgroundColor = DarkGreyElevation

@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.gmail.bogumilmecel2.fitnessappv2.components.CustomBasicTextField
+import com.gmail.bogumilmecel2.ui.components.base.CustomBasicTextField
 
 @Composable
 fun TextFieldSection(

@@ -37,11 +37,12 @@ fun FitnessAppTextStyle.getTextStyle(): TextStyle {
 
         is
         FitnessAppTextStyle.ParagraphLarge,
+        FitnessAppTextStyle.ParagraphSecondaryLarge,
         FitnessAppTextStyle.InputDescription -> FitnessAppTheme.typography.ParagraphLarge
 
         is
         FitnessAppTextStyle.ParagraphMedium,
-        FitnessAppTextStyle.ParagraphSecondary,
+        FitnessAppTextStyle.ParagraphSecondaryMedium,
         FitnessAppTextStyle.TextFieldPlaceholder -> FitnessAppTheme.typography.ParagraphMedium
 
         is FitnessAppTextStyle.Error -> FitnessAppTheme.typography.ParagraphSmall
@@ -65,7 +66,8 @@ sealed class FitnessAppTextStyle(
     )
 
     object CardTitle : FitnessAppTextStyle()
-    object ParagraphSecondary : FitnessAppTextStyle(color = FitnessAppColor.ContentSecondary)
+    object ParagraphSecondaryMedium : FitnessAppTextStyle(color = FitnessAppColor.ContentSecondary)
+    object ParagraphSecondaryLarge : FitnessAppTextStyle(color = FitnessAppColor.ContentSecondary)
     object ImportantTextMedium : FitnessAppTextStyle()
     object ParagraphMedium : FitnessAppTextStyle()
     object ParagraphLarge : FitnessAppTextStyle()

@@ -14,7 +14,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.gmail.bogumilmecel2.fitnessappv2.components.CustomBasicTextField
+import com.gmail.bogumilmecel2.ui.components.base.CustomBasicTextField
 
 @Composable
 fun TextQuestion(
@@ -38,9 +38,7 @@ fun TextQuestion(
             modifier = Modifier
                 .width(80.dp)
                 .testTag(tag),
-            textStyle = MaterialTheme.typography.h2.copy(
-                textAlign = TextAlign.Center
-            ),
+            textAlign = TextAlign.Center,
             singleLine = true
         )
 

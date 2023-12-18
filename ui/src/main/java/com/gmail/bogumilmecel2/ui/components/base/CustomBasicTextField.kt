@@ -1,4 +1,4 @@
-package com.gmail.bogumilmecel2.fitnessappv2.components
+package com.gmail.bogumilmecel2.ui.components.base
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -6,7 +6,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Card
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -16,12 +15,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 import com.gmail.bogumilmecel2.ui.theme.LocalColor.DarkGreyElevation9
-import com.gmail.bogumilmecel2.ui.theme.LocalColor.TextGreyPlaceholder
 
 @Composable
 fun CustomBasicTextField(
@@ -31,9 +28,9 @@ fun CustomBasicTextField(
     singleLine: Boolean = false,
     placeholder: String? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    textStyle: TextStyle = FitnessAppTheme.typography.ParagraphLarge,
-    textPadding: Dp = 12.dp
+    textAlign: TextAlign = TextAlign.Start
 ) {
+    val textPadding = 12.dp
     var isFocused by remember { mutableStateOf(false) }
 
     Card(
@@ -53,8 +50,9 @@ fun CustomBasicTextField(
                 .onFocusChanged {
                     isFocused = it.isFocused
                 },
-            textStyle = textStyle.copy(
-                color = FitnessAppTheme.colors.ContentPrimary
+            textStyle = FitnessAppTheme.typography.ParagraphLarge.copy(
+                color = FitnessAppTheme.colors.ContentPrimary,
+                textAlign = textAlign
             ),
             cursorBrush = SolidColor(Color.White),
             singleLine = singleLine,
@@ -62,13 +60,13 @@ fun CustomBasicTextField(
         )
 
         if (value.isBlank() && placeholder != null && !isFocused) {
-            Text(
+            CustomText(
                 text = placeholder,
-                style = textStyle,
-                color = TextGreyPlaceholder,
+                fitnessAppTextStyle = FitnessAppTextStyle.ParagraphSecondaryLarge,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(textPadding)
+                    .padding(textPadding),
+                textAlign = textAlign
             )
         }
     }
