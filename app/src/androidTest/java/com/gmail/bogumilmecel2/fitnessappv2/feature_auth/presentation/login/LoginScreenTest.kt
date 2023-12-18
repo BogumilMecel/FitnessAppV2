@@ -10,6 +10,8 @@ import androidx.compose.ui.test.performTextClearance
 import androidx.compose.ui.test.performTextInput
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.BaseAndroidTest
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.TestTags
+import com.gmail.bogumilmecel2.fitnessappv2.destinations.LoginScreenDestination
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before
 import org.junit.Test
@@ -19,15 +21,13 @@ internal class LoginScreenTest: BaseAndroidTest() {
 
     @Before
     fun setUp() {
-        setContent {
-            LoginScreen()
-        }
+        setContent(destination = LoginScreenDestination)
     }
 
     @Test
     fun enteredEmail_TextIsDisplayed(){
         val text = "abc"
-        val loginEmail = composeRule.onNodeWithTag(composeRule.activity.getString(R.string.EMAIL))
+        val loginEmail = composeRule.onNodeWithTag(TestTags.General.EMAIL)
         loginEmail.assertIsDisplayed().performTextInput(text)
         loginEmail.assert(
             hasText(text)
@@ -37,7 +37,7 @@ internal class LoginScreenTest: BaseAndroidTest() {
     @Test
     fun enteredPassword_TextIsDisplayed(){
         val text = "abc"
-        val loginPassword = composeRule.onNodeWithTag(composeRule.activity.getString(R.string.PASSWORD))
+        val loginPassword = composeRule.onNodeWithTag(TestTags.General.PASSWORD)
         loginPassword.assertIsDisplayed().performTextInput(text)
         val stringBuilder = StringBuilder()
         for (c in text.indices){
@@ -50,10 +50,9 @@ internal class LoginScreenTest: BaseAndroidTest() {
 
     @Test
     fun emptyFields_SnackbarVisible(){
-        composeRule.onNodeWithTag(composeRule.activity.getString(R.string.PASSWORD)).performTextClearance()
-        composeRule.onNodeWithTag(composeRule.activity.getString(R.string.EMAIL)).performTextClearance()
-        composeRule.onNodeWithTag(composeRule.activity.getString(R.string.BUTTON)).performClick()
+        composeRule.onNodeWithTag(TestTags.General.PASSWORD).performTextClearance()
+        composeRule.onNodeWithTag(TestTags.General.EMAIL).performTextClearance()
+        composeRule.onNodeWithTag(TestTags.General.PRIMARY_BUTTON).performClick()
         composeRule.onNodeWithText(composeRule.activity.getString(R.string.please_make_sure_all_fields_are_filled_in_correctly))
     }
-
 }

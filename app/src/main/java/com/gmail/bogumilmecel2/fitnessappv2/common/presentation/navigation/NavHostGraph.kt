@@ -21,9 +21,11 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.Botto
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.CustomSnackbar
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.ErrorUtils
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.AccountScreenDestination
+import com.gmail.bogumilmecel2.fitnessappv2.destinations.Destination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.DiaryScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.LoginScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.SearchScreenDestination
+import com.gmail.bogumilmecel2.fitnessappv2.destinations.SplashScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.SummaryScreenDestination
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 import com.gmail.bogumilmecel2.ui.theme.LocalColor.DarkGreyElevation1
@@ -34,7 +36,8 @@ import kotlinx.coroutines.flow.receiveAsFlow
 @Composable
 fun NavHostGraph(
     navController: NavHostController = rememberNavController(),
-    navigator: Navigator
+    navigator: Navigator,
+    startDestination: Destination = SplashScreenDestination
 ) {
     val currentDestination = navController.currentBackStackEntryAsState().value?.destination?.route
 
@@ -112,7 +115,8 @@ fun NavHostGraph(
         ) {
             DestinationsNavHost(
                 navGraph = NavGraphs.root,
-                navController = navController
+                navController = navController,
+                startRoute = startDestination
             )
         }
     }

@@ -8,18 +8,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Lock
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,10 +23,14 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.fitnessappv2.R
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.DefaultTextField
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.Toolbar
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.TestTags
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.presentation.util.AuthEvent
+import com.gmail.bogumilmecel2.ui.components.base.CustomBasicTextField
+import com.gmail.bogumilmecel2.ui.components.base.CustomButton
+import com.gmail.bogumilmecel2.ui.components.base.CustomIconStyle
 import com.ramcosta.composedestinations.annotation.Destination
 
 @Composable
@@ -41,15 +38,14 @@ import com.ramcosta.composedestinations.annotation.Destination
 fun RegisterScreen(
     viewModel: RegisterViewModel = hiltViewModel()
 ) {
-    val isLoadingState = viewModel.isLoading.value
-    val usernameState = viewModel.usernameState.value
-    val emailState = viewModel.emailState.value
-    val passwordState = viewModel.passwordState.value
-    val confirmPasswordState = viewModel.confirmPasswordState.value
+    val state = viewModel.state.collectAsStateWithLifecycle().value
 
     Scaffold(
         topBar = {
-            Toolbar(title = stringResource(id = R.string.register), isBackArrowVisible = true) {
+            Toolbar(
+                title = stringResource(id = R.string.register),
+                isBackArrowVisible = true
+            ) {
                 viewModel.onEvent(AuthEvent.RegisterLoginButtonClicked)
             }
         }
@@ -59,19 +55,14 @@ fun RegisterScreen(
                 .fillMaxSize()
                 .padding(paddingValues.calculateTopPadding())
         ) {
-            if (!isLoadingState) {
-
+            if (!state.isLoading) {
                 Column(
                     modifier = Modifier
                         .align(Alignment.Center)
                 ) {
-
-
-                    DefaultTextField(
-                        value = emailState.text,
-                        placeholder = {
-                            Text(text = emailState.hint)
-                        },
+                    CustomBasicTextField(
+                        value = state.email,
+                        placeholder = stringResource(id = R.string.email_address),
                         onValueChange = {
                             viewModel.onEvent(
                                 AuthEvent.EnteredEmail(email = it)
@@ -82,20 +73,16 @@ fun RegisterScreen(
                         ),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .testTag(stringResource(id = R.string.EMAIL))
                             .padding(horizontal = 20.dp),
-                        leadingIcon = {
-                            Icon(imageVector = Icons.Default.Email, contentDescription = passwordState.hint)
-                        }
+                        leadingIcon = CustomIconStyle.Email,
+                        testTag = TestTags.General.EMAIL
                     )
 
                     Spacer(modifier = Modifier.height(15.dp))
 
-                    DefaultTextField(
-                        value = usernameState.text,
-                        placeholder = {
-                            Text(text = usernameState.hint)
-                        },
+                    CustomBasicTextField(
+                        value = state.username,
+                        placeholder = stringResource(id = R.string.username),
                         onValueChange = {
                             viewModel.onEvent(
                                 AuthEvent.EnteredUsername(username = it)
@@ -103,20 +90,16 @@ fun RegisterScreen(
                         },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .testTag(stringResource(id = R.string.USERNAME))
                             .padding(horizontal = 20.dp),
-                        leadingIcon = {
-                            Icon(imageVector = Icons.Default.AccountCircle, contentDescription = passwordState.hint)
-                        }
+                        leadingIcon = CustomIconStyle.Account,
+                        testTag = TestTags.RegisterScreen.USERNAME
                     )
 
                     Spacer(modifier = Modifier.height(15.dp))
 
-                    DefaultTextField(
-                        value = passwordState.text,
-                        placeholder = {
-                            Text(text = passwordState.hint)
-                        },
+                    CustomBasicTextField(
+                        value = state.password,
+                        placeholder = stringResource(id = R.string.password),
                         onValueChange = {
                             viewModel.onEvent(
                                 AuthEvent.EnteredPassword(password = it)
@@ -128,20 +111,16 @@ fun RegisterScreen(
                         visualTransformation = PasswordVisualTransformation(),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .testTag(stringResource(id = R.string.PASSWORD))
                             .padding(horizontal = 20.dp),
-                        leadingIcon = {
-                            Icon(imageVector = Icons.Default.Lock, contentDescription = passwordState.hint)
-                        }
+                        leadingIcon = CustomIconStyle.Password,
+                        testTag = TestTags.General.PASSWORD
                     )
 
                     Spacer(modifier = Modifier.height(15.dp))
 
-                    DefaultTextField(
-                        value = confirmPasswordState.text,
-                        placeholder = {
-                            Text(text = confirmPasswordState.hint)
-                        },
+                    CustomBasicTextField(
+                        value = state.confirmPassword,
+                        placeholder = stringResource(id = R.string.confirm_your_password),
                         onValueChange = {
                             viewModel.onEvent(
                                 AuthEvent.EnteredConfirmPassword(confirmPassword = it)
@@ -153,35 +132,28 @@ fun RegisterScreen(
                         visualTransformation = PasswordVisualTransformation(),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .testTag(stringResource(id = R.string.CONFIRM))
                             .padding(horizontal = 20.dp),
-                        leadingIcon = {
-                            Icon(imageVector = Icons.Default.Lock, contentDescription = passwordState.hint)
-                        }
+                        leadingIcon = CustomIconStyle.Password,
+                        testTag = TestTags.RegisterScreen.CONFIRM_PASSWORD
                     )
 
                     Spacer(modifier = Modifier.height(40.dp))
 
-
-                    Button(
+                    CustomButton(
                         onClick = {
                             viewModel.onEvent(AuthEvent.AuthButtonClicked)
                         },
                         modifier = Modifier
-                            .padding(top = 20.dp, end = 20.dp, start = 20.dp, bottom = 100.dp)
+                            .padding(
+                                top = 20.dp,
+                                end = 20.dp,
+                                start = 20.dp,
+                                bottom = 100.dp
+                            )
                             .fillMaxWidth()
-                            .testTag(stringResource(id = R.string.BUTTON)),
-                        shape = RoundedCornerShape(50)
-                    ) {
-
-                        Text(
-                            text = stringResource(id = R.string.sign_up).uppercase(),
-                            style = MaterialTheme.typography.button,
-                            modifier = Modifier
-                                .padding(5.dp),
-                        )
-
-                    }
+                            .testTag(TestTags.General.PRIMARY_BUTTON),
+                        text = stringResource(id = R.string.sign_up)
+                    )
                 }
 
                 Text(
@@ -195,10 +167,7 @@ fun RegisterScreen(
                         }
                         .align(Alignment.BottomCenter)
                         .padding(10.dp)
-
-
                 )
-
             } else {
                 CircularProgressIndicator(
                     modifier = Modifier.align(Alignment.Center)

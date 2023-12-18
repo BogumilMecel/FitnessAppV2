@@ -4,6 +4,7 @@ import androidx.compose.ui.test.*
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.BaseAndroidTest
 import com.gmail.bogumilmecel2.fitnessappv2.common.di.AppModule
+import com.gmail.bogumilmecel2.fitnessappv2.destinations.ResetPasswordScreenDestination
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import org.junit.Before
@@ -14,9 +15,7 @@ import org.junit.Test
 internal class ResetPasswordScreenTest: BaseAndroidTest() {
     @Before
     fun setUp() {
-        setContent {
-            ResetPasswordScreen()
-        }
+        setContent(destination = ResetPasswordScreenDestination)
     }
 
     @Test

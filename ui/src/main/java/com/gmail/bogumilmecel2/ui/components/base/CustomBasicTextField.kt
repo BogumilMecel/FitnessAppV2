@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.LayoutDirection
@@ -32,6 +33,7 @@ import com.gmail.bogumilmecel2.ui.theme.LocalColor.DarkGreyElevation9
 fun CustomBasicTextField(
     modifier: Modifier = Modifier,
     value: String,
+    testTag: String? = null,
     onValueChange: (String) -> Unit,
     singleLine: Boolean = false,
     placeholder: String? = null,
@@ -70,6 +72,11 @@ fun CustomBasicTextField(
                     } else {
                         textPadding.calculateStartPadding(LayoutDirection.Ltr)
                     },
+                )
+                .then(
+                    other = testTag?.let { tag ->
+                        Modifier.testTag(tag)
+                    } ?: Modifier
                 )
                 .onFocusChanged {
                     isFocused = it.isFocused
