@@ -1,7 +1,8 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.componens
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 import com.gmail.bogumilmecel2.ui.theme.LocalColor.DarkGreyElevation6
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SearchProductItem(
     weight: Int,
@@ -25,19 +27,18 @@ fun SearchProductItem(
     name: String,
     calories: Int,
     onItemClick: (() -> Unit)? = null,
+    onItemLongClick: (() -> Unit)? = null,
     background: Color = DarkGreyElevation6
 ) {
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(background).let { modifier ->
-                onItemClick?.let { onClick ->
-                    modifier.clickable {
-                        onClick()
-                    }
-                } ?: modifier
-            },
+            .background(background)
+            .combinedClickable(
+                onClick = onItemClick ?: {},
+                onLongClick = onItemLongClick ?: {}
+            )
     ) {
         Row(
             modifier = Modifier

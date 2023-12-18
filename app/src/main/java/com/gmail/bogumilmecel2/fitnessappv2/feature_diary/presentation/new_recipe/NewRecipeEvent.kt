@@ -12,7 +12,7 @@ sealed interface NewRecipeEvent {
     object ClickedServingsArrow : NewRecipeEvent
     object ClickedBackArrow : NewRecipeEvent
     object ClickedAddNewIngredient : NewRecipeEvent
-    data class ClickedIngredient(val ingredient: Ingredient) : NewRecipeEvent
+    data class LongClickedIngredient(val ingredient: Ingredient) : NewRecipeEvent
     data class SwitchedPublic(val value: Boolean) : NewRecipeEvent
     data class EnteredServing(val value: String) : NewRecipeEvent
     data class SelectedTime(val time: TimeRequired) : NewRecipeEvent
@@ -26,4 +26,6 @@ sealed interface NewRecipeEvent {
     object ClickedIngredientsListArrow : NewRecipeEvent
     object ClickedSearchButton : NewRecipeEvent
     object ClickedSaveRecipe : NewRecipeEvent
+    object DismissedDeleteIngredientDialog: NewRecipeEvent
+    object ClickedConfirmButtonOnDeleteIngredientDialog: NewRecipeEvent
 }

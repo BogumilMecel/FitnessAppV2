@@ -171,11 +171,31 @@ class NewRecipeViewModel @Inject constructor(
                     )
                 }
             }
-            is NewRecipeEvent.ClickedIngredient -> {
+            is NewRecipeEvent.LongClickedIngredient -> {
                 _state.update {
                     it.copy(
-                        ingredients = it.ingredients.removeAndReturnList(element = event.ingredient)
+                        isDeleteIngredientDialogVisible = true,
+                        longClickedIngredient = event.ingredient
                     )
+                }
+            }
+
+            is NewRecipeEvent.DismissedDeleteIngredientDialog -> {
+                _state.update {
+                    it.copy(
+                        isDeleteIngredientDialogVisible = false
+                    )
+                }
+            }
+
+            is NewRecipeEvent.ClickedConfirmButtonOnDeleteIngredientDialog -> {
+                _state.value.longClickedIngredient?.let { ingredient ->
+                    _state.update {
+                        it.copy(
+                            ingredients = it.ingredients.removeAndReturnList(element = ingredient),
+                            isDeleteIngredientDialogVisible = false
+                        )
+                    }
                 }
             }
         }

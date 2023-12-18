@@ -36,4 +36,6 @@ data class NewRecipeState(
     val servingPrice: Double? = null,
     val isRecipePublic: Boolean = true,
     val isIngredientsListExpanded: Boolean = true,
+    val longClickedIngredient: Ingredient? = null,
+    val isDeleteIngredientDialogVisible: Boolean = false
 )

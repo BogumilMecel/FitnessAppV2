@@ -148,6 +148,7 @@
     <string name="recipe">Recipe</string>
     <string name="recipe_price_warning">Not every product has a price!</string>
     <string name="selected">Selected</string>
+    <string name="new_recipe_delete_ingredient_title">Do you want to delete %s from your recipe?</string>
 
     <string name="new_recipe_public">Should recipe be public</string>
     <string name="new_recipe_public_des">Everybody will be able to see it and you will not be able to delete it</string>

@@ -54,7 +54,7 @@ fun PriceSection(
             Box(modifier = Modifier.fillMaxWidth()) {
                 CustomText(
                     text = stringResource(id = R.string.prices),
-                    fitnessAppTextStyle = FitnessAppTextStyle.CardTitle,
+                    fitnessAppTextStyle = FitnessAppTextStyle.HeaderSmall,
                     textAlign = TextAlign.Center,
                     modifier = Modifier
                         .padding(16.dp)
