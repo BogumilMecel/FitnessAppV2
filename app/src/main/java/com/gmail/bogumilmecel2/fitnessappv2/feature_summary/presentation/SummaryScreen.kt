@@ -2,10 +2,8 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_summary.presentation
 
 import android.app.Activity
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
@@ -25,6 +23,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.presentation.compone
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.presentation.components.LogStreakSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.presentation.components.WeightSection
 import com.gmail.bogumilmecel2.ui.components.base.ButtonParams
+import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
 import com.gmail.bogumilmecel2.ui.components.base.SheetLayout
 import com.gmail.bogumilmecel2.ui.components.complex.DoubleNumberPicker
 import com.gmail.bogumilmecel2.ui.components.complex.SimpleSheetLayoutContent
@@ -131,31 +130,30 @@ fun SummaryScreen(viewModel: SummaryViewModel = hiltViewModel()) {
             viewModel.onEvent(SummaryEvent.DismissedWeightPickerDialog)
         }
     ) {
-        Column(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp)
+        ) {
             LogStreakSection(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 10.dp)
                     .padding(top = 12.dp),
                 streak = state.logStreak ?: 1
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
+            HeightSpacer(12.dp)
 
             CaloriesSumSection(
                 currentCalories = state.caloriesSum ?: 0,
                 wantedCalories = state.wantedCalories,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 10.dp)
+                modifier = Modifier.fillMaxWidth()
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
+            HeightSpacer(12.dp)
 
             WeightSection(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 10.dp),
+                modifier = Modifier.fillMaxWidth(),
                 lastWeightEntry = state.latestWeightEntry?.value,
                 weightProgress = state.weightProgress,
                 onEvent = {
@@ -163,7 +161,7 @@ fun SummaryScreen(viewModel: SummaryViewModel = hiltViewModel()) {
                 }
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
+            HeightSpacer(12.dp)
         }
     }
 }
