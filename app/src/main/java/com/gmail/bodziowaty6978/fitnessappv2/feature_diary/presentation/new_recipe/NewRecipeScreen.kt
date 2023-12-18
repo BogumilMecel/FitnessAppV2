@@ -13,9 +13,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Save
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -25,7 +23,6 @@ import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.BackArrow
-import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.CustomSnackbar
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_recipe.components.RecipeSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_recipe.components.SearchForProductSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.ProductMainSection
@@ -37,16 +34,7 @@ fun NewRecipeScreen(
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle().value
 
-    val scaffoldState = rememberScaffoldState()
-
-    LaunchedEffect(key1 = true){
-        viewModel.errorState.collect{
-            scaffoldState.snackbarHostState.showSnackbar(message = it)
-        }
-    }
-
     Scaffold(
-        scaffoldState = scaffoldState,
         floatingActionButton = {
             if(state.isRecipeSectionVisible) {
                 ExtendedFloatingActionButton(
@@ -75,9 +63,6 @@ fun NewRecipeScreen(
                     }
                 )
             }
-        },
-        snackbarHost = {
-            CustomSnackbar(snackbarHostState = it)
         }
     ) {
         if (state.isSearchSectionVisible) {

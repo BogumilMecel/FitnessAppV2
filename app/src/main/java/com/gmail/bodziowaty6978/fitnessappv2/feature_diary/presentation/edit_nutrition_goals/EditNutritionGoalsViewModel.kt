@@ -1,19 +1,17 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.edit_nutrition_goals
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gmail.bodziowaty6978.fitnessappv2.FitnessApp
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.NavigationActions
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigator
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.use_case.CalculateNutritionValuesPercentages
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.use_case.SaveNutritionValues
+import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.extensions.round
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -23,10 +21,7 @@ class EditNutritionGoalsViewModel @Inject constructor(
     private val navigator: Navigator,
     private val calculateNutritionValuesPercentages: CalculateNutritionValuesPercentages,
     private val saveNutritionValues: SaveNutritionValues
-) : ViewModel() {
-
-    private val _errorState = Channel<String>()
-    val errorState = _errorState.consumeAsFlow()
+) : BaseViewModel() {
 
     private val _state = MutableStateFlow(EditNutritionGoalsState())
     val state: StateFlow<EditNutritionGoalsState> = _state
@@ -97,7 +92,7 @@ class EditNutritionGoalsViewModel @Inject constructor(
         viewModelScope.launch {
             when (val resource = saveNutritionValues(_state.value.nutritionValues)) {
                 is Resource.Error -> {
-                    _errorState.send(resource.uiText)
+                    showSnackbarError(resource.uiText)
                 }
 
                 is Resource.Success -> {

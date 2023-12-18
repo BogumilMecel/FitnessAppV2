@@ -1,12 +1,12 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.diary
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gmail.bodziowaty6978.fitnessappv2.FitnessApp
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.NavigationActions
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.singleton.CurrentDate
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigator
+import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
@@ -16,10 +16,8 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.diar
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.diary.UpdateDiaryEntriesListAfterDelete
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -31,10 +29,7 @@ class DiaryViewModel @Inject constructor(
     private val updateDiaryEntriesListAfterDelete: UpdateDiaryEntriesListAfterDelete,
     private val resourceProvider: ResourceProvider,
     private val navigator: Navigator,
-) : ViewModel() {
-
-    private val _errorState = Channel<String>()
-    val errorState = _errorState.receiveAsFlow()
+) : BaseViewModel() {
 
     private val _state = MutableStateFlow(DiaryState())
     val state: StateFlow<DiaryState> = _state
@@ -96,7 +91,7 @@ class DiaryViewModel @Inject constructor(
                     viewModelScope.launch(Dispatchers.IO) {
                         val result = deleteDiaryEntry(diaryEntry.id)
                         if (result is CustomResult.Error) {
-                            _errorState.send(result.message)
+                            showSnackbarError(result.message)
                         } else {
                             _state.update {
                                 it.copy(
@@ -149,7 +144,7 @@ class DiaryViewModel @Inject constructor(
                 }
 
                 is Resource.Error -> {
-                    _errorState.send(resource.uiText)
+                    showSnackbarError(resource.uiText)
                 }
             }
         }

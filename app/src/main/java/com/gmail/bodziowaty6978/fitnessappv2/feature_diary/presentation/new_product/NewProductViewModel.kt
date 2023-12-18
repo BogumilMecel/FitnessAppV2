@@ -4,20 +4,18 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.NavigationActions
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigator
+import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.new_product.SaveNewProduct
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -28,7 +26,7 @@ class NewProductViewModel @Inject constructor(
     private val resourceProvider: ResourceProvider,
     private val saveNewProduct: SaveNewProduct,
     private val savedStateHandle: SavedStateHandle
-) : ViewModel() {
+) : BaseViewModel() {
 
     private val _state = MutableStateFlow(
         NewProductState(
@@ -37,9 +35,6 @@ class NewProductViewModel @Inject constructor(
         )
     )
     val state: StateFlow<NewProductState> = _state
-
-    private val _errorState = Channel<String>()
-    val errorState = _errorState.receiveAsFlow()
 
     init{
         val barcode = savedStateHandle.get<String>("barcode")
@@ -180,7 +175,7 @@ class NewProductViewModel @Inject constructor(
                     )
 
                     if(resource is Resource.Error){
-                        _errorState.send(resource.uiText)
+                        showSnackbarError(resource.uiText)
                     }else{
                         savedStateHandle.get<String>("mealName")?.let {
                             resource.data?.let { product ->

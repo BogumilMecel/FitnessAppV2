@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.BlueViolet1
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.OrangeYellow1
+import com.gmail.bodziowaty6978.fitnessappv2.common.util.ErrorUtils
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search.SearchEvent
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search.SearchState
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -31,7 +32,6 @@ import com.google.accompanist.permissions.rememberPermissionState
 fun SearchProductSection(
     modifier: Modifier,
     onEvent: (SearchEvent) -> Unit,
-    showSnackbar: (String) -> Unit,
     state: SearchState
 ) {
     val cameraPermissionState = rememberPermissionState(
@@ -43,7 +43,7 @@ fun SearchProductSection(
 
     LaunchedEffect(key1 = cameraPermissionState) {
         if (cameraPermissionState.status is PermissionStatus.Denied && state.hasPermissionDialogBeenShowed) {
-            showSnackbar(cameraPermissionErrorMessage)
+            ErrorUtils.showSnackbarWithMessage(cameraPermissionErrorMessage)
         }
     }
 

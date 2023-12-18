@@ -6,7 +6,12 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.rememberScaffoldState
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.navigation.NavHostController
@@ -17,10 +22,12 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigator
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.BottomBar
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.CustomSnackbar
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.DarkGrey
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.DarkGreyElevation1
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.util.BottomBarScreen
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.util.Screen
+import com.gmail.bodziowaty6978.fitnessappv2.common.util.ErrorUtils
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.extensions.asLifecycleAwareState
 import com.gmail.bodziowaty6978.fitnessappv2.feature_account.presentation.AccountScreen
 import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.presentation.login.LoginScreen
@@ -37,6 +44,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.presentation.I
 import com.gmail.bodziowaty6978.fitnessappv2.feature_splash.loading.presentation.SplashScreen
 import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.presentation.SummaryScreen
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import kotlinx.coroutines.flow.receiveAsFlow
 
 @Composable
 fun NavHostGraph(
@@ -85,13 +93,24 @@ fun NavHostGraph(
         }
     }
 
+    LaunchedEffect(key1 = true) {
+        ErrorUtils.errorState.receiveAsFlow().collect {
+            scaffoldState.snackbarHostState.showSnackbar(
+                message = it
+            )
+        }
+    }
+
     Scaffold(
         bottomBar = {
             if (bottomNavigationState) {
                 BottomBar(navController = navController)
             }
         },
-        scaffoldState = scaffoldState
+        scaffoldState = scaffoldState,
+        snackbarHost = { hostState ->
+            CustomSnackbar(snackbarHostState = hostState)
+        }
     ) { paddingValues ->
         Surface(
             modifier = Modifier

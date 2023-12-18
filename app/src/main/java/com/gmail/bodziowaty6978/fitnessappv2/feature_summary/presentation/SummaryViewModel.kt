@@ -1,19 +1,17 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_summary.presentation
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gmail.bodziowaty6978.fitnessappv2.FitnessApp
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.singleton.CurrentDate
+import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.domain.use_case.SummaryUseCases
 import com.gmail.bodziowaty6978.fitnessappv2.feature_weight.domain.model.WeightEntry
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,10 +20,7 @@ import javax.inject.Inject
 class SummaryViewModel @Inject constructor(
     private val summaryUseCases: SummaryUseCases,
     private val resourceProvider: ResourceProvider
-) : ViewModel() {
-
-    private val _errorState = Channel<String>()
-    val errorState = _errorState.receiveAsFlow()
+) : BaseViewModel() {
 
     private val _state = MutableStateFlow(SummaryState())
     val summaryState: StateFlow<SummaryState> = _state
@@ -91,7 +86,7 @@ class SummaryViewModel @Inject constructor(
                 }
 
                 is Resource.Error -> {
-                    _errorState.send(resource.uiText)
+                    showSnackbarError(message = resource.uiText)
                 }
             }
         }

@@ -15,9 +15,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Save
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -40,13 +38,6 @@ fun NewProductScreen(
     viewModel: NewProductViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.collectAsState().value
-    val scaffoldState = rememberScaffoldState()
-
-    LaunchedEffect(key1 = true) {
-        viewModel.errorState.collect {
-            scaffoldState.snackbarHostState.showSnackbar(it)
-        }
-    }
 
     BackHandler(
         enabled = state.isScannerVisible
@@ -58,7 +49,6 @@ fun NewProductScreen(
 
     if (!state.isScannerVisible) {
         Scaffold(
-            scaffoldState = scaffoldState,
             floatingActionButton = {
                 FloatingActionButton(
                     onClick = {

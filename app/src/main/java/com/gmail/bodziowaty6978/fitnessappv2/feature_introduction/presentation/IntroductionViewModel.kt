@@ -2,13 +2,13 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.presentation
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.NavigationActions
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigator
-import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
+import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
+import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.model.Question
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.use_cases.SaveIntroductionInformation
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.presentation.util.IntroductionExpectedQuestionAnswer
@@ -24,7 +24,7 @@ class IntroductionViewModel @Inject constructor(
     resourceProvider: ResourceProvider,
     private val saveIntroductionInformation: SaveIntroductionInformation,
     private val navigator: Navigator
-): ViewModel(){
+) : BaseViewModel() {
 
     private val _questionState = mutableStateOf<Map<IntroductionExpectedQuestionAnswer, Question>>(
         mapOf(
@@ -62,7 +62,7 @@ class IntroductionViewModel @Inject constructor(
         )
     )
     val questionState: State<Map<IntroductionExpectedQuestionAnswer, Question>> = _questionState
-    
+
     private val _introductionUiEvent = MutableSharedFlow<IntroductionUiEvent>()
     val introductionUiEvent: SharedFlow<IntroductionUiEvent> = _introductionUiEvent
 
@@ -79,45 +79,43 @@ class IntroductionViewModel @Inject constructor(
             IntroductionExpectedQuestionAnswer.ActivityDuringADay to "0"
         )
     )
-    val introductionAnswerState: State<Map<IntroductionExpectedQuestionAnswer,String>> = _introductionAnswerState
+    val introductionAnswerState: State<Map<IntroductionExpectedQuestionAnswer, String>> =
+        _introductionAnswerState
 
 
-
-    fun onEvent(event: IntroductionEvent){
-        when(event){
+    fun onEvent(event: IntroductionEvent) {
+        when (event) {
             is IntroductionEvent.ClickedArrow -> {
                 viewModelScope.launch {
                     if (event.isForward) {
                         _introductionUiEvent.emit(
                             IntroductionUiEvent.MoveForward
                         )
-                    }else{
+                    } else {
                         _introductionUiEvent.emit(
                             IntroductionUiEvent.MoveBackward
                         )
                     }
                 }
             }
+
             is IntroductionEvent.EnteredAnswer -> {
                 val currentAnswerState = _introductionAnswerState.value.toMutableMap()
                 currentAnswerState[event.expectedQuestionAnswer] = event.answer
                 _introductionAnswerState.value = currentAnswerState
             }
+
             is IntroductionEvent.FinishIntroduction -> {
                 viewModelScope.launch(Dispatchers.IO) {
-                    val result = saveIntroductionInformation(answers = _introductionAnswerState.value)
-                    if (result is CustomResult.Error){
-                        _introductionUiEvent.emit(
-                            IntroductionUiEvent.ShowSnackbar(result.message)
-                        )
-                    }else{
+                    val result =
+                        saveIntroductionInformation(answers = _introductionAnswerState.value)
+                    if (result is CustomResult.Error) {
+                        showSnackbarError(message = result.message)
+                    } else {
                         navigator.navigate(NavigationActions.IntroductionScreen.introductionToSummary())
                     }
                 }
             }
         }
     }
-
-
-
 }

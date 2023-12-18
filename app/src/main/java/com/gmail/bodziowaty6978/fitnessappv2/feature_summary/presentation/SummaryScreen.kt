@@ -7,10 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Scaffold
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -27,13 +24,6 @@ fun SummaryScreen(
     viewModel: SummaryViewModel = hiltViewModel()
 ) {
     val state = viewModel.summaryState.collectAsState().value
-    val scaffoldState = rememberScaffoldState()
-
-    LaunchedEffect(key1 = true){
-        viewModel.errorState.collect{
-            scaffoldState.snackbarHostState.showSnackbar(it)
-        }
-    }
 
     val activity = (LocalContext.current as? Activity)
 
@@ -41,56 +31,52 @@ fun SummaryScreen(
         activity?.finish()
     }
 
-    Scaffold(
-        scaffoldState = scaffoldState
+    if (state.isWeightPickerVisible) {
+        WeightPickerDialog(
+            onEvent = {
+                viewModel.onEvent(it)
+            },
+            startingValue = 100.0
+        )
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
     ) {
-        if (state.isWeightPickerVisible){
-            WeightPickerDialog(
-                onEvent = {
-                    viewModel.onEvent(it)
-                },
-                startingValue = 100.0
-            )
-        }
+        Spacer(modifier = Modifier.height(12.dp))
 
-        Column(
+        LogStreakSection(
             modifier = Modifier
-                .fillMaxSize()
-        ) {
-            Spacer(modifier = Modifier.height(12.dp))
+                .fillMaxWidth()
+                .padding(horizontal = 10.dp),
+            streak = state.logStreak ?: 1
+        )
 
-            LogStreakSection(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 10.dp),
-                streak = state.logStreak ?: 1
-            )
+        Spacer(modifier = Modifier.height(12.dp))
 
-            Spacer(modifier = Modifier.height(12.dp))
+        CaloriesSumSection(
+            currentCalories = state.caloriesSum ?: 0,
+            wantedCalories = state.wantedCalories,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 10.dp)
+        )
 
-            CaloriesSumSection(
-                currentCalories = state.caloriesSum ?: 0,
-                wantedCalories = state.wantedCalories,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 10.dp)
-            )
+        Spacer(modifier = Modifier.height(12.dp))
 
-            Spacer(modifier = Modifier.height(12.dp))
+        WeightSection(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 10.dp),
+            lastWeightEntry = state.latestWeightEntry?.value,
+            weightProgress = state.weightProgress,
+            onEvent = {
+                viewModel.onEvent(it)
+            }
+        )
 
-            WeightSection(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 10.dp),
-                lastWeightEntry = state.latestWeightEntry?.value,
-                weightProgress = state.weightProgress,
-                onEvent = {
-                    viewModel.onEvent(it)
-                }
-            )
+        Spacer(modifier = Modifier.height(12.dp))
 
-            Spacer(modifier = Modifier.height(12.dp))
-
-        }
     }
 }
