@@ -58,7 +58,7 @@ fun DiaryEntryItem(
                     Text(
                         text = when (diaryItem) {
                             is ProductDiaryEntry -> diaryItem.productName
-                            is RecipeDiaryEntry -> diaryItem.recipe.name
+                            is RecipeDiaryEntry -> diaryItem.recipeName
                             else -> ""
                         },
                         style = MaterialTheme.typography.body1

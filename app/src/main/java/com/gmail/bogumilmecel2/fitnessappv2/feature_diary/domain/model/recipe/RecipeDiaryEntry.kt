@@ -17,7 +17,8 @@ data class RecipeDiaryEntry(
     override val userId: String = "",
     override val mealName: MealName = MealName.BREAKFAST,
     override val date: String = "",
-    val recipe: Recipe = Recipe(),
+    val recipeName: String = "",
+    val recipeId: String = "",
     val servings: Int = 0,
 ) : DiaryItem {
     @Composable

@@ -139,13 +139,8 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideEditRecipeDiaryEntryUseCase(
-        diaryRepository: DiaryRepository,
-        resourceProvider: ResourceProvider
-    ): EditRecipeDiaryEntryUseCase = EditRecipeDiaryEntryUseCase(
-        diaryRepository = diaryRepository,
-        resourceProvider = resourceProvider
-    )
+    fun provideEditRecipeDiaryEntryUseCase(diaryRepository: DiaryRepository): EditRecipeDiaryEntryUseCase =
+        EditRecipeDiaryEntryUseCase(diaryRepository = diaryRepository)
 
     @Singleton
     @Provides

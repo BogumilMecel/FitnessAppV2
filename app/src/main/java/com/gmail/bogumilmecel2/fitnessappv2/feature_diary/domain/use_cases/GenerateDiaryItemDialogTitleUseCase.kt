@@ -11,7 +11,7 @@ class GenerateDiaryItemDialogTitleUseCase(
 ) {
     operator fun invoke(diaryItem: DiaryItem) = when(diaryItem) {
         is RecipeDiaryEntry -> {
-            "${diaryItem.recipe.name} (${resourceProvider.getPluralString(R.plurals.servings, diaryItem.servings)})"
+            "${diaryItem.recipeName} (${resourceProvider.getPluralString(R.plurals.servings, diaryItem.servings)})"
         }
         is ProductDiaryEntry -> {
             "${diaryItem.productName} (${diaryItem.weight}${resourceProvider.getString(stringResId = diaryItem.productMeasurementUnit.getStringRes())})"
