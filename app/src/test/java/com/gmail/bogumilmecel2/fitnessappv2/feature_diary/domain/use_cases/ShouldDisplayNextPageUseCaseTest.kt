@@ -10,23 +10,22 @@ class ShouldDisplayNextPageUseCaseTest {
 
     @Test
     fun `Check if should display next page with sample value, false expected`() {
-        assertFalse(
-            shouldDisplayNextPageUseCase(
-                size = 19,
-                perPage = 20,
-                currentPage = 1
-            )
-        )
+        assertFalse { callTestedMethod(size = 19) }
     }
 
     @Test
     fun `Check if should display next page with sample value, true expected`() {
-        assertTrue(
-            shouldDisplayNextPageUseCase(
-                size = 20,
-                perPage = 20,
-                currentPage = 1
-            )
-        )
+        assertTrue { callTestedMethod(size = 20) }
     }
+
+    @Test
+    fun `Check if should display next page with second sample value, true expected`() {
+        assertTrue { callTestedMethod(size = 21) }
+    }
+
+    private fun callTestedMethod(size: Int) = shouldDisplayNextPageUseCase(
+        size = size,
+        perPage = 20,
+        currentPage = 1
+    )
 }
