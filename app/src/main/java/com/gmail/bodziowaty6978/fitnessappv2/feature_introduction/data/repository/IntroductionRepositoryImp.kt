@@ -5,14 +5,9 @@ import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.UserInformation
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.repository.IntroductionRepository
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.SetOptions
-import kotlinx.coroutines.tasks.await
 
 
 class IntroductionRepositoryImp(
-    private val firestore: FirebaseFirestore,
-    private val userId:String?,
     private val informationDatastore : DataStore<UserInformation>,
     private val nutritionDatastore : DataStore<NutritionValues>
 ): IntroductionRepository {
@@ -22,12 +17,6 @@ class IntroductionRepositoryImp(
         nutritionValues: NutritionValues
     ): CustomResult {
         return try {
-            val userRef = firestore.collection("users").document(userId!!)
-            val batch = firestore.batch()
-            batch.set(userRef,userInformation, SetOptions.merge())
-            batch.set(userRef,nutritionValues, SetOptions.merge())
-            batch.commit().await()
-
             informationDatastore.updateData {
                 it.copy(
                     activityInADay = userInformation.activityInADay,

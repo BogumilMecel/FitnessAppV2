@@ -2,8 +2,11 @@ package com.gmail.bodziowaty6978.fitnessappv2.common.di
 
 import android.app.Application
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.datastore.core.DataStore
 import androidx.room.Room
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKey
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.ComposeCustomNavigator
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.room.AppRoomDatabase
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValues
@@ -40,8 +43,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.data.repositor
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.repository.IntroductionRepository
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.use_cases.CalculateNutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.use_cases.SaveIntroductionInformation
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
+import com.gmail.bodziowaty6978.fitnessappv2.feature_splash.data.api.LoadingApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -49,7 +51,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
 import javax.inject.Singleton
 
 @Module
@@ -74,6 +75,27 @@ object AppModule {
     @Singleton
     fun provideResourceProvider(app: Application): ResourceProvider = ResourceProvider(app)
 
+    @Provides
+    @Singleton
+    fun provideMasterKeyAlias(
+        @ApplicationContext context: Context
+    ):MasterKey = MasterKey.Builder(context, MasterKey.DEFAULT_MASTER_KEY_ALIAS)
+        .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+        .build()
+
+    @Singleton
+    @Provides
+    fun provideEncryptedSharedPreferences(
+        @ApplicationContext context: Context,
+        masterKey: MasterKey
+    ):SharedPreferences = EncryptedSharedPreferences.create(
+        context,
+        "PreferencesFilename",
+        masterKey,
+        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+    )
+
     @Singleton
     @Provides
     fun provideRetrofitInstance():Retrofit{
@@ -95,6 +117,10 @@ object AppModule {
         retrofit: Retrofit
     ):AuthApi = retrofit.create(AuthApi::class.java)
 
+    @Singleton
+    @Provides
+    fun provideLoadingApi(retrofit: Retrofit):LoadingApi = retrofit.create(LoadingApi::class.java)
+
 
     @Singleton
     @Provides
@@ -111,9 +137,13 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideAuthRepository(authApi: AuthApi): AuthRepository =
+    fun provideAuthRepository(
+        authApi: AuthApi,
+        resourceProvider: ResourceProvider
+    ): AuthRepository =
         AuthRepositoryImp(
-            authApi = authApi
+            authApi = authApi,
+            resourceProvider = resourceProvider
         )
 
     @Provides
@@ -142,13 +172,9 @@ object AppModule {
     @Provides
     @Singleton
     fun provideIntroductionRepository(
-        firebaseFirestore: FirebaseFirestore,
-        userId: String?,
         informationDatastore: DataStore<UserInformation>,
         nutritionDatastore: DataStore<NutritionValues>,
     ): IntroductionRepository = IntroductionRepositoryImp(
-        firestore = firebaseFirestore,
-        userId = userId,
         informationDatastore = informationDatastore,
         nutritionDatastore = nutritionDatastore
     )
@@ -173,16 +199,14 @@ object AppModule {
     @Singleton
     @Provides
     fun provideDiaryRepository(
-        firebaseFirestore: FirebaseFirestore,
-        userId: String?,
+        productApi: ProductApi,
         roomDatabase: AppRoomDatabase,
         resourceProvider: ResourceProvider
     ): DiaryRepository =
         DiaryRepositoryImp(
-            firebaseFirestore = firebaseFirestore,
-            userId = userId,
             productDao = roomDatabase.productDao(),
-            resourceProvider = resourceProvider
+            resourceProvider = resourceProvider,
+            productApi = productApi
         )
 
     @Singleton

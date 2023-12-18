@@ -45,7 +45,7 @@ fun SplashScreen(
     }
 
     LaunchedEffect(key1 = true) {
-        viewModel.checkIfUserLoggedIn()
+        viewModel.checkIfTokenIsPresent()
     }
 
     Box(
