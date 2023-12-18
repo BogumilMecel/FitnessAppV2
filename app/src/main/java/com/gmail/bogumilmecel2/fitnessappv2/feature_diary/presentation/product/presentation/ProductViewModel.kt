@@ -67,7 +67,7 @@ class ProductViewModel @Inject constructor(
                         when (entryData) {
                             is ProductEntryData.Adding -> {
                                 productUseCases.insertProductDiaryEntryUseCase(
-                                    productId = entryData.product.id,
+                                    product = entryData.product,
                                     mealName = entryData.mealName,
                                     weightStringValue = weight,
                                     date = entryData.dateTransferObject.realDate

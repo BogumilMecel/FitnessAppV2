@@ -219,10 +219,12 @@ object AppModule {
     @Provides
     fun providePostRecipeDiaryEntryUseCase(
         diaryRepository: DiaryRepository,
-        resourceProvider: ResourceProvider
+        resourceProvider: ResourceProvider,
+        calculateRecipeNutritionValuesForServingsUseCase: CalculateRecipeNutritionValuesForServingsUseCase
     ): PostRecipeDiaryEntryUseCase = PostRecipeDiaryEntryUseCase(
         diaryRepository = diaryRepository,
-        resourceProvider = resourceProvider
+        resourceProvider = resourceProvider,
+        calculateRecipeNutritionValuesForServingsUseCase = calculateRecipeNutritionValuesForServingsUseCase
     )
 
     @Singleton
@@ -475,14 +477,16 @@ object AppModule {
         diaryRepository: DiaryRepository,
         resourceProvider: ResourceProvider,
         createPieChartData: CreatePieChartData,
-        getUserCurrencyUseCase: GetUserCurrencyUseCase
+        getUserCurrencyUseCase: GetUserCurrencyUseCase,
+        calculateProductNutritionValuesUseCase: CalculateProductNutritionValuesUseCase
     ): ProductUseCases =
         ProductUseCases(
             calculateProductNutritionValuesUseCase = CalculateProductNutritionValuesUseCase(),
             createPieChartData = createPieChartData,
             insertProductDiaryEntryUseCase = InsertProductDiaryEntryUseCase(
                 diaryRepository = diaryRepository,
-                resourceProvider = resourceProvider
+                resourceProvider = resourceProvider,
+                calculateProductNutritionValuesUseCase = calculateProductNutritionValuesUseCase
             ),
             submitNewPriceUseCase = SubmitNewPriceUseCase(
                 diaryRepository = diaryRepository,

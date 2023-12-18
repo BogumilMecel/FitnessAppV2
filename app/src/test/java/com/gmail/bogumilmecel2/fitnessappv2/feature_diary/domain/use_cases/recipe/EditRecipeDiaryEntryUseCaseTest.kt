@@ -88,10 +88,12 @@ class EditRecipeDiaryEntryUseCaseTest : BaseMockkTest() {
                 servings = servings
             )
         } returns expectedNutritionValues
-        coEvery { diaryRepository.editRecipeDiaryEntry(recipeDiaryEntry = expectedRecipeDiaryEntry) } returns Resource.Success(Unit)
+        coEvery { diaryRepository.editRecipeDiaryEntry(recipeDiaryEntry = expectedRecipeDiaryEntry) } returns Resource.Success(expectedRecipeDiaryEntry)
+        coEvery { diaryRepository.insertOfflineDiaryEntry(expectedRecipeDiaryEntry) } returns Resource.Success(Unit)
         assertIs<Resource.Success<Unit>>(callTestedMethod())
         coVerify(exactly = 1) {
             diaryRepository.editRecipeDiaryEntry(recipeDiaryEntry = expectedRecipeDiaryEntry)
+            diaryRepository.insertOfflineDiaryEntry(expectedRecipeDiaryEntry)
         }
     }
 

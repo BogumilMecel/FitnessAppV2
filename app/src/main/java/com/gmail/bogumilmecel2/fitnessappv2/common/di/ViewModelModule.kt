@@ -115,7 +115,8 @@ object ViewModelModule {
         createPieChartData = createPieChartData,
         postRecipeDiaryEntryUseCase = PostRecipeDiaryEntryUseCase(
             diaryRepository = diaryRepository,
-            resourceProvider = resourceProvider
+            resourceProvider = resourceProvider,
+            calculateRecipeNutritionValuesForServingsUseCase = calculateRecipeNutritionValuesForServingsUseCase
         ),
         getRecipePriceFromIngredientsUseCase = getRecipePriceFromIngredientsUseCase,
         calculateSelectedServingPriceUseCase = calculateSelectedServingPriceUseCase,
