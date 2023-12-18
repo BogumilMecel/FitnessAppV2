@@ -7,7 +7,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.DiaryEntr
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.EditProductDiaryEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.EditRecipeDiaryEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductDiarySearchItem
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductDiaryHistoryItem
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductPrice
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductPriceResponse
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.RecipePriceResponse
@@ -88,7 +88,7 @@ interface DiaryApi {
     ) : Recipe?
 
     @GET("/diaryEntries/history/product")
-    suspend fun getProductDiaryHistory(): List<ProductDiarySearchItem>
+    suspend fun getProductDiaryHistory(): List<ProductDiaryHistoryItem>
 
     @GET("/diaryEntries/calories")
     suspend fun getCaloriesSum(

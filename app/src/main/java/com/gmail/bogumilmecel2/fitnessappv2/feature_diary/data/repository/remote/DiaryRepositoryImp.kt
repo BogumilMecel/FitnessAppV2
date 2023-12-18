@@ -4,12 +4,13 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.Currency
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseRepository
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.data.api.DiaryApi
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.dao.ProductDiaryHistoryDao
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.DeleteDiaryEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.DiaryEntriesResponse
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.EditProductDiaryEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.EditRecipeDiaryEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductDiarySearchItem
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductDiaryHistoryItem
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductPrice
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.RecipePriceResponse
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntryPostRequest
@@ -21,7 +22,10 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Re
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.RecipePriceRequest
 
-class DiaryRepositoryImp(private val diaryApi: DiaryApi) : DiaryRepository, BaseRepository() {
+class DiaryRepositoryImp(
+    private val diaryApi: DiaryApi,
+    private val productDiaryHistoryDao: ProductDiaryHistoryDao
+) : DiaryRepository, BaseRepository() {
 
     override suspend fun getDiaryEntries(date: String): Resource<DiaryEntriesResponse> {
         return handleRequest {
@@ -29,9 +33,15 @@ class DiaryRepositoryImp(private val diaryApi: DiaryApi) : DiaryRepository, Base
         }
     }
 
-    override suspend fun getProductDiaryHistory(): Resource<List<ProductDiarySearchItem>> {
+    override suspend fun getProductDiaryHistory(): Resource<List<ProductDiaryHistoryItem>> {
         return handleRequest {
             diaryApi.getProductDiaryHistory()
+        }
+    }
+
+    override suspend fun saveProductDiaryHistoryLocally(productDiaryHistoryItems: List<ProductDiaryHistoryItem>): Resource<Unit> {
+        return handleRequest {
+            productDiaryHistoryDao.insertProductDiaryHistory(productDiaryHistoryItems)
         }
     }
 
