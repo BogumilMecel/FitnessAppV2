@@ -5,4 +5,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface ConnectivityObserver {
     fun observe(): Flow<ConnectionState>
+    suspend fun isOnline(): Boolean
 }
