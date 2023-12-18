@@ -39,6 +39,13 @@ fun CustomButton(
                 colors = ButtonDefaults.outlinedButtonColors(
                     backgroundColor = backgroundColor,
                 ),
+                elevation = ButtonDefaults.elevation(
+                    defaultElevation = 0.dp,
+                    pressedElevation = 0.dp,
+                    disabledElevation = 0.dp,
+                    hoveredElevation = 0.dp,
+                    focusedElevation = 0.dp
+                ),
                 shape = shape,
                 border = BorderStroke(
                     width = 1.dp,
