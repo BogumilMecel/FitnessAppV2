@@ -38,163 +38,160 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Destination
 @Composable
-fun AccountScreen(
-    viewModel: AccountViewModel = hiltViewModel(),
-    navigator: DestinationsNavigator
-) {
-    val state = viewModel.state.collectAsStateWithLifecycle().value
+fun AccountScreen(navigator: DestinationsNavigator) {
+    hiltViewModel<AccountViewModel>().ConfigureViewModel(navigator = navigator) { viewModel ->
+        val state = viewModel.state.collectAsStateWithLifecycle().value
 
-    viewModel.ConfigureViewModel(navigator = navigator)
+        BackHandler {
+            viewModel.onEvent(AccountEvent.BackPressed)
+        }
 
-    BackHandler {
-        viewModel.onEvent(AccountEvent.BackPressed)
-    }
+        Column(modifier = Modifier.fillMaxSize()) {
+            Spacer(modifier = Modifier.height(10.dp))
 
-    Column(modifier = Modifier.fillMaxSize()) {
-        Spacer(modifier = Modifier.height(10.dp))
-
-        DefaultCardBackground(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 10.dp)
-        ) {
-            Column(
+            DefaultCardBackground(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .padding(bottom = 16.dp),
+                    .padding(horizontal = 10.dp)
             ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.nutrition_goals),
-                        style = FitnessAppTheme.typography.HeaderSmall,
-                        color = FitnessAppTheme.colors.ContentPrimary
-                    )
-
-                    CustomIconButton(
-                        params = IconButtonParams(
-                            iconVector = IconVector.Edit,
-                            onClick = {
-                                viewModel.onEvent(AccountEvent.ClickedEditNutritionGoals)
-                            }
-                        )
-                    )
-                }
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceAround,
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                        .padding(bottom = 16.dp),
                 ) {
-
-                    PieChartWithMiddleText(
-                        pieChartData = state.nutritionData.pieChartData,
-                        middleText = stringResource(
-                            id = R.string.kcal_with_value,
-                            state.nutritionData.nutritionValues.calories
-                        ),
-                        modifier = Modifier.size(128.dp),
-                    )
-
-                    Column {
-                        val nutritionValues = state.nutritionData.nutritionValues
-
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
                         Text(
-                            text = stringResource(id = R.string.carbohydrates),
-                            style = FitnessAppTheme.typography.ParagraphMedium,
-                            color = FitnessAppTheme.colors.ContentSecondary
+                            text = stringResource(id = R.string.nutrition_goals),
+                            style = FitnessAppTheme.typography.HeaderSmall,
+                            color = FitnessAppTheme.colors.ContentPrimary
                         )
 
-                        Text(
-                            text = "${nutritionValues.carbohydrates}",
-                            style = FitnessAppTheme.typography.HeaderExtraSmall,
-                            color = LightGreen3
+                        CustomIconButton(
+                            params = IconButtonParams(
+                                iconVector = IconVector.Edit,
+                                onClick = {
+                                    viewModel.onEvent(AccountEvent.ClickedEditNutritionGoals)
+                                }
+                            )
                         )
-
-                        Spacer(modifier = Modifier.height(6.dp))
-
-                        Text(
-                            text = stringResource(id = R.string.protein),
-                            style = FitnessAppTheme.typography.ParagraphMedium,
-                            color = FitnessAppTheme.colors.ContentSecondary
-                        )
-
-                        Text(
-                            text = "${nutritionValues.protein}",
-                            style = FitnessAppTheme.typography.HeaderExtraSmall,
-                            color = BlueViolet3
-                        )
-
-                        Spacer(modifier = Modifier.height(6.dp))
-
-                        Text(
-                            text = stringResource(id = R.string.fat),
-                            style = FitnessAppTheme.typography.ParagraphMedium,
-                            color = FitnessAppTheme.colors.ContentSecondary
-                        )
-
-                        Text(
-                            text = "${nutritionValues.fat}",
-                            style = FitnessAppTheme.typography.HeaderExtraSmall,
-                            color = OrangeYellow3
-                        )
-
-                        Spacer(modifier = Modifier.height(6.dp))
                     }
 
-                    Spacer(modifier = Modifier.width(16.dp))
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceAround,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    ) {
+
+                        PieChartWithMiddleText(
+                            pieChartData = state.nutritionData.pieChartData,
+                            middleText = stringResource(
+                                id = R.string.kcal_with_value,
+                                state.nutritionData.nutritionValues.calories
+                            ),
+                            modifier = Modifier.size(128.dp),
+                        )
+
+                        Column {
+                            val nutritionValues = state.nutritionData.nutritionValues
+
+                            Text(
+                                text = stringResource(id = R.string.carbohydrates),
+                                style = FitnessAppTheme.typography.ParagraphMedium,
+                                color = FitnessAppTheme.colors.ContentSecondary
+                            )
+
+                            Text(
+                                text = "${nutritionValues.carbohydrates}",
+                                style = FitnessAppTheme.typography.HeaderExtraSmall,
+                                color = LightGreen3
+                            )
+
+                            Spacer(modifier = Modifier.height(6.dp))
+
+                            Text(
+                                text = stringResource(id = R.string.protein),
+                                style = FitnessAppTheme.typography.ParagraphMedium,
+                                color = FitnessAppTheme.colors.ContentSecondary
+                            )
+
+                            Text(
+                                text = "${nutritionValues.protein}",
+                                style = FitnessAppTheme.typography.HeaderExtraSmall,
+                                color = BlueViolet3
+                            )
+
+                            Spacer(modifier = Modifier.height(6.dp))
+
+                            Text(
+                                text = stringResource(id = R.string.fat),
+                                style = FitnessAppTheme.typography.ParagraphMedium,
+                                color = FitnessAppTheme.colors.ContentSecondary
+                            )
+
+                            Text(
+                                text = "${nutritionValues.fat}",
+                                style = FitnessAppTheme.typography.HeaderExtraSmall,
+                                color = OrangeYellow3
+                            )
+
+                            Spacer(modifier = Modifier.height(6.dp))
+                        }
+
+                        Spacer(modifier = Modifier.width(16.dp))
+                    }
                 }
             }
-        }
 
-        Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
-        DefaultCardBackground(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 10.dp)
-        ) {
-            Row(
+            DefaultCardBackground(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+                    .padding(horizontal = 10.dp)
             ) {
-                Text(
-                    text = stringResource(id = R.string.account_ask_for_weight_daily),
-                    style = FitnessAppTheme.typography.ParagraphLarge,
-                    modifier = Modifier.weight(1f)
-                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.account_ask_for_weight_daily),
+                        style = FitnessAppTheme.typography.ParagraphLarge,
+                        modifier = Modifier.weight(1f)
+                    )
 
-                Switch(
-                    checked = state.askForWeightDaily,
-                    colors = SwitchDefaults.colors(
-                        uncheckedThumbColor = FitnessAppTheme.colors.ContentSecondary
-                    ),
-                    onCheckedChange = {
-                        viewModel.onEvent(AccountEvent.AskForWeightDailyClicked(it))
-                    },
-                )
+                    Switch(
+                        checked = state.askForWeightDaily,
+                        colors = SwitchDefaults.colors(
+                            uncheckedThumbColor = FitnessAppTheme.colors.ContentSecondary
+                        ),
+                        onCheckedChange = {
+                            viewModel.onEvent(AccountEvent.AskForWeightDailyClicked(it))
+                        },
+                    )
+                }
             }
-        }
 
-        Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
-        CustomButton(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 10.dp),
-            leftIcon = IconVector.Logout,
-            text = stringResource(id = R.string.log_out),
-        ) {
-            viewModel.onEvent(AccountEvent.ClickedLogOutButtonClicked)
+            CustomButton(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 10.dp),
+                leftIcon = IconVector.Logout,
+                text = stringResource(id = R.string.log_out),
+            ) {
+                viewModel.onEvent(AccountEvent.ClickedLogOutButtonClicked)
+            }
         }
     }
 }

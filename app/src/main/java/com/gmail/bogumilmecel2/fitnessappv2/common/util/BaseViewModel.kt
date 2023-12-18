@@ -1,5 +1,8 @@
 package com.gmail.bogumilmecel2.fitnessappv2.common.util
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavOptions
@@ -22,6 +25,8 @@ abstract class BaseViewModel<STATE : Any, EVENT : Any, NAV_ARGUMENTS : Any>(
     val state: StateFlow<STATE> = _state
 
     val navigationDestination: Channel<NavigationAction> = Channel()
+
+    var loaderVisible by mutableStateOf(false)
 
     @Inject
     lateinit var cachedValuesProvider: CachedValuesProvider

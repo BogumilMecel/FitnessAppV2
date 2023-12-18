@@ -48,9 +48,7 @@ class LoginViewModel @Inject constructor(
 
             is LoginEvent.LoginButtonClicked -> {
                 viewModelScope.launch(Dispatchers.IO) {
-                    _state.update {
-                        it.copy(isLoading = true)
-                    }
+                    loaderVisible = true
                     with(_state.value) {
                         authUseCases.logInUserUseCase(
                             email = email,
@@ -61,10 +59,7 @@ class LoginViewModel @Inject constructor(
                             )
                         }
                     }
-
-                    _state.update {
-                        it.copy(isLoading = false)
-                    }
+                    loaderVisible = false
                 }
             }
         }

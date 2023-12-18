@@ -43,134 +43,132 @@ import kotlinx.coroutines.flow.collectLatest
 )
 @Destination
 @Composable
-fun IntroductionScreen(
-    viewModel: IntroductionViewModel = hiltViewModel(),
-    navigator: DestinationsNavigator
-) {
-    viewModel.ConfigureViewModel(navigator = navigator)
-    val state = viewModel.state.collectAsStateWithLifecycle().value
-    val questionSize = QuestionName.values().size
+fun IntroductionScreen(navigator: DestinationsNavigator) {
+    hiltViewModel<IntroductionViewModel>().ConfigureViewModel(navigator = navigator) { viewModel ->
+        val state = viewModel.state.collectAsStateWithLifecycle().value
+        val questionSize = QuestionName.values().size
 
-    val pagerState = rememberPagerState(
-        initialPage = 0,
-    ) {
-        questionSize
-    }
-    val keyboardController = LocalSoftwareKeyboardController.current
-
-    var arrowState by remember {
-        mutableStateOf(0)
-    }
-
-    LaunchedEffect(pagerState) {
-        snapshotFlow { pagerState.currentPage }.collect {
-            arrowState = when (pagerState.currentPage) {
-                0 -> 0
-                else -> 2
-            }
+        val pagerState = rememberPagerState(
+            initialPage = 0,
+        ) {
+            questionSize
         }
-    }
+        val keyboardController = LocalSoftwareKeyboardController.current
 
-    LaunchedEffect(key1 = true) {
-        viewModel.introductionUiEvent.collectLatest {
-            when (it) {
-                is IntroductionUiEvent.MoveBackward -> {
-                    if (pagerState.currentPage != 0) {
-                        pagerState.animateScrollToPage(pagerState.currentPage - 1)
-                        keyboardController?.hide()
-                    }
-                }
+        var arrowState by remember {
+            mutableStateOf(0)
+        }
 
-                is IntroductionUiEvent.MoveForward -> {
-                    if (pagerState.currentPage != questionSize - 1) {
-                        pagerState.animateScrollToPage(pagerState.currentPage + 1)
-                        keyboardController?.hide()
-                    } else {
-                        viewModel.onEvent(IntroductionEvent.FinishIntroduction)
-                    }
+        LaunchedEffect(pagerState) {
+            snapshotFlow { pagerState.currentPage }.collect {
+                arrowState = when (pagerState.currentPage) {
+                    0 -> 0
+                    else -> 2
                 }
             }
         }
-    }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        Text(
-            text = stringResource(id = R.string.let_us_know_something_about_you),
-            style = MaterialTheme.typography.h1,
+        LaunchedEffect(key1 = true) {
+            (viewModel as IntroductionViewModel).introductionUiEvent.collectLatest {
+                when (it) {
+                    is IntroductionUiEvent.MoveBackward -> {
+                        if (pagerState.currentPage != 0) {
+                            pagerState.animateScrollToPage(pagerState.currentPage - 1)
+                            keyboardController?.hide()
+                        }
+                    }
+
+                    is IntroductionUiEvent.MoveForward -> {
+                        if (pagerState.currentPage != questionSize - 1) {
+                            pagerState.animateScrollToPage(pagerState.currentPage + 1)
+                            keyboardController?.hide()
+                        } else {
+                            viewModel.onEvent(IntroductionEvent.FinishIntroduction)
+                        }
+                    }
+                }
+            }
+        }
+
+        Box(
             modifier = Modifier
-                .align(Alignment.TopCenter)
-                .padding(top = 100.dp)
-        )
+                .fillMaxSize()
+        ) {
+            Text(
+                text = stringResource(id = R.string.let_us_know_something_about_you),
+                style = MaterialTheme.typography.h1,
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .padding(top = 100.dp)
+            )
 
-        HorizontalPager(state = pagerState) { index ->
-            val currentItem = QuestionName.values().toList()[index]
-            QuestionSection(title = stringResource(id = currentItem.getQuestionTitle())) {
-                when (currentItem.getQuestionType()) {
-                    QuestionType.INPUT -> {
-                        state.getStringAnswer(currentItem)?.let { answer ->
-                            TextQuestion(
-                                text = answer,
-                                onTextEntered = {
-                                    viewModel.onEvent(
-                                        IntroductionEvent.EnteredAnswer(
-                                            questionName = currentItem,
-                                            newValue = it
+            HorizontalPager(state = pagerState) { index ->
+                val currentItem = QuestionName.values().toList()[index]
+                QuestionSection(title = stringResource(id = currentItem.getQuestionTitle())) {
+                    when (currentItem.getQuestionType()) {
+                        QuestionType.INPUT -> {
+                            state.getStringAnswer(currentItem)?.let { answer ->
+                                TextQuestion(
+                                    text = answer,
+                                    onTextEntered = {
+                                        viewModel.onEvent(
+                                            IntroductionEvent.EnteredAnswer(
+                                                questionName = currentItem,
+                                                newValue = it
+                                            )
                                         )
-                                    )
-                                },
-                                unitResId = currentItem.getQuestionUnit(),
-                                tag = currentItem.name
-                            )
+                                    },
+                                    unitResId = currentItem.getQuestionUnit(),
+                                    tag = currentItem.name
+                                )
+                            }
                         }
-                    }
 
-                    QuestionType.TILE -> {
-                        state.getTileAnswer(questionName = currentItem)?.let { selectedTile ->
-                            TilesQuestion(
-                                questionName = currentItem,
-                                currentItem = selectedTile,
-                                onItemClick = { clickedTile ->
-                                    viewModel.onEvent(
-                                        IntroductionEvent.ClickedTile(
-                                            tile = clickedTile
+                        QuestionType.TILE -> {
+                            state.getTileAnswer(questionName = currentItem)?.let { selectedTile ->
+                                TilesQuestion(
+                                    questionName = currentItem,
+                                    currentItem = selectedTile,
+                                    onItemClick = { clickedTile ->
+                                        viewModel.onEvent(
+                                            IntroductionEvent.ClickedTile(
+                                                tile = clickedTile
+                                            )
                                         )
-                                    )
-                                }
-                            )
+                                    }
+                                )
+                            }
                         }
                     }
                 }
             }
-        }
 
-        if (arrowState != 0) {
+            if (arrowState != 0) {
+                BottomButton(
+                    modifier = Modifier
+                        .align(Alignment.BottomStart)
+                        .testTag(stringResource(id = R.string.BACK)),
+                    text = stringResource(id = R.string.back),
+                    onClick = {
+                        viewModel.onEvent(IntroductionEvent.ClickedArrowBackwards)
+                    },
+                    buttonColors = ButtonDefaults.buttonColors(
+                        backgroundColor = MaterialTheme.colors.secondary
+                    )
+                )
+            }
+
             BottomButton(
                 modifier = Modifier
-                    .align(Alignment.BottomStart)
-                    .testTag(stringResource(id = R.string.BACK)),
-                text = stringResource(id = R.string.back),
+                    .align(Alignment.BottomEnd)
+                    .testTag(stringResource(id = R.string.NEXT)),
+                text = stringResource(
+                    id = if (pagerState.currentPage == questionSize - 1) R.string.finish else R.string.next
+                ),
                 onClick = {
-                    viewModel.onEvent(IntroductionEvent.ClickedArrowBackwards)
-                },
-                buttonColors = ButtonDefaults.buttonColors(
-                    backgroundColor = MaterialTheme.colors.secondary
-                )
+                    viewModel.onEvent(IntroductionEvent.ClickedArrowForward)
+                }
             )
         }
-
-        BottomButton(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .testTag(stringResource(id = R.string.NEXT)),
-            text = stringResource(
-                id = if (pagerState.currentPage == questionSize - 1) R.string.finish else R.string.next
-            ),
-            onClick = {
-                viewModel.onEvent(IntroductionEvent.ClickedArrowForward)
-            }
-        )
     }
 }

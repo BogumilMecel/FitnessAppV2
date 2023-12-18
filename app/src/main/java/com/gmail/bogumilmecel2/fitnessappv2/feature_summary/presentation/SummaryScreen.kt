@@ -29,108 +29,106 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Destination
 @Composable
-fun SummaryScreen(
-    viewModel: SummaryViewModel = hiltViewModel(),
-    navigator: DestinationsNavigator
-) {
-    viewModel.ConfigureViewModel(navigator = navigator)
-    val state = viewModel.state.collectAsStateWithLifecycle().value
-    val activity = (LocalContext.current as? Activity)
+fun SummaryScreen(navigator: DestinationsNavigator) {
+    hiltViewModel<SummaryViewModel>().ConfigureViewModel(navigator = navigator) { viewModel ->
+        val state = viewModel.state.collectAsStateWithLifecycle().value
+        val activity = (LocalContext.current as? Activity)
 
-    BackHandler {
-        if (state.weightPickerDialogVisible) {
-            viewModel.onEvent(SummaryEvent.DismissedWeightPickerDialog)
-        } else if (state.isAskForWeightPermissionDialogVisible) {
-            viewModel.onEvent(SummaryEvent.DismissedWeightDialogsQuestionDialog)
-        } else {
-            activity?.finish()
-        }
-    }
-
-    if (state.weightPickerDialogVisible) {
-        CustomDialog(
-            title = stringResource(id = R.string.summary_weight_dialog_title),
-            content = {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 24.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    val startingValue = state.latestWeightEntry?.value ?: 80.0
-
-                    DoubleNumberPicker(
-                        modifier = Modifier,
-                        value = state.weightPickerCurrentValue,
-                        minValue = startingValue - 50.0,
-                        maxValue = startingValue + 50.0,
-                        onValueChange = {
-                            viewModel.onEvent(SummaryEvent.WeightPickerValueChanged(it))
-                        }
-                    )
-                }
-            },
-            endButtonParams = ButtonParams(
-                text = stringResource(id = R.string.save),
-                onClick = { viewModel.onEvent(SummaryEvent.SavedWeightPickerValue) }
-            ),
-            secondaryButtonParams = ButtonParams(
-                text = stringResource(id = R.string.cancel),
-                onClick = { viewModel.onEvent(SummaryEvent.DismissedWeightPickerDialog) }
-            ),
-            onDismissRequest = { viewModel.onEvent(SummaryEvent.DismissedWeightPickerDialog) }
-        )
-    } else if (state.isAskForWeightPermissionDialogVisible) {
-        CustomDialog(
-            title = stringResource(id = R.string.summary_ask_for_weight_dialogs_title),
-            secondaryText = stringResource(id = R.string.summary_ask_for_weight_dialogs_description),
-            endButtonParams = ButtonParams(
-                text = stringResource(id = R.string.accept),
-                onClick = { viewModel.onEvent(SummaryEvent.ClickedAcceptInWeightDialogsQuestion) }
-            ),
-            secondaryButtonParams = ButtonParams(
-                text = stringResource(id = R.string.decline),
-                onClick = { viewModel.onEvent(SummaryEvent.ClickedDeclineInWeightDialogsQuestion) }
-            ),
-            extraButtonParams = ButtonParams(
-                text = stringResource(id = R.string.ask_me_later),
-                onClick = { viewModel.onEvent(SummaryEvent.ClickedNotNowInWeightDialogsQuestion) }
-            ),
-            onDismissRequest = { viewModel.onEvent(SummaryEvent.DismissedWeightDialogsQuestionDialog) }
-        )
-    }
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 10.dp)
-    ) {
-        LogStreakSection(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 12.dp),
-            streak = state.logStreak ?: 1
-        )
-
-        HeightSpacer(12.dp)
-
-        CaloriesSumSection(
-            currentCalories = state.caloriesSum ?: 0,
-            wantedCalories = state.wantedCalories,
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        HeightSpacer(12.dp)
-
-        WeightSection(
-            modifier = Modifier.fillMaxWidth(),
-            lastWeightEntry = state.latestWeightEntry?.value,
-            weightProgress = state.weightProgress,
-            onEvent = {
-                viewModel.onEvent(it)
+        BackHandler {
+            if (state.weightPickerDialogVisible) {
+                viewModel.onEvent(SummaryEvent.DismissedWeightPickerDialog)
+            } else if (state.isAskForWeightPermissionDialogVisible) {
+                viewModel.onEvent(SummaryEvent.DismissedWeightDialogsQuestionDialog)
+            } else {
+                activity?.finish()
             }
-        )
+        }
 
-        HeightSpacer(12.dp)
+        if (state.weightPickerDialogVisible) {
+            CustomDialog(
+                title = stringResource(id = R.string.summary_weight_dialog_title),
+                content = {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 24.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        val startingValue = state.latestWeightEntry?.value ?: 80.0
+
+                        DoubleNumberPicker(
+                            modifier = Modifier,
+                            value = state.weightPickerCurrentValue,
+                            minValue = startingValue - 50.0,
+                            maxValue = startingValue + 50.0,
+                            onValueChange = {
+                                viewModel.onEvent(SummaryEvent.WeightPickerValueChanged(it))
+                            }
+                        )
+                    }
+                },
+                endButtonParams = ButtonParams(
+                    text = stringResource(id = R.string.save),
+                    onClick = { viewModel.onEvent(SummaryEvent.SavedWeightPickerValue) }
+                ),
+                secondaryButtonParams = ButtonParams(
+                    text = stringResource(id = R.string.cancel),
+                    onClick = { viewModel.onEvent(SummaryEvent.DismissedWeightPickerDialog) }
+                ),
+                onDismissRequest = { viewModel.onEvent(SummaryEvent.DismissedWeightPickerDialog) }
+            )
+        } else if (state.isAskForWeightPermissionDialogVisible) {
+            CustomDialog(
+                title = stringResource(id = R.string.summary_ask_for_weight_dialogs_title),
+                secondaryText = stringResource(id = R.string.summary_ask_for_weight_dialogs_description),
+                endButtonParams = ButtonParams(
+                    text = stringResource(id = R.string.accept),
+                    onClick = { viewModel.onEvent(SummaryEvent.ClickedAcceptInWeightDialogsQuestion) }
+                ),
+                secondaryButtonParams = ButtonParams(
+                    text = stringResource(id = R.string.decline),
+                    onClick = { viewModel.onEvent(SummaryEvent.ClickedDeclineInWeightDialogsQuestion) }
+                ),
+                extraButtonParams = ButtonParams(
+                    text = stringResource(id = R.string.ask_me_later),
+                    onClick = { viewModel.onEvent(SummaryEvent.ClickedNotNowInWeightDialogsQuestion) }
+                ),
+                onDismissRequest = { viewModel.onEvent(SummaryEvent.DismissedWeightDialogsQuestionDialog) }
+            )
+        }
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 10.dp)
+        ) {
+            LogStreakSection(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 12.dp),
+                streak = state.logStreak ?: 1
+            )
+
+            HeightSpacer(12.dp)
+
+            CaloriesSumSection(
+                currentCalories = state.caloriesSum ?: 0,
+                wantedCalories = state.wantedCalories,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            HeightSpacer(12.dp)
+
+            WeightSection(
+                modifier = Modifier.fillMaxWidth(),
+                lastWeightEntry = state.latestWeightEntry?.value,
+                weightProgress = state.weightProgress,
+                onEvent = {
+                    viewModel.onEvent(it)
+                }
+            )
+
+            HeightSpacer(12.dp)
+        }
     }
 }

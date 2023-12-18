@@ -34,94 +34,92 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Destination(navArgsDelegate = ProductNavArguments::class)
 @Composable
-fun ProductScreen(
-    viewModel: ProductViewModel = hiltViewModel(),
-    navigator: DestinationsNavigator
-) {
-    viewModel.ConfigureViewModel(navigator)
-    val state = viewModel.state.collectAsStateWithLifecycle().value
+fun ProductScreen(navigator: DestinationsNavigator) {
+    hiltViewModel<ProductViewModel>().ConfigureViewModel(navigator = navigator) { viewModel ->
+        val state = viewModel.state.collectAsStateWithLifecycle().value
 
-    Scaffold(
-        floatingActionButton = {
-            ExtendedFloatingActionButton(
-                text = {
-                    Text(
-                        text = stringResource(id = R.string.save).uppercase(),
-                        color = Color.Black,
-                        style = MaterialTheme.typography.button
-                    )
-                },
-                onClick = {
-                    viewModel.onEvent(
-                        ProductEvent.ClickedAddProduct
-                    )
-                },
-                icon = {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = "Add"
-                    )
-                },
-                backgroundColor = FitnessAppTheme.colors.Error,
+        Scaffold(
+            floatingActionButton = {
+                ExtendedFloatingActionButton(
+                    text = {
+                        Text(
+                            text = stringResource(id = R.string.save).uppercase(),
+                            color = Color.Black,
+                            style = MaterialTheme.typography.button
+                        )
+                    },
+                    onClick = {
+                        viewModel.onEvent(
+                            ProductEvent.ClickedAddProduct
+                        )
+                    },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = "Add"
+                        )
+                    },
+                    backgroundColor = FitnessAppTheme.colors.Error,
+                    modifier = Modifier
+                        .testTag(stringResource(id = R.string.create_product))
+                )
+            }
+        ) { paddingValues ->
+            if (state.isSubmitPriceDialogVisible) {
+                SubmitNewPriceDialog(
+                    productName = state.productName,
+                    price = state.priceValue,
+                    forValue = state.priceForValue,
+                    currency = Currency.PLN,
+                    measurementUnit = state.productMeasurementUnit,
+                    onEvent = {
+                        viewModel.onEvent(it)
+                    }
+                )
+            }
+
+            Column(
                 modifier = Modifier
-                    .testTag(stringResource(id = R.string.create_product))
-            )
-        }
-    ) { paddingValues ->
-        if (state.isSubmitPriceDialogVisible) {
-            SubmitNewPriceDialog(
-                productName = state.productName,
-                price = state.priceValue,
-                forValue = state.priceForValue,
-                currency = Currency.PLN,
-                measurementUnit = state.productMeasurementUnit,
-                onEvent = {
-                    viewModel.onEvent(it)
-                }
-            )
-        }
+                    .fillMaxSize()
+                    .padding(paddingValues.calculateBottomPadding())
+            ) {
+                HeaderRow(
+                    middlePrimaryText = stringResource(id = state.mealName.getDisplayValue()),
+                    middleSecondaryText = state.date,
+                    onBackPressed = {
+                        viewModel.onEvent(ProductEvent.ClickedBackArrow)
+                    }
+                )
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues.calculateBottomPadding())
-        ) {
-            HeaderRow(
-                middlePrimaryText = stringResource(id = state.mealName.getDisplayValue()),
-                middleSecondaryText = state.date,
-                onBackPressed = {
-                    viewModel.onEvent(ProductEvent.ClickedBackArrow)
-                }
-            )
+                Spacer(modifier = Modifier.height(10.dp))
 
-            Spacer(modifier = Modifier.height(10.dp))
+                ProductMainSection(
+                    modifier = Modifier.padding(horizontal = 15.dp),
+                    productName = state.productName,
+                    currentWeight = state.weight,
+                    onWeightEntered = {
+                        viewModel.onEvent(ProductEvent.EnteredWeight(it))
+                    },
+                    nutritionData = state.nutritionData
+                )
 
-            ProductMainSection(
-                modifier = Modifier.padding(horizontal = 15.dp),
-                productName = state.productName,
-                currentWeight = state.weight,
-                onWeightEntered = {
-                    viewModel.onEvent(ProductEvent.EnteredWeight(it))
-                },
-                nutritionData = state.nutritionData
-            )
+                Spacer(modifier = Modifier.height(10.dp))
 
-            Spacer(modifier = Modifier.height(10.dp))
+                PriceSection(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 15.dp),
+                    productPrice = state.productPrice,
+                    onSubmitPriceClicked = {
+                        viewModel.onEvent(ProductEvent.ClickedSubmitNewPrice)
+                    },
+                    onInfoButtonClicked = {
+                        viewModel.onEvent(ProductEvent.ClickedInfoPriceButton)
+                    }
+                )
 
-            PriceSection(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 15.dp),
-                productPrice = state.productPrice,
-                onSubmitPriceClicked = {
-                    viewModel.onEvent(ProductEvent.ClickedSubmitNewPrice)
-                },
-                onInfoButtonClicked = {
-                    viewModel.onEvent(ProductEvent.ClickedInfoPriceButton)
-                }
-            )
-
-            Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(10.dp))
+            }
         }
     }
 }

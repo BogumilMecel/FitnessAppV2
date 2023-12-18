@@ -115,10 +115,7 @@ class NewProductViewModel @Inject constructor(
 
             is NewProductEvent.ClickedSaveButton -> {
                 viewModelScope.launch(Dispatchers.IO) {
-                    _state.update {
-                        it.copy(isLoading = true)
-                    }
-
+                    loaderVisible = true
                     with(_state.value) {
                         saveNewProductUseCase(
                             name = productName,
@@ -143,12 +140,7 @@ class NewProductViewModel @Inject constructor(
                             )
                         }
                     }
-
-                    _state.update {
-                        it.copy(
-                            isLoading = false
-                        )
-                    }
+                    loaderVisible = false
                 }
             }
 

@@ -47,6 +47,17 @@ fun LoaderColumn(
 }
 
 @Composable
+fun Loader(visible: Boolean) {
+    AnimatedVisibility(
+        visible = visible,
+        enter = fadeIn(),
+        exit = fadeOut()
+    ) {
+        TopLevelLoader()
+    }
+}
+
+@Composable
 private fun TopLevelLoader() {
     val interactionSource = remember { MutableInteractionSource() }
 

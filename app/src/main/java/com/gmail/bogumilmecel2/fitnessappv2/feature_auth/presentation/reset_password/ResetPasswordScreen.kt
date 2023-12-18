@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -32,30 +31,25 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Composable
 @Destination
-fun ResetPasswordScreen(
-    viewModel: ResetPasswordViewModel = hiltViewModel(),
-    navigator: DestinationsNavigator
-) {
-    viewModel.ConfigureViewModel(navigator = navigator)
-    val state = viewModel.state.collectAsStateWithLifecycle().value
+fun ResetPasswordScreen(navigator: DestinationsNavigator) {
+    hiltViewModel<ResetPasswordViewModel>().ConfigureViewModel(navigator = navigator) { viewModel ->
+        val state = viewModel.state.collectAsStateWithLifecycle().value
 
-    Scaffold(
-        topBar = {
-            Toolbar(
-                title = stringResource(id = R.string.reset_your_password),
-                isBackArrowVisible = true,
-            ){
-                viewModel.onEvent(AuthEvent.RegisterLoginButtonClicked)
+        Scaffold(
+            topBar = {
+                Toolbar(
+                    title = stringResource(id = R.string.reset_your_password),
+                    isBackArrowVisible = true,
+                ) {
+                    viewModel.onEvent(AuthEvent.RegisterLoginButtonClicked)
+                }
             }
-        }
-    ) { paddingValues ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues.calculateTopPadding())
-        ) {
-            if (!state.isLoading) {
-
+        ) { paddingValues ->
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues.calculateTopPadding())
+            ) {
                 Column(
                     modifier = Modifier
                         .align(Alignment.Center)
@@ -89,10 +83,6 @@ fun ResetPasswordScreen(
                         text = stringResource(id = R.string.reset_my_password)
                     )
                 }
-            } else {
-                CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.Center)
-                )
             }
         }
     }

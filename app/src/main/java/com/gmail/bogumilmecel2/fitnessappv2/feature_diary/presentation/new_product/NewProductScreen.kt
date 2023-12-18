@@ -34,111 +34,106 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Destination(navArgsDelegate = NewProductNavArguments::class)
 @Composable
-fun NewProductScreen(
-    viewModel: NewProductViewModel = hiltViewModel(),
-    navigator: DestinationsNavigator
-) {
-    val state = viewModel.state.collectAsState().value
+fun NewProductScreen(navigator: DestinationsNavigator) {
+    hiltViewModel<NewProductViewModel>().ConfigureViewModel(navigator = navigator) { viewModel ->
+        val state = viewModel.state.collectAsState().value
 
-    viewModel.ConfigureViewModel(navigator = navigator)
-
-    BackHandler(
-        enabled = state.isScannerVisible
-    ) {
-        if (state.isScannerVisible) {
-            viewModel.onEvent(NewProductEvent.ClosedScanner)
+        BackHandler(
+            enabled = state.isScannerVisible
+        ) {
+            if (state.isScannerVisible) {
+                viewModel.onEvent(NewProductEvent.ClosedScanner)
+            }
         }
-    }
 
-    if (!state.isScannerVisible) {
-        Scaffold(
-            floatingActionButton = {
-                FloatingActionButton(
-                    onClick = {
-                        if (!state.isLoading) {
+        if (!state.isScannerVisible) {
+            Scaffold(
+                floatingActionButton = {
+                    FloatingActionButton(
+                        onClick = {
                             viewModel.onEvent(NewProductEvent.ClickedSaveButton)
                         }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Save,
+                            contentDescription = "Save"
+                        )
                     }
+                }
+            ) { paddingValues ->
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(vertical = paddingValues.calculateBottomPadding())
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Save,
-                        contentDescription = "Save"
+                    HeaderRow(
+                        middlePrimaryText = stringResource(id = R.string.create_product),
+                        onBackPressed = {
+                            viewModel.onEvent(NewProductEvent.ClickedBackArrow)
+                        }
+                    )
+
+                    Spacer(modifier = Modifier.height(5.dp))
+
+                    TextFieldSection(
+                        name = stringResource(id = R.string.product_name),
+                        textFieldValue = state.productName,
+                        onTextEntered = {
+                            viewModel.onEvent(NewProductEvent.EnteredProductName(it))
+                        },
+                        modifier = Modifier
+                            .weight(0.4F)
+                            .testTag(stringResource(id = R.string.product_name) + "TEXT_FIELD")
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+
+                    ContainerWeightSection(
+                        state = state,
+                        onEvent = {
+                            viewModel.onEvent(it)
+                        }
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    BarcodeSection(
+                        barcode = state.barcode,
+                        onEvent = {
+                            viewModel.onEvent(it)
+                        }
+                    )
+
+                    Spacer(modifier = Modifier.height(36.dp))
+
+                    Text(
+                        text = stringResource(id = R.string.nutrition_values),
+                        modifier = Modifier
+                            .padding(horizontal = 15.dp),
+                        style = MaterialTheme.typography.body1.copy(
+                            fontWeight = FontWeight.Normal
+                        )
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    NutritionSection(
+                        onEvent = {
+                            viewModel.onEvent(it)
+                        },
+                        state = state
                     )
                 }
             }
-        ) { paddingValues ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(vertical = paddingValues.calculateBottomPadding())
-            ) {
-                HeaderRow(
-                    middlePrimaryText = stringResource(id = R.string.create_product),
-                    onBackPressed = {
-                        viewModel.onEvent(NewProductEvent.ClickedBackArrow)
-                    }
-                )
-
-                Spacer(modifier = Modifier.height(5.dp))
-
-                TextFieldSection(
-                    name = stringResource(id = R.string.product_name),
-                    textFieldValue = state.productName,
-                    onTextEntered = {
-                        viewModel.onEvent(NewProductEvent.EnteredProductName(it))
-                    },
-                    modifier = Modifier
-                        .weight(0.4F)
-                        .testTag(stringResource(id = R.string.product_name) + "TEXT_FIELD")
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-
-                ContainerWeightSection(
-                    state = state,
-                    onEvent = {
-                        viewModel.onEvent(it)
-                    }
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                BarcodeSection(
-                    barcode = state.barcode,
-                    onEvent = {
-                        viewModel.onEvent(it)
-                    }
-                )
-
-                Spacer(modifier = Modifier.height(36.dp))
-
-                Text(
-                    text = stringResource(id = R.string.nutrition_values),
-                    modifier = Modifier
-                        .padding(horizontal = 15.dp),
-                    style = MaterialTheme.typography.body1.copy(
-                        fontWeight = FontWeight.Normal
-                    )
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                NutritionSection(
-                    onEvent = {
-                        viewModel.onEvent(it)
-                    },
-                    state = state
-                )
-            }
+        } else {
+            ScannerSection(
+                onBarcodeScanned = { scannedBarcode ->
+                    scannedBarcode?.let { barcode ->
+                        viewModel.onEvent(NewProductEvent.EnteredBarcode(barcode))
+                    } ?: viewModel.onEvent(NewProductEvent.ClosedScanner)
+                }
+            )
         }
-    } else {
-        ScannerSection(
-            onBarcodeScanned = { scannedBarcode ->
-                scannedBarcode?.let { barcode ->
-                    viewModel.onEvent(NewProductEvent.EnteredBarcode(barcode))
-                } ?: viewModel.onEvent(NewProductEvent.ClosedScanner)
-            }
-        )
     }
 }

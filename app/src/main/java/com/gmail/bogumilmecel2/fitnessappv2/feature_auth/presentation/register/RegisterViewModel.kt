@@ -52,11 +52,7 @@ class RegisterViewModel @Inject constructor(
             }
             is AuthEvent.AuthButtonClicked -> {
                 viewModelScope.launch(Dispatchers.IO) {
-                    _state.update {
-                        it.copy(
-                            isLoading = true
-                        )
-                    }
+                    loaderVisible = true
                     with(_state.value) {
                         authUseCases.registerUser(
                             email = email,
@@ -74,12 +70,7 @@ class RegisterViewModel @Inject constructor(
                             }
                         }
                     }
-
-                    _state.update {
-                        it.copy(
-                            isLoading = false
-                        )
-                    }
+                    loaderVisible = false
                 }
             }
             else -> {

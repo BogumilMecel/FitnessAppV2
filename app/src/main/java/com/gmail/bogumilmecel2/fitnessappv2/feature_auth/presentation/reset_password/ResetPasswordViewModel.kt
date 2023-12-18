@@ -35,21 +35,13 @@ class ResetPasswordViewModel @Inject constructor(
 
             else -> {
                 viewModelScope.launch(Dispatchers.IO) {
-                    _state.update {
-                        it.copy(
-                            isLoading = true
-                        )
-                    }
+                    loaderVisible = true
                     authUseCases.resetPasswordWithEmail(
                         email = _state.value.email
                     ).handle {
                         showSnackbarError("Successfully sent an email")
                     }
-                    _state.update {
-                        it.copy(
-                            isLoading = false
-                        )
-                    }
+                    loaderVisible = false
                 }
             }
         }

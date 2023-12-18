@@ -29,80 +29,77 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Destination
 @Composable
-fun DiaryScreen(
-    viewModel: DiaryViewModel = hiltViewModel(),
-    navigator: DestinationsNavigator
-) {
-    val state = viewModel.state.collectAsStateWithLifecycle().value
+fun DiaryScreen(navigator: DestinationsNavigator) {
+    hiltViewModel<DiaryViewModel>().ConfigureViewModel(navigator = navigator) { viewModel ->
+        val state = viewModel.state.collectAsStateWithLifecycle().value
 
-    viewModel.ConfigureViewModel(navigator = navigator)
-
-    BackHandler {
-        viewModel.onEvent(DiaryEvent.BackPressed)
-    }
-
-    Scaffold(
-        bottomBar = {
-            NutritionBottomSection(
-                currentNutritionValues = state.currentTotalNutritionValues,
-                wantedNutritionValues = state.wantedTotalNutritionValues,
-                modifier = Modifier
-                    .background(BackgroundSecondary)
-                    .padding(bottom = 5.dp)
-            )
+        BackHandler {
+            viewModel.onEvent(DiaryEvent.BackPressed)
         }
-    ) { paddingValues ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            state.longClickedDiaryItemParams?.let {
-                ProductItemDialog(
-                    title = it.dialogTitle,
-                    onDeleteButtonClicked = {
-                        viewModel.onEvent(DiaryEvent.ClickedDeleteInDialog)
-                    },
-                    onEditButtonClicked = {
-                        viewModel.onEvent(DiaryEvent.ClickedEditInDialog)
-                    },
-                    onDismissRequest = {
-                        viewModel.onEvent(DiaryEvent.DismissedDialog)
-                    }
+
+        Scaffold(
+            bottomBar = {
+                NutritionBottomSection(
+                    currentNutritionValues = state.currentTotalNutritionValues,
+                    wantedNutritionValues = state.wantedTotalNutritionValues,
+                    modifier = Modifier
+                        .background(BackgroundSecondary)
+                        .padding(bottom = 5.dp)
                 )
             }
-
-            Column(
+        ) { paddingValues ->
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = paddingValues.calculateBottomPadding()),
-                verticalArrangement = Arrangement.SpaceBetween
+                    .fillMaxSize()
             ) {
-                CalendarSection(
+                state.longClickedDiaryItemParams?.let {
+                    ProductItemDialog(
+                        title = it.dialogTitle,
+                        onDeleteButtonClicked = {
+                            viewModel.onEvent(DiaryEvent.ClickedDeleteInDialog)
+                        },
+                        onEditButtonClicked = {
+                            viewModel.onEvent(DiaryEvent.ClickedEditInDialog)
+                        },
+                        onDismissRequest = {
+                            viewModel.onEvent(DiaryEvent.DismissedDialog)
+                        }
+                    )
+                }
+
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(MaterialTheme.colors.background)
-                        .padding(
-                            horizontal = 10.dp,
-                            vertical = 2.dp
-                        ),
-                    date = state.displayedDate,
-                    onArrowForwardClicked = {
-                        viewModel.onEvent(event = DiaryEvent.ClickedCalendarArrowForward)
-                    },
-                    onArrowBackwardsClicked = {
-                        viewModel.onEvent(event = DiaryEvent.ClickedCalendarArrowBackwards)
-                    },
-                )
+                        .padding(bottom = paddingValues.calculateBottomPadding()),
+                    verticalArrangement = Arrangement.SpaceBetween
+                ) {
+                    CalendarSection(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colors.background)
+                            .padding(
+                                horizontal = 10.dp,
+                                vertical = 2.dp
+                            ),
+                        date = state.displayedDate,
+                        onArrowForwardClicked = {
+                            viewModel.onEvent(event = DiaryEvent.ClickedCalendarArrowForward)
+                        },
+                        onArrowBackwardsClicked = {
+                            viewModel.onEvent(event = DiaryEvent.ClickedCalendarArrowBackwards)
+                        },
+                    )
 
-                LazyColumn {
-                    items(MealName.values()) { mealName ->
-                        DiaryMealSection(
-                            mealName = mealName,
-                            diaryEntries = state.diaryEntries[mealName]?.diaryEntries,
-                            nutritionValues = state.diaryEntries[mealName]?.nutritionValues,
-                            wantedNutritionValues = state.wantedTotalNutritionValues,
-                            onEvent = { event -> viewModel.onEvent(event) }
-                        )
+                    LazyColumn {
+                        items(MealName.values()) { mealName ->
+                            DiaryMealSection(
+                                mealName = mealName,
+                                diaryEntries = state.diaryEntries[mealName]?.diaryEntries,
+                                nutritionValues = state.diaryEntries[mealName]?.nutritionValues,
+                                wantedNutritionValues = state.wantedTotalNutritionValues,
+                                onEvent = { event -> viewModel.onEvent(event) }
+                            )
+                        }
                     }
                 }
             }
