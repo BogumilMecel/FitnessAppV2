@@ -17,10 +17,7 @@ class WeighRepositoryImp(
         timezone: String
     ): Resource<NewWeightEntryResponse> {
         return handleRequest {
-            val response = weightApi.addWeightEntry(
-                newWeightEntryRequest = newWeightEntryRequest,
-                timezone = timezone
-            )
+            val response = weightApi.addWeightEntry(newWeightEntryRequest = newWeightEntryRequest)
             cachedValuesProvider.updateWeightInfo(
                 weightProgress = response.weightProgress,
                 latestWeightEntry = response.latestWeightEntry

@@ -14,7 +14,7 @@ class LoadingRepositoryImp(
 
     override suspend fun authenticateUser(timezoneId: String): Resource<User?> {
         return handleRequest {
-            loadingApi.authenticate(timezone = timezoneId)?.let {
+            loadingApi.authenticate()?.let {
                 cachedValuesProvider.saveUser(it)
                 it
             }
