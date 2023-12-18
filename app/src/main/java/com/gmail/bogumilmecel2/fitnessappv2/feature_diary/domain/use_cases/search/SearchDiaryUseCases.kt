@@ -18,5 +18,7 @@ data class SearchDiaryUseCases(
     val getRecipeUseCase: GetRecipeUseCase,
     val getProductUseCase: GetProductUseCase,
     val getDiaryHistoryUseCase: GetDiaryHistoryUseCase,
-    val shouldDisplayNextPageUseCase: ShouldDisplayNextPageUseCase
+    val shouldDisplayNextPageUseCase: ShouldDisplayNextPageUseCase,
+    val getLocalUserRecipesUseCase: GetLocalUserRecipesUseCase,
+    val getLocalUserProductsUseCase: GetLocalUserProductsUseCase
 )

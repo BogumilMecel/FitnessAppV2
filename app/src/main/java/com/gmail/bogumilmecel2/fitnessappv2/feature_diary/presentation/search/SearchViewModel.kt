@@ -14,7 +14,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.destinations.SearchScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Recipe
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.SearchDiaryUseCases
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.presentation.ProductEntryData
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.recipe.RecipeEntryData
@@ -28,7 +27,6 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val searchDiaryUseCases: SearchDiaryUseCases,
-    private val diaryRepository: DiaryRepository,
     private val barcodeScanner: BarcodeScanner,
     savedStateHandle: SavedStateHandle,
 ) : BaseViewModel<SearchState, SearchEvent, SearchNavArguments>(
@@ -36,9 +34,11 @@ class SearchViewModel @Inject constructor(
     navArguments = SearchScreenDestination.argsFrom(savedStateHandle)
 ) {
     private val diaryHistory = mutableListOf<ProductDiaryEntry>()
-    private var userRecipes = emptyList<Recipe>()
-    private var userProducts = emptyList<Product>()
+    private var userRecipes = mutableListOf<Recipe>()
+    private var userProducts = mutableListOf<Product>()
     private var everythingPage = 1
+    private var userRecipesPage = 1
+    private var userProductsPage = 1
     private var isDataInitialized: Boolean = false
     private var isDisplayingHistory = true
     private var currentTabIndex = SearchTab.EVERYTHING.ordinal
@@ -187,33 +187,59 @@ class SearchViewModel @Inject constructor(
             }
 
             SearchTab.PRODUCTS.ordinal -> {
-
+                if (
+                    searchDiaryUseCases.shouldDisplayNextPageUseCase(
+                        size = userProducts.size,
+                        perPage = ApiConstants.DEFAULT_OFFLINE_PAGE_SIZE,
+                        currentPage = userProductsPage
+                    )
+                ) {
+                    userProductsPage++
+                    fetchUserProducts()
+                }
             }
 
             SearchTab.RECIPES.ordinal -> {
-
+                if (
+                    searchDiaryUseCases.shouldDisplayNextPageUseCase(
+                        size = userRecipes.size,
+                        perPage = ApiConstants.DEFAULT_OFFLINE_PAGE_SIZE,
+                        currentPage = userRecipesPage
+                    )
+                ) {
+                    userRecipesPage++
+                    fetchUserRecipes()
+                }
             }
         }
     }
 
     private fun fetchUserRecipes() {
         viewModelScope.launch(Dispatchers.IO) {
-            diaryRepository.getLocalUserRecipes(
-                userId = cachedValuesProvider.getUserId()
-            ).handle { recipes ->
-                userRecipes = recipes
-                createSearchItemParamsFromRecipeUseCase(items = recipes)
+            loaderVisible = true
+            searchDiaryUseCases.getLocalUserRecipesUseCase(
+                page = userRecipesPage,
+                searchText = searchText
+            ).handle(
+                finally = { loaderVisible = false }
+            ) {
+                userRecipes.addAll(it)
+                createSearchItemParamsFromRecipeUseCase()
             }
         }
     }
 
     private fun fetchUserProducts() {
         viewModelScope.launch(Dispatchers.IO) {
-            diaryRepository.getLocalUserProducts(
-                userId = cachedValuesProvider.getUserId()
-            ).handle { products ->
-                userProducts = products
-                createMyProductsSearchItemParamsFromProductUseCase(items = products)
+            loaderVisible = true
+            searchDiaryUseCases.getLocalUserProductsUseCase(
+                page = userProductsPage,
+                searchText = searchText
+            ).handle(
+                finally = { loaderVisible = false }
+            ) {
+                userProducts.addAll(it)
+                createSearchItemParamsFromUserProductsUseCase()
             }
         }
     }
@@ -234,34 +260,16 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun handleSearchTextChange() {
-        isDisplayingHistory = true
+        userProducts.clear()
+        userRecipes.clear()
         diaryHistory.clear()
+        userProductsPage = 1
+        userRecipesPage = 1
         everythingPage = 1
+        isDisplayingHistory = true
         requestHistory()
-        filterUserRecipes()
-        filterUserProducts()
-    }
-
-    private fun filterUserRecipes() {
-        createSearchItemParamsFromRecipeUseCase(
-            items = userRecipes.filter {
-                it.name.contains(
-                    other = searchText.orEmpty(),
-                    ignoreCase = true
-                )
-            }
-        )
-    }
-
-    private fun filterUserProducts() {
-        createMyProductsSearchItemParamsFromProductUseCase(
-            items = userProducts.filter {
-                it.name.contains(
-                    other = searchText.orEmpty(),
-                    ignoreCase = true
-                )
-            }
-        )
+        fetchUserProducts()
+        fetchUserRecipes()
     }
 
     private fun createSearchItemParamsFromHistoryItems() {
@@ -292,10 +300,10 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    private fun createMyProductsSearchItemParamsFromProductUseCase(items: List<Product>) {
+    private fun createSearchItemParamsFromUserProductsUseCase() {
         _state.update {
             it.copy(
-                myProductsSearchItems = items.map { product ->
+                myProductsSearchItems = userProducts.map { product ->
                     searchDiaryUseCases.createSearchItemParamsFromProductUseCase(
                         product = product,
                         onClick = { onEvent(SearchEvent.ClickedProduct(product)) },
@@ -306,10 +314,10 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    private fun createSearchItemParamsFromRecipeUseCase(items: List<Recipe>) {
+    private fun createSearchItemParamsFromRecipeUseCase() {
         _state.update {
             it.copy(
-                myRecipesSearchItems = items.map { recipe ->
+                myRecipesSearchItems = userRecipes.map { recipe ->
                     searchDiaryUseCases.createSearchItemParamsFromRecipeUseCase(
                         recipe = recipe,
                         onClick = { onEvent(SearchEvent.ClickedRecipe(recipe)) },

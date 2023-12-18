@@ -14,6 +14,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_account.domain.use_case.Edit
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CalculateSelectedServingPriceUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CalculateServingPrice
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CalculateSkipUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CreateSearchItemParamsFromIngredientUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CreateSearchItemParamsFromProductDiaryEntryUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CreateSearchItemParamsFromProductUseCase
@@ -46,6 +47,8 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.recip
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.recipe.GetRecipeUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.recipe.PostRecipeDiaryEntryUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.recipe.RecipeUseCases
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.GetLocalUserProductsUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.GetLocalUserRecipesUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.SearchDiaryUseCases
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.SearchForProductWithBarcode
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.SearchForProductsUseCase
@@ -153,7 +156,9 @@ object ViewModelModule {
         resourceProvider: ResourceProvider,
         createSearchItemParamsFromProductUseCase: CreateSearchItemParamsFromProductUseCase,
         getProductUseCase: GetProductUseCase,
-        getRecipeUseCase: GetRecipeUseCase
+        getRecipeUseCase: GetRecipeUseCase,
+        cachedValuesProvider: CachedValuesProvider,
+        calculateSkipUseCase: CalculateSkipUseCase
     ): SearchDiaryUseCases =
         SearchDiaryUseCases(
             searchForProductsUseCase = searchForProductsUseCase,
@@ -165,7 +170,17 @@ object ViewModelModule {
             getDiaryHistoryUseCase = GetDiaryHistoryUseCase(diaryRepository),
             getProductUseCase = getProductUseCase,
             getRecipeUseCase = getRecipeUseCase,
-            shouldDisplayNextPageUseCase = ShouldDisplayNextPageUseCase()
+            shouldDisplayNextPageUseCase = ShouldDisplayNextPageUseCase(),
+            getLocalUserRecipesUseCase = GetLocalUserRecipesUseCase(
+                cachedValuesProvider = cachedValuesProvider,
+                diaryRepository = diaryRepository,
+                calculateSkipUseCase = calculateSkipUseCase
+            ),
+            getLocalUserProductsUseCase = GetLocalUserProductsUseCase(
+                cachedValuesProvider = cachedValuesProvider,
+                diaryRepository = diaryRepository,
+                calculateSkipUseCase = calculateSkipUseCase
+            )
         )
 
     @ViewModelScoped

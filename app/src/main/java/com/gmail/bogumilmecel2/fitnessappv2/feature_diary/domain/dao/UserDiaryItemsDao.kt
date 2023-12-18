@@ -30,17 +30,31 @@ interface UserDiaryItemsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertRecipeDiaryEntry(recipeDiaryEntry: RecipeDiaryEntry)
 
-    @Query("SELECT * from recipe WHERE user_id = :userId")
-    fun getUserRecipes(userId: String): List<Recipe>
+    @Query("SELECT * from recipe WHERE user_id = :userId AND (:searchText IS NULL OR name LIKE '%' || :searchText || '%') LIMIT :limit OFFSET :offset")
+    fun getUserRecipes(
+        searchText: String?,
+        userId: String,
+        limit: Int,
+        offset: Int
+    ): List<Recipe>
 
-    @Query("SELECT * from product WHERE user_id = :userId")
-    fun getUserProducts(userId: String): List<Product>
+    @Query("SELECT * from product WHERE user_id = :userId AND (:searchText IS NULL OR name LIKE '%' || :searchText || '%') LIMIT :limit OFFSET :offset")
+    fun getUserProducts(
+        searchText: String?,
+        userId: String,
+        limit: Int,
+        offset: Int
+    ): List<Product>
 
     @Query("SELECT * FROM productdiaryentry WHERE date = :date")
     fun getProductDiaryEntries(date: String): List<ProductDiaryEntry>
 
     @Query("SELECT * FROM productdiaryentry WHERE product_name LIKE '%' || :searchText || '%' GROUP BY product_id ORDER BY utc_timestamp DESC LIMIT :limit OFFSET :offset")
-    fun getProductDiaryEntriesForSearch(searchText: String, limit: Int, offset: Int): List<ProductDiaryEntry>
+    fun getProductDiaryEntriesForSearch(
+        searchText: String,
+        limit: Int,
+        offset: Int
+    ): List<ProductDiaryEntry>
 
     @Query("SELECT * FROM recipediaryentry WHERE date = :date")
     fun getRecipeDiaryEntries(date: String): List<RecipeDiaryEntry>
