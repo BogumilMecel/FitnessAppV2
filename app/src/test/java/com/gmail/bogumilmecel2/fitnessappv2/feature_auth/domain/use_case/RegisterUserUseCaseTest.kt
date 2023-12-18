@@ -1,6 +1,6 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.use_case
 
-import com.gmail.bogumilmecel2.auth.ValidateRegisterDataUseCase
+import com.gmail.bogumilmecel2.auth.ValidateAuthDataUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.BaseTest
 import com.gmail.bogumilmecel2.fitnessappv2.common.MockConstants
@@ -18,11 +18,11 @@ import kotlin.test.Test
 internal class RegisterUserUseCaseTest : BaseTest() {
 
     private val authRepository = mockk<AuthRepository>()
-    private val validateRegisterDataUseCase = mockkClass(ValidateRegisterDataUseCase::class)
+    private val validateAuthDataUseCase = mockkClass(ValidateAuthDataUseCase::class)
     private val registerUserUseCase = RegisterUserUseCase(
         authRepository = authRepository,
         resourceProvider = resourceProvider,
-        validateRegisterDataUseCase = validateRegisterDataUseCase
+        validateAuthDataUseCase = validateAuthDataUseCase
     )
 
     @Test
@@ -33,35 +33,35 @@ internal class RegisterUserUseCaseTest : BaseTest() {
 
     @Test
     fun `Check if validation returns invalid email result, resource error is returned`() = runTest {
-        mockValidationResult(result = ValidateRegisterDataUseCase.Result.InvalidEmail)
+        mockValidationResult(result = ValidateAuthDataUseCase.Result.InvalidEmail)
         callTestedMethod().assertIsError(resourceProvider.getString(R.string.please_make_sure_you_have_entered_correct_email))
     }
 
     @Test
     fun `Check if validation returns invalid email length result, resource error is returned`() =
         runTest {
-            mockValidationResult(result = ValidateRegisterDataUseCase.Result.EmailLengthInvalid)
+            mockValidationResult(result = ValidateAuthDataUseCase.Result.EmailLengthInvalid)
             callTestedMethod().assertIsError(resourceProvider.getString(R.string.register_email_length_invalid))
         }
 
     @Test
     fun `Check if validation returns invalid password length result, resource error is returned`() =
         runTest {
-            mockValidationResult(result = ValidateRegisterDataUseCase.Result.PasswordLengthInvalid)
+            mockValidationResult(result = ValidateAuthDataUseCase.Result.PasswordLengthInvalid)
             callTestedMethod().assertIsError(resourceProvider.getString(R.string.please_make_sure_your_password_is_at_least_6_characters_and_is_not_longer_than_24_characters))
         }
 
     @Test
     fun `Check if validation returns invalid username length result, resource error is returned`() =
         runTest {
-            mockValidationResult(result = ValidateRegisterDataUseCase.Result.UsernameLengthInvalid)
+            mockValidationResult(result = ValidateAuthDataUseCase.Result.UsernameLengthInvalid)
             callTestedMethod().assertIsError(resourceProvider.getString(R.string.register_username_length_invalid))
         }
 
     @Test
     fun `Check if validation returns success result and repository returns resource error, resource error is returned`() =
         runTest {
-            mockValidationResult(result = ValidateRegisterDataUseCase.Result.Success)
+            mockValidationResult(result = ValidateAuthDataUseCase.Result.Success)
             mockRepositoryRequest(Resource.Error())
             callTestedMethod().assertIsError()
             verifyRepositoryCall()
@@ -70,7 +70,7 @@ internal class RegisterUserUseCaseTest : BaseTest() {
     @Test
     fun `Check if validation returns success result and repository returns resource success, resource success is returned`() =
         runTest {
-            mockValidationResult(result = ValidateRegisterDataUseCase.Result.Success)
+            mockValidationResult(result = ValidateAuthDataUseCase.Result.Success)
             mockRepositoryRequest()
             callTestedMethod().assertIsSuccess()
             verifyRepositoryCall()
@@ -100,9 +100,9 @@ internal class RegisterUserUseCaseTest : BaseTest() {
         } returns resource
     }
 
-    private fun mockValidationResult(result: ValidateRegisterDataUseCase.Result) {
+    private fun mockValidationResult(result: ValidateAuthDataUseCase.Result) {
         every {
-            validateRegisterDataUseCase.invoke(
+            validateAuthDataUseCase.invoke(
                 username = any(),
                 email = any(),
                 password = any()
