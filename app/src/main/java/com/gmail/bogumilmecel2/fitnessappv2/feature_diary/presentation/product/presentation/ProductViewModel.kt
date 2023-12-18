@@ -24,7 +24,7 @@ class ProductViewModel @Inject constructor(
 ) : BaseViewModel<ProductState, ProductEvent>(
     state = with(ProductScreenDestination.argsFrom(savedStateHandle)) {
         ProductState(
-            weight = if (entryData is ProductEntryData.Editing) entryData.weight else "",
+            weight = if (entryData is ProductEntryData.Editing) entryData.productDiaryEntry.weight.toString() else "",
             date = entryData.dateTransferObject.displayedDate
         )
     }
@@ -80,8 +80,9 @@ class ProductViewModel @Inject constructor(
 
                             is ProductEntryData.Editing -> {
                                 editProductDiaryEntryUseCase(
-                                    productDiaryEntryId = entryData.productDiaryEntryId,
-                                    newWeightStringValue = weight
+                                    productDiaryEntry = entryData.productDiaryEntry,
+                                    product = entryData.product,
+                                    newWeightStringValue = weight,
                                 ).handle {
                                     navigateUp()
                                 }

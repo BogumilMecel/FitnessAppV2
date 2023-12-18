@@ -153,8 +153,10 @@ object AppModule {
     @Provides
     fun provideEditProductDiaryEntryUseCase(
         diaryRepository: DiaryRepository,
+        calculateProductNutritionValuesUseCase: CalculateProductNutritionValuesUseCase
     ): EditProductDiaryEntryUseCase = EditProductDiaryEntryUseCase(
-        diaryRepository = diaryRepository
+        diaryRepository = diaryRepository,
+        calculateProductNutritionValuesUseCase = calculateProductNutritionValuesUseCase
     )
 
     @Singleton

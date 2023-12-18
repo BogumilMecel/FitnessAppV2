@@ -4,7 +4,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.Currency
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.ApiConstants
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.DeleteDiaryEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.DiaryEntriesResponse
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.EditProductDiaryEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.EditRecipeDiaryEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductDiaryHistoryItem
@@ -73,7 +72,7 @@ interface DiaryApi {
 
     @PUT("/diaryEntries/product")
     suspend fun editProductDiaryEntry(
-        @Body editProductDiaryEntryRequest: EditProductDiaryEntryRequest
+        @Body productDiaryEntry: ProductDiaryEntry
     )
 
     @PUT("/diaryEntries/recipe")
