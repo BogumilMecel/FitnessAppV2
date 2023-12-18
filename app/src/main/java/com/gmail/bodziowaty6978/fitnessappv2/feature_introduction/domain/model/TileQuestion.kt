@@ -2,98 +2,61 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.model
 
 import com.gmail.bodziowaty6978.fitnessappv2.R
 
-data class GenderQuestion(
-    override val questionType: QuestionType = QuestionType.TILE,
-    override val questionName: QuestionName = QuestionName.GENDER,
-    var selectedGender: Gender = Gender.MALE
-) : Question {
-    enum class Gender {
-        MALE, FEMALE;
+enum class Gender: Tile {
+    MALE, FEMALE;
 
-        fun getDisplayValue() = when (this) {
-            MALE -> R.string.introduction_male
-            FEMALE -> R.string.introduction_female
-        }
+    override fun getDisplayValue() = when (this) {
+        MALE -> R.string.introduction_male
+        FEMALE -> R.string.introduction_female
     }
 }
 
-data class AgeQuestion(
-    override val questionType: QuestionType = QuestionType.INPUT,
-    override val questionName: QuestionName = QuestionName.AGE,
-    var value: String = ""
-) : Question
+enum class TypeOfWork: Tile {
+    SEDENTARY, MIXED, PHYSICAL;
 
-data class HeightQuestion(
-    override val questionType: QuestionType = QuestionType.INPUT,
-    override val questionName: QuestionName = QuestionName.AGE,
-    var value: String = ""
-) : Question
-
-data class CurrentWeightQuestion(
-    override val questionType: QuestionType = QuestionType.INPUT,
-    override val questionName: QuestionName = QuestionName.AGE,
-    var value: String = ""
-) : Question
-
-data class WorkQuestion(
-    override val questionType: QuestionType = QuestionType.TILE,
-    override val questionName: QuestionName = QuestionName.AGE,
-    var selectedTypeOfWork: TypeOfWork = TypeOfWork.SEDENTARY,
-) : Question {
-
-    enum class TypeOfWork {
-        SEDENTARY, MIXED, PHYSICAL;
-
-        fun getDisplayValue() = when (this) {
-            SEDENTARY -> R.string.introduction_sedentary
-            MIXED -> R.string.introduction_mixed
-            PHYSICAL -> R.string.introduction_physical
-        }
+    override fun getDisplayValue() = when (this) {
+        SEDENTARY -> R.string.introduction_sedentary
+        MIXED -> R.string.introduction_mixed
+        PHYSICAL -> R.string.introduction_physical
     }
 }
 
-data class TrainingQuestion(
-    override val questionType: QuestionType = QuestionType.TILE,
-    override val questionName: QuestionName = QuestionName.AGE,
-    var selectedTrainingFrequency: TrainingFrequency = TrainingFrequency.NONE,
-) : Question {
-    enum class TrainingFrequency {
-        NONE, LOW, AVERAGE, HIGH, VERY_HIGH;
+enum class TrainingFrequency: Tile {
+    NONE, LOW, AVERAGE, HIGH, VERY_HIGH;
 
-        fun getDisplayValue() = when (this) {
-            NONE -> R.string.introduction_none
-            LOW -> R.string.introduction_training_low
-            AVERAGE -> R.string.introduction_training_average
-            HIGH -> R.string.introduction_training_high
-            VERY_HIGH -> R.string.introduction_training_very_high
-        }
+    override fun getDisplayValue() = when (this) {
+        NONE -> R.string.introduction_none
+        LOW -> R.string.introduction_training_low
+        AVERAGE -> R.string.introduction_training_average
+        HIGH -> R.string.introduction_training_high
+        VERY_HIGH -> R.string.introduction_training_very_high
     }
 }
 
-data class ActivityQuestion(
-    override val questionType: QuestionType = QuestionType.TILE,
-    override val questionName: QuestionName = QuestionName.AGE,
-    var selectedActivityLevel: ActivityLevel = ActivityLevel.LOW,
-) : Question {
-    enum class ActivityLevel {
-        LOW, MODERATE, HIGH, VERY_HIGH;
+enum class ActivityLevel: Tile {
+    LOW, MODERATE, HIGH, VERY_HIGH;
 
-        fun getDisplayValue() = when (this) {
-            LOW -> R.string.introduction_activity_low
-            MODERATE -> R.string.introduction_activity_moderate
-            HIGH -> R.string.introduction_activity_high
-            VERY_HIGH -> R.string.introduction_activity_very_high
+    companion object {
+        fun getDisplayValues() = ActivityLevel.values().map {
+            it.getDisplayValue()
         }
+    }
+
+    override fun getDisplayValue() = when (this) {
+        LOW -> R.string.introduction_activity_low
+        MODERATE -> R.string.introduction_activity_moderate
+        HIGH -> R.string.introduction_activity_high
+        VERY_HIGH -> R.string.introduction_activity_very_high
     }
 }
 
-data class DesiredWeightQuestion(
-    override val questionType: QuestionType = QuestionType.INPUT,
-    override val questionName: QuestionName = QuestionName.DESIRED_WEIGHT,
-    var selectedDesiredWeight: DesiredWeight = DesiredWeight.LOOSE
-) : Question {
-    enum class DesiredWeight {
-        LOOSE, GAIN
+enum class DesiredWeight : Tile {
+    LOOSE,
+    GAIN;
+
+    override fun getDisplayValue() = when(this) {
+        LOOSE -> R.string.introduction_loose
+        GAIN -> R.string.introduction_gain
     }
 }
 
@@ -110,8 +73,26 @@ enum class QuestionName {
         ACTIVITY_LEVEL -> R.string.how_would_you_describe_your_activity_level_during_a_day
         DESIRED_WEIGHT -> R.string.what_is_your_desired_weight
     }
+
+    fun getQuestionType() = when (this) {
+        GENDER, TYPE_OF_WORK, TRAINING_FREQUENCY, ACTIVITY_LEVEL, DESIRED_WEIGHT -> QuestionType.TILE
+        AGE, HEIGHT, CURRENT_WEIGHT -> QuestionType.INPUT
+    }
+
+    fun getQuestionTiles(): List<Tile> = when (this) {
+            GENDER -> Gender.values()
+            TYPE_OF_WORK -> TypeOfWork.values()
+            ACTIVITY_LEVEL -> ActivityLevel.values()
+            TRAINING_FREQUENCY -> TrainingFrequency.values()
+            DESIRED_WEIGHT -> DesiredWeight.values()
+            else -> emptyArray()
+    }.toList()
 }
 
 enum class QuestionType {
     TILE, INPUT
+}
+
+interface Tile {
+    fun getDisplayValue(): Int
 }
