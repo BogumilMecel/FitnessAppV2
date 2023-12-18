@@ -19,7 +19,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.searc
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_product.NewProductEntryData
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.presentation.ProductEntryData
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.recipe.RecipeEntryData
-import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator.navigate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.update
@@ -428,18 +427,8 @@ class SearchViewModel @Inject constructor(
                     }
                 }
             ) { product ->
-                if (entryData is SearchEntryData.DiaryArguments) {
-                    product?.let {
-                        navigate(
-                            ProductScreenDestination(
-                                entryData = ProductEntryData.Adding(
-                                    product = product,
-                                    mealName = entryData.mealName,
-                                    dateTransferObject = entryData.dateTransferObject
-                                ),
-                            )
-                        )
-                    }
+                product?.let {
+                    navigateToProductScreen(it)
                 }
             }
         }

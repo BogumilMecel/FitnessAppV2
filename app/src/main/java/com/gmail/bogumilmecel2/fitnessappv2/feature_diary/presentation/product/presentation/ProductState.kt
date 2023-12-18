@@ -14,5 +14,6 @@ data class ProductState(
     val productName: String = "",
     val productMeasurementUnit: MeasurementUnit = MeasurementUnit.GRAMS,
     val headerPrimaryText: String = "",
-    val headerSecondaryText: String = ""
+    val headerSecondaryText: String = "",
+    val submitPriceButtonVisible: Boolean = true
 )
