@@ -7,7 +7,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.DeleteDiaryEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.DiaryEntriesResponse
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductDiaryHistoryItem
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductPrice
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.RecipePriceResponse
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.UserDiaryItemsResponse
@@ -59,10 +58,7 @@ interface DiaryRepository {
     ): Resource<ProductPrice>
 
     suspend fun addNewRecipe(newRecipeRequest: NewRecipeRequest): Resource<Recipe>
-    suspend fun getOnlineDiaryHistory(
-        page: Int,
-        searchText: String?
-    ): Resource<List<ProductDiaryHistoryItem>>
+    suspend fun getOfflineDiaryEntries(limit: Int, offset: Int, searchText: String): Resource<List<ProductDiaryEntry>>
     suspend fun getUserDiaryItems(): Resource<UserDiaryItemsResponse>
     suspend fun insertUserProductsLocally(userProducts: List<Product>): Resource<Unit>
     suspend fun insertUserRecipesLocally(userRecipes: List<Recipe>): Resource<Unit>
