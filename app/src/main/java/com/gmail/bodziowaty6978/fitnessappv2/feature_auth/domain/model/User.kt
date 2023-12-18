@@ -12,6 +12,7 @@ data class User(
     val username:String = "",
     val nutritionValues: NutritionValues? = null,
     val userInformation: UserInformation? = null,
+    val favoriteUserRecipesIds: List<String>?,
     val latestLogEntry: LogEntry? = null,
-    val weightEntries: List<WeightEntry> = emptyList()
+    val weightEntries: List<WeightEntry>? = null
 )

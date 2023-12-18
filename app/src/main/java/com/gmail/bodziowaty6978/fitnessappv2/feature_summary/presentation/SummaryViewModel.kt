@@ -1,11 +1,9 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_summary.presentation
 
 import androidx.lifecycle.viewModelScope
-import com.gmail.bodziowaty6978.fitnessappv2.FitnessApp
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.singleton.CurrentDate
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
-import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.domain.use_case.SummaryUseCases
 import com.gmail.bodziowaty6978.fitnessappv2.feature_weight.domain.model.WeightEntry
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,18 +17,10 @@ import javax.inject.Inject
 @HiltViewModel
 class SummaryViewModel @Inject constructor(
     private val summaryUseCases: SummaryUseCases,
-    private val resourceProvider: ResourceProvider
 ) : BaseViewModel() {
 
     private val _state = MutableStateFlow(SummaryState())
     val summaryState: StateFlow<SummaryState> = _state
-
-    init {
-        getLatestLogEntry()
-        getCaloriesSum()
-        getLatestWeightEntries()
-        initWantedCalories()
-    }
 
     fun onEvent(event: SummaryEvent) {
         when (event) {
@@ -54,6 +44,13 @@ class SummaryViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun initializeData() {
+        getLatestLogEntry()
+        getCaloriesSum()
+        getLatestWeightEntries()
+        initWantedCalories()
     }
 
     private fun saveNewWeightEntry(value: Double) {
@@ -106,7 +103,7 @@ class SummaryViewModel @Inject constructor(
         viewModelScope.launch {
             _state.update {
                 it.copy(
-                    wantedCalories = FitnessApp.getWantedNutritionValues().calories
+                    wantedCalories = sharedPreferencesUtils.getWantedNutritionValues().calories
                 )
             }
         }
@@ -116,7 +113,7 @@ class SummaryViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             _state.update {
                 it.copy(
-                    logStreak = FitnessApp.getLatestLogEntry().streak
+                    logStreak = sharedPreferencesUtils.getLatestLogEntry().streak
                 )
             }
         }

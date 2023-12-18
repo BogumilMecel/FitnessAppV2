@@ -1,14 +1,12 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.diary
 
 import androidx.lifecycle.viewModelScope
-import com.gmail.bodziowaty6978.fitnessappv2.FitnessApp
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.NavigationActions
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.singleton.CurrentDate
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
-import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Meal
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.diary.DeleteDiaryEntry
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.diary.GetDiaryEntries
@@ -26,17 +24,10 @@ class DiaryViewModel @Inject constructor(
     private val getDiaryEntries: GetDiaryEntries,
     private val deleteDiaryEntry: DeleteDiaryEntry,
     private val updateDiaryEntriesListAfterDelete: UpdateDiaryEntriesListAfterDelete,
-    private val resourceProvider: ResourceProvider,
 ) : BaseViewModel() {
 
     private val _state = MutableStateFlow(DiaryState())
     val state: StateFlow<DiaryState> = _state
-
-    init {
-        initMeals()
-        getDiaryEntries()
-        initWantedNutritionValues()
-    }
 
     private fun initMeals() {
         val mealNames = resourceProvider.getStringArray(R.array.meal_names)
@@ -69,7 +60,7 @@ class DiaryViewModel @Inject constructor(
             is DiaryEvent.LongClickedDiaryEntry -> {
                 _state.update {
                     it.copy(
-                        longClickedDiaryEntry = event.diaryEntry,
+                        longClickedDiaryItem = event.diaryItem,
                         isDialogShowed = true
                     )
                 }
@@ -85,7 +76,7 @@ class DiaryViewModel @Inject constructor(
             }
 
             is DiaryEvent.ClickedDeleteInDialog -> {
-                _state.value.longClickedDiaryEntry?.let { diaryEntry ->
+                _state.value.longClickedDiaryItem?.let { diaryEntry ->
                     viewModelScope.launch(Dispatchers.IO) {
                         val result = deleteDiaryEntry(diaryEntry.id)
                         if (result is CustomResult.Error) {
@@ -115,11 +106,17 @@ class DiaryViewModel @Inject constructor(
         }
     }
 
+    fun initData() {
+        initMeals()
+        getDiaryEntries()
+        initWantedNutritionValues()
+    }
+
     private fun initWantedNutritionValues() {
         viewModelScope.launch {
             _state.update {
                 it.copy(
-                    wantedNutritionValues = FitnessApp.getWantedNutritionValues()
+                    wantedNutritionValues = sharedPreferencesUtils.getWantedNutritionValues()
                 )
             }
         }

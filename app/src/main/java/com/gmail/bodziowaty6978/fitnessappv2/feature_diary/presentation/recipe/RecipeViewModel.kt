@@ -1,0 +1,133 @@
+package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.recipe
+
+import androidx.lifecycle.viewModelScope
+import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.NavigationActions
+import com.gmail.bodziowaty6978.fitnessappv2.common.data.singleton.CurrentDate
+import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.multiplyBy
+import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
+import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.Recipe
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.product.CreatePieChartData
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.recipe.PostRecipeDiaryEntryUseCase
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.NutritionData
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
+
+@HiltViewModel
+class RecipeViewModel @Inject constructor(
+    private val createPieChartData: CreatePieChartData,
+    private val postRecipeDiaryEntryUseCase: PostRecipeDiaryEntryUseCase
+) : BaseViewModel() {
+
+    private val _state = MutableStateFlow(RecipeState())
+    val state: StateFlow<RecipeState> = _state
+
+    fun onEvent(event: RecipeEvent) {
+        when (event) {
+            is RecipeEvent.ClickedBackArrow -> navigateBack()
+            is RecipeEvent.ClickedFavorite -> {
+                onFavoriteClicked()
+            }
+
+            is RecipeEvent.EnteredPortions -> {
+                _state.update {
+                    it.copy(
+                        portions = event.value
+                    )
+                }
+                recalculateNutritionData()
+            }
+
+            is RecipeEvent.ClickedExpandIngredientsList -> {
+                _state.update {
+                    it.copy(
+                        isIngredientsListExpanded = !_state.value.isIngredientsListExpanded
+                    )
+                }
+            }
+
+            is RecipeEvent.ClickedSaveRecipeDiaryEntry -> {
+                viewModelScope.launch {
+                    val resource = postRecipeDiaryEntryUseCase(
+                        dateModel = CurrentDate.dateModel(resourceProvider = resourceProvider),
+                        mealName = _state.value.mealName,
+                        recipe = _state.value.recipe,
+                        servingsString = _state.value.portions
+                    )
+
+                    when (resource) {
+                        is Resource.Success -> {
+                            if (resource.data) {
+                                navigate(NavigationActions.Recipe.recipeToDiary())
+                            } else {
+                                showSnackbarError(message = resourceProvider.getUnknownErrorString())
+                            }
+                        }
+
+                        is Resource.Error -> {
+                            showSnackbarError(message = resource.uiText)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    fun initializeRecipe(recipe: Recipe) = _state.update {
+        it.copy(
+            recipe = recipe,
+            isFavorite = sharedPreferencesUtils.getFavoriteRecipesIds().contains(recipe.id)
+        )
+    }.also {
+        initializeRecipeData()
+    }
+
+    private fun onFavoriteClicked() {
+        _state.update {
+            it.copy(
+                isFavorite = !_state.value.isFavorite
+            )
+        }
+
+    }
+
+    private fun recalculateNutritionData() {
+        assignNutritionValues()
+    }
+
+    private fun initializeRecipeData() {
+        _state.value.recipe.nutritionValues.let { recipeNutritionValues ->
+            _state.update {
+                it.copy(
+                    nutritionData = NutritionData(
+                        pieEntries = createPieChartData(nutritionValues = recipeNutritionValues)
+                    ),
+                )
+            }
+            assignNutritionValues()
+        }
+    }
+
+    private fun assignNutritionValues() {
+        val recipe = _state.value.recipe
+        val recipeServings = if (recipe.servings == 0) 1.0 else recipe.servings.toDouble()
+        recipe.nutritionValues.multiplyBy(
+            number = _state.value.portions.toDoubleOrNull()?.let { portions ->
+                portions / recipeServings
+            } ?: (1.0 / recipeServings)
+        ).let { calculatedNutritionValues ->
+            _state.update {
+                it.copy(
+                    nutritionData = _state.value.nutritionData.copy(
+                        nutritionValues = calculatedNutritionValues
+                    )
+                )
+            }
+        }
+    }
+}

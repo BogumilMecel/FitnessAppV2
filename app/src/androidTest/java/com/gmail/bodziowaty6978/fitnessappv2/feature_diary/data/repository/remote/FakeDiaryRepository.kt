@@ -24,7 +24,7 @@ class FakeDiaryRepository: DiaryRepository {
         )
     }
 
-    override suspend fun addDiaryEntry(diaryEntry: DiaryEntry): CustomResult {
+    override suspend fun addProductDiaryEntry(diaryEntry: DiaryEntry): CustomResult {
         diaryEntries.add(DiaryEntryWithId("$index",diaryEntry))
         return CustomResult.Success
     }

@@ -8,7 +8,6 @@ import com.gmail.bodziowaty6978.fitnessappv2.common.data.singleton.CurrentDate
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
-import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.product.ProductUseCases
@@ -25,7 +24,6 @@ import javax.inject.Inject
 @HiltViewModel
 class ProductViewModel @Inject constructor(
     private val productUseCases: ProductUseCases,
-    private val resourceProvider: ResourceProvider,
     savedStateHandle: SavedStateHandle
 ) : BaseViewModel() {
 
@@ -162,6 +160,12 @@ class ProductViewModel @Inject constructor(
             }
         }
     }
+
+    fun initializeProduct(product: Product) = _state.update {
+        it.copy(
+            product = product
+        )
+    }.also { initializeProductData() }
 
     private fun initializeProductData() {
         _state.update {

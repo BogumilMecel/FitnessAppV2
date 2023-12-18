@@ -1,6 +1,5 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.new_recipe
 
-import com.gmail.bodziowaty6978.fitnessappv2.FitnessApp
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
@@ -19,7 +18,9 @@ class AddNewRecipe(
         time: String,
         servings: String,
         recipeName: String,
-        nutritionValues: NutritionValues
+        nutritionValues: NutritionValues,
+        userId: String,
+        username: String
     ): Resource<Recipe> {
         return if (ingredients.size < 2) {
             Resource.Error(resourceProvider.getString(R.string.empty_recipe_ingredients))
@@ -37,9 +38,9 @@ class AddNewRecipe(
                     servings = servingsValue,
                     timestamp = System.currentTimeMillis(),
                     name = recipeName,
-                    username = FitnessApp.getUsername(),
+                    username = username,
                     nutritionValues = nutritionValues,
-                    userId = FitnessApp.getUserId()
+                    userId = userId
                 )
                 diaryRepository.addNewRecipe(
                     recipe = recipe,

@@ -31,8 +31,10 @@ fun NutritionBottomItem(
             modifier = Modifier.padding(bottom = 3.dp, top = 3.dp)
         )
 
+        val progress = currentValue.toFloat() / wantedValue.toFloat()
+
         LinearProgressIndicator(
-            progress = currentValue.toFloat() / wantedValue.toFloat(),
+            progress = if (!progress.isNaN()) progress else 0f,
             color = progressColor
         )
 

@@ -75,7 +75,7 @@ fun CaloriesSumSection(
                 Spacer(modifier = Modifier.height(4.dp))
 
                 LinearProgressIndicator(
-                    progress = progress
+                    progress = if (!progress.isNaN()) progress else 0f
                 )
             }
         }

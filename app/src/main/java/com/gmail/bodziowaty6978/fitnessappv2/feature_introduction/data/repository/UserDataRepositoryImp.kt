@@ -1,6 +1,6 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.data.repository
 
-import com.gmail.bodziowaty6978.fitnessappv2.FitnessApp
+import com.gmail.bodziowaty6978.fitnessappv2.common.data.utils.CustomSharedPreferencesUtils
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.UserInformation
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseRepository
@@ -12,7 +12,8 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.reposit
 
 class UserDataRepositoryImp(
     private val userDataApi: UserDataApi,
-    private val resourceProvider: ResourceProvider
+    private val resourceProvider: ResourceProvider,
+    private val customSharedPreferencesUtils: CustomSharedPreferencesUtils
 ) : UserDataRepository, BaseRepository(resourceProvider) {
 
     override suspend fun saveNutritionValues(nutritionValues: NutritionValues): Resource<Boolean> {
@@ -20,7 +21,7 @@ class UserDataRepositoryImp(
             val wereAcknowledged =
                 userDataApi.saveNutritionValues(nutritionValues = nutritionValues)
             if (wereAcknowledged) {
-                FitnessApp.saveWantedNutritionValues(nutritionValues)
+                customSharedPreferencesUtils.saveWantedNutritionValues(nutritionValues)
                 Resource.Success(true)
             } else Resource.Error(resourceProvider.getUnknownErrorString())
         } catch (e: Exception) {
@@ -35,7 +36,7 @@ class UserDataRepositoryImp(
             val wereAcknowledged =
                 userDataApi.saveUserInformation(userInformation = userInformation)
             if (wereAcknowledged) {
-                FitnessApp.saveUserInformation(userInformation)
+                customSharedPreferencesUtils.saveUserInformation(userInformation)
                 Resource.Success(true)
             } else Resource.Error(resourceProvider.getUnknownErrorString())
         } catch (e: Exception) {

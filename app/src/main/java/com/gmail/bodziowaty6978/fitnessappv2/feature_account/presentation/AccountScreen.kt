@@ -6,12 +6,12 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.BackHandler
@@ -22,12 +22,15 @@ import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.TextGr
 import com.gmail.bodziowaty6978.fitnessappv2.feature_account.presentation.components.LogOutButton
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.ChartSection
 
-@OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 fun AccountScreen(
     viewModel: AccountViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle().value
+
+    LaunchedEffect(key1 = true) {
+        viewModel.initData()
+    }
 
     BackHandler {
         viewModel.onEvent(AccountEvent.BackPressed)

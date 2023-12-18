@@ -8,7 +8,7 @@ data class SearchState(
     val items: List<Product> = emptyList(),
     val productSearchBarText: String = "",
     val recipesSearchBarText: String = "",
-    val searchBarPlaceholderText: String,
+    val searchBarPlaceholderText: String = "",
     val isScannerVisible: Boolean = false,
     val hasPermissionDialogBeenShowed: Boolean = false,
     val barcode: String? = null,
