@@ -1,4 +1,4 @@
-package com.gmail.bogumilmecel2.fitnessappv2.components.theme
+package com.gmail.bogumilmecel2.ui.theme
 
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -8,7 +8,7 @@ import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
-import com.gmail.bogumilmecel2.fitnessappv2.R
+import com.gmail.bogumilmecel2.ui.R
 
 data class FitnessAppTypography(
     val Button: TextStyle = text(fontSize = 14.sp, fontWeight = FontWeight.Medium),
