@@ -9,6 +9,6 @@ class SearchForRecipes(
 ) {
 
     suspend operator fun invoke(searchText: String): Resource<List<Recipe>>{
-        return diaryRepository.searchForRecipes(searchText = searchText.ifEmpty { null })
+        return diaryRepository.searchForRecipes(searchText = searchText)
     }
 }

@@ -5,7 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.NavigationActions
-import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigator
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.TextFieldState
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
@@ -20,7 +19,6 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val authUseCases: AuthUseCases,
-    private val navigator: Navigator,
     resourceProvider: ResourceProvider
 ) : BaseViewModel() {
 
@@ -56,11 +54,11 @@ class LoginViewModel @Inject constructor(
             }
 
             is AuthEvent.RegisterLoginButtonClicked -> {
-                navigator.navigate(NavigationActions.LoginScreen.loginToRegister())
+                navigate(NavigationActions.LoginScreen.loginToRegister())
             }
 
             is AuthEvent.ForgotButtonClicked -> {
-                navigator.navigate(NavigationActions.LoginScreen.loginToReset())
+                navigate(NavigationActions.LoginScreen.loginToReset())
             }
 
             else -> {
@@ -73,7 +71,7 @@ class LoginViewModel @Inject constructor(
                     if (resource is CustomResult.Error) {
                         showSnackbarError(resource.message)
                     } else {
-                        navigator.navigate(NavigationActions.LoginScreen.loginToLoading())
+                        navigate(NavigationActions.LoginScreen.loginToLoading())
                     }
                     _isLoading.value = false
                 }

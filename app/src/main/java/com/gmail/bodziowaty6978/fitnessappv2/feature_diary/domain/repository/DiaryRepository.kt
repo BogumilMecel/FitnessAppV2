@@ -9,9 +9,9 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.R
 
 interface DiaryRepository {
     suspend fun getDiaryEntries(timestamp: Long): Resource<List<DiaryEntry>>
-    suspend fun searchForProducts(searchText: String?): Resource<List<Product>>
+    suspend fun searchForProducts(searchText: String): Resource<List<Product>>
     suspend fun searchForProductWithBarcode(barcode: String): Resource<Product>
-    suspend fun searchForRecipes(searchText: String?): Resource<List<Recipe>>
+    suspend fun searchForRecipes(searchText: String): Resource<List<Recipe>>
     suspend fun getProductHistory(): Resource<List<Product>>
     suspend fun addDiaryEntry(diaryEntry: DiaryEntry): Resource<DiaryEntry>
     suspend fun deleteDiaryEntry(diaryEntryId: String): CustomResult

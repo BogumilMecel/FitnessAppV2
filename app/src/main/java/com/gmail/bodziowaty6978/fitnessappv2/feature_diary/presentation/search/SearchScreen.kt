@@ -117,7 +117,7 @@ fun SearchScreen(
 
                         1 -> {
                             SearchRecipeSection(
-                                recipe = state.recipes,
+                                recipes = state.recipes,
                                 onEvent = {
                                     viewModel.onEvent(it)
                                 }

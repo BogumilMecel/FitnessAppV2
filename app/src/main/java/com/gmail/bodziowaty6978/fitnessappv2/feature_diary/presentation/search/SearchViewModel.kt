@@ -4,7 +4,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.NavigationActions
-import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigator
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
@@ -19,7 +18,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val navigator: Navigator,
     private val searchDiaryUseCases: SearchDiaryUseCases,
     private val resourceProvider: ResourceProvider,
     private val savedStateHandle: SavedStateHandle,
@@ -53,7 +51,7 @@ class SearchViewModel @Inject constructor(
             }
 
             is SearchEvent.ClickedBackArrow -> {
-                navigator.navigate(NavigationActions.General.navigateUp())
+                navigateBack()
             }
 
             is SearchEvent.ClickedSearch -> {
@@ -78,11 +76,11 @@ class SearchViewModel @Inject constructor(
                 }
             }
 
-            is SearchEvent.ClickedSearchItem -> {
+            is SearchEvent.ClickedProduct -> {
                 savedStateHandle.get<String>("mealName")?.let { mealName ->
                     navigator.navigate(
                         NavigationActions.SearchScreen.searchToProduct(
-                            product = event.item,
+                            product = event.product,
                             mealName = mealName
                         )
                     )
@@ -141,6 +139,10 @@ class SearchViewModel @Inject constructor(
                         currentTabIndex = 1
                     )
                 }
+            }
+
+            is SearchEvent.ClickedRecipe -> {
+                navigator.navigate(NavigationActions.SearchScreen.searchToRecipe(event.recipe))
             }
         }
     }

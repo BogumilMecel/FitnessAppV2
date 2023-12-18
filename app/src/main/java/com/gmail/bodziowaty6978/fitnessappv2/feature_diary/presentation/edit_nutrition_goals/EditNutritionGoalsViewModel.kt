@@ -3,7 +3,6 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.edit_nu
 import androidx.lifecycle.viewModelScope
 import com.gmail.bodziowaty6978.fitnessappv2.FitnessApp
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.NavigationActions
-import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigator
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.use_case.CalculateNutritionValuesPercentages
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.use_case.SaveNutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
@@ -18,7 +17,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class EditNutritionGoalsViewModel @Inject constructor(
-    private val navigator: Navigator,
     private val calculateNutritionValuesPercentages: CalculateNutritionValuesPercentages,
     private val saveNutritionValues: SaveNutritionValues
 ) : BaseViewModel() {
@@ -79,7 +77,7 @@ class EditNutritionGoalsViewModel @Inject constructor(
             }
 
             is EditNutritionGoalsEvent.BackArrowPressed -> {
-                navigator.navigate(NavigationActions.General.navigateUp())
+                navigate(NavigationActions.General.navigateUp())
             }
 
             is EditNutritionGoalsEvent.SaveButtonClicked -> {
@@ -96,7 +94,7 @@ class EditNutritionGoalsViewModel @Inject constructor(
                 }
 
                 is Resource.Success -> {
-                    navigator.navigate(NavigationActions.EditNutritionGoals.editNutritionGoalsToAccount())
+                    navigate(NavigationActions.EditNutritionGoals.editNutritionGoalsToAccount())
                 }
             }
         }

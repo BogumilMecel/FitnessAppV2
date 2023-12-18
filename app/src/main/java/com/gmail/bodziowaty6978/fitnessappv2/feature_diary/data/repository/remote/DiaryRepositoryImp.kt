@@ -36,7 +36,7 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun searchForProducts(searchText: String?): Resource<List<Product>> {
+    override suspend fun searchForProducts(searchText: String): Resource<List<Product>> {
         return try {
             val items = diaryApi.searchForProducts(searchText = searchText)
             return Resource.Success(data = items)
@@ -55,7 +55,7 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun searchForRecipes(searchText: String?): Resource<List<Recipe>> {
+    override suspend fun searchForRecipes(searchText: String): Resource<List<Recipe>> {
         return try {
             Resource.Success(data = diaryApi.searchForRecipes(searchText))
         } catch (e: Exception) {

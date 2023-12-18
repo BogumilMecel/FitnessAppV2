@@ -39,6 +39,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.edit_nut
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_product.NewProductScreen
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_recipe.NewRecipeScreen
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.ProductScreen
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.recipe.RecipeScreen
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search.SearchScreen
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.presentation.IntroductionScreen
 import com.gmail.bodziowaty6978.fitnessappv2.feature_splash.loading.presentation.SplashScreen

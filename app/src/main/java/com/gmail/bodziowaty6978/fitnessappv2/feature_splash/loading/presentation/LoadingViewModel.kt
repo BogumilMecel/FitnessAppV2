@@ -3,7 +3,6 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_splash.loading.presentatio
 import androidx.lifecycle.viewModelScope
 import com.gmail.bodziowaty6978.fitnessappv2.FitnessApp
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.NavigationActions
-import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigator
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.use_case.GetToken
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
@@ -18,7 +17,6 @@ import javax.inject.Inject
 class LoadingViewModel @Inject constructor(
     private val loadingRepository: LoadingRepository,
     private val getToken: GetToken,
-    private val navigator: Navigator,
     private val getLatestLogEntry: GetLatestLogEntry
 ) : BaseViewModel() {
 
@@ -27,17 +25,17 @@ class LoadingViewModel @Inject constructor(
             if (it.nutritionValues != null && it.userInformation != null) {
                 requestLatestLogEntry()
             } else {
-                navigator.navigate(NavigationActions.LoadingScreen.loadingToIntroduction())
+                navigate(NavigationActions.LoadingScreen.loadingToIntroduction())
             }
         } ?: kotlin.run {
-            navigator.navigate(NavigationActions.LoadingScreen.loadingToLogin())
+            navigate(NavigationActions.LoadingScreen.loadingToLogin())
         }
     }
 
     private suspend fun requestLatestLogEntry() {
         getLatestLogEntry(logRequest = LogRequest(timestamp = System.currentTimeMillis())).data?.let {
             FitnessApp.updateLatestLogEntry(it)
-            navigator.navigate(NavigationActions.LoadingScreen.loadingToSummary())
+            navigate(NavigationActions.LoadingScreen.loadingToSummary())
         }
     }
 
@@ -46,7 +44,7 @@ class LoadingViewModel @Inject constructor(
             getToken()?.let {
                 authenticateUser()
             } ?: kotlin.run {
-                navigator.navigate(NavigationActions.LoadingScreen.loadingToLogin())
+                navigate(NavigationActions.LoadingScreen.loadingToLogin())
             }
         }
     }
@@ -55,7 +53,7 @@ class LoadingViewModel @Inject constructor(
         if (loadingRepository.authenticateUser() is CustomResult.Success) {
             checkUser()
         } else {
-            navigator.navigate(NavigationActions.LoadingScreen.loadingToLogin())
+            navigate(NavigationActions.LoadingScreen.loadingToLogin())
         }
     }
 }

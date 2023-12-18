@@ -89,9 +89,11 @@ object NavigationActions {
         fun accountToLogin() = object : NavigationAction {
             override val destination: String = AuthScreen.LoginAuthScreen.route
         }
+
         fun accountToEditNutritionGoals() = object : NavigationAction {
             override val destination: String = Screen.EditNutritionGoalsScreen.route
         }
+
         fun accountToSummary() = object : NavigationAction {
             override val destination: String = BottomBarScreen.Summary.route
         }
@@ -102,6 +104,7 @@ object NavigationActions {
         fun diaryToSearch(mealName: String) = object : NavigationAction {
             override val destination: String = Screen.SearchScreen.route + "?mealName=$mealName"
         }
+
         fun diaryToSummary() = object : NavigationAction {
             override val destination: String = BottomBarScreen.Summary.route
         }
@@ -112,12 +115,14 @@ object NavigationActions {
     object SearchScreen {
         fun searchToNewProduct(mealName: String = "Breakfast", barcode: String? = null) =
             object : NavigationAction {
-                override val destination: String = Screen.NewProductScreen.route + "?mealName=$mealName" + "&barcode=$barcode"
+                override val destination: String =
+                    Screen.NewProductScreen.route + "?mealName=$mealName" + "&barcode=$barcode"
             }
 
         fun searchToProduct(product: Product, mealName: String) = object :
             NavigationAction {
-            override val destination: String = Screen.ProductScreen.route + "?mealName=$mealName" + "&product=${
+            override val destination: String =
+                Screen.ProductScreen.route + "?mealName=$mealName" + "&product=${
                     Gson().toJson(product)
                 }"
         }
@@ -145,7 +150,7 @@ object NavigationActions {
             override val destination: String =
                 Screen.ProductScreen.route + "?mealName=$mealName" + "&product=${
                     Gson().toJson(product)
-                }" 
+                }"
         }
     }
 
@@ -166,7 +171,7 @@ object NavigationActions {
     }
 
     object EditNutritionGoals {
-        fun  editNutritionGoalsToAccount() = object : NavigationAction {
+        fun editNutritionGoalsToAccount() = object : NavigationAction {
             override val destination: String = BottomBarScreen.Account.route
         }
     }
