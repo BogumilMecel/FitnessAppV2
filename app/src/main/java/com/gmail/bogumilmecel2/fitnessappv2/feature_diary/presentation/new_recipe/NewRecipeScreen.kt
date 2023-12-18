@@ -40,14 +40,14 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_recip
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_recipe.components.RecipePriceSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_recipe.components.RecipeUserInputSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.presentation.components.ProductMainSection
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.componens.ForEachSearchList
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.componens.SearchList
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.shared.ProductItemDialog
 import com.gmail.bogumilmecel2.ui.components.base.CustomBasicTextField
 import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
 import com.gmail.bogumilmecel2.ui.components.base.IconButtonParams
 import com.gmail.bogumilmecel2.ui.components.base.IconVector
+import com.gmail.bogumilmecel2.ui.components.complex.ForEachSearchList
 import com.gmail.bogumilmecel2.ui.components.complex.HeaderRow
+import com.gmail.bogumilmecel2.ui.components.complex.SearchList
 import com.ramcosta.composedestinations.annotation.Destination
 
 @Destination(navArgsDelegate = NewRecipeNavArguments::class)

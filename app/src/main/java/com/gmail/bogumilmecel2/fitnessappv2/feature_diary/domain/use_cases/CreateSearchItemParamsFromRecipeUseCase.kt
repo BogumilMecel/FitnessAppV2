@@ -4,7 +4,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.multiplyBy
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Recipe
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.componens.SearchItemParams
+import com.gmail.bogumilmecel2.ui.components.complex.SearchItemParams
 
 class CreateSearchItemParamsFromRecipeUseCase(private val resourceProvider: ResourceProvider) {
     operator fun invoke(
