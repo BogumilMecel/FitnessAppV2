@@ -56,7 +56,7 @@ fun SearchScreen(
     val cameraPermissionErrorMessage = stringResource(id = R.string.camera_permission_is_required_for_this_feature_to_be_available)
 
     LaunchedEffect(key1 = cameraPermissionState){
-        if(cameraPermissionState.status is PermissionStatus.Denied){
+        if(cameraPermissionState.status is PermissionStatus.Denied&&searchState.hasPermissionDialogBeenShowed){
             scaffoldState.snackbarHostState.showSnackbar(cameraPermissionErrorMessage)
         }
     }
@@ -65,11 +65,9 @@ fun SearchScreen(
         enabled = searchState.isScannerVisible
     ) {
         if(searchState.isScannerVisible){
-            viewModel.onEvent(SearchEvent.ClickedBackArrow)
+            viewModel.onEvent(SearchEvent.ClosedScanner(mealName))
         }
     }
-
-
 
     if (!searchState.isScannerVisible) {
         Scaffold(
@@ -143,6 +141,7 @@ fun SearchScreen(
                         color = Beige1,
                         onClick = {
                             if (!cameraPermissionState.status.isGranted) {
+                                viewModel.onEvent(SearchEvent.ShowedPermissionDialog)
                                 cameraPermissionState.launchPermissionRequest()
                             } else {
                                 viewModel.onEvent(SearchEvent.ClickedScanButton)
@@ -231,6 +230,4 @@ fun SearchScreen(
             }
         )
     }
-
-
 }

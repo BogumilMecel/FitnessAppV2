@@ -13,6 +13,9 @@ object NavigationActions {
         fun navigateUp() = object : NavigationAction {
             override val destination: String = "navigateUp"
         }
+        fun resetScreen() = object :NavigationAction{
+            override val destination: String = "reset"
+        }
     }
 
     //Auth
@@ -113,7 +116,6 @@ object NavigationActions {
         fun searchToNewProduct(mealName: String = "Breakfast") = object : NavigationAction {
             override val destination: String = Screen.NewProductScreen.route
         }
-
         fun searchToProduct(productWithId: Parcelable, mealName: String) = object :
             NavigationAction {
             override val destination: String = Screen.ProductScreen.route + "?mealName=$mealName"

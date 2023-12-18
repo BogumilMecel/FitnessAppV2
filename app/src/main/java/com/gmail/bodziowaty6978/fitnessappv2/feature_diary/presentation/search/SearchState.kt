@@ -8,4 +8,5 @@ data class SearchState(
     val errorMessage:String? = null,
     val searchBarText:String = "",
     val isScannerVisible:Boolean = false,
+    val hasPermissionDialogBeenShowed:Boolean = false
 )

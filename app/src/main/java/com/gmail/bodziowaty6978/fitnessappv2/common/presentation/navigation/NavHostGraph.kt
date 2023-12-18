@@ -1,5 +1,7 @@
 package com.gmail.bodziowaty6978.fitnessappv2.common.presentation.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
@@ -34,6 +36,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.presentation.I
 import com.gmail.bodziowaty6978.fitnessappv2.feature_splash.loading.presentation.SplashScreen
 import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.presentation.SummaryScreen
 
+@RequiresApi(Build.VERSION_CODES.N)
 @Composable
 fun NavHostGraph(
     navController: NavHostController = rememberNavController(),
@@ -61,7 +64,16 @@ fun NavHostGraph(
             }
             if (it.destination == "navigateUp") {
                 navController.navigateUp()
-            } else {
+            } else if(it.destination == "reset"){
+                navController.currentBackStackEntry?.destination?.route?.let {currentDestination ->
+                    navController.backQueue.removeIf{ navBackStackEntry ->
+                        navBackStackEntry.destination.route == currentDestination
+                    }
+                    navController.popBackStack()
+                    navController.navigate(currentDestination)
+                }
+            }
+            else {
                 navController.navigate(it.destination, it.navOptions)
             }
         }
