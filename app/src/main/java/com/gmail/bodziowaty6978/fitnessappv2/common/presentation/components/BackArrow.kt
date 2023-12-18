@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun BackArrow(
+    modifier: Modifier = Modifier,
     onBackArrowPressed:() -> Unit
 ) {
 

@@ -1,65 +1,50 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search
 
-import android.Manifest
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.singleton.CurrentDate
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.BackHandler
-import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.Beige1
-import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.BlueViolet3
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search.componens.BottomSearchAddItem
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search.componens.SearchButton
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search.componens.SearchProductItem
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.Grey
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search.componens.SearchProductSection
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search.componens.SearchRecipeSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search.componens.SearchTopSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.shared.ScannerSection
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.rememberPagerState
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.PermissionStatus
-import com.google.accompanist.permissions.isGranted
-import com.google.accompanist.permissions.rememberPermissionState
+import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalPermissionsApi::class, ExperimentalLifecycleComposeApi::class)
+@OptIn(ExperimentalPermissionsApi::class, ExperimentalLifecycleComposeApi::class, ExperimentalPagerApi::class)
 @Composable
 fun SearchScreen(
     viewModel: SearchViewModel = hiltViewModel()
 ) {
     val state = viewModel.searchState.collectAsStateWithLifecycle().value
 
-    val cameraPermissionState = rememberPermissionState(
-        permission = Manifest.permission.CAMERA
-    )
+    val scope = rememberCoroutineScope()
 
     val scaffoldState = rememberScaffoldState()
+    val pagerState = rememberPagerState(initialPage = 0)
 
     LaunchedEffect(key1 = true) {
         viewModel.initializeHistory()
-    }
-
-    val cameraPermissionErrorMessage =
-        stringResource(id = R.string.camera_permission_is_required_to_scan_a_product_barcode)
-
-    LaunchedEffect(key1 = cameraPermissionState) {
-        if (cameraPermissionState.status is PermissionStatus.Denied && state.hasPermissionDialogBeenShowed) {
-            scaffoldState.snackbarHostState.showSnackbar(cameraPermissionErrorMessage)
-        }
     }
 
     LaunchedEffect(key1 = true) {
@@ -94,166 +79,58 @@ fun SearchScreen(
                         contentDescription = "search"
                     )
                 }
-            },
-            bottomBar = {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .shadow(elevation = 24.dp)
-                ) {
-                    BottomSearchAddItem(
-                        modifier = Modifier.weight(1F),
-                        onClick = {
-                            viewModel.onEvent(SearchEvent.ClickedNewProduct)
-                        },
-                        name = stringResource(id = R.string.product),
-                        color = BlueViolet3
-                    )
-
-                    BottomSearchAddItem(
-                        modifier = Modifier.weight(1F),
-                        onClick = {
-
-                        },
-                        name = stringResource(id = R.string.recipe),
-                        color = Color.DarkGray,
-                        textColor = Color.DarkGray
-                    )
-                }
             }
-
-        ) {
+        ) { paddingValues ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(it)
             ) {
                 SearchTopSection(
-                    modifier = Modifier,
+                    modifier = Modifier
+                        .background(Grey),
                     searchBarText = state.searchBarText,
                     mealName = state.mealName,
                     date = CurrentDate.dateModel(LocalContext.current).valueToDisplay
                         ?: CurrentDate.dateModel(LocalContext.current).date,
                     onEvent = { searchEvent ->
                         viewModel.onEvent(searchEvent)
-                    }
+                    },
+                    pagerState = pagerState,
+                    scope = scope
                 )
 
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 10.dp, vertical = 8.dp)
-                ) {
-
-                    SearchButton(
-                        text = stringResource(id = R.string.scan),
-                        color = Beige1,
-                        onClick = {
-                            if (!cameraPermissionState.status.isGranted) {
-                                viewModel.onEvent(SearchEvent.ShowedPermissionDialog)
-                                cameraPermissionState.launchPermissionRequest()
-                            } else {
-                                viewModel.onEvent(SearchEvent.ClickedScanButton)
-                            }
-                        },
-                        icon = {
-                            Icon(
-                                painter = painterResource(id = R.drawable.barcode_scan),
-                                contentDescription = stringResource(id = R.string.scan),
-                                tint = Color.Black
-                            )
-                        },
-                        modifier = Modifier
-                            .weight(1F)
-                            .testTag(stringResource(id = R.string.scan))
-                    )
-
-                    SearchButton(
-                        text = stringResource(id = R.string.filter),
-                        modifier = Modifier.weight(1F),
-                        color = MaterialTheme.colors.secondary,
-                        onClick = {
-
-                        },
-                        icon = {
-                            Icon(
-                                painter = painterResource(id = R.drawable.filter),
-                                contentDescription = stringResource(id = R.string.filter),
-                                tint = Color.Black
-                            )
-                        },
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                ) {
-                    if (state.isLoading) {
-                        Row(
-                            modifier = Modifier
-                                .align(Alignment.Center)
-                        ) {
-                            CircularProgressIndicator()
-                        }
-                    } else if (state.barcode != null) {
-                        Column(
-                            modifier = Modifier
-                                .align(Alignment.Center)
-                        ) {
-
-                            Text(
-                                text = stringResource(id = R.string.there_is_no_product_with_provided_barcode_do_you_want_to_add_it),
+                HorizontalPager(
+                    count = 2,
+                    state = pagerState
+                ) {pagerScope ->
+                    when(pagerScope){
+                        0 -> {
+                            SearchProductSection(
                                 modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 30.dp),
-                                style = MaterialTheme.typography.h1.copy(
-                                    textAlign = TextAlign.Center
-                                )
-                            )
-
-                            Spacer(modifier = Modifier.height(16.dp))
-
-                            Button(
-                                onClick = {
-                                    viewModel.onEvent(SearchEvent.ClickedNewProduct)
+                                    .fillMaxSize()
+                                    .padding(paddingValues),
+                                onEvent = { event ->
+                                    viewModel.onEvent(event)
                                 },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 60.dp)
-                            ) {
-                                Text(
-                                    text = stringResource(id = R.string.add),
-                                    style = MaterialTheme.typography.button
-                                )
-
-                            }
-
-                            Spacer(modifier = Modifier.height(32.dp))
-
+                                showSnackbar = {
+                                    scope.launch {
+                                        scaffoldState.snackbarHostState.showSnackbar(it)
+                                    }
+                                },
+                                state = state
+                            )
                         }
-                    } else if (state.items.isNotEmpty()) {
-
-                        val items = state.items
-
-                        LazyColumn(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                        ) {
-                            items(items.size) { itemPosition ->
-                                SearchProductItem(product = items[itemPosition]) {
-                                    viewModel.onEvent(
-                                        SearchEvent.ClickedSearchItem(
-                                            item = items[itemPosition]
-                                        )
-                                    )
+                        1 -> {
+                            SearchRecipeSection(
+                                calculatedRecipes = state.calculatedRecipes,
+                                onEvent = {
+                                    viewModel.onEvent(it)
                                 }
-                            }
+                            )
                         }
                     }
                 }
+
             }
         }
     } else {

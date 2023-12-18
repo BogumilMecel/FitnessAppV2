@@ -19,6 +19,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigator
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.BottomBar
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.DarkGrey
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.Grey
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.util.BottomBarScreen
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.util.Screen
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.extensions.asLifecycleAwareState
@@ -29,24 +31,34 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.presentation.reset_pas
 import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.presentation.util.AuthScreen
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.diary.DiaryScreen
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_product.NewProductScreen
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_recipe.NewRecipeScreen
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.ProductScreen
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search.SearchScreen
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.presentation.IntroductionScreen
 import com.gmail.bodziowaty6978.fitnessappv2.feature_splash.loading.presentation.SplashScreen
 import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.presentation.SummaryScreen
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @RequiresApi(Build.VERSION_CODES.N)
 @Composable
 fun NavHostGraph(
     navController: NavHostController = rememberNavController(),
     navigator: Navigator,
-    startDestination: String = Screen.LoadingScreen.route
+//    startDestination: String = Screen.NewProductScreen.route + "?mealName={mealName}&barcode={barcode}"
+    startDestination: String = Screen.NewRecipeScreen.route
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
     val navigatorState by navigator.navActions.asLifecycleAwareState(
         lifecycleOwner = lifecycleOwner,
         initialState = null
     )
+
+    var statusBarColor by remember{
+        mutableStateOf(DarkGrey)
+    }
+
+    val systemUiController = rememberSystemUiController()
+    systemUiController.setSystemBarsColor(color = statusBarColor)
 
     val scaffoldState = rememberScaffoldState()
 
@@ -67,9 +79,9 @@ fun NavHostGraph(
             } else {
                 navController.navigate(it.destination, it.navOptions)
             }
+            statusBarColor = if (navController.currentDestination?.route == Screen.SearchScreen.route + "?mealName={mealName}") Grey else DarkGrey
         }
     }
-
 
     Scaffold(
         bottomBar = {
@@ -198,6 +210,12 @@ fun NavHostGraph(
                     )
                 ) {
                     NewProductScreen()
+                }
+
+                composable(
+                    route = Screen.NewRecipeScreen.route
+                ){
+                    NewRecipeScreen()
                 }
             }
         }

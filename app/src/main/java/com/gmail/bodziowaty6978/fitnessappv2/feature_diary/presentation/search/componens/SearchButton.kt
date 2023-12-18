@@ -23,7 +23,7 @@ fun SearchButton(
 
     Button(
         modifier = modifier
-            .padding(horizontal = 10.dp),
+            .padding(horizontal = 5.dp),
         onClick = {
             onClick()
         },
@@ -34,13 +34,13 @@ fun SearchButton(
     ) {
         Row(
             modifier = Modifier
-                .padding(10.dp),
+                .padding(vertical = 10.dp, horizontal = 5.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
             icon()
 
-            Spacer(modifier = Modifier.width(10.dp))
+            Spacer(modifier = Modifier.width(6.dp))
 
             Text(
                 text = text,
