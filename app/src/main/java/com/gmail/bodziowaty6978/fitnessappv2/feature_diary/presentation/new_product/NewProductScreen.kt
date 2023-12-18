@@ -17,6 +17,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.BackArrow
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.diary.components.HorizontalProgressIndicator
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_product.components.BarcodeSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_product.components.ContainerWeightSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_product.components.NutritionSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_product.components.TextFieldSection
@@ -34,8 +35,9 @@ fun NewProductScreen(
     LaunchedEffect(key1 = true){
         viewModel.state.collectLatest {
             it.errorMessage?.let { message ->
-                scaffoldState.snackbarHostState.showSnackbar(message)
-                viewModel.onEvent(NewProductEvent.ShowedSnackbar)
+                if (message!=state.lastErrorMessage){
+                    scaffoldState.snackbarHostState.showSnackbar(message)
+                }
             }
         }
     }
@@ -90,6 +92,15 @@ fun NewProductScreen(
                         viewModel.onEvent(it)
                     },
                     containerWeightText = state.containerWeight
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                BarcodeSection(
+                    barcode = state.barcode,
+                    onEvent = {
+                        viewModel.onEvent(it)
+                    }
                 )
 
                 Spacer(modifier = Modifier.height(40.dp))
