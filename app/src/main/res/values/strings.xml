@@ -16,6 +16,7 @@
     <string name="bottom_nav_summary">Summary</string>
     <string name="bottom_nav_diary">Diary</string>
     <string name="bottom_nav_account">Account</string>
+    <string name="bottom_nav_training">Training</string>
 
 <!--    Auth-->
     <string name="email_address">Email Address</string>

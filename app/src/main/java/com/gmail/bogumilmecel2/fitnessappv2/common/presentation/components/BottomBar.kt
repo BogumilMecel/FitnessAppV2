@@ -11,19 +11,14 @@ import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 
 @Composable
 fun BottomBar(navController: NavHostController) {
-    val screens = listOf(
-        BottomBarScreen.Summary,
-        BottomBarScreen.Diary,
-        BottomBarScreen.Account,
-    )
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
     BottomNavigation(backgroundColor = FitnessAppTheme.colors.BackgroundSecondary) {
-        screens.forEach { screen ->
+        BottomBarScreen.entries.forEach { screen ->
             AddItem(
                 bottomBarScreen = screen,
-                screensNumber = screens.size,
+                screensNumber = BottomBarScreen.entries.size,
                 isSelected = currentDestination?.hierarchy?.any {
                     it.route == screen.route
                 } == true,
