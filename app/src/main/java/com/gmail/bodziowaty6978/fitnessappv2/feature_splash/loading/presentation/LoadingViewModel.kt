@@ -22,8 +22,8 @@ class LoadingViewModel @Inject constructor(
 
     private val _loadingState = MutableStateFlow(LoadingState())
 
-    private suspend fun checkNutritionValues(token: String) {
-        val resource = loadingRepository.getNutritionValues(token)
+    private suspend fun checkNutritionValues() {
+        val resource = loadingRepository.getNutritionValues()
         _loadingState.update {
             it.copy(
                 hasNutritionValues = resource.data != null
@@ -67,17 +67,17 @@ class LoadingViewModel @Inject constructor(
             token?.let { hasToken = true }
             _loadingState.update { it.copy(hasToken = hasToken) }
             if (hasToken) {
-                authenticateUser(token!!)
-                checkNutritionValues(token)
+                authenticateUser()
+                checkNutritionValues()
             }
             checkUser()
         }
     }
 
-    private suspend fun authenticateUser(token: String) {
+    private suspend fun authenticateUser() {
         _loadingState.update {
             it.copy(
-                isLoggedIn = loadingRepository.authenticateUser(token).data != null
+                isLoggedIn = loadingRepository.authenticateUser().data != null
             )
         }
         checkUser()

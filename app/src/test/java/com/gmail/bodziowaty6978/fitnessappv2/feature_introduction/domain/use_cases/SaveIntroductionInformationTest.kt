@@ -2,7 +2,7 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.use_ca
 
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
-import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.repository.IntroductionRepository
+import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.repository.UserDataRepository
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.presentation.util.IntroductionExpectedQuestionAnswer
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -26,22 +26,22 @@ internal class SaveIntroductionInformationTest {
     private lateinit var answers: MutableMap<IntroductionExpectedQuestionAnswer, String>
 
     @Mock
-    private lateinit var mockIntroductionRepository: IntroductionRepository
+    private lateinit var mockUserDataRepository: UserDataRepository
 
     private lateinit var closeable: AutoCloseable
 
     @Before
     fun setUp() = runTest{
         closeable = MockitoAnnotations.openMocks(this)
-        mockIntroductionRepository = Mockito.mock(IntroductionRepository::class.java)
-        Mockito.`when`(mockIntroductionRepository.saveNutritionValues(
+        mockUserDataRepository = Mockito.mock(UserDataRepository::class.java)
+        Mockito.`when`(mockUserDataRepository.saveNutritionValues(
             any(),
             any()
         )).thenReturn(CustomResult.Success)
         saveIntroductionInformation = SaveIntroductionInformation(
             calculateNutritionValues = CalculateNutritionValues(),
             resourceProvider = ResourceProvider(RuntimeEnvironment.getApplication()),
-            introductionRepository = mockIntroductionRepository
+            userDataRepository = mockUserDataRepository
         )
         answers = mutableMapOf(
             IntroductionExpectedQuestionAnswer.Gender to "0",

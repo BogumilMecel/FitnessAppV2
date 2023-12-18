@@ -6,10 +6,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalLifecycleOwner
 
 @Composable
-public fun BackHandler(enabled: Boolean = true, onBack: () -> Unit) {
-    // Safely update the current `onBack` lambda when a new one is provided
+fun BackHandler(enabled: Boolean = true, onBack: () -> Unit) {
     val currentOnBack by rememberUpdatedState(onBack)
-    // Remember in Composition a back callback that calls the `onBack` lambda
     val backCallback = remember {
         object : OnBackPressedCallback(enabled) {
             override fun handleOnBackPressed() {
@@ -17,7 +15,6 @@ public fun BackHandler(enabled: Boolean = true, onBack: () -> Unit) {
             }
         }
     }
-    // On every successful composition, update the callback with the `enabled` value
     SideEffect {
         backCallback.isEnabled = enabled
     }
@@ -26,9 +23,7 @@ public fun BackHandler(enabled: Boolean = true, onBack: () -> Unit) {
     }.onBackPressedDispatcher
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(lifecycleOwner, backDispatcher) {
-        // Add callback to the backDispatcher
         backDispatcher.addCallback(lifecycleOwner, backCallback)
-        // When the effect leaves the Composition, remove the callback
         onDispose {
             backCallback.remove()
         }

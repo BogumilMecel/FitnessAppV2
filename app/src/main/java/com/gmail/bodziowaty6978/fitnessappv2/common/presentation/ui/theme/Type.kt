@@ -46,6 +46,12 @@ val Typography = Typography(
         fontSize = 16.sp,
         color = TextWhite
     ),
+    h4 = TextStyle(
+        fontFamily = Roboto,
+        fontWeight = FontWeight.Bold,
+        fontSize = 14.sp,
+        color = TextWhite
+    ),
     button = TextStyle(
         fontFamily = Roboto,
         fontWeight = FontWeight.Medium,

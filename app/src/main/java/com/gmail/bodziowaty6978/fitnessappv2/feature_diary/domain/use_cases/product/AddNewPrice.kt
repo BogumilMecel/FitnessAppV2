@@ -10,7 +10,7 @@ class AddNewPrice(
 
     suspend operator fun invoke(
         price: Price,
-        productId:Int
+        productId:String
     ):Resource<Price>{
         return diaryRepository.addNewPrice(
             price = price,

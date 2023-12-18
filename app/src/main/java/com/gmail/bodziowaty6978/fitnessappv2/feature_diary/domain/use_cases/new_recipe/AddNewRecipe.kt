@@ -11,7 +11,6 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.repository.Dia
 
 class AddNewRecipe(
     private val diaryRepository: DiaryRepository,
-    private val getToken: GetToken,
     private val resourceProvider: ResourceProvider
 ) {
     suspend operator fun invoke(
@@ -21,36 +20,31 @@ class AddNewRecipe(
         servings: String,
         recipeName: String
     ): Resource<Recipe> {
-        val token = getToken()
-        token?.let {
-            if (ingredients.size < 2) {
-                return Resource.Error(resourceProvider.getString(R.string.empty_recipe_ingredients))
-            } else if (recipeName.length < 4) {
-                Log.e("huj", recipeName)
-                return Resource.Error(resourceProvider.getString(R.string.bad_recipe_name))
+        return if (ingredients.size < 2) {
+            Resource.Error(resourceProvider.getString(R.string.empty_recipe_ingredients))
+        } else if (recipeName.length < 4) {
+            Log.e("huj", recipeName)
+            Resource.Error(resourceProvider.getString(R.string.bad_recipe_name))
+        } else {
+            val difficultyValue = difficulty.toIntOrNull()
+            val timeValue = time.toIntOrNull()
+            val servingsValue = servings.toIntOrNull()
+            if (difficultyValue != null && timeValue != null && servingsValue != null) {
+                val recipe = Recipe(
+                    ingredients = ingredients,
+                    timeNeeded = timeValue,
+                    difficulty = difficultyValue,
+                    servings = servingsValue,
+                    timestamp = System.currentTimeMillis(),
+                    name = recipeName
+                )
+                diaryRepository.addNewRecipe(
+                    recipe = recipe,
+                    timestamp = System.currentTimeMillis()
+                )
             } else {
-                val difficultyValue = difficulty.toIntOrNull()
-                val timeValue = time.toIntOrNull()
-                val servingsValue = servings.toIntOrNull()
-                if (difficultyValue != null && timeValue != null && servingsValue != null) {
-                    val recipe = Recipe(
-                        ingredients = ingredients,
-                        timeNeeded = timeValue,
-                        difficulty = difficultyValue,
-                        servings = servingsValue,
-                        timestamp = System.currentTimeMillis(),
-                        name = recipeName
-                    )
-                    return diaryRepository.addNewRecipe(
-                        recipe = recipe,
-                        token = token,
-                        timestamp = System.currentTimeMillis()
-                    )
-                } else {
-                    return Resource.Error(resourceProvider.getString(R.string.please_make_sure_all_fields_are_filled_in_correctly))
-                }
+                Resource.Error(resourceProvider.getString(R.string.please_make_sure_all_fields_are_filled_in_correctly))
             }
         }
-        return Resource.Error(resourceProvider.getUnknownErrorString())
     }
 }

@@ -1,12 +1,12 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model
 
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.diary_entry.CalculatedDiaryEntry
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.diary_entry.DiaryEntry
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.util.NutritionType
 
 
 data class Meal(
     val mealName:String,
-    val diaryEntries:List<CalculatedDiaryEntry>
+    val diaryEntries:List<DiaryEntry>
 )
 
 fun Meal.sumNutritionValues(

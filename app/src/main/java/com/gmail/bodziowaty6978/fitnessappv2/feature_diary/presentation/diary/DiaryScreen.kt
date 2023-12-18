@@ -17,6 +17,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bodziowaty6978.fitnessappv2.R
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.BackHandler
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.DarkGreyElevation3
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.Grey
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.diary.components.CalendarSection
@@ -36,6 +37,10 @@ fun DiaryScreen(
         viewModel.errorState.collect {
             scaffoldState.snackbarHostState.showSnackbar(it)
         }
+    }
+
+    BackHandler {
+        viewModel.onEvent(DiaryEvent.BackPressed)
     }
 
     Scaffold(

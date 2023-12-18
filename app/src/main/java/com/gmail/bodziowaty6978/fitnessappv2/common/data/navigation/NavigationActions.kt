@@ -15,10 +15,6 @@ object NavigationActions {
         fun navigateUp() = object : NavigationAction {
             override val destination: String = "navigateUp"
         }
-
-        fun resetScreen() = object : NavigationAction {
-            override val destination: String = "reset"
-        }
     }
 
     //Auth
@@ -93,12 +89,21 @@ object NavigationActions {
         fun accountToLogin() = object : NavigationAction {
             override val destination: String = AuthScreen.LoginAuthScreen.route
         }
+        fun accountToEditNutritionGoals() = object : NavigationAction {
+            override val destination: String = Screen.EditNutritionGoalsScreen.route
+        }
+        fun accountToSummary() = object : NavigationAction {
+            override val destination: String = BottomBarScreen.Summary.route
+        }
     }
 
     //Diary
     object DiaryScreen {
         fun diaryToSearch(mealName: String) = object : NavigationAction {
             override val destination: String = Screen.SearchScreen.route + "?mealName=$mealName"
+        }
+        fun diaryToSummary() = object : NavigationAction {
+            override val destination: String = BottomBarScreen.Summary.route
         }
     }
 
@@ -157,6 +162,12 @@ object NavigationActions {
                 }" + "recipe=${
                     Gson().toJson(recipe)
                 }"
+        }
+    }
+
+    object EditNutritionGoals {
+        fun  editNutritionGoalsToAccount() = object : NavigationAction {
+            override val destination: String = BottomBarScreen.Account.route
         }
     }
 }

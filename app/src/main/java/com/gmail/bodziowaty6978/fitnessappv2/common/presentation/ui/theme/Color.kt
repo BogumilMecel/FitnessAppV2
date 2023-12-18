@@ -33,3 +33,5 @@ val DarkGreyElevation = Color(0xFF242424)
 
 val TextWhite = Color(0xffeeeeee)
 val TextGrey = Color(0xFFbfbfbf)
+val Green = Color(0xFF81c784)
+val RedError = Color(0xFFe57373)

@@ -29,7 +29,7 @@ fun WeightPickerDialog(
     val formatToString: (Double) -> String = { "${it.round(1)} kg" }
     Dialog(
         onDismissRequest = {
-            /*TODO*/
+            onEvent(SummaryEvent.DismissedWeightPickerDialog)
         },
     ) {
         Column(

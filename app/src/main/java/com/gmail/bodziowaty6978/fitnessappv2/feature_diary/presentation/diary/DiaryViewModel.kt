@@ -1,18 +1,15 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.diary
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.NavigationActions
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.singleton.CurrentDate
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigator
-import com.gmail.bodziowaty6978.fitnessappv2.common.domain.use_case.GetToken
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.use_case.GetWantedNutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
-import com.gmail.bodziowaty6978.fitnessappv2.common.util.extensions.TAG
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Meal
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.diary.DeleteDiaryEntry
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.diary.GetDiaryEntries
@@ -34,7 +31,6 @@ class DiaryViewModel @Inject constructor(
     private val updateDiaryEntriesListAfterDelete: UpdateDiaryEntriesListAfterDelete,
     private val resourceProvider: ResourceProvider,
     private val navigator: Navigator,
-    private val getToken: GetToken,
     private val getWantedNutritionValues: GetWantedNutritionValues
 ) : ViewModel() {
 
@@ -120,6 +116,9 @@ class DiaryViewModel @Inject constructor(
             is DiaryEvent.ClickedEditInDialog -> {
 
             }
+            is DiaryEvent.BackPressed -> {
+                navigator.navigate(NavigationActions.DiaryScreen.diaryToSummary())
+            }
         }
     }
 
@@ -135,12 +134,6 @@ class DiaryViewModel @Inject constructor(
 
     private fun getDiaryEntries() {
         val currentDate = CurrentDate.dateModel(resourceProvider = resourceProvider)
-
-        viewModelScope.launch {
-            getToken()?.let { Log.e(TAG, it) }
-        }
-
-
         viewModelScope.launch(Dispatchers.IO) {
             val resource = getDiaryEntries(
                 timestamp = currentDate.timestamp,
@@ -162,7 +155,6 @@ class DiaryViewModel @Inject constructor(
                     resource.uiText?.let { error ->
                         _errorState.send(error)
                     }
-
                 }
             }
         }

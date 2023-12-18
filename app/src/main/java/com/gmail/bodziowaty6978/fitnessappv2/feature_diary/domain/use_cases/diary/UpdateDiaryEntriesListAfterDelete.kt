@@ -5,12 +5,12 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Meal
 class UpdateDiaryEntriesListAfterDelete {
 
     operator fun invoke(
-        diaryEntryId: Int,
+        diaryEntryId: String,
         meals: List<Meal>
     ): List<Meal> {
         meals.forEachIndexed { index, meal ->
             val diaryEntry = meal.diaryEntries.find {
-                it.diaryEntry.id == diaryEntryId
+                it.id == diaryEntryId
             }
 
             diaryEntry?.let {

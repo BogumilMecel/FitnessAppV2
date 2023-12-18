@@ -25,7 +25,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.sear
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.search.SearchDiaryUseCases
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.search.SearchForProductWithBarcode
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.search.SearchForProducts
-import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.repository.IntroductionRepository
+import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.repository.UserDataRepository
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.use_cases.CalculateNutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.use_cases.SaveIntroductionInformation
 import com.google.firebase.auth.FirebaseAuth
@@ -96,7 +96,7 @@ object TestAppModule {
 
     @Provides
     @Singleton
-    fun provideIntroductionRepository(): IntroductionRepository = object : IntroductionRepository {
+    fun provideIntroductionRepository(): UserDataRepository = object : UserDataRepository {
         override suspend fun saveNutritionValues(
             userInformation: UserInformation,
             nutritionValues: NutritionValues
@@ -113,11 +113,11 @@ object TestAppModule {
     @Provides
     @Singleton
     fun provideSaveInformationUseCase(
-        introductionRepository: IntroductionRepository,
+        userDataRepository: UserDataRepository,
         resourceProvider: ResourceProvider,
         calculateNutritionValues: CalculateNutritionValues
     ): SaveIntroductionInformation = SaveIntroductionInformation(
-        introductionRepository = introductionRepository,
+        userDataRepository = userDataRepository,
         resourceProvider = resourceProvider,
         calculateNutritionValues = calculateNutritionValues
     )

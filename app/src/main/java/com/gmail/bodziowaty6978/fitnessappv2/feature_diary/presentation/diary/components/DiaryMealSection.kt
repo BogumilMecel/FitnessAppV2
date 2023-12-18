@@ -30,8 +30,8 @@ fun DiaryMealSection(
 
     Card(
         shape = RoundedCornerShape(10),
-        modifier = Modifier.padding(horizontal = 20.dp, vertical = 10.dp),
-        elevation = 6.dp
+        modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+        elevation = 3.dp
     ) {
         Column(
             modifier = Modifier
@@ -53,7 +53,6 @@ fun DiaryMealSection(
                 )
 
                 Row {
-
                     Icon(imageVector = Icons.Default.Edit,
                          contentDescription = "Edit",
                          modifier = Modifier
@@ -77,10 +76,10 @@ fun DiaryMealSection(
             }
 
             diaryEntriesValues.forEach {
-                DiaryEntryItem(diaryEntry = it.diaryEntry, onItemClicked = {
-                    onEvent(DiaryEvent.ClickedDiaryEntry(it.diaryEntry))
+                DiaryEntryItem(diaryEntry = it, onItemClicked = {
+                    onEvent(DiaryEvent.ClickedDiaryEntry(it))
                 }, onItemLongClick = {
-                    onEvent(DiaryEvent.LongClickedDiaryEntry(it.diaryEntry))
+                    onEvent(DiaryEvent.LongClickedDiaryEntry(it))
                 })
             }
 

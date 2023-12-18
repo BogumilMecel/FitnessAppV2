@@ -14,13 +14,9 @@ class LoadingRepositoryImp(
     private val customSharedPreferencesUtils: CustomSharedPreferencesUtils
 ):LoadingRepository {
 
-    override suspend fun authenticateUser(
-        token:String
-    ): Resource<Boolean> {
+    override suspend fun authenticateUser(): Resource<Boolean> {
         return try {
-            loadingApi.authenticate(
-                token = token
-            )
+            loadingApi.authenticate()
             Resource.Success(true)
         } catch (e: Exception) {
             e.printStackTrace()
@@ -28,11 +24,11 @@ class LoadingRepositoryImp(
         }
     }
 
-    override suspend fun getNutritionValues(token: String): Resource<NutritionValues?> {
+    override suspend fun getNutritionValues(): Resource<NutritionValues?> {
         return try {
             var wantedNutritionValues = customSharedPreferencesUtils.getWantedNutritionValues()
             if (wantedNutritionValues == null){
-                loadingApi.getNutritionValues(token = token)?.let {
+                loadingApi.getNutritionValues()?.let {
                     customSharedPreferencesUtils.saveWantedNutritionValues(it)
                     wantedNutritionValues = it
                 }

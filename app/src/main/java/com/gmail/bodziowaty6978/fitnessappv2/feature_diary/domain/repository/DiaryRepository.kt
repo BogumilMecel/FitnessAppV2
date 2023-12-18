@@ -8,15 +8,15 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.diary_en
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 
 interface DiaryRepository {
-    suspend fun getDiaryEntries(timestamp:Long, token:String): Resource<List<DiaryEntry>>
+    suspend fun getDiaryEntries(timestamp:Long): Resource<List<DiaryEntry>>
     suspend fun searchForProducts(searchText:String) : Resource<List<Product>>
     suspend fun searchForProductWithBarcode(barcode:String):Resource<Product>
-    suspend fun getProductHistory(token: String):Resource<List<Product>>
-    suspend fun addDiaryEntry(diaryEntry: DiaryEntry, token: String):Resource<DiaryEntry>
-    suspend fun deleteDiaryEntry(diaryEntryId: Int, token:String):CustomResult
+    suspend fun getProductHistory():Resource<List<Product>>
+    suspend fun addDiaryEntry(diaryEntry: DiaryEntry):Resource<DiaryEntry>
+    suspend fun deleteDiaryEntry(diaryEntryId: String):CustomResult
     suspend fun editDiaryEntry(diaryEntry: DiaryEntry):CustomResult
     suspend fun saveNewProduct(product: Product):Resource<Product>
-    suspend fun getCaloriesSum(date:String, token: String):Resource<Int>
-    suspend fun addNewPrice(price: Price, productId:Int):Resource<Price>
-    suspend fun addNewRecipe(recipe: Recipe, token: String, timestamp: Long): Resource<Recipe>
+    suspend fun getCaloriesSum(date:String):Resource<Int>
+    suspend fun addNewPrice(price: Price, productId:String):Resource<Price>
+    suspend fun addNewRecipe(recipe: Recipe, timestamp: Long): Resource<Recipe>
 }
