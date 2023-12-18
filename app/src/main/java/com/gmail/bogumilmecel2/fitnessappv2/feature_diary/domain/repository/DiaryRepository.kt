@@ -5,7 +5,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.DiaryItem
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.DeleteDiaryEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.DiaryEntriesResponse
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.EditRecipeDiaryEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductDiaryHistoryItem
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductPrice
@@ -37,7 +36,7 @@ interface DiaryRepository {
     suspend fun deleteDiaryEntry(deleteDiaryEntryRequest: DeleteDiaryEntryRequest): Resource<Unit>
     suspend fun deleteOfflineDiaryEntry(diaryItem: DiaryItem): Resource<Unit>
     suspend fun editProductDiaryEntry(productDiaryEntry: ProductDiaryEntry): Resource<Unit>
-    suspend fun editRecipeDiaryEntry(editRecipeDiaryEntryRequest: EditRecipeDiaryEntryRequest): Resource<Unit>
+    suspend fun editRecipeDiaryEntry(recipeDiaryEntry: RecipeDiaryEntry): Resource<Unit>
     suspend fun saveNewProduct(newProductRequest: NewProductRequest): Resource<Product>
     suspend fun getProduct(productId: String): Resource<Product?>
     suspend fun getCaloriesSum(date: String): Resource<Int>

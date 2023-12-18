@@ -191,8 +191,7 @@ class DiaryViewModel @Inject constructor(
                                 recipe = recipe,
                                 date = diaryEntry.date,
                                 mealName = diaryEntry.mealName,
-                                servings = diaryEntry.servings.toString(),
-                                recipeDiaryEntryId = diaryEntry.id
+                                recipeDiaryEntry = diaryEntry
                             )
                         )
                     )
