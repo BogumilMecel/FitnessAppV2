@@ -222,10 +222,10 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun clearLocalData(): Resource<Unit> {
+    override suspend fun clearLocalData(userId: String): Resource<Unit> {
         return handleRequest {
-            userDiaryItemsDao.deleteUserProducts()
-            userDiaryItemsDao.deleteUserRecipes()
+            userDiaryItemsDao.deleteUserProducts(userId)
+            userDiaryItemsDao.deleteUserRecipes(userId)
         }
     }
 
@@ -273,6 +273,18 @@ class DiaryRepositoryImp(
         }
     }
 
+    override suspend fun cacheProduct(product: Product): Resource<Unit> {
+        return handleRequest {
+            userDiaryItemsDao.insertProduct(product)
+        }
+    }
+
+    override suspend fun cacheRecipe(recipe: Recipe): Resource<Unit> {
+        return handleRequest {
+            userDiaryItemsDao.insertRecipe(recipe)
+        }
+    }
+
     override suspend fun deleteOfflineDiaryEntry(diaryItem: DiaryItem): Resource<Unit> {
         return handleRequest {
             when(diaryItem) {
@@ -284,6 +296,18 @@ class DiaryRepositoryImp(
                     userDiaryItemsDao.deleteRecipeDiaryEntry(diaryItem.id)
                 }
             }
+        }
+    }
+
+    override suspend fun getOfflineProduct(productId: String): Resource<Product?> {
+        return handleRequest {
+            userDiaryItemsDao.getProduct(productId).firstOrNull()
+        }
+    }
+
+    override suspend fun getOfflineRecipe(recipeId: String): Resource<Recipe?> {
+        return handleRequest {
+            userDiaryItemsDao.getRecipe(recipeId).firstOrNull()
         }
     }
 }
