@@ -46,7 +46,7 @@ class AccountViewModel @Inject constructor(
 
     private fun getWantedNutritionValues() {
         viewModelScope.launch {
-            initializeProductData(sharedPreferencesUtils.getWantedNutritionValues())
+            initializeProductData(cachedValuesProvider.getWantedNutritionValues())
         }
     }
 

@@ -143,14 +143,16 @@ class EditNutritionGoalsViewModel @Inject constructor(
     }
 
     private fun initWantedNutritionValues() {
-        val wantedNutritionValues = sharedPreferencesUtils.getWantedNutritionValues()
-        _state.update {
-            it.copy(
-                nutritionValues = wantedNutritionValues,
-                calories = wantedNutritionValues.calories.toString()
-            )
+        viewModelScope.launch {
+            val wantedNutritionValues = cachedValuesProvider.getWantedNutritionValues()
+            _state.update {
+                it.copy(
+                    nutritionValues = wantedNutritionValues,
+                    calories = wantedNutritionValues.calories.toString()
+                )
+            }
+            calculatePercentages()
         }
-        calculatePercentages()
     }
 
     private fun calculatePercentages() {

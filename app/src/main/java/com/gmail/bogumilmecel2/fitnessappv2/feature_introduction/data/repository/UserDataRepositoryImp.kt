@@ -1,6 +1,6 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.data.repository
 
-import com.gmail.bogumilmecel2.fitnessappv2.common.data.utils.CustomSharedPreferencesUtils
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.CachedValuesProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseRepository
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
@@ -12,14 +12,14 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.reposito
 
 class UserDataRepositoryImp(
     private val userDataApi: UserDataApi,
-    private val customSharedPreferencesUtils: CustomSharedPreferencesUtils
+    private val cachedValuesProvider: CachedValuesProvider
 ) : UserDataRepository, BaseRepository() {
 
     override suspend fun saveNutritionValues(nutritionValues: NutritionValues): Resource<Unit> {
         return handleRequest {
             userDataApi.saveNutritionValues(nutritionValues = nutritionValues).let {
                 if (it) {
-                    customSharedPreferencesUtils.saveWantedNutritionValues(nutritionValues)
+                    cachedValuesProvider.saveWantedNutritionValues(nutritionValues)
                 }
             }
         }
@@ -30,7 +30,7 @@ class UserDataRepositoryImp(
             val user = userDataApi.saveUserInformation(
                 introductionRequest = introductionRequest
             )
-            customSharedPreferencesUtils.saveUser(user)
+            cachedValuesProvider.saveUser(user)
             user
         }
     }

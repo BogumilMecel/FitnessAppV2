@@ -130,7 +130,7 @@ class DiaryViewModel @Inject constructor(
         viewModelScope.launch {
             _state.update {
                 it.copy(
-                    wantedTotalNutritionValues = sharedPreferencesUtils.getWantedNutritionValues()
+                    wantedTotalNutritionValues = cachedValuesProvider.getWantedNutritionValues()
                 )
             }
         }

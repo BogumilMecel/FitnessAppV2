@@ -1,8 +1,8 @@
 package com.gmail.bogumilmecel2.fitnessappv2.common.util
 
 import android.content.SharedPreferences
-import com.gmail.bogumilmecel2.fitnessappv2.common.data.utils.CustomSharedPreferencesUtils
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.CachedValuesProvider
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.Currency
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.model.User
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.model.LogEntry
@@ -12,48 +12,76 @@ import com.google.gson.Gson
 class RealCachedValuesProvider(
     private val gson: Gson,
     private val sharedPreferences: SharedPreferences
-): CachedValuesProvider {
+) : CachedValuesProvider {
 
     companion object {
         const val USER_KEY = "user"
+        const val CURRENCY = "currency"
     }
 
-    override suspend fun getWantedNutritionValues(): NutritionValues {
-        TODO("Not yet implemented")
-    }
+    override suspend fun getWantedNutritionValues() =
+        getUser()?.nutritionValues ?: NutritionValues()
 
     override suspend fun saveWantedNutritionValues(nutritionValues: NutritionValues) {
-        TODO("Not yet implemented")
+        getUser()?.copy(
+            nutritionValues = nutritionValues
+        )?.let {
+            saveUser(it)
+        }
     }
 
-    override suspend fun getWeightProgress(): String {
-        TODO("Not yet implemented")
+    override suspend fun getWeightProgress() = getUser()?.weightProgress ?: ""
+
+    override suspend fun updateWeightInfo(
+        weightProgress: String?,
+        latestWeightEntry: WeightEntry?
+    ) {
+        getUser()?.let {
+            saveUser(
+                user = it.copy(
+                    latestWeightEntry = latestWeightEntry,
+                    weightProgress = weightProgress
+                )
+            )
+
+        }
     }
 
-    override suspend fun updateWeightIProgress() {
-        TODO("Not yet implemented")
+    override suspend fun getLatestLogEntry() = getUser()?.latestLogEntry ?: LogEntry()
+
+    override suspend fun getLatestWeightEntry() = getUser()?.latestWeightEntry
+
+    override suspend fun getUser() = getItemFromJson(
+        USER_KEY,
+        User::class.java
+    )
+
+    override suspend fun getUserCurrency(): Currency = getItemFromJson(
+        key = CURRENCY,
+        String::class.java
+    )?.let {
+        Currency.getCurrencyFromShortName(shortName = it)
+    } ?: Currency.PLN
+
+    override suspend fun saveUser(user: User) {
+        saveItemToJson(
+            item = user,
+            key = USER_KEY
+        )
     }
 
-    override suspend fun getLatestLogEntry(): LogEntry {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun getLatestWeightEntry(): WeightEntry {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun updateLatestWeightEntry() {
-        TODO("Not yet implemented")
-    }
-
-    private suspend fun getUser() = getItemFromJson(CustomSharedPreferencesUtils.USER_KEY, User::class.java)
-
-    private fun <T> getItemFromJson(key: String, clazz: Class<T>): T?{
+    private fun <T> getItemFromJson(key: String, clazz: Class<T>): T? {
         return try {
-            sharedPreferences.getString(key, null)?.let { jsonString ->
-                gson.fromJson(jsonString, clazz)
+            sharedPreferences.getString(
+                key,
+                null
+            )?.let { jsonString ->
+                gson.fromJson(
+                    jsonString,
+                    clazz
+                )
             }
-        }catch (e:Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
             null
         }
@@ -62,7 +90,10 @@ class RealCachedValuesProvider(
     private fun saveItemToJson(item: Any, key: String): Boolean {
         return try {
             gson.toJson(item)?.let { jsonString ->
-                sharedPreferences.edit().putString(key, jsonString).commit()
+                sharedPreferences.edit().putString(
+                    key,
+                    jsonString
+                ).commit()
             }
             true
         } catch (e: Exception) {
