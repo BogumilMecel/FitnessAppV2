@@ -12,7 +12,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.navigation.Navigator
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.repository.TokenRepository
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.*
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.DefaultInterceptor
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.ResourceProvider
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.RealResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.feature_account.domain.use_case.DeleteToken
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.data.api.AuthApi
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.data.repository.AuthRepositoryImp
@@ -70,7 +70,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideResourceProvider(app: Application): ResourceProvider = ResourceProvider(app)
+    fun provideResourceProvider(app: Application): RealResourceProvider = RealResourceProvider(app)
 
     @Provides
     @Singleton
@@ -111,9 +111,9 @@ object AppModule {
     @Singleton
     @Provides
     fun provideGenerateDiaryItemDialogTitleUseCase(
-        resourceProvider: ResourceProvider
+        realResourceProvider: RealResourceProvider
     ): GenerateDiaryItemDialogTitleUseCase = GenerateDiaryItemDialogTitleUseCase(
-        resourceProvider = resourceProvider
+        realResourceProvider = realResourceProvider
     )
 
     @Singleton
@@ -128,20 +128,20 @@ object AppModule {
     @Provides
     fun provideEditProductDiaryEntryUseCase(
         diaryRepository: DiaryRepository,
-        resourceProvider: ResourceProvider
+        realResourceProvider: RealResourceProvider
     ): EditProductDiaryEntryUseCase = EditProductDiaryEntryUseCase(
         diaryRepository = diaryRepository,
-        resourceProvider = resourceProvider
+        realResourceProvider = realResourceProvider
     )
 
     @Singleton
     @Provides
     fun provideEditRecipeDiaryEntryUseCase(
         diaryRepository: DiaryRepository,
-        resourceProvider: ResourceProvider
+        realResourceProvider: RealResourceProvider
     ): EditRecipeDiaryEntryUseCase = EditRecipeDiaryEntryUseCase(
         diaryRepository = diaryRepository,
-        resourceProvider = resourceProvider
+        realResourceProvider = realResourceProvider
     )
 
     @Singleton
@@ -186,20 +186,20 @@ object AppModule {
     @Provides
     fun provideTokenRepository(
         sharedPreferences: SharedPreferences,
-        resourceProvider: ResourceProvider
+        realResourceProvider: RealResourceProvider
     ): TokenRepository = TokenRepositoryImp(
         sharedPreferences = sharedPreferences,
-        resourceProvider = resourceProvider
+        realResourceProvider = realResourceProvider
     )
 
     @Singleton
     @Provides
     fun providePostRecipeDiaryEntryUseCase(
         diaryRepository: DiaryRepository,
-        resourceProvider: ResourceProvider
+        realResourceProvider: RealResourceProvider
     ): PostRecipeDiaryEntryUseCase = PostRecipeDiaryEntryUseCase(
         diaryRepository = diaryRepository,
-        resourceProvider = resourceProvider
+        realResourceProvider = realResourceProvider
     )
 
     @Singleton
@@ -220,11 +220,11 @@ object AppModule {
     @Singleton
     fun provideAuthRepository(
         authApi: AuthApi,
-        resourceProvider: ResourceProvider
+        realResourceProvider: RealResourceProvider
     ): AuthRepository =
         AuthRepositoryImp(
             authApi = authApi,
-            resourceProvider = resourceProvider
+            realResourceProvider = realResourceProvider
         )
 
     @Provides
@@ -249,23 +249,23 @@ object AppModule {
     @Singleton
     fun provideAuthUseCases(
         authRepository: AuthRepository,
-        resourceProvider: ResourceProvider,
+        realResourceProvider: RealResourceProvider,
         saveToken: SaveToken
     ): AuthUseCases = AuthUseCases(
         logInUser = LogInUser(
             repository = authRepository,
-            resourceProvider = resourceProvider,
+            realResourceProvider = realResourceProvider,
             saveToken = saveToken
         ),
 
         registerUser = RegisterUser(
             repository = authRepository,
-            resourceProvider = resourceProvider,
+            realResourceProvider = realResourceProvider,
         ),
 
         resetPasswordWithEmail = ResetPasswordWithEmail(
             repository = authRepository,
-            resourceProvider = resourceProvider
+            realResourceProvider = realResourceProvider
         ),
 
         )
@@ -279,20 +279,20 @@ object AppModule {
     @Singleton
     fun provideSaveInformationUseCase(
         userDataRepository: UserDataRepository,
-        resourceProvider: ResourceProvider,
+        realResourceProvider: RealResourceProvider,
     ): SaveIntroductionInformation = SaveIntroductionInformation(
         userDataRepository = userDataRepository,
-        resourceProvider = resourceProvider
+        realResourceProvider = realResourceProvider
     )
 
     @Singleton
     @Provides
     fun provideDiaryRepository(
         diaryApi: DiaryApi,
-        resourceProvider: ResourceProvider
+        realResourceProvider: RealResourceProvider
     ): DiaryRepository =
         DiaryRepositoryImp(
-            resourceProvider = resourceProvider,
+            realResourceProvider = realResourceProvider,
             diaryApi = diaryApi
         )
 
@@ -308,10 +308,10 @@ object AppModule {
     @Provides
     fun provideAddNewRecipe(
         diaryRepository: DiaryRepository,
-        resourceProvider: ResourceProvider
+        realResourceProvider: RealResourceProvider
     ): AddNewRecipe = AddNewRecipe(
         diaryRepository = diaryRepository,
-        resourceProvider = resourceProvider
+        realResourceProvider = realResourceProvider
     )
 
     @Singleton
@@ -349,7 +349,7 @@ object AppModule {
         calculateRecipeNutritionValues: CalculateRecipeNutritionValues,
         createPieChartData: CreatePieChartData,
         searchForProductsUseCase: SearchForProductsUseCase,
-        calculateProductNutritionValues: CalculateProductNutritionValues,
+        calculateProductNutritionValuesUseCase: CalculateProductNutritionValuesUseCase,
         getRecipePriceFromIngredientsUseCase: GetRecipePriceFromIngredientsUseCase,
         calculateServingPrice: CalculateServingPrice
     ): NewRecipeUseCases = NewRecipeUseCases(
@@ -357,15 +357,15 @@ object AppModule {
         calculateRecipeNutritionValues = calculateRecipeNutritionValues,
         createPieChartData = createPieChartData,
         searchForProductsUseCase = searchForProductsUseCase,
-        calculateProductNutritionValues = calculateProductNutritionValues,
+        calculateProductNutritionValuesUseCase = calculateProductNutritionValuesUseCase,
         getRecipePriceFromIngredientsUseCase = getRecipePriceFromIngredientsUseCase,
         calculateServingPrice = calculateServingPrice
     )
 
     @Singleton
     @Provides
-    fun provideCalculateProductNutritionValues(): CalculateProductNutritionValues =
-        CalculateProductNutritionValues()
+    fun provideCalculateProductNutritionValues(): CalculateProductNutritionValuesUseCase =
+        CalculateProductNutritionValuesUseCase()
 
     @Singleton
     @Provides
@@ -382,11 +382,11 @@ object AppModule {
     @Provides
     fun provideWeightRepository(
         weightApi: WeightApi,
-        resourceProvider: ResourceProvider,
+        realResourceProvider: RealResourceProvider,
         customSharedPreferencesUtils: CustomSharedPreferencesUtils
     ): WeightRepository = WeighRepositoryImp(
         weightApi = weightApi,
-        resourceProvider = resourceProvider,
+        realResourceProvider = realResourceProvider,
         customSharedPreferencesUtils = customSharedPreferencesUtils
     )
 
@@ -428,11 +428,11 @@ object AppModule {
     @Provides
     fun provideIntroductionRepository(
         userDataApi: UserDataApi,
-        resourceProvider: ResourceProvider,
+        realResourceProvider: RealResourceProvider,
         customSharedPreferencesUtils: CustomSharedPreferencesUtils
     ): UserDataRepository = UserDataRepositoryImp(
         userDataApi = userDataApi,
-        resourceProvider = resourceProvider,
+        realResourceProvider = realResourceProvider,
         customSharedPreferencesUtils = customSharedPreferencesUtils
     )
 
@@ -440,11 +440,11 @@ object AppModule {
     @Provides
     fun provideLoadingRepository(
         loadingApi: LoadingApi,
-        resourceProvider: ResourceProvider,
+        realResourceProvider: RealResourceProvider,
         customSharedPreferencesUtils: CustomSharedPreferencesUtils
     ): LoadingRepository = LoadingRepositoryImp(
         loadingApi = loadingApi,
-        resourceProvider = resourceProvider,
+        realResourceProvider = realResourceProvider,
         customSharedPreferencesUtils = customSharedPreferencesUtils
     )
 
@@ -492,20 +492,20 @@ object AppModule {
     @Provides
     fun provideProductUseCases(
         diaryRepository: DiaryRepository,
-        resourceProvider: ResourceProvider,
+        realResourceProvider: RealResourceProvider,
         createPieChartData: CreatePieChartData,
         getUserCurrencyUseCase: GetUserCurrencyUseCase
     ): ProductUseCases =
         ProductUseCases(
-            calculateProductNutritionValues = CalculateProductNutritionValues(),
+            calculateProductNutritionValuesUseCase = CalculateProductNutritionValuesUseCase(),
             createPieChartData = createPieChartData,
             addDiaryEntry = AddDiaryEntry(
                 diaryRepository = diaryRepository,
-                resourceProvider = resourceProvider
+                realResourceProvider = realResourceProvider
             ),
             submitNewPriceUseCase = SubmitNewPriceUseCase(
                 diaryRepository = diaryRepository,
-                resourceProvider = resourceProvider,
+                realResourceProvider = realResourceProvider,
                 getUserCurrencyUseCase = getUserCurrencyUseCase
             ),
             getPriceUseCase = GetPriceUseCase(

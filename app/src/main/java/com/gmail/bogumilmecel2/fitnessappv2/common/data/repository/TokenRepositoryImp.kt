@@ -4,12 +4,12 @@ import android.content.SharedPreferences
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.repository.TokenRepository
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseRepository
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.ResourceProvider
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.RealResourceProvider
 
 class TokenRepositoryImp(
     private val sharedPreferences: SharedPreferences,
-    resourceProvider: ResourceProvider
-) : TokenRepository, BaseRepository(resourceProvider) {
+    realResourceProvider: RealResourceProvider
+) : TokenRepository, BaseRepository(realResourceProvider) {
     override suspend fun getToken(): Resource<String> {
         return handleRequest {
             sharedPreferences.getString("token", null) ?: throw NullPointerException()

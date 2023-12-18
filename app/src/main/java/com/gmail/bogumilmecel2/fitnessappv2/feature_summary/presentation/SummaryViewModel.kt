@@ -107,7 +107,7 @@ class SummaryViewModel @Inject constructor(
         viewModelScope.launch {
             val caloriesSum = summaryUseCases.getCaloriesSum(
                 date = CurrentDate.dateModel(
-                    resourceProvider = resourceProvider
+                    realResourceProvider = realResourceProvider
                 ).date
             )
             _state.update {

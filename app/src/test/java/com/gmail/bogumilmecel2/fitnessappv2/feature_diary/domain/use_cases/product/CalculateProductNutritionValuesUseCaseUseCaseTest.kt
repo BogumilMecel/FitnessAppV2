@@ -2,21 +2,15 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.prod
 
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
-import org.junit.Before
 import org.junit.Test
 
-internal class CalculateProductNutritionValuesTest{
+internal class CalculateProductNutritionValuesUseCaseUseCaseTest {
 
-    lateinit var calculateProductNutritionValues: CalculateProductNutritionValues
-
-    @Before
-    fun setUp(){
-        calculateProductNutritionValues = CalculateProductNutritionValues()
-    }
+    val calculateProductNutritionValuesUseCase = CalculateProductNutritionValuesUseCase()
 
     @Test
-    fun randomValues1_CorrectNewValues(){
-        val newValues = calculateProductNutritionValues(
+    fun `When provided with random values 1, return give correct nutrition values`() {
+        val newValues = calculateProductNutritionValuesUseCase(
             weight = 100,
             product = Product(
                 nutritionValues = NutritionValues(
@@ -27,15 +21,15 @@ internal class CalculateProductNutritionValuesTest{
                 )
             )
         )
-        assert(newValues.calories==100)
-        assert(newValues.carbohydrates==100.0)
-        assert(newValues.protein==100.0)
-        assert(newValues.fat==100.0)
+        assert(newValues.calories == 100)
+        assert(newValues.carbohydrates == 100.0)
+        assert(newValues.protein == 100.0)
+        assert(newValues.fat == 100.0)
     }
 
     @Test
-    fun randomValues2_CorrectNewValues(){
-        val newValues = calculateProductNutritionValues(
+    fun `When provided with random values 2, return give correct nutrition values`() {
+        val newValues = calculateProductNutritionValuesUseCase(
             weight = 170,
             product = Product(
                 nutritionValues = NutritionValues(
@@ -46,15 +40,15 @@ internal class CalculateProductNutritionValuesTest{
                 )
             )
         )
-        assert(newValues.calories==32)
-        assert(newValues.carbohydrates==4.9)
-        assert(newValues.protein==1.5)
-        assert(newValues.fat==0.3)
+        assert(newValues.calories == 32)
+        assert(newValues.carbohydrates == 4.9)
+        assert(newValues.protein == 1.5)
+        assert(newValues.fat == 0.3)
     }
 
     @Test
-    fun randomValues3_CorrectNewValues(){
-        val newValues = calculateProductNutritionValues(
+    fun `When provided with random values 3, return give correct nutrition values`() {
+        val newValues = calculateProductNutritionValuesUseCase(
             weight = 60,
             product = Product(
                 nutritionValues = NutritionValues(
@@ -65,9 +59,9 @@ internal class CalculateProductNutritionValuesTest{
                 )
             )
         )
-        assert(newValues.calories==55)
-        assert(newValues.carbohydrates==0.6)
-        assert(newValues.protein==13.2)
-        assert(newValues.fat==0.0)
+        assert(newValues.calories == 55)
+        assert(newValues.carbohydrates == 0.6)
+        assert(newValues.protein == 13.2)
+        assert(newValues.fat == 0.0)
     }
 }

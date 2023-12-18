@@ -3,7 +3,7 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_auth.data.repository
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseRepository
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.ResourceProvider
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.RealResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.data.api.AuthApi
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.model.LoginRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.model.RegisterRequest
@@ -12,8 +12,8 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.repository.AuthR
 
 class AuthRepositoryImp(
     private val authApi: AuthApi,
-    private val resourceProvider: ResourceProvider
-) : AuthRepository, BaseRepository(resourceProvider) {
+    private val realResourceProvider: RealResourceProvider
+) : AuthRepository, BaseRepository(realResourceProvider) {
 
     override suspend fun logInUser(
         loginRequest: LoginRequest
@@ -32,6 +32,6 @@ class AuthRepositoryImp(
     }
 
     override suspend fun sendPasswordResetEmail(email: String): Resource<Boolean> {
-        return Resource.Error(resourceProvider.getString(R.string.unknown_error))
+        return Resource.Error(realResourceProvider.getString(R.string.unknown_error))
     }
 }

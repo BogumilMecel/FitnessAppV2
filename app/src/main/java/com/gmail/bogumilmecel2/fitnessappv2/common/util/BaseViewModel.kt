@@ -21,7 +21,7 @@ open class BaseViewModel @Inject constructor() : ViewModel() {
     lateinit var sharedPreferencesUtils: CustomSharedPreferencesUtils
 
     @Inject
-    lateinit var resourceProvider: ResourceProvider
+    lateinit var realResourceProvider: RealResourceProvider
 
     fun showSnackbarError(message: String) {
         viewModelScope.launch {

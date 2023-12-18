@@ -121,7 +121,7 @@ class SearchViewModel @Inject constructor(
             is SearchEvent.ClickedProductsTab -> {
                 _searchState.update {
                     it.copy(
-                        searchBarPlaceholderText = resourceProvider.getString(R.string.product_name),
+                        searchBarPlaceholderText = realResourceProvider.getString(R.string.product_name),
                         currentTabIndex = 0
                     )
                 }
@@ -130,7 +130,7 @@ class SearchViewModel @Inject constructor(
             is SearchEvent.ClickedRecipesTab -> {
                 _searchState.update {
                     it.copy(
-                        searchBarPlaceholderText = resourceProvider.getString(R.string.recipe_name),
+                        searchBarPlaceholderText = realResourceProvider.getString(R.string.recipe_name),
                         currentTabIndex = 1
                     )
                 }
@@ -237,7 +237,7 @@ class SearchViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             searchDiaryUseCases.searchForProductWithBarcode(barcode).handle(
                 onError = { errorMessage ->
-                    if (errorMessage == resourceProvider.getString(R.string.there_is_no_product_with_provided_barcode_do_you_want_to_add_it)) {
+                    if (errorMessage == realResourceProvider.getString(R.string.there_is_no_product_with_provided_barcode_do_you_want_to_add_it)) {
                         _searchState.update {
                             it.copy(
                                 barcode = barcode,
