@@ -2,6 +2,7 @@ package com.gmail.bogumilmecel2.fitnessappv2.common
 
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.Currency
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.OfflineMode
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.UserInformation
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.CachedValuesProvider
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.model.User
@@ -28,4 +29,6 @@ class MockCachedValuesProvider : CachedValuesProvider {
     override suspend fun getLocalLastTimeShowedWeightPicker() = null
     override suspend fun setLocalLastTimeShowedWeightPicker(date: String) {}
     override suspend fun updateUserInformation(userInformation: UserInformation) {}
+    override suspend fun setOfflineMode(offlineMode: OfflineMode) {}
+    override suspend fun getOfflineMode(): OfflineMode = OfflineMode.Online
 }

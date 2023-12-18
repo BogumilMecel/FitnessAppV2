@@ -3,6 +3,8 @@ package com.gmail.bogumilmecel2.fitnessappv2.common.di
 import android.app.Application
 import com.gmail.bogumilmecel2.auth.ValidateAuthDataUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.common.MockCachedValuesProvider
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.connectivity.ConnectivityObserver
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.ConnectionState
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.Currency
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.DiaryItem
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
@@ -61,6 +63,9 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import javax.inject.Singleton
 
 @Module
@@ -102,9 +107,7 @@ object TestAppModule {
             TODO("Not yet implemented")
         }
 
-        override suspend fun saveToken(token: String): Resource<Unit> {
-            TODO("Not yet implemented")
-        }
+        override suspend fun saveToken(token: String): Resource<Unit> = Resource.Success(Unit)
 
         override suspend fun deleteToken(): Resource<Unit> {
             TODO("Not yet implemented")
@@ -114,6 +117,14 @@ object TestAppModule {
     @Provides
     @Singleton
     fun provideAuthRepository(): AuthRepository = MockAuthRepository()
+
+    @Singleton
+    @Provides
+    fun provideConnectivityObserver(): ConnectivityObserver = object : ConnectivityObserver {
+        override fun observe(): Flow<ConnectionState> = callbackFlow {
+            awaitClose {  }
+        }
+    }
 
     @Singleton
     @Provides
