@@ -22,7 +22,7 @@ class AuthRepositoryImp(
 
     override suspend fun registerUser(
         registerRequest: RegisterRequest
-    ): Resource<Boolean> {
+    ): Resource<Unit> {
         return handleRequest {
             authApi.registerUser(request = registerRequest)
         }

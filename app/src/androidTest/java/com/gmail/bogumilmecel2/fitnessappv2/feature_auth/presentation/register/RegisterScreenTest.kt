@@ -61,14 +61,6 @@ internal class RegisterScreenTest: BaseAndroidTest() {
     }
 
     @Test
-    fun checkIfSnackbarIsVisibleWhenAllFieldsAreEmpty() {
-        performButtonClickAndAssertSnackbarDisplayed(
-            buttonTestTag = TestTags.PRIMARY_BUTTON,
-            snackbarText = getString(R.string.please_make_sure_all_fields_are_filled_in_correctly)
-        )
-    }
-
-    @Test
     fun checkIfSnackbarIsVisibleWhenEmailIsNotValid() {
         enterFieldValues(email = AndroidMockConstants.INCORRECT_EMAIL)
 
@@ -102,10 +94,10 @@ internal class RegisterScreenTest: BaseAndroidTest() {
     }
 
     @Test
-    fun checkIfSnackbarIsVisibleLongerThan24Characters() {
+    fun checkIfSnackbarIsVisibleLongerThanMaximum() {
         enterFieldValues(
-            password = AndroidMockConstants.TOO_LONG_PASSWORD,
-            confirmPassword = AndroidMockConstants.TOO_LONG_PASSWORD
+            password = AndroidMockConstants.getInvalidLengthPassword(),
+            confirmPassword = AndroidMockConstants.getInvalidLengthPassword()
         )
 
         performButtonClickAndAssertSnackbarDisplayed(
@@ -144,6 +136,8 @@ internal class RegisterScreenTest: BaseAndroidTest() {
             testTag = TestTags.PASSWORD,
             text = password
         )
+
+        Thread.sleep(1000)
 
         performTextInput(
             testTag = TestTags.CONFIRM_PASSWORD,

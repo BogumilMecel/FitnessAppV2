@@ -14,6 +14,13 @@ object MockConstants {
     const val USER_ID = "user_id"
     const val CORRECT_PAGE = 1
 
+    object Auth {
+        const val CORRECT_EMAIL = "email@email.com"
+        const val CORRECT_PASSWORD = "123456"
+        const val CORRECT_PASSWORD_2 = "654321"
+        const val CORRECT_USERNAME = "username"
+    }
+
     object Diary {
         const val PRODUCT_ID_11 = "11"
         const val PRODUCT_DIARY_ENTRY_ID_21 = "21"
@@ -61,11 +68,6 @@ object MockConstants {
         )
 
         fun getSampleNutritionValues() = NutritionValues(calories = 255, carbohydrates = 31.0, protein = 17.0, fat = 7.0)
-
-        fun mockMeasurementUnitString(resourceProvider: ResourceProvider) {
-            every { resourceProvider.getString(stringResId = MeasurementUnit.GRAMS.getStringRes()) } returns GRAMS
-            every { resourceProvider.getString(stringResId = MeasurementUnit.MILLILITERS.getStringRes()) } returns MILLILITERS
-        }
 
         fun mockMeasurementUnitWithValueString(
             resourceProvider: ResourceProvider,

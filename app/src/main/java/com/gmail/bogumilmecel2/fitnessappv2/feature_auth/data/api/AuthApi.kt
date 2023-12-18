@@ -8,9 +8,7 @@ import retrofit2.http.POST
 
 interface AuthApi {
     @POST("/authentication/signup/")
-    suspend fun registerUser(
-        @Body request: RegisterRequest
-    ): Boolean
+    suspend fun registerUser(@Body request: RegisterRequest)
 
     @POST("/authentication/signin/")
     suspend fun signIn(
