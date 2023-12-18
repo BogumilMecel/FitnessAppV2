@@ -10,8 +10,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.Switch
-import androidx.compose.material.SwitchDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -29,6 +27,7 @@ import com.gmail.bogumilmecel2.ui.components.base.CustomButton
 import com.gmail.bogumilmecel2.ui.components.base.CustomIconButton
 import com.gmail.bogumilmecel2.ui.components.base.IconButtonParams
 import com.gmail.bogumilmecel2.ui.components.base.IconVector
+import com.gmail.bogumilmecel2.ui.components.base.listing.ListingSwitch
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 import com.gmail.bogumilmecel2.ui.theme.LocalColor.BlueViolet3
 import com.gmail.bogumilmecel2.ui.theme.LocalColor.LightGreen3
@@ -156,29 +155,14 @@ fun AccountScreen(navigator: DestinationsNavigator) {
                     .fillMaxWidth()
                     .padding(horizontal = 10.dp)
             ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.account_ask_for_weight_daily),
-                        style = FitnessAppTheme.typography.ParagraphLarge,
-                        modifier = Modifier.weight(1f)
-                    )
-
-                    Switch(
-                        checked = state.askForWeightDaily,
-                        colors = SwitchDefaults.colors(
-                            uncheckedThumbColor = FitnessAppTheme.colors.ContentSecondary
-                        ),
-                        onCheckedChange = {
-                            viewModel.onEvent(AccountEvent.AskForWeightDailyClicked(it))
-                        },
-                    )
-                }
+                ListingSwitch(
+                    topText = stringResource(id = R.string.account_ask_for_weight_daily),
+                    bottomText = stringResource(id = R.string.account_daily_weight_description),
+                    checked = state.askForWeightDaily,
+                    onCheckedChange = {
+                        viewModel.onEvent(AccountEvent.AskForWeightDailyClicked(it))
+                    }
+                )
             }
 
             Spacer(modifier = Modifier.height(12.dp))

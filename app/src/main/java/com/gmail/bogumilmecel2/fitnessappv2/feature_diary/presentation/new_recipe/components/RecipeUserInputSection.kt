@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Switch
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
@@ -31,7 +30,7 @@ import com.gmail.bogumilmecel2.ui.components.base.CustomButton
 import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
 import com.gmail.bogumilmecel2.ui.components.base.IconVector
 import com.gmail.bogumilmecel2.ui.components.base.WidthSpacer
-import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
+import com.gmail.bogumilmecel2.ui.components.base.listing.ListingSwitch
 
 @Composable
 fun RecipeUserInputSection(
@@ -156,7 +155,9 @@ fun RecipeUserInputSection(
                     onValueChange = {
                         onEvent(NewRecipeEvent.EnteredServing(it))
                     },
-                    modifier = Modifier.width(80.dp).height(48.dp),
+                    modifier = Modifier
+                        .width(80.dp)
+                        .height(48.dp),
                     singleLine = true,
                     textAlign = TextAlign.Center
                 )
@@ -165,40 +166,15 @@ fun RecipeUserInputSection(
 
         HeightSpacer()
 
-        DefaultCardBackground(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .padding(15.dp)
-            ) {
-                Column(
-                    modifier = Modifier.weight(0.8f)
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.new_recipe_public),
-                        style = MaterialTheme.typography.body1
-                    )
-
-                    HeightSpacer(height = 4.dp)
-
-                    Text(
-                        text = stringResource(id = R.string.new_recipe_public_des),
-                        style = MaterialTheme.typography.body2.copy(color = FitnessAppTheme.colors.ContentSecondary)
-                    )
+        DefaultCardBackground(modifier = Modifier.fillMaxWidth()) {
+            ListingSwitch(
+                topText = stringResource(id = R.string.new_recipe_public),
+                bottomText = stringResource(id = R.string.new_recipe_public_des),
+                checked = state.isRecipePublic,
+                onCheckedChange = {
+                    onEvent(NewRecipeEvent.SwitchedPublic(it))
                 }
-
-                WidthSpacer()
-
-                Switch(
-                    checked = state.isRecipePublic,
-                    onCheckedChange = {
-                        onEvent(NewRecipeEvent.SwitchedPublic(it))
-                    },
-                    modifier = Modifier.weight(0.2f)
-                )
-            }
+            )
         }
 
         HeightSpacer()
