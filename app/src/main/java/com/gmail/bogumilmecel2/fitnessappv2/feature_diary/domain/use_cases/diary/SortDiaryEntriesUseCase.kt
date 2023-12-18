@@ -1,17 +1,14 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary
 
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.DiaryItem
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.DiaryEntriesResponse
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.MealName
 
-class SortDiaryEntries {
+class SortDiaryEntriesUseCase {
 
     operator fun invoke(
-        diaryEntriesResponse: DiaryEntriesResponse
+        diaryEntries: List<DiaryItem>
     ):Map<MealName,List<DiaryItem>>{
-        return mutableListOf<DiaryItem>().run {
-            addAll(diaryEntriesResponse.recipeDiaryEntries)
-            addAll(diaryEntriesResponse.productDiaryEntries)
+        return diaryEntries.toMutableList().run {
             sortByDescending { it.timestamp }
             groupBy { it.mealName }
         }

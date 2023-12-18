@@ -37,7 +37,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.recip
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.GetDiaryHistory
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.SearchDiaryUseCases
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.SearchForProductWithBarcode
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.SearchForProducts
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.SearchForProductsUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.SearchForRecipes
 import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.data.api.UserDataApi
 import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.data.repository.UserDataRepositoryImp
@@ -299,15 +299,6 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideGetDiaryEntriesUseCase(
-        diaryRepository: DiaryRepository,
-    ): GetDiaryEntries = GetDiaryEntries(
-        diaryRepository = diaryRepository,
-        sortDiaryEntries = SortDiaryEntries()
-    )
-
-    @Singleton
-    @Provides
     fun provideDeleteDiaryEntryUseCase(
         diaryRepository: DiaryRepository
     ): DeleteDiaryEntry = DeleteDiaryEntry(
@@ -358,7 +349,7 @@ object AppModule {
         addNewRecipe: AddNewRecipe,
         calculateRecipeNutritionValues: CalculateRecipeNutritionValues,
         createPieChartData: CreatePieChartData,
-        searchForProducts: SearchForProducts,
+        searchForProductsUseCase: SearchForProductsUseCase,
         calculateProductNutritionValues: CalculateProductNutritionValues,
         getRecipePriceFromIngredientsUseCase: GetRecipePriceFromIngredientsUseCase,
         calculateServingPrice: CalculateServingPrice
@@ -366,7 +357,7 @@ object AppModule {
         addNewRecipe = addNewRecipe,
         calculateRecipeNutritionValues = calculateRecipeNutritionValues,
         createPieChartData = createPieChartData,
-        searchForProducts = searchForProducts,
+        searchForProductsUseCase = searchForProductsUseCase,
         calculateProductNutritionValues = calculateProductNutritionValues,
         getRecipePriceFromIngredientsUseCase = getRecipePriceFromIngredientsUseCase,
         calculateServingPrice = calculateServingPrice
@@ -420,7 +411,7 @@ object AppModule {
     fun provideSearchForProductsUseCase(
         diaryRepository: DiaryRepository,
         getDiaryHistory: GetDiaryHistory
-    ): SearchForProducts = SearchForProducts(
+    ): SearchForProductsUseCase = SearchForProductsUseCase(
         diaryRepository = diaryRepository,
         getDiaryHistory = getDiaryHistory
     )
@@ -473,11 +464,11 @@ object AppModule {
     @Provides
     fun provideDiarySearchUseCases(
         diaryRepository: DiaryRepository,
-        searchForProducts: SearchForProducts,
+        searchForProductsUseCase: SearchForProductsUseCase,
         getDiaryHistory: GetDiaryHistory
     ): SearchDiaryUseCases =
         SearchDiaryUseCases(
-            searchForProducts = searchForProducts,
+            searchForProductsUseCase = searchForProductsUseCase,
             getDiaryHistory = getDiaryHistory,
             searchForProductWithBarcode = SearchForProductWithBarcode(diaryRepository),
             searchForRecipes = SearchForRecipes(diaryRepository)

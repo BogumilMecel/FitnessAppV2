@@ -12,13 +12,13 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class RecipeDiaryEntry(
     override val id: String,
-    override val nutritionValues: NutritionValues,
-    override val timestamp: Long,
-    override val userId: String,
-    override val mealName: MealName,
-    override val date: String,
-    val recipe: Recipe,
-    val servings: Int,
+    override val nutritionValues: NutritionValues = NutritionValues(),
+    override val timestamp: Long = 0,
+    override val userId: String = "",
+    override val mealName: MealName = MealName.BREAKFAST,
+    override val date: String = "",
+    val recipe: Recipe = Recipe(),
+    val servings: Int = 0,
 ) : DiaryItem {
     @Composable
     override fun getDisplayValue() = stringResource(
