@@ -11,6 +11,5 @@ data class NewRecipeRequest(
     val timeRequired: TimeRequired,
     val difficulty: Difficulty,
     val ingredients: List<Ingredient>,
-    val timestamp: Long,
     val isPublic: Boolean
 )
