@@ -40,7 +40,7 @@ class PostRecipeDiaryEntryUseCase(
 
         offlineDiaryRepository.insertRecipe(recipe)
 
-        return diaryRepository.insertOfflineDiaryEntry(insertedRecipeDiaryEntry)
+        return offlineDiaryRepository.insertRecipeDiaryEntry(insertedRecipeDiaryEntry)
     }
 
     private fun getServingsResourceError() = Resource.Error<Unit>(uiText = resourceProvider.getString(R.string.recipe_servings_error))

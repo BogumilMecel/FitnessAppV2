@@ -7,6 +7,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.OfflineDiaryRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -17,11 +18,13 @@ import kotlin.test.assertIs
 class EditRecipeDiaryEntryUseCaseTest : BaseTest() {
 
     private val diaryRepository = mockk<DiaryRepository>()
+    private val offlineDiaryEntry = mockk<OfflineDiaryRepository>()
     private val calculateRecipeNutritionValuesForServingsUseCase =
         mockk<CalculateRecipeNutritionValuesForServingsUseCase>()
     private val editRecipeDiaryEntryUseCase = EditRecipeDiaryEntryUseCase(
         diaryRepository = diaryRepository,
-        calculateRecipeNutritionValuesForServingsUseCase = calculateRecipeNutritionValuesForServingsUseCase
+        calculateRecipeNutritionValuesForServingsUseCase = calculateRecipeNutritionValuesForServingsUseCase,
+        offlineDiaryRepository = offlineDiaryEntry
     )
 
     @Test
@@ -89,11 +92,11 @@ class EditRecipeDiaryEntryUseCaseTest : BaseTest() {
             )
         } returns expectedNutritionValues
         coEvery { diaryRepository.editRecipeDiaryEntry(recipeDiaryEntry = expectedRecipeDiaryEntry) } returns Resource.Success(expectedRecipeDiaryEntry)
-        coEvery { diaryRepository.insertOfflineDiaryEntry(expectedRecipeDiaryEntry) } returns Resource.Success(Unit)
+        coEvery { offlineDiaryEntry.insertRecipeDiaryEntry(expectedRecipeDiaryEntry) } returns Resource.Success(Unit)
         assertIs<Resource.Success<Unit>>(callTestedMethod())
         coVerify(exactly = 1) {
             diaryRepository.editRecipeDiaryEntry(recipeDiaryEntry = expectedRecipeDiaryEntry)
-            diaryRepository.insertOfflineDiaryEntry(expectedRecipeDiaryEntry)
+            offlineDiaryEntry.insertRecipeDiaryEntry(expectedRecipeDiaryEntry)
         }
     }
 

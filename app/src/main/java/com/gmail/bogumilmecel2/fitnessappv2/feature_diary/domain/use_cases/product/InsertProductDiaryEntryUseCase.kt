@@ -41,7 +41,7 @@ class InsertProductDiaryEntryUseCase(
 
         offlineDiaryRepository.insertProduct(product = product)
 
-        return diaryRepository.insertOfflineDiaryEntry(insertedProductDiaryEntry)
+        return offlineDiaryRepository.insertProductDiaryEntry(insertedProductDiaryEntry)
     }
 
     private fun getWeightErrorResource() =

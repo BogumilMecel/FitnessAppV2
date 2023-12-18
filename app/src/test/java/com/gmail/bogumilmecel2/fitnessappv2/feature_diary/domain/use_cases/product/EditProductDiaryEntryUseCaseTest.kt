@@ -7,6 +7,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.OfflineDiaryRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -17,10 +18,12 @@ import kotlin.test.assertIs
 class EditProductDiaryEntryUseCaseTest: BaseTest() {
 
     private val diaryRepository = mockk<DiaryRepository>()
+    private val offlineDiaryEntry = mockk<OfflineDiaryRepository>()
     private val calculateProductNutritionValuesUseCase = mockk<CalculateProductNutritionValuesUseCase>()
     private val editProductDiaryEntryUseCase = EditProductDiaryEntryUseCase(
         diaryRepository = diaryRepository,
-        calculateProductNutritionValuesUseCase = calculateProductNutritionValuesUseCase
+        calculateProductNutritionValuesUseCase = calculateProductNutritionValuesUseCase,
+        offlineDiaryRepository = offlineDiaryEntry
     )
 
     @Test
@@ -75,11 +78,11 @@ class EditProductDiaryEntryUseCaseTest: BaseTest() {
             )
         } returns expectedNutritionValues
         coEvery { diaryRepository.editProductDiaryEntry(productDiaryEntry = expectedProductDiaryEntry) } returns Resource.Success(expectedProductDiaryEntry)
-        coEvery { diaryRepository.insertOfflineDiaryEntry(expectedProductDiaryEntry) } returns Resource.Success(Unit)
+        coEvery { offlineDiaryEntry.insertProductDiaryEntry(expectedProductDiaryEntry) } returns Resource.Success(Unit)
         assertIs<Resource.Success<Unit>>(callTestedMethod())
         coVerify(exactly = 1) {
             diaryRepository.editProductDiaryEntry(productDiaryEntry = expectedProductDiaryEntry)
-            diaryRepository.insertOfflineDiaryEntry(expectedProductDiaryEntry)
+            offlineDiaryEntry.insertProductDiaryEntry(expectedProductDiaryEntry)
         }
     }
 

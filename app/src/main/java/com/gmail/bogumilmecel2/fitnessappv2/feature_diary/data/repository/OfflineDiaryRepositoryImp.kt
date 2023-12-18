@@ -146,4 +146,16 @@ class OfflineDiaryRepositoryImp(
             userDiaryItemsDao.insertProduct(product)
         }
     }
+
+    override suspend fun insertProductDiaryEntry(productDiaryEntry: ProductDiaryEntry): Resource<Unit> {
+        return handleRequest {
+            userDiaryItemsDao.insertProductDiaryEntry(productDiaryEntry)
+        }
+    }
+
+    override suspend fun insertRecipeDiaryEntry(recipeDiaryEntry: RecipeDiaryEntry): Resource<Unit> {
+        return handleRequest {
+            userDiaryItemsDao.insertRecipeDiaryEntry(recipeDiaryEntry)
+        }
+    }
 }

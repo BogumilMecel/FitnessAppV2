@@ -5,9 +5,11 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.toValidInt
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.OfflineDiaryRepository
 
 class EditProductDiaryEntryUseCase(
     private val diaryRepository: DiaryRepository,
+    private val offlineDiaryRepository: OfflineDiaryRepository,
     private val calculateProductNutritionValuesUseCase: CalculateProductNutritionValuesUseCase
 ) {
     suspend operator fun invoke(
@@ -38,7 +40,7 @@ class EditProductDiaryEntryUseCase(
             }
 
             is Resource.Success -> {
-                diaryRepository.insertOfflineDiaryEntry(diaryItem = resource.data)
+                offlineDiaryRepository.insertProductDiaryEntry(productDiaryEntry = resource.data)
             }
         }
     }

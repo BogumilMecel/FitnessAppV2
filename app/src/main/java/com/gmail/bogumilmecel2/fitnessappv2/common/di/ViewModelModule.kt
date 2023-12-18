@@ -145,7 +145,8 @@ object ViewModelModule {
         calculateSelectedServingPriceUseCase = CalculateSelectedServingPriceUseCase(),
         editRecipeDiaryEntryUseCase = EditRecipeDiaryEntryUseCase(
             diaryRepository = diaryRepository,
-            calculateRecipeNutritionValuesForServingsUseCase = calculateRecipeNutritionValuesForServingsUseCase
+            calculateRecipeNutritionValuesForServingsUseCase = calculateRecipeNutritionValuesForServingsUseCase,
+            offlineDiaryRepository = offlineDiaryRepository
         ),
         createSearchItemParamsFromIngredientUseCase = createSearchItemParamsFromIngredientUseCase
     )
@@ -239,7 +240,8 @@ object ViewModelModule {
             ),
             editProductDiaryEntryUseCase = EditProductDiaryEntryUseCase(
                 diaryRepository = diaryRepository,
-                calculateProductNutritionValuesUseCase = calculateProductNutritionValuesUseCase
+                calculateProductNutritionValuesUseCase = calculateProductNutritionValuesUseCase,
+                offlineDiaryRepository = offlineDiaryRepository
             ),
             generateNewRecipeSearchTitleUseCase = generateNewRecipeSearchTitleUseCase
         )

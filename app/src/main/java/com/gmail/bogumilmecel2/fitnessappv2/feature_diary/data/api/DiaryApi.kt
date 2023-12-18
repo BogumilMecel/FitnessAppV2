@@ -36,9 +36,6 @@ interface DiaryApi {
         @Query("date") date: String
     ): DiaryEntriesResponse
 
-    @GET("/diaryEntries/complete")
-    suspend fun getDiaryEntriesComplete(): DiaryEntriesResponse
-
     @POST("/diaryEntries/product")
     suspend fun insertProductDiaryEntry(
         @Body productDiaryEntryPostRequest: ProductDiaryEntryPostRequest

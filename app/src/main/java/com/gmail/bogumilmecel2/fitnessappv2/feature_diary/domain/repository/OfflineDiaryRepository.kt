@@ -52,4 +52,8 @@ interface OfflineDiaryRepository {
     suspend fun insertRecipe(recipe: Recipe): Resource<Unit>
 
     suspend fun insertProduct(product: Product): Resource<Unit>
+
+    suspend fun insertProductDiaryEntry(productDiaryEntry: ProductDiaryEntry): Resource<Unit>
+
+    suspend fun insertRecipeDiaryEntry(recipeDiaryEntry: RecipeDiaryEntry): Resource<Unit>
 }

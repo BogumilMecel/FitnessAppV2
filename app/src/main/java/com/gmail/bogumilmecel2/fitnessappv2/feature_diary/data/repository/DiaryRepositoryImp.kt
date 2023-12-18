@@ -203,31 +203,11 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun getDiaryEntriesComplete(): Resource<DiaryEntriesResponse> {
-        return handleRequest {
-            diaryApi.getDiaryEntriesComplete()
-        }
-    }
-
     override suspend fun insertOfflineDiaryEntries(diaryEntriesResponse: DiaryEntriesResponse): Resource<Unit> {
         return handleRequest {
             with(diaryEntriesResponse) {
                 userDiaryItemsDao.insertRecipeDiaryEntries(recipeDiaryEntries)
                 userDiaryItemsDao.insertProductDiaryEntries(productDiaryEntries)
-            }
-        }
-    }
-
-    override suspend fun insertOfflineDiaryEntry(diaryItem: DiaryItem): Resource<Unit> {
-        return handleRequest {
-            when(diaryItem) {
-                is ProductDiaryEntry -> {
-                    userDiaryItemsDao.insertProductDiaryEntry(diaryItem)
-                }
-
-                is RecipeDiaryEntry -> {
-                    userDiaryItemsDao.insertRecipeDiaryEntry(diaryItem)
-                }
             }
         }
     }

@@ -75,11 +75,11 @@ class InsertProductDiaryEntryUseCaseTest: BaseTest() {
         coEvery { calculateProductNutritionValuesUseCase(any(), any()) } returns sampleNutritionValues
         coEvery { diaryRepository.insertProductDiaryEntry(productDiaryEntryPostRequest = expectedRequest) } returns Resource.Success(expectedProductDiaryEntry)
         coEvery { offlineDiaryRepository.insertProduct(product = MockConstants.Diary.getSampleProduct()) } returns Resource.Success(Unit)
-        coEvery { diaryRepository.insertOfflineDiaryEntry(expectedProductDiaryEntry) } returns Resource.Success(Unit)
+        coEvery { offlineDiaryRepository.insertProductDiaryEntry(expectedProductDiaryEntry) } returns Resource.Success(Unit)
         assertIs<Resource.Success<Unit>>(callTestedMethod())
         coVerify(exactly = 1) { diaryRepository.insertProductDiaryEntry(productDiaryEntryPostRequest = expectedRequest) }
         coVerify(exactly = 1) { offlineDiaryRepository.insertProduct(MockConstants.Diary.getSampleProduct()) }
-        coVerify(exactly = 1) { diaryRepository.insertOfflineDiaryEntry(diaryItem = expectedProductDiaryEntry) }
+        coVerify(exactly = 1) { offlineDiaryRepository.insertProductDiaryEntry(productDiaryEntry = expectedProductDiaryEntry) }
     }
 
     private suspend fun callTestedMethod(

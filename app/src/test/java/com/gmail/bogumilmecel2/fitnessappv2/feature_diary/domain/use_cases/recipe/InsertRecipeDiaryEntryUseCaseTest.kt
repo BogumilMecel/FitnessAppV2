@@ -19,7 +19,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import kotlin.test.assertIs
 
-class PostRecipeDiaryEntryUseCaseTest : BaseTest() {
+class InsertRecipeDiaryEntryUseCaseTest : BaseTest() {
 
     private val diaryRepository = mockk<DiaryRepository>()
     private val offlineDiaryRepository = mockk<OfflineDiaryRepository>()
@@ -83,11 +83,11 @@ class PostRecipeDiaryEntryUseCaseTest : BaseTest() {
                 )
             } returns sampleNutritionValues
             coEvery { diaryRepository.insertRecipeDiaryEntry(recipeDiaryEntryRequest = expectedRequest) } returns Resource.Success(expectedRecipeDiaryEntry)
-            coEvery { diaryRepository.insertOfflineDiaryEntry(expectedRecipeDiaryEntry) } returns Resource.Success(Unit)
+            coEvery { offlineDiaryRepository.insertRecipeDiaryEntry(expectedRecipeDiaryEntry) } returns Resource.Success(Unit)
             coEvery { offlineDiaryRepository.insertRecipe(recipe = any()) } returns Resource.Success(Unit)
             assertIs<Resource.Success<Unit>>(callTestedMethod())
             coVerify(exactly = 1) { diaryRepository.insertRecipeDiaryEntry(recipeDiaryEntryRequest = expectedRequest) }
-            coVerify(exactly = 1) { diaryRepository.insertOfflineDiaryEntry(expectedRecipeDiaryEntry) }
+            coVerify(exactly = 1) { offlineDiaryRepository.insertRecipeDiaryEntry(expectedRecipeDiaryEntry) }
         }
 
     private suspend fun callTestedMethod(

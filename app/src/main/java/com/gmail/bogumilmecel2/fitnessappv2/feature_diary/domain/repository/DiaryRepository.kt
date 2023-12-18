@@ -22,7 +22,6 @@ import kotlinx.datetime.LocalDateTime
 
 interface DiaryRepository {
     suspend fun getDiaryEntries(date: String): Resource<DiaryEntriesResponse>
-    suspend fun getDiaryEntriesComplete(): Resource<DiaryEntriesResponse>
     suspend fun getProductDiaryEntries(latestTimestamp: Long?): Resource<List<ProductDiaryEntry>>
     suspend fun getRecipeDiaryEntries(latestTimestamp: Long?): Resource<List<RecipeDiaryEntry>>
     suspend fun insertOfflineDiaryEntries(diaryEntriesResponse: DiaryEntriesResponse): Resource<Unit>
@@ -59,5 +58,4 @@ interface DiaryRepository {
     suspend fun addNewRecipe(newRecipeRequest: NewRecipeRequest): Resource<Recipe>
     suspend fun getUserProducts(latestDate: LocalDateTime?): Resource<List<Product>>
     suspend fun getUserRecipes(latestTimestamp: Long?): Resource<List<Recipe>>
-    suspend fun insertOfflineDiaryEntry(diaryItem: DiaryItem): Resource<Unit>
 }
