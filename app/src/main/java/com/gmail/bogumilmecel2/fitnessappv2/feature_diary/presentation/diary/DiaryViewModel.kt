@@ -1,10 +1,12 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.diary
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.DateTransferObject
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.DiaryItem
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.DateHolder
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.TAG
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.ProductScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.RecipeScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.SearchScreenDestination
@@ -167,13 +169,15 @@ class DiaryViewModel @Inject constructor(
     }
 
     private fun calculateMealNutritionValues(mealName: MealName) {
-        val mutableMealNutritionValues = _state.value.mealNutritionValues.toMutableMap()
-        mutableMealNutritionValues[mealName] =
-            calculateNutritionValuesFromDiaryEntriesUseCase(diaryEntries = _state.value.getDiaryEntries(mealName))
-        _state.update {
-            it.copy(
-                mealNutritionValues = mutableMealNutritionValues
-            )
+        if (mealName != null) {
+            val mutableMealNutritionValues = _state.value.mealNutritionValues.toMutableMap()
+            mutableMealNutritionValues[mealName] =
+                calculateNutritionValuesFromDiaryEntriesUseCase(diaryEntries = _state.value.getDiaryEntries(mealName))
+            _state.update {
+                it.copy(
+                    mealNutritionValues = mutableMealNutritionValues
+                )
+            }
         }
     }
 
@@ -248,6 +252,7 @@ class DiaryViewModel @Inject constructor(
     private fun getDiaryEntries() {
         viewModelScope.launch(Dispatchers.IO) {
             getDiaryEntriesUseCase(date = dateHolder.getLocalDateString()).handle { diaryEntries ->
+                Log.e(TAG, diaryEntries.toString())
                 _state.update {
                     it.copy(
                         diaryEntries = diaryEntries
