@@ -1,6 +1,7 @@
 package com.gmail.bogumilmecel2.fitnessappv2.common.util
 
 import android.text.format.DateUtils
+import android.text.format.DateUtils.DAY_IN_MILLIS
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.DateProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvider
@@ -8,6 +9,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import java.text.SimpleDateFormat
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.util.Date
 import java.util.Locale
 
@@ -18,7 +21,9 @@ class RealDateProvider : DateProvider {
         private const val EU_DATE_PATTERN = "dd/MM/yyyy"
     }
 
-    private val _currentDate: MutableStateFlow<Long> = MutableStateFlow(System.currentTimeMillis())
+    private val _currentDate: MutableStateFlow<Long> = MutableStateFlow(
+        ZonedDateTime.now(ZoneId.systemDefault()).toInstant().epochSecond
+    )
     override val currentDate: StateFlow<Long> = _currentDate
 
     override fun getDateString(
@@ -47,13 +52,13 @@ class RealDateProvider : DateProvider {
 
     override fun addDay() {
         _currentDate.update {
-            it + DateUtils.DAY_IN_MILLIS
+            it + DAY_IN_MILLIS
         }
     }
 
     override fun deductDay() {
         _currentDate.update {
-            it - DateUtils.DAY_IN_MILLIS
+            it - DAY_IN_MILLIS
         }
     }
 
