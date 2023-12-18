@@ -24,7 +24,6 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.ViewModelLayout
 import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.model.QuestionName
@@ -44,9 +43,8 @@ import kotlinx.coroutines.flow.collectLatest
 @Destination
 @Composable
 fun IntroductionScreen(navigator: DestinationsNavigator) {
-    hiltViewModel<IntroductionViewModel>().ViewModelLayout(navigator = navigator) { viewModel ->
-        val state = viewModel.state.collectAsStateWithLifecycle().value
-        val questionSize = QuestionName.values().size
+    hiltViewModel<IntroductionViewModel>().ViewModelLayout(navigator = navigator) { viewModel, state ->
+        val questionSize = QuestionName.entries.size
 
         val pagerState = rememberPagerState(
             initialPage = 0,
@@ -103,7 +101,7 @@ fun IntroductionScreen(navigator: DestinationsNavigator) {
             )
 
             HorizontalPager(state = pagerState) { index ->
-                val currentItem = QuestionName.values().toList()[index]
+                val currentItem = QuestionName.entries[index]
                 QuestionSection(title = stringResource(id = currentItem.getQuestionTitle())) {
                     when (currentItem.getQuestionType()) {
                         QuestionType.INPUT -> {

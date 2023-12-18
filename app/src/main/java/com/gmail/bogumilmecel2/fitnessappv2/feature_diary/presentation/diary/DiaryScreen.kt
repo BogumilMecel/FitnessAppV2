@@ -15,7 +15,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.BackHandler
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.ViewModelLayout
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.MealName
@@ -30,8 +29,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Destination
 @Composable
 fun DiaryScreen(navigator: DestinationsNavigator) {
-    hiltViewModel<DiaryViewModel>().ViewModelLayout(navigator = navigator) { viewModel ->
-        val state = viewModel.state.collectAsStateWithLifecycle().value
+    hiltViewModel<DiaryViewModel>().ViewModelLayout(navigator = navigator) { viewModel, state ->
 
         BackHandler {
             viewModel.onEvent(DiaryEvent.BackPressed)
@@ -91,7 +89,7 @@ fun DiaryScreen(navigator: DestinationsNavigator) {
                     )
 
                     LazyColumn {
-                        items(MealName.values()) { mealName ->
+                        items(MealName.entries) { mealName ->
                             DiaryMealSection(
                                 mealName = mealName,
                                 diaryEntries = state.diaryEntries[mealName]?.diaryEntries,

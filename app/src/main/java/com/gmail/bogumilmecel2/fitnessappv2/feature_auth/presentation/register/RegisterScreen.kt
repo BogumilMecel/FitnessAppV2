@@ -22,7 +22,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.Toolbar
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.TestTags
@@ -37,9 +36,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Composable
 @Destination
 fun RegisterScreen(navigator: DestinationsNavigator) {
-    hiltViewModel<RegisterViewModel>().ViewModelLayout(navigator = navigator) { viewModel ->
-        val state = viewModel.state.collectAsStateWithLifecycle().value
-
+    hiltViewModel<RegisterViewModel>().ViewModelLayout(navigator = navigator) { viewModel, state ->
         Scaffold(
             topBar = {
                 Toolbar(

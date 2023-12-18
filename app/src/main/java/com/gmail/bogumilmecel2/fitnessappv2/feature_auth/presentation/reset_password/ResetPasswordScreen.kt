@@ -17,11 +17,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.Toolbar
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.ViewModelLayout
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.TestTags
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.ViewModelLayout
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.presentation.util.AuthEvent
 import com.gmail.bogumilmecel2.ui.components.base.CustomBasicTextField
 import com.gmail.bogumilmecel2.ui.components.base.CustomButton
@@ -32,9 +31,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Composable
 @Destination
 fun ResetPasswordScreen(navigator: DestinationsNavigator) {
-    hiltViewModel<ResetPasswordViewModel>().ViewModelLayout(navigator = navigator) { viewModel ->
-        val state = viewModel.state.collectAsStateWithLifecycle().value
-
+    hiltViewModel<ResetPasswordViewModel>().ViewModelLayout(navigator = navigator) { viewModel, state ->
         Scaffold(
             topBar = {
                 Toolbar(
