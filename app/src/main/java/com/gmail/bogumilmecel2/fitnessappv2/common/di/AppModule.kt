@@ -231,13 +231,7 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideDiaryRepository(
-        diaryApi: DiaryApi,
-        userDiaryItemsDao: UserDiaryItemsDao
-    ): DiaryRepository = DiaryRepositoryImp(
-        diaryApi = diaryApi,
-        userDiaryItemsDao = userDiaryItemsDao
-    )
+    fun provideDiaryRepository(diaryApi: DiaryApi): DiaryRepository = DiaryRepositoryImp(diaryApi = diaryApi)
 
     @Singleton
     @Provides

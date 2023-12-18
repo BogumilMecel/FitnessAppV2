@@ -1,8 +1,6 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository
 
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.Currency
-import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.DiaryItem
-import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.DeleteDiaryEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.DiaryEntriesResponse
@@ -24,7 +22,6 @@ interface DiaryRepository {
     suspend fun getDiaryEntries(date: String): Resource<DiaryEntriesResponse>
     suspend fun getProductDiaryEntries(latestTimestamp: Long?): Resource<List<ProductDiaryEntry>>
     suspend fun getRecipeDiaryEntries(latestTimestamp: Long?): Resource<List<RecipeDiaryEntry>>
-    suspend fun insertOfflineDiaryEntries(diaryEntriesResponse: DiaryEntriesResponse): Resource<Unit>
     suspend fun searchForProducts(searchText: String, page: Int): Resource<List<Product>>
     suspend fun searchForProductWithBarcode(barcode: String): Resource<Product?>
     suspend fun searchForRecipes(searchText: String): Resource<List<Recipe>>
@@ -32,17 +29,10 @@ interface DiaryRepository {
     suspend fun insertRecipeDiaryEntry(recipeDiaryEntryRequest: RecipeDiaryEntryRequest): Resource<RecipeDiaryEntry>
     suspend fun getRecipe(recipeId: String): Resource<Recipe?>
     suspend fun deleteDiaryEntry(deleteDiaryEntryRequest: DeleteDiaryEntryRequest): Resource<Unit>
-    suspend fun deleteOfflineDiaryEntry(diaryItem: DiaryItem): Resource<Unit>
-    suspend fun deleteOfflineDiaryEntries(
-        date: String,
-        productDiaryEntriesIds: List<String>,
-        recipeDiaryEntriesIds: List<String>
-    ): Resource<Unit>
     suspend fun editProductDiaryEntry(productDiaryEntry: ProductDiaryEntry): Resource<ProductDiaryEntry>
     suspend fun editRecipeDiaryEntry(recipeDiaryEntry: RecipeDiaryEntry): Resource<RecipeDiaryEntry>
     suspend fun saveNewProduct(newProductRequest: NewProductRequest): Resource<Product>
     suspend fun getProduct(productId: String): Resource<Product?>
-    suspend fun getDiaryEntriesNutritionValues(date: String): Resource<List<NutritionValues>>
     suspend fun getPrice(productId: String, currency: Currency): Resource<ProductPrice?>
     suspend fun getRecipePriceFromIngredients(
         recipePriceRequest: RecipePriceRequest,

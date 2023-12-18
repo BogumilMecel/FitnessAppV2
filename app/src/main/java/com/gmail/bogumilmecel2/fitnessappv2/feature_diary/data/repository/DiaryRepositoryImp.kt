@@ -1,12 +1,9 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.data.repository
 
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.Currency
-import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.DiaryItem
-import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseRepository
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.data.api.DiaryApi
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.dao.UserDiaryItemsDao
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.DeleteDiaryEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.DiaryEntriesResponse
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
@@ -24,10 +21,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.Diar
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.RecipePriceRequest
 import kotlinx.datetime.LocalDateTime
 
-class DiaryRepositoryImp(
-    private val diaryApi: DiaryApi,
-    private val userDiaryItemsDao: UserDiaryItemsDao
-) : DiaryRepository, BaseRepository() {
+class DiaryRepositoryImp(private val diaryApi: DiaryApi) : DiaryRepository, BaseRepository() {
 
     override suspend fun getDiaryEntries(date: String): Resource<DiaryEntriesResponse> {
         return handleRequest {
@@ -103,23 +97,6 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun deleteOfflineDiaryEntries(
-        date: String,
-        productDiaryEntriesIds: List<String>,
-        recipeDiaryEntriesIds: List<String>
-    ): Resource<Unit> {
-        return handleRequest {
-            userDiaryItemsDao.deleteRecipeDiaryEntries(
-                date = date,
-                diaryEntriesIds = recipeDiaryEntriesIds
-            )
-            userDiaryItemsDao.deleteProductDiaryEntries(
-                date = date,
-                diaryEntriesIds = productDiaryEntriesIds
-            )
-        }
-    }
-
     override suspend fun editProductDiaryEntry(productDiaryEntry: ProductDiaryEntry): Resource<ProductDiaryEntry> {
         return handleRequest {
             diaryApi.editProductDiaryEntry(productDiaryEntry = productDiaryEntry)
@@ -129,15 +106,6 @@ class DiaryRepositoryImp(
     override suspend fun editRecipeDiaryEntry(recipeDiaryEntry: RecipeDiaryEntry): Resource<RecipeDiaryEntry> {
         return handleRequest {
             diaryApi.editRecipeDiaryEntry(recipeDiaryEntry = recipeDiaryEntry)
-        }
-    }
-
-    override suspend fun getDiaryEntriesNutritionValues(date: String): Resource<List<NutritionValues>> {
-        return handleRequest {
-            buildList {
-                addAll(userDiaryItemsDao.getProductDiaryEntriesNutritionValues(date))
-                addAll(userDiaryItemsDao.getRecipeDiaryEntriesNutritionValues(date))
-            }
         }
     }
 
@@ -200,29 +168,6 @@ class DiaryRepositoryImp(
     override suspend fun getUserRecipes(latestTimestamp: Long?): Resource<List<Recipe>> {
         return handleRequest {
             diaryApi.getUserRecipes(latestTimestamp)
-        }
-    }
-
-    override suspend fun insertOfflineDiaryEntries(diaryEntriesResponse: DiaryEntriesResponse): Resource<Unit> {
-        return handleRequest {
-            with(diaryEntriesResponse) {
-                userDiaryItemsDao.insertRecipeDiaryEntries(recipeDiaryEntries)
-                userDiaryItemsDao.insertProductDiaryEntries(productDiaryEntries)
-            }
-        }
-    }
-
-    override suspend fun deleteOfflineDiaryEntry(diaryItem: DiaryItem): Resource<Unit> {
-        return handleRequest {
-            when(diaryItem) {
-                is ProductDiaryEntry -> {
-                    userDiaryItemsDao.deleteProductDiaryEntry(diaryItem.id)
-                }
-
-                is RecipeDiaryEntry -> {
-                    userDiaryItemsDao.deleteRecipeDiaryEntry(diaryItem.id)
-                }
-            }
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository
 
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
@@ -56,4 +57,20 @@ interface OfflineDiaryRepository {
     suspend fun insertProductDiaryEntry(productDiaryEntry: ProductDiaryEntry): Resource<Unit>
 
     suspend fun insertRecipeDiaryEntry(recipeDiaryEntry: RecipeDiaryEntry): Resource<Unit>
+
+    suspend fun deleteProductDiaryEntry(productDiaryEntryId: String): Resource<Unit>
+
+    suspend fun deleteRecipeDiaryEntry(recipeDiaryEntryId: String): Resource<Unit>
+
+    suspend fun deleteProductDiaryEntries(
+        date: String,
+        productDiaryEntriesIds: List<String>,
+    ): Resource<Unit>
+
+    suspend fun deleteRecipeDiaryEntries(
+        date: String,
+        recipeDiaryEntriesIds: List<String>
+    ): Resource<Unit>
+
+    suspend fun getDiaryEntriesNutritionValues(date: String): Resource<List<NutritionValues>>
 }

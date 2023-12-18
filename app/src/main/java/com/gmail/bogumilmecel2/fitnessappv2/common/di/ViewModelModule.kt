@@ -199,8 +199,14 @@ object ViewModelModule {
         getRecipeUseCase: GetRecipeUseCase
     ): DiaryUseCases = DiaryUseCases(
         getOfflineDiaryEntriesUseCase = GetOfflineDiaryEntriesUseCase(offlineDiaryRepository = offlineDiaryRepository),
-        getOnlineDiaryEntriesUseCase = GetOnlineDiaryEntriesUseCase(diaryRepository = diaryRepository),
-        deleteDiaryEntryUseCase = DeleteDiaryEntryUseCase(diaryRepository = diaryRepository),
+        getOnlineDiaryEntriesUseCase = GetOnlineDiaryEntriesUseCase(
+            diaryRepository = diaryRepository,
+            offlineDiaryRepository = offlineDiaryRepository
+        ),
+        deleteDiaryEntryUseCase = DeleteDiaryEntryUseCase(
+            diaryRepository = diaryRepository,
+            offlineDiaryRepository = offlineDiaryRepository
+        ),
         sumNutritionValuesUseCase = SumNutritionValuesUseCase(),
         createLongClickedDiaryItemParamsUseCase = CreateLongClickedDiaryItemParamsUseCase(
             resourceProvider = resourceProvider
@@ -285,11 +291,11 @@ object ViewModelModule {
     @ViewModelScoped
     @Provides
     fun provideSummaryUseCases(
-        diaryRepository: DiaryRepository,
+        offlineDiaryRepository: OfflineDiaryRepository,
         cachedValuesProvider: CachedValuesProvider,
         saveAskForWeightDailyUseCase: SaveAskForWeightDailyUseCase
     ): SummaryUseCases = SummaryUseCases(
-        getCaloriesSum = GetCaloriesSum(diaryRepository = diaryRepository),
+        getCaloriesSum = GetCaloriesSum(offlineDiaryRepository = offlineDiaryRepository),
         checkIfShouldAskForWeightDialogsUseCase = CheckIfShouldAskForWeightDialogsUseCase(),
         handleWeightDialogsQuestionUseCase = HandleWeightDialogsQuestionUseCase(
             cachedValuesProvider = cachedValuesProvider,

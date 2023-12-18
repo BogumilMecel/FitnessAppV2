@@ -1,5 +1,6 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.data.repository
 
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseRepository
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.database.SqlProductQueries
@@ -156,6 +157,51 @@ class OfflineDiaryRepositoryImp(
     override suspend fun insertRecipeDiaryEntry(recipeDiaryEntry: RecipeDiaryEntry): Resource<Unit> {
         return handleRequest {
             userDiaryItemsDao.insertRecipeDiaryEntry(recipeDiaryEntry)
+        }
+    }
+
+    override suspend fun deleteProductDiaryEntry(productDiaryEntryId: String): Resource<Unit> {
+        return handleRequest {
+            userDiaryItemsDao.deleteProductDiaryEntry(productDiaryEntryId)
+        }
+    }
+
+    override suspend fun deleteRecipeDiaryEntry(recipeDiaryEntryId: String): Resource<Unit> {
+        return handleRequest {
+            userDiaryItemsDao.deleteRecipeDiaryEntry(recipeDiaryEntryId)
+        }
+    }
+
+    override suspend fun deleteProductDiaryEntries(
+        date: String,
+        productDiaryEntriesIds: List<String>
+    ): Resource<Unit> {
+        return handleRequest {
+            userDiaryItemsDao.deleteProductDiaryEntries(
+                date = date,
+                diaryEntriesIds = productDiaryEntriesIds
+            )
+        }
+    }
+
+    override suspend fun deleteRecipeDiaryEntries(
+        date: String,
+        recipeDiaryEntriesIds: List<String>
+    ): Resource<Unit> {
+        return handleRequest {
+            userDiaryItemsDao.deleteRecipeDiaryEntries(
+                date = date,
+                diaryEntriesIds = recipeDiaryEntriesIds
+            )
+        }
+    }
+
+    override suspend fun getDiaryEntriesNutritionValues(date: String): Resource<List<NutritionValues>> {
+        return handleRequest {
+            buildList {
+                addAll(userDiaryItemsDao.getProductDiaryEntriesNutritionValues(date))
+                addAll(userDiaryItemsDao.getRecipeDiaryEntriesNutritionValues(date))
+            }
         }
     }
 }
