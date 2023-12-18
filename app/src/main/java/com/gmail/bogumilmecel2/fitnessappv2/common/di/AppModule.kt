@@ -398,7 +398,8 @@ object AppModule {
     fun provideSummaryUseCases(
         diaryRepository: DiaryRepository,
         weightRepository: WeightRepository,
-        checkIfWeightIsValidUseCase: CheckIfWeightIsValidUseCase
+        checkIfWeightIsValidUseCase: CheckIfWeightIsValidUseCase,
+        cachedValuesProvider: CachedValuesProvider
     ): SummaryUseCases = SummaryUseCases(
         getCaloriesSum = GetCaloriesSum(diaryRepository = diaryRepository),
         addWeightEntryUseCase = AddWeightEntryUseCase(
@@ -407,7 +408,7 @@ object AppModule {
         ),
         checkIfShouldAskForWeightDialogsUseCase = CheckIfShouldAskForWeightDialogsUseCase(weightRepository),
         handleWeightDialogsQuestionUseCase = HandleWeightDialogsQuestionUseCase(weightRepository),
-        checkIfShouldShowWeightPickerUseCase = CheckIfShouldShowWeightPickerUseCase()
+        checkIfShouldShowWeightPickerUseCase = CheckIfShouldShowWeightPickerUseCase(cachedValuesProvider)
     )
 
     @Singleton

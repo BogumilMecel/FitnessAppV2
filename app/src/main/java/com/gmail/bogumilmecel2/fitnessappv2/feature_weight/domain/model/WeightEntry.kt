@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class WeightEntry(
-    val value: Double,
-    val utcTimestamp: Long,
-    val date: String
+    val value: Double = 0.0,
+    val utcTimestamp: Long = 0,
+    val date: String = ""
 )
