@@ -16,7 +16,9 @@ class LoadingRepositoryImp(
         token:String
     ): Resource<Boolean> {
         return try {
-            loadingApi.authenticate(token = "Bearer $token")
+            loadingApi.authenticate(
+                token = token
+            )
             Resource.Success(true)
         } catch (e: Exception) {
             Resource.Error(resourceProvider.getString(R.string.unknown_error))
@@ -26,7 +28,9 @@ class LoadingRepositoryImp(
     override suspend fun getNutritionValues(token: String): Resource<NutritionValues> {
         return try {
             return Resource.Success(
-                data = loadingApi.getNutritionValues(token)
+                data = loadingApi.getNutritionValues(
+                    token = token
+                )
             )
         }catch (e:Exception){
             Resource.Error(resourceProvider.getString(R.string.unknown_error))

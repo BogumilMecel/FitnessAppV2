@@ -39,13 +39,13 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.data.repositor
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.repository.IntroductionRepository
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.use_cases.CalculateNutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.use_cases.SaveIntroductionInformation
+import com.gmail.bodziowaty6978.fitnessappv2.feature_log.data.api.LogApi
+import com.gmail.bodziowaty6978.fitnessappv2.feature_log.data.repository.LogRepositoryImp
+import com.gmail.bodziowaty6978.fitnessappv2.feature_log.domain.repository.LogRepository
+import com.gmail.bodziowaty6978.fitnessappv2.feature_log.domain.use_case.*
 import com.gmail.bodziowaty6978.fitnessappv2.feature_splash.data.api.LoadingApi
 import com.gmail.bodziowaty6978.fitnessappv2.feature_splash.data.repository.LoadingRepositoryImp
 import com.gmail.bodziowaty6978.fitnessappv2.feature_splash.domain.repository.LoadingRepository
-import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.feature_log.data.api.LogApi
-import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.feature_log.data.repository.LogRepositoryImp
-import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.feature_log.domain.repository.LogRepository
-import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.feature_log.domain.use_case.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -264,7 +264,7 @@ object AppModule {
     fun provideLogRepository(
         logApi: LogApi,
         resourceProvider: ResourceProvider
-    ):LogRepository = LogRepositoryImp(
+    ): LogRepository = LogRepositoryImp(
         logApi = logApi,
         resourceProvider = resourceProvider
     )
@@ -275,7 +275,7 @@ object AppModule {
         logRepository: LogRepository,
         getToken: GetToken,
         resourceProvider: ResourceProvider
-    ):InsertLogEntry = InsertLogEntry(
+    ): InsertLogEntry = InsertLogEntry(
         logRepository = logRepository,
         getToken = getToken,
         resourceProvider = resourceProvider
@@ -289,7 +289,7 @@ object AppModule {
         getToken: GetToken,
         resourceProvider: ResourceProvider,
         diaryRepository: DiaryRepository
-    ):SummaryUseCases = SummaryUseCases(
+    ): SummaryUseCases = SummaryUseCases(
         getLatestLogEntry = GetLatestLogEntry(
             logRepository = logRepository,
             getToken = getToken,
@@ -302,7 +302,8 @@ object AppModule {
             diaryRepository = diaryRepository,
             getToken = getToken,
             resourceProvider = resourceProvider
-        )
+        ),
+        insertLogEntry = insertLogEntry
     )
 
     @Singleton

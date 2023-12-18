@@ -24,9 +24,8 @@ class DiaryRepositoryImp(
             Log.e(TAG, Date(timestamp).formatToString())
             val entries = productApi.getDiaryEntries(
                 date = Date(timestamp).formatToString(),
-                token = "Bearer $token"
+                token = token
             )
-            Log.e(TAG, entries.toString())
             Resource.Success(entries)
         }catch (e:Exception){
             e.printStackTrace()
@@ -36,7 +35,7 @@ class DiaryRepositoryImp(
     override suspend fun getProductHistory(token: String): Resource<List<Product>> {
         return try {
             val result = productApi.getProductHistory(
-                token = "Bearer $token"
+                token = token
             )
             Resource.Success(data = result)
         }catch (e:Exception){
@@ -73,7 +72,7 @@ class DiaryRepositoryImp(
         return try {
             val newDiaryEntry = productApi.insertDiaryEntry(
                 diaryEntry = diaryEntry,
-                token = "Bearer $token"
+                token = token
             )
             Resource.Success(data = newDiaryEntry)
         }catch (e:Exception){
@@ -101,7 +100,7 @@ class DiaryRepositoryImp(
         return try {
             val wasDeleted = productApi.deleteDiaryEntry(
                 entryId = diaryEntryId,
-                token = "Bearer $token"
+                token = token
             )
             if (wasDeleted) CustomResult.Success else CustomResult.Error(message = resourceProvider.getString(R.string.unknown_error))
         }catch (e:Exception){
@@ -118,9 +117,8 @@ class DiaryRepositoryImp(
         return try {
             val resource = productApi.getCaloriesSum(
                 date = date,
-                token = "Bearer $token"
+                token = token
             ).sum()
-            Log.e(TAG, resource.toString())
             Resource.Success(
                 data = resource
             )

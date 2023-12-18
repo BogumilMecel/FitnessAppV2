@@ -8,12 +8,12 @@ import retrofit2.http.POST
 
 interface IntroductionApi {
 
-    @POST("user/information")
+    @POST("/user/information")
     suspend fun saveUserInformation(
         @Body userInformation: UserInformation
     ):CustomResult
 
-    @POST("user/nutrition")
+    @POST("/user/nutrition")
     suspend fun saveNutritionValues(
         @Body nutritionValues: NutritionValues
     ):CustomResult
