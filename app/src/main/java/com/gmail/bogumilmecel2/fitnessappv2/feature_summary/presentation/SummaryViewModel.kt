@@ -1,8 +1,10 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_summary.presentation
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.CustomDateUtils
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.TAG
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.use_case.SummaryUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -18,6 +20,7 @@ class SummaryViewModel @Inject constructor(
     override fun onEvent(event: SummaryEvent) {
         when (event) {
             is SummaryEvent.DismissedWeightPickerDialog -> {
+                Log.e(TAG, "dismissed")
                 _state.update {
                     it.copy(
                         isWeightPickerVisible = false

@@ -10,10 +10,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.gmail.bogumilmecel2.ui.components.base.CustomIconButton
-import com.gmail.bogumilmecel2.ui.components.base.IconVector
 import com.gmail.bogumilmecel2.ui.components.base.CustomText
 import com.gmail.bogumilmecel2.ui.components.base.FitnessAppTextStyle
-import com.gmail.bogumilmecel2.ui.components.base.IconParams
+import com.gmail.bogumilmecel2.ui.components.base.IconButtonParams
+import com.gmail.bogumilmecel2.ui.components.base.IconVector
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 
 @Composable
@@ -21,7 +21,7 @@ fun HeaderRow(
     middlePrimaryText: String?,
     middleSecondaryText: String? = null,
     onBackPressed: (() -> Unit)? = null,
-    endIconParams: IconParams? = null
+    endIconButtonParams: IconButtonParams? = null
 ) {
     Row(
         modifier = Modifier
@@ -32,8 +32,8 @@ fun HeaderRow(
     ) {
         onBackPressed?.let {
             CustomIconButton(
-                iconParams = IconParams(
-                    iconStyle = IconVector.Back,
+                params = IconButtonParams(
+                    iconVector = IconVector.Back,
                     onClick = {
                         onBackPressed()
                     },
@@ -46,7 +46,7 @@ fun HeaderRow(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.weight(1f)
                 .then(
-                    other = if (endIconParams == null) {
+                    other = if (endIconButtonParams == null) {
                         Modifier.padding(end = 48.dp)
                     } else Modifier
                 )
@@ -70,9 +70,9 @@ fun HeaderRow(
             }
         }
 
-        endIconParams?.let {
+        endIconButtonParams?.let {
             CustomIconButton(
-                iconParams = endIconParams
+                params = endIconButtonParams
             )
         }
     }
