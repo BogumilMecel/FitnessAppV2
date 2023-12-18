@@ -4,12 +4,14 @@ import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.MeasurementUnit
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvider
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.toLocalDateTime
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 import io.mockk.every
 
 object MockConstants {
     const val MOCK_DATE_2021 = "2021-12-12"
+    const val MOCK_DATE_TIME = "2023-12-02T00:00:00.000"
     const val TIMESTAMP = 123456789L
     const val USER_ID = "user_id"
     const val CORRECT_PAGE = 1
@@ -55,9 +57,9 @@ object MockConstants {
         fun getSampleProduct() = Product(
             id = PRODUCT_ID_11,
             name = PRODUCT_NAME_1,
-            utcTimestamp = TIMESTAMP,
             nutritionValues = getSampleNutritionValues(),
-            userId = USER_ID
+            userId = USER_ID,
+            dateCreated = MOCK_DATE_TIME.toLocalDateTime()
         )
 
         fun getSampleRecipe() = Recipe(

@@ -8,7 +8,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntry
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.utils.DiaryConverters
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.utils.Converters
 
 @Database(
     entities = [
@@ -20,7 +20,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.utils.DiaryConv
     version = 1,
     exportSchema = false
 )
-@TypeConverters(DiaryConverters::class)
+@TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     companion object {
         const val DATABASE_NAME = "fitness_app_database"

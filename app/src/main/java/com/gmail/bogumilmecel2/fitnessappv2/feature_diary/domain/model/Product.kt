@@ -7,6 +7,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.MeasurementUnit
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.product.NutritionValuesIn
 import com.google.gson.annotations.SerializedName
+import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
 
 @Entity
@@ -23,10 +24,6 @@ data class Product(
     @SerializedName("container_weight")
     @ColumnInfo(name = "container_weight")
     val containerWeight: Int? = null,
-
-    @SerializedName("utc_timestamp")
-    @ColumnInfo(name = "utc_timestamp")
-    val utcTimestamp: Long = System.currentTimeMillis(),
 
     @SerializedName("nutrition_values_in")
     @ColumnInfo(name = "nutrition_values_in")
@@ -50,5 +47,9 @@ data class Product(
 
     @SerializedName("user_id")
     @ColumnInfo(name = "user_id")
-    val userId: String = ""
+    val userId: String = "",
+
+    @SerializedName("date_created")
+    @ColumnInfo(name = "date_created")
+    val dateCreated: LocalDateTime
 )

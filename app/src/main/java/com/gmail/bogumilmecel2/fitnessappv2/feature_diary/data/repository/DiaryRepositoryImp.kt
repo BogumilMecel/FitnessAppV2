@@ -22,6 +22,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Re
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.RecipePriceRequest
+import kotlinx.datetime.LocalDateTime
 
 class DiaryRepositoryImp(
     private val diaryApi: DiaryApi,
@@ -190,9 +191,9 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun getUserProducts(latestTimestamp: Long?): Resource<List<Product>> {
+    override suspend fun getUserProducts(latestDate: LocalDateTime?): Resource<List<Product>> {
         return handleRequest {
-            diaryApi.getUserProducts(latestTimestamp)
+            diaryApi.getUserProducts(latestDate)
         }
     }
 

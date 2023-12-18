@@ -19,7 +19,7 @@ class GetProductsAndSaveOfflineUseCase(
         ).data ?: return Resource.Error()
 
         val userProducts = diaryRepository.getUserProducts(
-            latestTimestamp = latestOfflineProduct.firstOrNull()?.utcTimestamp
+            latestDate = latestOfflineProduct.firstOrNull()?.dateCreated
         ).data ?: return Resource.Error()
 
         return offlineDiaryRepository.insertProducts(userProducts)

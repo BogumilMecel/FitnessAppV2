@@ -19,6 +19,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Re
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.RecipePriceRequest
+import kotlinx.datetime.LocalDateTime
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.HTTP
@@ -123,7 +124,7 @@ interface DiaryApi {
     ): RecipePriceResponse?
 
     @GET("/userData/products")
-    suspend fun getUserProducts(@Query(Constants.Query.LATEST_TIMESTAMP) latestTimestamp: Long?): List<Product>
+    suspend fun getUserProducts(@Query(Constants.Query.LATEST_TIMESTAMP) latestDate: LocalDateTime?): List<Product>
 
     @GET("/userData/recipes")
     suspend fun getUserRecipes(@Query(Constants.Query.LATEST_TIMESTAMP) latestTimestamp: Long?): List<Recipe>

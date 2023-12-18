@@ -6,9 +6,8 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvi
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.repository.TokenRepository
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.CalculateNutritionValuesPercentages
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.CheckIfWeightIsValidUseCase
-import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.GetTokenUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.FormatLocalDateUseCase
-import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.GetToken
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.GetTokenUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.GetUserCurrencyUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.SaveNutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.feature_account.domain.use_case.AccountUseCases

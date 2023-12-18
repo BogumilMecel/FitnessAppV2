@@ -18,6 +18,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Re
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.RecipePriceRequest
+import kotlinx.datetime.LocalDateTime
 
 interface DiaryRepository {
     suspend fun getDiaryEntries(date: String): Resource<DiaryEntriesResponse>
@@ -58,7 +59,7 @@ interface DiaryRepository {
     suspend fun addNewRecipe(newRecipeRequest: NewRecipeRequest): Resource<Recipe>
     suspend fun insertUserProductsLocally(userProducts: List<Product>): Resource<Unit>
     suspend fun insertUserRecipesLocally(userRecipes: List<Recipe>): Resource<Unit>
-    suspend fun getUserProducts(latestTimestamp: Long?): Resource<List<Product>>
+    suspend fun getUserProducts(latestDate: LocalDateTime?): Resource<List<Product>>
     suspend fun getUserRecipes(latestTimestamp: Long?): Resource<List<Recipe>>
     suspend fun insertOfflineDiaryEntry(diaryItem: DiaryItem): Resource<Unit>
     suspend fun cacheProduct(product: Product): Resource<Unit>
