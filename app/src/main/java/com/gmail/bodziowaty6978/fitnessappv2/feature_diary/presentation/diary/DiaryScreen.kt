@@ -5,19 +5,22 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValues
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.Grey
 import com.gmail.bodziowaty6978.fitnessappv2.datastoreNutrition
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.diary.components.CalendarSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.diary.components.DiaryMealSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.diary.components.NutritionBottomSection
 
+@OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 fun DiaryScreen(
     viewModel: DiaryViewModel = hiltViewModel(),
@@ -25,9 +28,7 @@ fun DiaryScreen(
 ) {
     val context = LocalContext.current
 
-    var nutritionValues by remember{
-        mutableStateOf(NutritionValues())
-    }
+    val state = viewModel.diaryState.collectAsStateWithLifecycle().value
 
     LaunchedEffect(key1 = true){
         viewModel.getDiaryEntries()
@@ -35,11 +36,9 @@ fun DiaryScreen(
 
     LaunchedEffect(key1 = true){
         context.datastoreNutrition.data.collect{
-            nutritionValues = it
+            viewModel.onEvent(DiaryEvent.CollectedWantedNutritionValues(it))
         }
     }
-
-    val meals = viewModel.mealsState.value
 
     Box(modifier = Modifier
         .fillMaxSize()
@@ -67,7 +66,7 @@ fun DiaryScreen(
                     .verticalScroll(rememberScrollState())
                     .weight(1f, fill = false)
             ) {
-                meals.forEach { meal ->
+                state.meals.forEach { meal ->
                     DiaryMealSection(
                         meal = meal,
                         onAddProductClick = {
@@ -77,8 +76,8 @@ fun DiaryScreen(
                 }
             }
         }
-        NutritionBottomSection(meals = meals,
-            wantedNutritionValues = nutritionValues,
+        NutritionBottomSection(meals = state.meals,
+            wantedNutritionValues = state.wantedNutritionValues,
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .background(Grey)

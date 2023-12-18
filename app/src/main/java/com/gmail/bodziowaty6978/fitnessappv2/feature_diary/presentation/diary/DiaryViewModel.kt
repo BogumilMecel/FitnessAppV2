@@ -1,13 +1,11 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.diary
 
 import android.util.Log
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gmail.bodziowaty6978.fitnessappv2.R
-import com.gmail.bodziowaty6978.fitnessappv2.common.data.singleton.CurrentDate
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.NavigationActions
+import com.gmail.bodziowaty6978.fitnessappv2.common.data.singleton.CurrentDate
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigator
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
@@ -16,8 +14,9 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.diar
 import com.gmail.bodziowaty6978.fitnessappv2.util.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -28,18 +27,18 @@ class DiaryViewModel @Inject constructor(
     private val navigator: Navigator
 ): ViewModel(){
 
-    private val _mealsState = mutableStateOf<List<Meal>>(
-        listOf(
-            Meal(mealName = resourceProvider.getString(R.string.breakfast), diaryEntries = emptyList()),
-            Meal(mealName = resourceProvider.getString(R.string.lunch), diaryEntries = emptyList()),
-            Meal(mealName = resourceProvider.getString(R.string.dinner), diaryEntries = emptyList()),
-            Meal(mealName = resourceProvider.getString(R.string.supper), diaryEntries = emptyList()),
+    private val _diaryState = MutableStateFlow(
+        DiaryState(
+            meals = listOf(
+                Meal(mealName = resourceProvider.getString(R.string.breakfast), diaryEntries = emptyList()),
+                Meal(mealName = resourceProvider.getString(R.string.lunch), diaryEntries = emptyList()),
+                Meal(mealName = resourceProvider.getString(R.string.dinner), diaryEntries = emptyList()),
+                Meal(mealName = resourceProvider.getString(R.string.supper), diaryEntries = emptyList()),
+            ),
+
         )
     )
-    val mealsState: State<List<Meal>> = _mealsState
-
-    private val _diaryUiEvent = MutableSharedFlow<DiaryUiEvent>()
-    val diaryUiEvent: SharedFlow<DiaryUiEvent> = _diaryUiEvent
+    val diaryState : StateFlow<DiaryState> = _diaryState
 
     fun onEvent(event: DiaryEvent){
         when(event){
@@ -48,6 +47,16 @@ class DiaryViewModel @Inject constructor(
             }
             is DiaryEvent.ClickedAddProduct -> {
                 navigator.navigate(NavigationActions.DiaryScreen.diaryToSearch(event.mealName))
+            }
+            is DiaryEvent.ClickedDiaryEntry -> {
+
+            }
+            is DiaryEvent.CollectedWantedNutritionValues -> {
+                _diaryState.update {
+                    it.copy(
+                        wantedNutritionValues = event.nutritionValues
+                    )
+                }
             }
         }
     }
@@ -64,14 +73,33 @@ class DiaryViewModel @Inject constructor(
 
             when(resource){
                 is Resource.Success -> {
-                    val data = resource.data!!
-                    _mealsState.value = data
-                    Log.e(TAG,data.toString())
+                    val data = resource.data
+                    data?.let {meals ->
+                        _diaryState.update {
+                            it.copy(
+                                meals = meals
+                            )
+                        }
+                    }
                 }
                 is Resource.Error -> {
-                    _diaryUiEvent.emit(DiaryUiEvent.ShowSnackbar(resource.uiText!!))
+                    onError(resource.uiText)
                 }
             }
+        }
+    }
+
+    private fun onError(errorMessage:String?){
+        _diaryState.update {
+            it.copy(
+                errorMessage = errorMessage
+            )
+        }
+
+        _diaryState.update {
+            it.copy(
+                lastErrorMessage = errorMessage
+            )
         }
     }
 }

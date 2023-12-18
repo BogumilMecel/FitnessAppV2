@@ -24,18 +24,17 @@ fun DiaryMealSection(
     meal: Meal,
     onAddProductClick: (String) -> Unit,
     wantedNutritionValues: NutritionValues = NutritionValues(
-        calories = 2500*25/100,
-        carbohydrates = 250.0*25.0/100.0,
-        protein = 187.5*25.0/100.0,
-        fat = 83.3*25.0/100.0
+        calories = 2500 * 25 / 100,
+        carbohydrates = 250.0 * 25.0 / 100.0,
+        protein = 187.5 * 25.0 / 100.0,
+        fat = 83.3 * 25.0 / 100.0
     )
 ) {
     val diaryEntriesValues = meal.diaryEntries
 
     Card(
         shape = RoundedCornerShape(10),
-        modifier = Modifier
-            .padding(horizontal = 10.dp, vertical = 10.dp),
+        modifier = Modifier.padding(horizontal = 20.dp, vertical = 10.dp),
         elevation = 6.dp
     ) {
         Column(
@@ -59,42 +58,42 @@ fun DiaryMealSection(
 
                 Row {
 
-                    Icon(
-                        imageVector = Icons.Default.Edit,
-                        contentDescription = "Edit",
-                        modifier = Modifier
-                            .clickable {
+                    Icon(imageVector = Icons.Default.Edit,
+                         contentDescription = "Edit",
+                         modifier = Modifier
+                             .clickable {
 
-                            }
-                            .padding(10.dp)
-                            .size(32.dp),
-                        tint = OrangeYellow1
-                    )
+                             }
+                             .padding(10.dp)
+                             .size(32.dp),
+                         tint = OrangeYellow1)
 
-                    Icon(
-                        imageVector = Icons.Default.AddCircle,
-                        contentDescription = "Add",
-                        modifier = Modifier
-                            .clickable {
-                                onAddProductClick(meal.mealName)
-                            }
-                            .padding(10.dp)
-                            .size(32.dp),
-                        tint = OrangeYellow1
-                    )
+                    Icon(imageVector = Icons.Default.AddCircle,
+                         contentDescription = "Add",
+                         modifier = Modifier
+                             .clickable {
+                                 onAddProductClick(meal.mealName)
+                             }
+                             .padding(10.dp)
+                             .size(32.dp),
+                         tint = OrangeYellow1)
                 }
             }
 
             diaryEntriesValues.forEach {
-                DiaryEntryItem(diaryEntry = it.diaryEntry) {
+                DiaryEntryItem(
+                    diaryEntry = it.diaryEntry,
+                    onItemClicked = {
 
-                }
+                    },
+                    onItemLongClick = {
+
+                    }
+                )
             }
 
             Divider(
-                modifier = Modifier
-                    .height(16.dp),
-                color = Color.Transparent
+                modifier = Modifier.height(16.dp), color = Color.Transparent
             )
 
             Row(
@@ -113,32 +112,30 @@ fun DiaryMealSection(
                 Spacer(modifier = Modifier.width(32.dp))
 
 
-                MealSectionNutritionItem(
-                    currentValue = diaryEntriesValues.sumOf { it.diaryEntry.nutritionValues.carbohydrates }.toInt(),
-                    wantedValue = wantedNutritionValues.carbohydrates.toInt(),
-                    name = stringResource(id = R.string.carbs),
-                    modifier = Modifier
+                MealSectionNutritionItem(currentValue = diaryEntriesValues.sumOf { it.diaryEntry.nutritionValues.carbohydrates }
+                    .toInt(),
+                                         wantedValue = wantedNutritionValues.carbohydrates.toInt(),
+                                         name = stringResource(id = R.string.carbs),
+                                         modifier = Modifier)
+
+                Spacer(modifier = Modifier.width(32.dp))
+
+                MealSectionNutritionItem(currentValue = diaryEntriesValues.sumOf { it.diaryEntry.nutritionValues.protein }
+                    .toInt(),
+                                         wantedValue = wantedNutritionValues.protein.toInt(),
+                                         name = stringResource(id = R.string.protein),
+                                         modifier = Modifier
+
                 )
 
                 Spacer(modifier = Modifier.width(32.dp))
 
-                MealSectionNutritionItem(
-                    currentValue = diaryEntriesValues.sumOf { it.diaryEntry.nutritionValues.protein }.toInt(),
-                    wantedValue = wantedNutritionValues.protein.toInt(),
-                    name = stringResource(id = R.string.protein),
-                    modifier = Modifier
 
-                )
-
-                Spacer(modifier = Modifier.width(32.dp))
-
-
-                MealSectionNutritionItem(
-                    currentValue = diaryEntriesValues.sumOf { it.diaryEntry.nutritionValues.fat }.toInt(),
-                    wantedValue = wantedNutritionValues.fat.toInt(),
-                    name = stringResource(id = R.string.fat),
-                    modifier = Modifier
-                )
+                MealSectionNutritionItem(currentValue = diaryEntriesValues.sumOf { it.diaryEntry.nutritionValues.fat }
+                    .toInt(),
+                                         wantedValue = wantedNutritionValues.fat.toInt(),
+                                         name = stringResource(id = R.string.fat),
+                                         modifier = Modifier)
             }
         }
     }

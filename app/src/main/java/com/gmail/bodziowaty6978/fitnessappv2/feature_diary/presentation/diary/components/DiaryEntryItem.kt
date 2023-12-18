@@ -1,5 +1,7 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.diary.components
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card
 import androidx.compose.material.Divider
@@ -14,16 +16,26 @@ import androidx.compose.ui.unit.dp
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.TextGrey
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.DiaryEntry
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DiaryEntryItem(
     diaryEntry: DiaryEntry,
-    onItemClicked: () -> Unit
+    onItemClicked: () -> Unit,
+    onItemLongClick: () -> Unit
 ) {
 
     Card(
         elevation = 8.dp,
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .combinedClickable(
+                onClick = {
+                    onItemClicked()
+                },
+                onLongClick = {
+                    onItemLongClick()
+                },
+            ),
         shape = RectangleShape,
     ) {
         Row(
