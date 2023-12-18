@@ -7,7 +7,7 @@ class DeleteDiaryEntry(
     private val diaryRepository: DiaryRepository
 ) {
 
-    suspend operator fun invoke(diaryEntryId:String):CustomResult{
+    suspend operator fun invoke(diaryEntryId:Int):CustomResult{
         return diaryRepository.deleteDiaryEntry(diaryEntryId = diaryEntryId)
     }
 }

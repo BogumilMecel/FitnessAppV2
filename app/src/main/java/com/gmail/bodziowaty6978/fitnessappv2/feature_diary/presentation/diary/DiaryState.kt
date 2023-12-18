@@ -2,6 +2,7 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.diary
 
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Meal
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.diary_entry.DiaryEntry
 
 data class DiaryState(
     val meals:List<Meal> = emptyList(),
@@ -9,5 +10,5 @@ data class DiaryState(
     val lastErrorMessage:String? = null,
     val wantedNutritionValues:NutritionValues = NutritionValues(),
     val isDialogShowed:Boolean = false,
-    val longClickedDiaryEntryWithId:DiaryEntryWithId? = null
+    val longClickedDiaryEntryWithId:DiaryEntry? = null
 )
