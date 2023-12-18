@@ -14,13 +14,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Lock
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,10 +26,11 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.fitnessappv2.R
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.DefaultTextField
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.Toolbar
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.presentation.util.AuthEvent
+import com.gmail.bogumilmecel2.ui.components.base.CustomBasicTextField
 import com.ramcosta.composedestinations.annotation.Destination
 
 @Composable
@@ -41,9 +38,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel()
 ) {
-    val isLoadingState = viewModel.isLoading.value
-    val emailState = viewModel.emailState.value
-    val passwordState = viewModel.passwordState.value
+    val state = viewModel.state.collectAsStateWithLifecycle().value
 
     Scaffold(
         topBar = {
@@ -60,18 +55,15 @@ fun LoginScreen(
                 .fillMaxSize()
                 .padding(paddingValues.calculateTopPadding())
         ) {
-            if (!isLoadingState) {
-
+            if (!state.isLoading) {
                 Column(
                     modifier = Modifier
                         .align(Alignment.Center)
                 ) {
 
-                    DefaultTextField(
-                        value = emailState.text,
-                        placeholder = {
-                            Text(text = emailState.hint)
-                        },
+                    CustomBasicTextField(
+                        value = state.email,
+                        placeholder = stringResource(id = R.string.email_address),
                         onValueChange = {
                             viewModel.onEvent(AuthEvent.EnteredEmail(email = it))
                         },
@@ -82,19 +74,17 @@ fun LoginScreen(
                             .fillMaxWidth()
                             .testTag(stringResource(id = R.string.EMAIL))
                             .padding(horizontal = 20.dp),
-                        leadingIcon = {
-                            Icon(imageVector = Icons.Default.Email, contentDescription = emailState.hint)
-                        }
+//                        leadingIcon = {
+//                            Icon(imageVector = Icons.Default.Email, contentDescription = emailState.hint)
+//                        }
                     )
 
                     Spacer(modifier = Modifier.height(15.dp))
 
 
-                    DefaultTextField(
-                        value = passwordState.text,
-                        placeholder = {
-                            Text(text = passwordState.hint)
-                        },
+                    CustomBasicTextField(
+                        value = state.password,
+                        placeholder = stringResource(id = R.string.password),
                         onValueChange = {
                             viewModel.onEvent(
                                 AuthEvent.EnteredPassword(password = it)
@@ -108,9 +98,9 @@ fun LoginScreen(
                             .fillMaxWidth()
                             .testTag(stringResource(id = R.string.PASSWORD))
                             .padding(horizontal = 20.dp),
-                        leadingIcon = {
-                            Icon(imageVector = Icons.Default.Lock, contentDescription = passwordState.hint)
-                        }
+//                        leadingIcon = {
+//                            Icon(imageVector = Icons.Default.Lock, contentDescription = passwordState.hint)
+//                        }
                     )
 
                     Spacer(modifier = Modifier.height(40.dp))
