@@ -10,5 +10,5 @@ data class DiaryState(
     val lastErrorMessage:String? = null,
     val wantedNutritionValues:NutritionValues = NutritionValues(),
     val isDialogShowed:Boolean = false,
-    val longClickedDiaryEntryWithId:DiaryEntry? = null
+    val longClickedDiaryEntry:DiaryEntry? = null
 )

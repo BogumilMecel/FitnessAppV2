@@ -1,18 +1,17 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.search
 
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
-import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 
 class SearchForProducts(
     private val diaryRepository: DiaryRepository,
-    private val resourceProvider: ResourceProvider,
     private val getDiaryHistory: GetDiaryHistory
 ) {
 
-    suspend operator fun invoke(productName:String):Resource<List<ProductWithId>>{
+    suspend operator fun invoke(productName:String):Resource<List<Product>>{
         if (productName.isBlank()){
-            return  getDiaryHistory()
+            return getDiaryHistory()
         }
         return diaryRepository.searchForProducts(productName)
     }

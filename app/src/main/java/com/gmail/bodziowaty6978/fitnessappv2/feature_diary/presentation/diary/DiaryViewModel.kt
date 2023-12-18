@@ -7,6 +7,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.NavigationActions
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.singleton.CurrentDate
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigator
+import com.gmail.bodziowaty6978.fitnessappv2.common.domain.use_case.GetToken
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
@@ -29,7 +30,8 @@ class DiaryViewModel @Inject constructor(
     private val deleteDiaryEntry: DeleteDiaryEntry,
     private val updateDiaryEntriesListAfterDelete: UpdateDiaryEntriesListAfterDelete,
     private val resourceProvider: ResourceProvider,
-    private val navigator: Navigator
+    private val navigator: Navigator,
+    private val getToken: GetToken
 ) : ViewModel() {
 
 
@@ -75,7 +77,7 @@ class DiaryViewModel @Inject constructor(
             is DiaryEvent.LongClickedDiaryEntry -> {
                 _state.update {
                     it.copy(
-                        longClickedDiaryEntryWithId = event.diaryEntry,
+                        longClickedDiaryEntry = event.diaryEntry,
                         isDialogShowed = true
                     )
                 }
@@ -96,7 +98,7 @@ class DiaryViewModel @Inject constructor(
                 }
             }
             is DiaryEvent.ClickedDeleteInDialog -> {
-                _state.value.longClickedDiaryEntryWithId?.let { diaryEntry ->
+                _state.value.longClickedDiaryEntry?.let { diaryEntry ->
                     viewModelScope.launch(Dispatchers.IO) {
                         val result = deleteDiaryEntry(diaryEntry.id)
                         if (result is CustomResult.Error) {
@@ -122,11 +124,16 @@ class DiaryViewModel @Inject constructor(
     }
 
     private fun getDiaryEntries() {
-        val currentDate = CurrentDate.dateModel(resourceProvider = resourceProvider).date
+        val currentDate = CurrentDate.dateModel(resourceProvider = resourceProvider)
+
+        viewModelScope.launch {
+            getToken()?.let { Log.e(TAG, it) }
+        }
+
 
         viewModelScope.launch(Dispatchers.IO) {
             val resource = getDiaryEntries(
-                date = currentDate,
+                timestamp = currentDate.timestamp,
                 mealNames = resourceProvider.getStringArray(R.array.meal_names).toList()
             )
             Log.e(TAG, resource.toString())

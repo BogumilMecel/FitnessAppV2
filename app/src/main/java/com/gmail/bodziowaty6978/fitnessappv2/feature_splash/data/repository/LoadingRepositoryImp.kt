@@ -16,11 +16,8 @@ class LoadingRepositoryImp(
         token:String
     ): Resource<Boolean> {
         return try {
-            val call = loadingApi.authenticate(token = token)
-            if (call) {
-                Resource.Success(true)
-            }
-            Resource.Error(resourceProvider.getString(R.string.unknown_error))
+            loadingApi.authenticate(token = "Bearer $token")
+            Resource.Success(true)
         } catch (e: Exception) {
             Resource.Error(resourceProvider.getString(R.string.unknown_error))
         }

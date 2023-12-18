@@ -2,7 +2,6 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.new
 
 import android.util.Log
 import com.gmail.bodziowaty6978.fitnessappv2.R
-import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
@@ -25,7 +24,7 @@ class SaveNewProduct(
         protein: String,
         fat: String,
         barcode: String,
-    ): Resource<String> {
+    ): Resource<Product> {
         val caloriesValue = calories.toIntOrNull()
         val carbohydratesValue = carbohydrates.toDoubleOrNull()
         val proteinValue = protein.toDoubleOrNull()

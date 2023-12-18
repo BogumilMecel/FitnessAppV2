@@ -18,7 +18,7 @@ class TokenRepositoryImp(
 
     override suspend fun saveToken(token: String): CustomResult {
         return try {
-            sharedPreferences.edit().putString("token",token)
+            sharedPreferences.edit().putString("token",token).apply()
             CustomResult.Success
         }catch (e:Exception){
             CustomResult.Error(e.message.toString())

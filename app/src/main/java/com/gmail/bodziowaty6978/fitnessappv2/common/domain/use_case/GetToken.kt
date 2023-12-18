@@ -1,8 +1,10 @@
 package com.gmail.bodziowaty6978.fitnessappv2.common.domain.use_case
 
+import android.util.Log
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.singleton.TokenStatus
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.repository.TokenRepository
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
+import com.gmail.bodziowaty6978.fitnessappv2.util.TAG
 
 class GetToken(
     private val tokenRepository: TokenRepository
@@ -12,6 +14,12 @@ class GetToken(
         return if (resource is Resource.Error) {
             TokenStatus.changeTokenStatus(false)
             null
-        } else resource.data!!
+        } else {
+            Log.e(TAG,resource.data.toString())
+            resource.data ?: kotlin.run {
+                TokenStatus.changeTokenStatus(false)
+                null
+            }
+        }
     }
 }

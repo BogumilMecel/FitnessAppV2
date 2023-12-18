@@ -8,8 +8,8 @@ import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.NavigationActions
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigator
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.TextFieldState
-import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.CustomResult
+import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.domain.use_case.AuthUseCases
 import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.presentation.util.AuthEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -63,12 +63,12 @@ class LoginViewModel @Inject constructor(
             else -> {
                 viewModelScope.launch(Dispatchers.IO) {
                     _isLoading.value = true
-                    val result = authUseCases.logInUser(
+                    val resource = authUseCases.logInUser(
                         email = _emailState.value.text,
                         password = _passwordState.value.text
                     )
-                    if (result is CustomResult.Error){
-                        _snackbarState.emit(result.message)
+                    if (resource is CustomResult.Error){
+                        _snackbarState.emit(resource.message)
                     }else{
                         navigator.navigate(NavigationActions.LoginScreen.loginToLoading())
                     }

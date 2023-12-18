@@ -8,10 +8,14 @@ import androidx.room.Room
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.navigation.ComposeCustomNavigator
+import com.gmail.bodziowaty6978.fitnessappv2.common.data.repository.TokenRepositoryImp
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.room.AppRoomDatabase
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.UserInformation
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigator
+import com.gmail.bodziowaty6978.fitnessappv2.common.domain.repository.TokenRepository
+import com.gmail.bodziowaty6978.fitnessappv2.common.domain.use_case.GetToken
+import com.gmail.bodziowaty6978.fitnessappv2.common.domain.use_case.SaveToken
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.datastoreInformation
 import com.gmail.bodziowaty6978.fitnessappv2.datastoreNutrition
@@ -25,10 +29,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.domain.use_case.ResetP
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.data.api.ProductApi
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.data.repository.remote.DiaryRepositoryImp
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.repository.DiaryRepository
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.diary.DeleteDiaryEntry
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.diary.GetDiaryEntries
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.diary.SortDiaryEntries
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.diary.UpdateDiaryEntriesListAfterDelete
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.diary.*
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.new_product.CalculateNutritionValuesIn100G
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.new_product.SaveNewProduct
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.product.AddDiaryEntry
@@ -44,6 +45,8 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.reposit
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.use_cases.CalculateNutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.use_cases.SaveIntroductionInformation
 import com.gmail.bodziowaty6978.fitnessappv2.feature_splash.data.api.LoadingApi
+import com.gmail.bodziowaty6978.fitnessappv2.feature_splash.data.repository.LoadingRepositoryImp
+import com.gmail.bodziowaty6978.fitnessappv2.feature_splash.domain.repository.LoadingRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -130,6 +133,23 @@ object AppModule {
 
     @Singleton
     @Provides
+    fun provideTokenRepository(
+        sharedPreferences: SharedPreferences
+    ):TokenRepository = TokenRepositoryImp(
+        sharedPreferences = sharedPreferences
+    )
+
+    @Singleton
+    @Provides
+    fun provideGetTokenUseCase(
+        tokenRepository:TokenRepository
+    ):GetToken = GetToken(
+        tokenRepository = tokenRepository
+    )
+
+
+    @Singleton
+    @Provides
     fun provideUserInformationDatastore(
         @ApplicationContext context: Context
     ): DataStore<UserInformation> = context.datastoreInformation
@@ -148,13 +168,23 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideSaveTokenUseCase(
+        tokenRepository: TokenRepository
+    ):SaveToken = SaveToken(
+        tokenRepository = tokenRepository
+    )
+
+    @Provides
+    @Singleton
     fun provideAuthUseCases(
         authRepository: AuthRepository,
-        resourceProvider: ResourceProvider
+        resourceProvider: ResourceProvider,
+        saveToken: SaveToken
     ): AuthUseCases = AuthUseCases(
         logInUser = LogInUser(
             repository = authRepository,
-            resourceProvider = resourceProvider
+            resourceProvider = resourceProvider,
+            saveToken = saveToken
         ),
 
         registerUser = RegisterUser(
@@ -212,10 +242,17 @@ object AppModule {
     @Singleton
     @Provides
     fun provideGetDiaryEntriesUseCase(
-        diaryRepository: DiaryRepository
+        diaryRepository: DiaryRepository,
+        calculateDiaryEntriesNutritionValues: CalculateDiaryEntriesNutritionValues,
+        getToken: GetToken,
+        resourceProvider: ResourceProvider
     ): GetDiaryEntries = GetDiaryEntries(
         diaryRepository = diaryRepository,
-        sortDiaryEntries = SortDiaryEntries()
+        sortDiaryEntries = SortDiaryEntries(
+            calculateDiaryEntriesNutritionValues = calculateDiaryEntriesNutritionValues
+        ),
+        getToken = getToken,
+        resourceProvider = resourceProvider
     )
 
     @Singleton
@@ -236,8 +273,21 @@ object AppModule {
         getDiaryHistory: GetDiaryHistory
     ): SearchForProducts = SearchForProducts(
         diaryRepository = diaryRepository,
-        resourceProvider = resourceProvider,
         getDiaryHistory = getDiaryHistory
+    )
+
+    @Provides
+    @Singleton
+    fun provideCalculateDiaryEntriesNutritionValuesUseCase():CalculateDiaryEntriesNutritionValues = CalculateDiaryEntriesNutritionValues()
+
+    @Singleton
+    @Provides
+    fun provideLoadingRepository(
+        loadingApi: LoadingApi,
+        resourceProvider: ResourceProvider
+    ):LoadingRepository = LoadingRepositoryImp(
+        loadingApi = loadingApi,
+        resourceProvider = resourceProvider
     )
 
     @Singleton
@@ -261,12 +311,17 @@ object AppModule {
     @Provides
     fun provideProductUseCases(
         diaryRepository: DiaryRepository,
-        resourceProvider: ResourceProvider
+        resourceProvider: ResourceProvider,
+        getToken:GetToken
     ): ProductUseCases =
         ProductUseCases(
             calculateNutritionValues = com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.product.CalculateNutritionValues(),
             createPieChartData = CreatePieChartData(),
-            addDiaryEntry = AddDiaryEntry(diaryRepository, resourceProvider = resourceProvider),
+            addDiaryEntry = AddDiaryEntry(
+                diaryRepository,
+                resourceProvider = resourceProvider,
+                getToken = getToken
+            ),
             saveProductToHistory = SaveProductToHistory(diaryRepository)
 
         )

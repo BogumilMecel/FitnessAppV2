@@ -3,7 +3,9 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.dia
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Meal
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.diary_entry.DiaryEntry
 
-class SortDiaryEntries(){
+class SortDiaryEntries(
+    private val calculateDiaryEntriesNutritionValues: CalculateDiaryEntriesNutritionValues
+){
 
     operator fun invoke(
         entries:List<DiaryEntry>,
@@ -17,8 +19,14 @@ class SortDiaryEntries(){
                     entriesList.add(diaryEntry)
                 }
             }
-            meals.add(Meal(mealName=mealName, diaryEntries = entriesList))
-
+            meals.add(
+                Meal(
+                    mealName=mealName,
+                    diaryEntries = calculateDiaryEntriesNutritionValues(
+                        diaryEntries = entriesList
+                    )
+                )
+            )
         }
         return meals
     }
