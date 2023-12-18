@@ -19,6 +19,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.Creat
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CreateSearchItemParamsFromProductDiaryEntryUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CreateSearchItemParamsFromProductUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CreateSearchItemParamsFromRecipeUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GenerateNewRecipeSearchTitleUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetDiaryHistoryUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetPriceUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetRecipePriceFromIngredientsUseCase
@@ -158,7 +159,8 @@ object ViewModelModule {
         getProductUseCase: GetProductUseCase,
         getRecipeUseCase: GetRecipeUseCase,
         cachedValuesProvider: CachedValuesProvider,
-        calculateSkipUseCase: CalculateSkipUseCase
+        calculateSkipUseCase: CalculateSkipUseCase,
+        generateNewRecipeSearchTitleUseCase: GenerateNewRecipeSearchTitleUseCase
     ): SearchDiaryUseCases =
         SearchDiaryUseCases(
             searchForProductsUseCase = searchForProductsUseCase,
@@ -180,7 +182,8 @@ object ViewModelModule {
                 cachedValuesProvider = cachedValuesProvider,
                 diaryRepository = diaryRepository,
                 calculateSkipUseCase = calculateSkipUseCase
-            )
+            ),
+            generateNewRecipeSearchTitleUseCase = generateNewRecipeSearchTitleUseCase
         )
 
     @ViewModelScoped
@@ -209,7 +212,8 @@ object ViewModelModule {
         resourceProvider: ResourceProvider,
         createPieChartDataUseCase: CreatePieChartDataUseCase,
         getUserCurrencyUseCase: GetUserCurrencyUseCase,
-        calculateProductNutritionValuesUseCase: CalculateProductNutritionValuesUseCase
+        calculateProductNutritionValuesUseCase: CalculateProductNutritionValuesUseCase,
+        generateNewRecipeSearchTitleUseCase: GenerateNewRecipeSearchTitleUseCase
     ): ProductUseCases =
         ProductUseCases(
             calculateProductNutritionValuesUseCase = CalculateProductNutritionValuesUseCase(),
@@ -231,7 +235,8 @@ object ViewModelModule {
             editProductDiaryEntryUseCase = EditProductDiaryEntryUseCase(
                 diaryRepository = diaryRepository,
                 calculateProductNutritionValuesUseCase = calculateProductNutritionValuesUseCase
-            )
+            ),
+            generateNewRecipeSearchTitleUseCase = generateNewRecipeSearchTitleUseCase
         )
 
     @ViewModelScoped

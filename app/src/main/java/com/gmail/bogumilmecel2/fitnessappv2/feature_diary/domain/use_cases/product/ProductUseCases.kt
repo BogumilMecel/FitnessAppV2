@@ -1,5 +1,6 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product
 
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GenerateNewRecipeSearchTitleUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetPriceUseCase
 
 data class ProductUseCases(
@@ -9,4 +10,5 @@ data class ProductUseCases(
     val submitNewPriceUseCase: SubmitNewPriceUseCase,
     val getPriceUseCase: GetPriceUseCase,
     val editProductDiaryEntryUseCase: EditProductDiaryEntryUseCase,
+    val generateNewRecipeSearchTitleUseCase: GenerateNewRecipeSearchTitleUseCase
 )
