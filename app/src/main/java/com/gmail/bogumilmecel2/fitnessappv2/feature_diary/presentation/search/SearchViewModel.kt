@@ -3,9 +3,10 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.gmail.bogumilmecel2.fitnessappv2.R
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.Constants
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BarcodeScanner
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseResultViewModel
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.Constants
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.getHttpCode
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.NewProductScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.NewRecipeScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.ProductScreenDestination
@@ -419,10 +420,10 @@ class SearchViewModel @Inject constructor(
     private fun onBarcodeScanned(barcode: String) {
         viewModelScope.launch(Dispatchers.IO) {
             loaderVisible = true
-            searchDiaryUseCases.searchForProductWithBarcode(barcode).handleWithHttpCode(
+            searchDiaryUseCases.searchForProductWithBarcode(barcode).handle(
                 finally = { loaderVisible = false },
-                onError = { _, code ->
-                    if (code == Constants.HttpStatusCodes.NOT_FOUND) {
+                onError = { exception ->
+                    if (exception.getHttpCode() == Constants.HttpStatusCodes.NOT_FOUND) {
                         _state.update { it.copy(noProductFoundVisible = true) }
                     }
                 }

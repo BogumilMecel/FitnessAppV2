@@ -67,43 +67,23 @@ abstract class BaseViewModel<STATE : Any, EVENT : Any, NAV_ARGUMENTS : Any>(
     protected inline fun <T> Resource<T>.handle(
         showSnackbar: Boolean = true,
         finally: () -> Unit = {},
-        onError: (String) -> Unit = {},
+        onError: (Exception) -> Unit = {},
         block: (T) -> Unit
     ) {
         if (this is Resource.Error) {
             if (showSnackbar) {
                 showSnackbarError(message = uiText)
             }
-            onError(uiText)
-        } else if (this is Resource.Success) {
-            block(this.data)
         }
-        finally()
-    }
 
-    protected inline fun <T> Resource<T>.handleWithHttpCode(
-        finally: () -> Unit = {},
-        onError: (uiText: String, httpCode: Int?) -> Unit = { _, _ -> },
-        block: (T) -> Unit
-    ) {
-        if (this is Resource.Error) {
-            onError(uiText, (this as? Resource.ComplexError)?.getHttpCode())
-        } else if (this is Resource.Success) {
-            block(this.data)
-        }
-        finally()
-    }
-
-    protected inline fun <T> Resource<T>.handleWithException(
-        finally: () -> Unit = {},
-        onError: (exception: Exception) -> Unit = { _ -> },
-        block: (T) -> Unit
-    ) {
         if (this is Resource.ComplexError) {
             onError(exception)
-        } else if (this is Resource.Success) {
+        }
+
+        if (this is Resource.Success) {
             block(this.data)
         }
+
         finally()
     }
 
