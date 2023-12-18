@@ -11,7 +11,7 @@ internal class LogInRegisterRequestTest {
 
     @Mock
     private lateinit var authRepository: AuthRepository
-    private lateinit var logInUser: LogInUser
+    private lateinit var logInUserUseCase: LogInUserUseCase
 
     private lateinit var closeable: AutoCloseable
 
