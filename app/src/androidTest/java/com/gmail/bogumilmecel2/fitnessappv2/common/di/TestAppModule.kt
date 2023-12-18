@@ -13,6 +13,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.GetToken
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.GetUserCurrencyUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.SaveNutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.SaveToken
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.RealResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.feature_account.domain.use_case.DeleteToken
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.model.AuthenticationRequest
@@ -97,14 +98,7 @@ object TestAppModule {
 
     @Provides
     @Singleton
-    fun provideResourceProvider(app: Application): ResourceProvider = object : ResourceProvider {
-        override fun getString(stringResId: Int, vararg args: Any) = ""
-
-        override fun getPluralString(pluralResId: Int, quantity: Int) = ""
-
-        override fun mockString(stringResId: Int, value: String) {
-        }
-    }
+    fun provideResourceProvider(app: Application): ResourceProvider = RealResourceProvider(context = app)
 
     @Singleton
     @Provides
