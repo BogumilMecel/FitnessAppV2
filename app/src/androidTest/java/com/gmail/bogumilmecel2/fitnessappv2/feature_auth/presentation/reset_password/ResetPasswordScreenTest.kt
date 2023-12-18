@@ -1,45 +1,21 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_auth.presentation.reset_password
 
 import androidx.compose.ui.test.*
-import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import com.gmail.bogumilmecel2.fitnessappv2.R
+import com.gmail.bogumilmecel2.fitnessappv2.common.BaseAndroidTest
 import com.gmail.bogumilmecel2.fitnessappv2.common.di.AppModule
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.MainActivity
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.FitnessAppV2Theme
-import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 
 @HiltAndroidTest
 @UninstallModules(AppModule::class)
-internal class ResetPasswordScreenTest {
-    @get:Rule(order = 0)
-    val hiltRule = HiltAndroidRule(this)
-
-    @get:Rule(order = 1)
-    val composeRule = createAndroidComposeRule<MainActivity>()
-
+internal class ResetPasswordScreenTest: BaseAndroidTest() {
     @Before
     fun setUp() {
-        hiltRule.inject()
-        composeRule.setContent {
-            val navController = rememberNavController()
-            FitnessAppV2Theme {
-                NavHost(
-                    navController = navController,
-                    startDestination = AuthScreen.ResetPasswordAuthScreen.route
-                ) {
-                    composable(route = AuthScreen.ResetPasswordAuthScreen.route) {
-                        ResetPasswordScreen()
-                    }
-                }
-            }
+        setContent {
+            ResetPasswordScreen()
         }
     }
 
