@@ -6,6 +6,8 @@ import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigation
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.util.BottomBarScreen
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.util.Screen
 import com.gmail.bodziowaty6978.fitnessappv2.feature_auth.presentation.util.AuthScreen
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
+import com.google.gson.Gson
 
 object NavigationActions {
 
@@ -138,11 +140,9 @@ object NavigationActions {
     object NewProductScreen{
         fun newProductToProduct(
             mealName:String,
-            productWithIdRProductWithId
+            product:Product
         ) = object :NavigationAction{
-            override val destination: String = Screen.ProductScreen.route + "?mealName=$mealName"
-//            override val parcelableArguments: Map<String, Parcelable>
-//                get() = mapOf(Pair("productWithId",productWithId),Pair("ProductWithId",productWithId))
+            override val destination: String = Screen.ProductScreen.route + "?mealName=$mealName" +"&product=${Gson().toJson(product)}"
         }
     }
 }

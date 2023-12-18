@@ -18,6 +18,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.data.singleton.CurrentDate
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.LightRed
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.ProductNameSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.ProductNutritionSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.ProductTopSection
@@ -27,10 +28,8 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.
 @Composable
 fun ProductScreen(
     viewModel: ProductViewModel = hiltViewModel(),
-    productWithId: ProductWithId,
+    product: Product,
 ) {
-    val product = productWithId.product
-
     val state = viewModel.state.collectAsStateWithLifecycle().value
 
     val scaffoldState = rememberScaffoldState()

@@ -35,6 +35,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search.S
 import com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.presentation.IntroductionScreen
 import com.gmail.bodziowaty6978.fitnessappv2.feature_splash.loading.presentation.SplashScreen
 import com.gmail.bodziowaty6978.fitnessappv2.feature_summary.presentation.SummaryScreen
+import com.google.gson.Gson
 
 @RequiresApi(Build.VERSION_CODES.N)
 @Composable
@@ -161,31 +162,32 @@ fun NavHostGraph(
                 }
 
                 composable(
-                    route = Screen.ProductScreen.route + "?mealName={mealName}",
+                    route = Screen.ProductScreen.route + "?mealName={mealName}" + "&product={product}",
                     arguments = listOf(
                         navArgument(
                             name = "mealName"
                         ) {
                             type = NavType.StringType
                             defaultValue = "Breakfast"
+                        },
+                        navArgument(
+                            name = "product"
+                        ) {
+                            type = NavType.StringType
+                            defaultValue = null
+                            nullable = true
                         }
                     )
                 ) {
-                    val productWithId = ProductWithId(productId = "1", product = Product())
-//                        navController.previousBackStackEntry?.arguments?.getParcelable<ProductWithId>(
-//                            "productWithId"
-//                        )
-                    if (productWithId != null) {
-                        ProductScreen(productWithId = productWithId)
-                    } else {
-                        ProductScreen(
-                            productWithId = ProductWithId(
-                                product = Product(),
-                                productId = ""
-                            )
-                        )
-                    }
+                    val productString = it.arguments?.getString("product")
+                    val mealName = it.arguments?.getString("mealName") ?: "Breakfast"
+                    val product = productString?.let { productJson ->
+                        Gson().fromJson(productJson, Product::class.java)
+                    } ?: Product()
 
+                    ProductScreen(
+                        product = Gson().fromJson(productString, Product::class.java)
+                    )
                 }
 
                 composable(
