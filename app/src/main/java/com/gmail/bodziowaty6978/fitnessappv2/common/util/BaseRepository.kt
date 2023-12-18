@@ -1,9 +1,12 @@
 package com.gmail.bodziowaty6978.fitnessappv2.common.util
 
+import com.gmail.bodziowaty6978.fitnessappv2.common.data.singleton.TokenStatus
+import retrofit2.HttpException
+
 open class BaseRepository(
     private val resourceProvider: ResourceProvider
 ) {
-    inline fun <R> handleRequest(block: () -> R): Resource<R> {
+    suspend inline fun <R> handleRequest(block: () -> R): Resource<R> {
         return try {
             Resource.Success(block())
         } catch (e: Exception) {
@@ -11,8 +14,13 @@ open class BaseRepository(
         }
     }
 
-    fun <T> handleExceptionWithResource(exception: Exception, data: T? = null): Resource<T> {
+    suspend fun <T> handleExceptionWithResource(exception: Exception, data: T? = null): Resource<T> {
         exception.printStackTrace()
+        if (exception is HttpException) {
+            if (exception.code() == 401) {
+                TokenStatus.tokenNotPresent()
+            }
+        }
         return Resource.Error(
             uiText = exception.message ?: resourceProvider.getUnknownErrorString(),
             data = data

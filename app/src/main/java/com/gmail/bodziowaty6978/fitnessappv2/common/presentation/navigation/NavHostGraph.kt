@@ -10,9 +10,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavOptions
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.gmail.bodziowaty6978.fitnessappv2.NavGraphs
+import com.gmail.bodziowaty6978.fitnessappv2.common.data.singleton.TokenStatus
+import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.NavigationAction
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.navigation.Navigator
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.BottomBar
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.CustomSnackbar
@@ -21,6 +24,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.DarkGr
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.ErrorUtils
 import com.gmail.bodziowaty6978.fitnessappv2.destinations.AccountScreenDestination
 import com.gmail.bodziowaty6978.fitnessappv2.destinations.DiaryScreenDestination
+import com.gmail.bodziowaty6978.fitnessappv2.destinations.LoginScreenDestination
 import com.gmail.bodziowaty6978.fitnessappv2.destinations.SearchScreenDestination
 import com.gmail.bodziowaty6978.fitnessappv2.destinations.SummaryScreenDestination
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -50,6 +54,19 @@ fun NavHostGraph(
                         it.navOptions
                     )
                 }
+            }
+        }
+    }
+
+    LaunchedEffect(key1 = true) {
+        TokenStatus.tokenStatus.receiveAsFlow().collect {
+            if (it == TokenStatus.Status.UNAVAILABLE) {
+                navigator.navigate(
+                    navAction = NavigationAction(
+                        direction = LoginScreenDestination,
+                        navOptions = NavOptions.Builder().setPopUpTo(0, true).build()
+                    )
+                )
             }
         }
     }
