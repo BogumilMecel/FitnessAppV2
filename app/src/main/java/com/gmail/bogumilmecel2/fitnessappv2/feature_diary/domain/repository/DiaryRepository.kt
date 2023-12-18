@@ -57,11 +57,7 @@ interface DiaryRepository {
     ): Resource<ProductPrice>
 
     suspend fun addNewRecipe(newRecipeRequest: NewRecipeRequest): Resource<Recipe>
-    suspend fun insertUserProductsLocally(userProducts: List<Product>): Resource<Unit>
-    suspend fun insertUserRecipesLocally(userRecipes: List<Recipe>): Resource<Unit>
     suspend fun getUserProducts(latestDate: LocalDateTime?): Resource<List<Product>>
     suspend fun getUserRecipes(latestTimestamp: Long?): Resource<List<Recipe>>
     suspend fun insertOfflineDiaryEntry(diaryItem: DiaryItem): Resource<Unit>
-    suspend fun cacheProduct(product: Product): Resource<Unit>
-    suspend fun cacheRecipe(recipe: Recipe): Resource<Unit>
 }

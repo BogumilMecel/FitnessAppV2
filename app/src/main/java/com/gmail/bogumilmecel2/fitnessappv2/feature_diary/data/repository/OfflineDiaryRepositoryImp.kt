@@ -123,15 +123,27 @@ class OfflineDiaryRepositoryImp(
         }
     }
 
-    override suspend fun getOfflineProduct(productId: String): Resource<Product?> {
+    override suspend fun getProduct(productId: String): Resource<Product?> {
         return handleRequest {
             productQueries.getProduct(productId).executeAsOneOrNull()?.toProduct()
         }
     }
 
-    override suspend fun getOfflineRecipe(recipeId: String): Resource<Recipe?> {
+    override suspend fun getRecipe(recipeId: String): Resource<Recipe?> {
         return handleRequest {
             userDiaryItemsDao.getRecipe(recipeId).firstOrNull()
+        }
+    }
+
+    override suspend fun insertRecipe(recipe: Recipe): Resource<Unit> {
+        return handleRequest {
+            userDiaryItemsDao.insertRecipe(recipe)
+        }
+    }
+
+    override suspend fun insertProduct(product: Product): Resource<Unit> {
+        return handleRequest {
+            userDiaryItemsDao.insertProduct(product)
         }
     }
 }

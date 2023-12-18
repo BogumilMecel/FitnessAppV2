@@ -10,6 +10,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Re
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.OfflineDiaryRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -21,12 +22,14 @@ import kotlin.test.assertIs
 class PostRecipeDiaryEntryUseCaseTest : BaseTest() {
 
     private val diaryRepository = mockk<DiaryRepository>()
+    private val offlineDiaryRepository = mockk<OfflineDiaryRepository>()
     private val calculateRecipeNutritionValuesForServingsUseCase =
         mockk<CalculateRecipeNutritionValuesForServingsUseCase>()
     private val postRecipeDiaryEntryUseCase = PostRecipeDiaryEntryUseCase(
         diaryRepository = diaryRepository,
         resourceProvider = resourceProvider,
-        calculateRecipeNutritionValuesForServingsUseCase = calculateRecipeNutritionValuesForServingsUseCase
+        calculateRecipeNutritionValuesForServingsUseCase = calculateRecipeNutritionValuesForServingsUseCase,
+        offlineDiaryRepository = offlineDiaryRepository
     )
 
     @Test
@@ -81,7 +84,7 @@ class PostRecipeDiaryEntryUseCaseTest : BaseTest() {
             } returns sampleNutritionValues
             coEvery { diaryRepository.insertRecipeDiaryEntry(recipeDiaryEntryRequest = expectedRequest) } returns Resource.Success(expectedRecipeDiaryEntry)
             coEvery { diaryRepository.insertOfflineDiaryEntry(expectedRecipeDiaryEntry) } returns Resource.Success(Unit)
-            coEvery { diaryRepository.cacheRecipe(recipe = any()) } returns Resource.Success(Unit)
+            coEvery { offlineDiaryRepository.insertRecipe(recipe = any()) } returns Resource.Success(Unit)
             assertIs<Resource.Success<Unit>>(callTestedMethod())
             coVerify(exactly = 1) { diaryRepository.insertRecipeDiaryEntry(recipeDiaryEntryRequest = expectedRequest) }
             coVerify(exactly = 1) { diaryRepository.insertOfflineDiaryEntry(expectedRecipeDiaryEntry) }

@@ -5,6 +5,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.MockConstants
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.OfflineDiaryRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -14,7 +15,11 @@ import org.junit.Test
 class GetRecipeUseCaseTest: BaseTest() {
 
     private val diaryRepository = mockk<DiaryRepository>()
-    private val getRecipeUseCase = GetRecipeUseCase(diaryRepository = diaryRepository)
+    private val offlineDiaryRepository = mockk<OfflineDiaryRepository>()
+    private val getRecipeUseCase = GetRecipeUseCase(
+        diaryRepository = diaryRepository,
+        offlineDiaryRepository = offlineDiaryRepository
+    )
 
     @Test
     fun `Check if cached product is not null, resource success with cached product is returned`() =
@@ -45,14 +50,14 @@ class GetRecipeUseCaseTest: BaseTest() {
 
     private fun verify(expectedOffline: Int = 1, expectedOnline: Int = 1) {
         coVerify(exactly = expectedOnline) { diaryRepository.getRecipe(recipeId = MockConstants.Diary.RECIPE_ID_1) }
-        coVerify(exactly = expectedOffline) { diaryRepository.getOfflineRecipe(recipeId = MockConstants.Diary.RECIPE_ID_1) }
+        coVerify(exactly = expectedOffline) { offlineDiaryRepository.getRecipe(recipeId = MockConstants.Diary.RECIPE_ID_1) }
     }
 
     private fun mockData(
         getOfflineRecipeResource: Resource<Recipe?> = Resource.Success(data = MockConstants.Diary.getSampleRecipe()),
         getRecipeResource: Resource<Recipe?> = Resource.Success(data = MockConstants.Diary.getSampleRecipe())
     ) {
-        coEvery { diaryRepository.getOfflineRecipe(MockConstants.Diary.RECIPE_ID_1) } returns getOfflineRecipeResource
+        coEvery { offlineDiaryRepository.getRecipe(MockConstants.Diary.RECIPE_ID_1) } returns getOfflineRecipeResource
         coEvery { diaryRepository.getRecipe(MockConstants.Diary.RECIPE_ID_1) } returns getRecipeResource
     }
 

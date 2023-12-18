@@ -129,6 +129,7 @@ object ViewModelModule {
         createSearchItemParamsFromIngredientUseCase: CreateSearchItemParamsFromIngredientUseCase,
         createPieChartDataUseCase: CreatePieChartDataUseCase,
         diaryRepository: DiaryRepository,
+        offlineDiaryRepository: OfflineDiaryRepository,
         resourceProvider: ResourceProvider,
         getRecipePriceFromIngredientsUseCase: GetRecipePriceFromIngredientsUseCase,
         calculateRecipeNutritionValuesForServingsUseCase: CalculateRecipeNutritionValuesForServingsUseCase
@@ -137,7 +138,8 @@ object ViewModelModule {
         postRecipeDiaryEntryUseCase = PostRecipeDiaryEntryUseCase(
             diaryRepository = diaryRepository,
             resourceProvider = resourceProvider,
-            calculateRecipeNutritionValuesForServingsUseCase = calculateRecipeNutritionValuesForServingsUseCase
+            calculateRecipeNutritionValuesForServingsUseCase = calculateRecipeNutritionValuesForServingsUseCase,
+            offlineDiaryRepository = offlineDiaryRepository
         ),
         getRecipePriceFromIngredientsUseCase = getRecipePriceFromIngredientsUseCase,
         calculateSelectedServingPriceUseCase = CalculateSelectedServingPriceUseCase(),
@@ -210,6 +212,7 @@ object ViewModelModule {
     @Provides
     fun provideProductUseCases(
         diaryRepository: DiaryRepository,
+        offlineDiaryRepository: OfflineDiaryRepository,
         resourceProvider: ResourceProvider,
         createPieChartDataUseCase: CreatePieChartDataUseCase,
         getUserCurrencyUseCase: GetUserCurrencyUseCase,
@@ -222,7 +225,8 @@ object ViewModelModule {
             insertProductDiaryEntryUseCase = InsertProductDiaryEntryUseCase(
                 diaryRepository = diaryRepository,
                 resourceProvider = resourceProvider,
-                calculateProductNutritionValuesUseCase = calculateProductNutritionValuesUseCase
+                calculateProductNutritionValuesUseCase = calculateProductNutritionValuesUseCase,
+                offlineDiaryRepository = offlineDiaryRepository
             ),
             submitNewPriceUseCase = SubmitNewPriceUseCase(
                 diaryRepository = diaryRepository,

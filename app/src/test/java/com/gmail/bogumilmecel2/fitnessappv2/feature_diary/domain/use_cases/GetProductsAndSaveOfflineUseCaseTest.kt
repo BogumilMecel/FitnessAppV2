@@ -70,7 +70,7 @@ class GetProductsAndSaveOfflineUseCaseTest : BaseTest() {
                 userId = MockConstants.USER_ID
             )
         } returns getOfflineProductsResource
-        coEvery { diaryRepository.getUserProducts(latestTimestamp = MockConstants.TIMESTAMP) } returns getOnlineProductsResource
+        coEvery { diaryRepository.getUserProducts(latestDate = MockConstants.MOCK_DATE_TIME.toLocalDateTime()) } returns getOnlineProductsResource
         getOnlineProductsResource.data?.let {
             coEvery { offlineDiaryRepository.insertProducts(it) } returns insertingResource
         }

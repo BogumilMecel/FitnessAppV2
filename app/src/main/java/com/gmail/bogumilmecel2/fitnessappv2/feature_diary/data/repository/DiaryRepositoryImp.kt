@@ -203,18 +203,6 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun insertUserProductsLocally(userProducts: List<Product>): Resource<Unit> {
-        return handleRequest {
-            userDiaryItemsDao.insertProducts(userProducts)
-        }
-    }
-
-    override suspend fun insertUserRecipesLocally(userRecipes: List<Recipe>): Resource<Unit> {
-        return handleRequest {
-            userDiaryItemsDao.insertRecipes(userRecipes)
-        }
-    }
-
     override suspend fun getDiaryEntriesComplete(): Resource<DiaryEntriesResponse> {
         return handleRequest {
             diaryApi.getDiaryEntriesComplete()
@@ -241,18 +229,6 @@ class DiaryRepositoryImp(
                     userDiaryItemsDao.insertRecipeDiaryEntry(diaryItem)
                 }
             }
-        }
-    }
-
-    override suspend fun cacheProduct(product: Product): Resource<Unit> {
-        return handleRequest {
-            userDiaryItemsDao.insertProduct(product)
-        }
-    }
-
-    override suspend fun cacheRecipe(recipe: Recipe): Resource<Unit> {
-        return handleRequest {
-            userDiaryItemsDao.insertRecipe(recipe)
         }
     }
 

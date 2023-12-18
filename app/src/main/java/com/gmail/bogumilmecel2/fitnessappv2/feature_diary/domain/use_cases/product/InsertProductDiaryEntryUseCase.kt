@@ -8,9 +8,11 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.MealName
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntryPostRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.OfflineDiaryRepository
 
 class InsertProductDiaryEntryUseCase(
     private val diaryRepository: DiaryRepository,
+    private val offlineDiaryRepository: OfflineDiaryRepository,
     private val resourceProvider: ResourceProvider,
     private val calculateProductNutritionValuesUseCase: CalculateProductNutritionValuesUseCase
 ) {
@@ -37,7 +39,7 @@ class InsertProductDiaryEntryUseCase(
             )
         ).data ?: return Resource.Error()
 
-        diaryRepository.cacheProduct(product = product)
+        offlineDiaryRepository.insertProduct(product = product)
 
         return diaryRepository.insertOfflineDiaryEntry(insertedProductDiaryEntry)
     }

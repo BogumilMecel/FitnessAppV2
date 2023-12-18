@@ -11,7 +11,7 @@ class GetRecipeUseCase(
 ) {
 
     suspend operator fun invoke(recipeId: String): Resource<Recipe?> {
-        val cachedRecipe = offlineDiaryRepository.getOfflineRecipe(recipeId = recipeId).data
+        val cachedRecipe = offlineDiaryRepository.getRecipe(recipeId = recipeId).data
 
         if (cachedRecipe != null) {
             return Resource.Success(cachedRecipe)

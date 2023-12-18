@@ -8,9 +8,11 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.MealName
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.OfflineDiaryRepository
 
 class PostRecipeDiaryEntryUseCase(
     private val diaryRepository: DiaryRepository,
+    private val offlineDiaryRepository: OfflineDiaryRepository,
     private val resourceProvider: ResourceProvider,
     private val calculateRecipeNutritionValuesForServingsUseCase: CalculateRecipeNutritionValuesForServingsUseCase
 ) {
@@ -36,7 +38,7 @@ class PostRecipeDiaryEntryUseCase(
             )
         ).data ?: return Resource.Error()
 
-        diaryRepository.cacheRecipe(recipe)
+        offlineDiaryRepository.insertRecipe(recipe)
 
         return diaryRepository.insertOfflineDiaryEntry(insertedRecipeDiaryEntry)
     }

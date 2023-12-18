@@ -10,6 +10,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntryPostRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.OfflineDiaryRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -20,11 +21,13 @@ import kotlin.test.assertIs
 class InsertProductDiaryEntryUseCaseTest: BaseTest() {
 
     private val diaryRepository = mockk<DiaryRepository>()
+    private val offlineDiaryRepository = mockk<OfflineDiaryRepository>()
     private val calculateProductNutritionValuesUseCase = mockk<CalculateProductNutritionValuesUseCase>()
     private val insertProductDiaryEntryUseCase = InsertProductDiaryEntryUseCase(
         diaryRepository = diaryRepository,
         resourceProvider = resourceProvider,
-        calculateProductNutritionValuesUseCase = calculateProductNutritionValuesUseCase
+        calculateProductNutritionValuesUseCase = calculateProductNutritionValuesUseCase,
+        offlineDiaryRepository = offlineDiaryRepository
     )
 
     @Test
@@ -71,11 +74,11 @@ class InsertProductDiaryEntryUseCaseTest: BaseTest() {
         )
         coEvery { calculateProductNutritionValuesUseCase(any(), any()) } returns sampleNutritionValues
         coEvery { diaryRepository.insertProductDiaryEntry(productDiaryEntryPostRequest = expectedRequest) } returns Resource.Success(expectedProductDiaryEntry)
-        coEvery { diaryRepository.cacheProduct(product = MockConstants.Diary.getSampleProduct()) } returns Resource.Success(Unit)
+        coEvery { offlineDiaryRepository.insertProduct(product = MockConstants.Diary.getSampleProduct()) } returns Resource.Success(Unit)
         coEvery { diaryRepository.insertOfflineDiaryEntry(expectedProductDiaryEntry) } returns Resource.Success(Unit)
         assertIs<Resource.Success<Unit>>(callTestedMethod())
         coVerify(exactly = 1) { diaryRepository.insertProductDiaryEntry(productDiaryEntryPostRequest = expectedRequest) }
-        coVerify(exactly = 1) { diaryRepository.cacheProduct(MockConstants.Diary.getSampleProduct()) }
+        coVerify(exactly = 1) { offlineDiaryRepository.insertProduct(MockConstants.Diary.getSampleProduct()) }
         coVerify(exactly = 1) { diaryRepository.insertOfflineDiaryEntry(diaryItem = expectedProductDiaryEntry) }
     }
 

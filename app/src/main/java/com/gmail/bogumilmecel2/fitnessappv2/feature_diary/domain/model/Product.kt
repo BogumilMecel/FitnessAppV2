@@ -8,7 +8,10 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.database.SqlProduct
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.product.NutritionValuesIn
 import com.google.gson.annotations.SerializedName
+import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.Serializable
 
 @Entity
@@ -52,7 +55,7 @@ data class Product(
 
     @SerializedName("date_created")
     @ColumnInfo(name = "date_created")
-    val dateCreated: LocalDateTime
+    val dateCreated: LocalDateTime = Clock.System.now().toLocalDateTime(TimeZone.UTC)
 )
 
 fun SqlProduct.toProduct() = Product(

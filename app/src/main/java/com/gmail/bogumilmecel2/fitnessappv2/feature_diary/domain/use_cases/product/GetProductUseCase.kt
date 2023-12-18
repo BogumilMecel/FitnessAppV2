@@ -10,7 +10,7 @@ class GetProductUseCase(
     private val offlineDiaryRepository: OfflineDiaryRepository
 ) {
     suspend operator fun invoke(productId: String): Resource<Product?> {
-        val cachedProduct = offlineDiaryRepository.getOfflineProduct(productId = productId).data
+        val cachedProduct = offlineDiaryRepository.getProduct(productId = productId).data
 
         if (cachedProduct != null) {
             return Resource.Success(cachedProduct)
