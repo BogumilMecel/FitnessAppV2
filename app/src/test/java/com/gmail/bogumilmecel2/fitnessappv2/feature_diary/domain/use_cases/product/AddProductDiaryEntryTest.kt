@@ -12,7 +12,7 @@ internal class AddProductDiaryEntryTest{
     private lateinit var mockDiaryRepository: DiaryRepository
 
     private lateinit var closable:AutoCloseable
-    private lateinit var addDiaryEntry: AddDiaryEntry
+    private lateinit var insertProductDiaryEntryUseCase: InsertProductDiaryEntryUseCase
 
 //    @Before
 //    fun setUp() = runTest{

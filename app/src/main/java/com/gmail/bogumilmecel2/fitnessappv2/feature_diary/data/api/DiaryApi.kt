@@ -10,7 +10,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductPrice
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductPriceResponse
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.RecipePriceResponse
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntryPostRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.product.NewPriceRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.product.NewProductRequest
@@ -31,7 +30,7 @@ interface DiaryApi {
     @POST("/diaryEntries/product")
     suspend fun insertProductDiaryEntry(
         @Body productDiaryEntryPostRequest: ProductDiaryEntryPostRequest
-    ): ProductDiaryEntry
+    ): Unit
 
     @POST("/diaryEntries/recipe")
     suspend fun insertRecipeDiaryEntry(

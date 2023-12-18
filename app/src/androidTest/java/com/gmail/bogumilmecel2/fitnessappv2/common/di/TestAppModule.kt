@@ -40,7 +40,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_recipe.AddNewRecipe
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_recipe.CalculateRecipeNutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_recipe.NewRecipeUseCases
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.AddDiaryEntry
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.InsertProductDiaryEntryUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.CalculateProductNutritionValuesUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.CreatePieChartData
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.product.EditProductDiaryEntryUseCase
@@ -446,7 +446,7 @@ object TestAppModule {
         ProductUseCases(
             calculateProductNutritionValuesUseCase = CalculateProductNutritionValuesUseCase(),
             createPieChartData = createPieChartData,
-            addDiaryEntry = AddDiaryEntry(
+            insertProductDiaryEntryUseCase = InsertProductDiaryEntryUseCase(
                 diaryRepository = diaryRepository,
                 resourceProvider = resourceProvider
             ),

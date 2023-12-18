@@ -5,7 +5,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetPr
 data class ProductUseCases(
     val createPieChartData: CreatePieChartData,
     val calculateProductNutritionValuesUseCase: CalculateProductNutritionValuesUseCase,
-    val addDiaryEntry: AddDiaryEntry,
+    val insertProductDiaryEntryUseCase: InsertProductDiaryEntryUseCase,
     val submitNewPriceUseCase: SubmitNewPriceUseCase,
     val getPriceUseCase: GetPriceUseCase,
 )

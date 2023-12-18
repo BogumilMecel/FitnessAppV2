@@ -38,7 +38,7 @@ class PostRecipeDiaryEntryUseCaseTest : BaseMockkTest() {
 
     @Test
     fun `Check if servings are not valid integer, resource error is returned`() = runTest {
-        val resource = callTestedMethod(servings = MockConstants.Diary.INVALID_RECIPE_SERVINGS)
+        val resource = callTestedMethod(servings = MockConstants.Diary.INVALID_WEIGHT_OR_SERVINGS)
         assertIs<Resource.Error<Unit>>(resource)
         checkErrorMessage(resource)
     }
