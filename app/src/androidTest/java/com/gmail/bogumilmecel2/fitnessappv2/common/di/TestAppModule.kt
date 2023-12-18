@@ -26,27 +26,13 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.use_case.AuthUse
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.use_case.LogInUser
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.use_case.RegisterUser
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.use_case.ResetPasswordWithEmail
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.DeleteDiaryEntryRequest
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.DiaryEntriesResponse
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.EditProductDiaryEntryRequest
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.EditRecipeDiaryEntryRequest
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductPrice
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.RecipePriceResponse
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntryPostRequest
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.product.NewPriceRequest
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.product.NewProductRequest
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.NewRecipeRequest
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Recipe
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntryRequest
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.data.MockDiaryRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CalculateSelectedServingPriceUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CalculateServingPrice
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GenerateDiaryItemDialogTitleUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetPriceUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetRecipePriceFromIngredientsUseCase
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.RecipePriceRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.CalculateNutritionValuesFromDiaryEntriesUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.CalculateNutritionValuesFromNutritionValuesUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.CreateLongClickedDiaryItemParamsUseCase
@@ -247,81 +233,7 @@ object TestAppModule {
 
     @Singleton
     @Provides
-    fun provideDiaryRepository(): DiaryRepository = object : DiaryRepository {
-        override suspend fun getDiaryEntries(date: String): Resource<DiaryEntriesResponse> {
-            TODO("Not yet implemented")
-        }
-
-        override suspend fun searchForProducts(searchText: String): Resource<List<Product>> {
-            TODO("Not yet implemented")
-        }
-
-        override suspend fun searchForProductWithBarcode(barcode: String): Resource<Product?> {
-            TODO("Not yet implemented")
-        }
-
-        override suspend fun searchForRecipes(searchText: String): Resource<List<Recipe>> {
-            TODO("Not yet implemented")
-        }
-
-        override suspend fun getProductHistory(): Resource<List<Product>> {
-            TODO("Not yet implemented")
-        }
-
-        override suspend fun addProductDiaryEntry(productDiaryEntryPostRequest: ProductDiaryEntryPostRequest): Resource<ProductDiaryEntry> {
-            TODO("Not yet implemented")
-        }
-
-        override suspend fun addRecipeDiaryEntry(recipeDiaryEntryRequest: RecipeDiaryEntryRequest): Resource<Unit> {
-            TODO("Not yet implemented")
-        }
-
-        override suspend fun deleteDiaryEntry(deleteDiaryEntryRequest: DeleteDiaryEntryRequest): Resource<Unit> {
-            TODO("Not yet implemented")
-        }
-
-        override suspend fun editProductDiaryEntry(editProductDiaryEntryRequest: EditProductDiaryEntryRequest): Resource<Unit> {
-            TODO("Not yet implemented")
-        }
-
-        override suspend fun editRecipeDiaryEntry(editRecipeDiaryEntryRequest: EditRecipeDiaryEntryRequest): Resource<Unit> {
-            TODO("Not yet implemented")
-        }
-
-        override suspend fun saveNewProduct(newProductRequest: NewProductRequest): Resource<Product> {
-            TODO("Not yet implemented")
-        }
-
-        override suspend fun getCaloriesSum(date: String): Resource<Int> {
-            TODO("Not yet implemented")
-        }
-
-        override suspend fun getPrice(
-            productId: String,
-            currency: Currency
-        ): Resource<ProductPrice?> {
-            TODO("Not yet implemented")
-        }
-
-        override suspend fun getRecipePriceFromIngredients(
-            recipePriceRequest: RecipePriceRequest,
-            currency: Currency
-        ): Resource<RecipePriceResponse?> {
-            TODO("Not yet implemented")
-        }
-
-        override suspend fun submitNewPrice(
-            newPriceRequest: NewPriceRequest,
-            productId: String,
-            currency: Currency
-        ): Resource<ProductPrice> {
-            TODO("Not yet implemented")
-        }
-
-        override suspend fun addNewRecipe(newRecipeRequest: NewRecipeRequest): Resource<Recipe> {
-            TODO("Not yet implemented")
-        }
-    }
+    fun provideDiaryRepository(): DiaryRepository = MockDiaryRepository()
 
     @Singleton
     @Provides
