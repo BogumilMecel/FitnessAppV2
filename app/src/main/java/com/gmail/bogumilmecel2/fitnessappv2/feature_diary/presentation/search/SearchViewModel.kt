@@ -3,7 +3,7 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.gmail.bogumilmecel2.fitnessappv2.R
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.ApiConstants
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.Constants
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BarcodeScanner
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseResultViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.NewProductScreenDestination
@@ -223,7 +223,7 @@ class SearchViewModel @Inject constructor(
                     if (
                         searchDiaryUseCases.shouldDisplayNextPageUseCase(
                             size = diaryHistory.size,
-                            perPage = ApiConstants.DEFAULT_OFFLINE_PAGE_SIZE,
+                            perPage = Constants.DEFAULT_OFFLINE_PAGE_SIZE,
                             currentPage = everythingPage
                         )
                     ) {
@@ -234,7 +234,7 @@ class SearchViewModel @Inject constructor(
                     if (
                         searchDiaryUseCases.shouldDisplayNextPageUseCase(
                             size = everythingProducts.size,
-                            perPage = ApiConstants.DEFAULT_PAGE_SIZE,
+                            perPage = Constants.DEFAULT_PAGE_SIZE,
                             currentPage = everythingPage
                         )
                     ) {
@@ -248,7 +248,7 @@ class SearchViewModel @Inject constructor(
                 if (
                     searchDiaryUseCases.shouldDisplayNextPageUseCase(
                         size = userProducts.size,
-                        perPage = ApiConstants.DEFAULT_OFFLINE_PAGE_SIZE,
+                        perPage = Constants.DEFAULT_OFFLINE_PAGE_SIZE,
                         currentPage = userProductsPage
                     )
                 ) {
@@ -261,7 +261,7 @@ class SearchViewModel @Inject constructor(
                 if (
                     searchDiaryUseCases.shouldDisplayNextPageUseCase(
                         size = userRecipes.size,
-                        perPage = ApiConstants.DEFAULT_OFFLINE_PAGE_SIZE,
+                        perPage = Constants.DEFAULT_OFFLINE_PAGE_SIZE,
                         currentPage = userRecipesPage
                     )
                 ) {
@@ -422,7 +422,7 @@ class SearchViewModel @Inject constructor(
             searchDiaryUseCases.searchForProductWithBarcode(barcode).handleWithHttpCode(
                 finally = { loaderVisible = false },
                 onError = { _, code ->
-                    if (code == ApiConstants.HttpStatusCodes.NOT_FOUND) {
+                    if (code == Constants.HttpStatusCodes.NOT_FOUND) {
                         _state.update { it.copy(noProductFoundVisible = true) }
                     }
                 }

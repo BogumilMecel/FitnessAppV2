@@ -1,9 +1,9 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.data.api
 
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.Currency
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.ApiConstants
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.ApiConstants.Query.PAGE
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.ApiConstants.Query.SEARCH_TEXT
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.Constants
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.Constants.Query.PAGE
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.Constants.Query.SEARCH_TEXT
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.DeleteDiaryEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.DiaryEntriesResponse
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
@@ -96,7 +96,7 @@ interface DiaryApi {
     suspend fun addNewPriceForProduct(
         @Body newPriceRequest: NewPriceRequest,
         @Path("productId") productId: String,
-        @Header(ApiConstants.Headers.CURRENCY) currency: Currency
+        @Header(Constants.Headers.CURRENCY) currency: Currency
     ): ProductPrice
 
     @POST("/recipes")
@@ -107,13 +107,13 @@ interface DiaryApi {
     @GET("/products/{productId}/price")
     suspend fun getProductPrice(
         @Path("productId") productId: String,
-        @Header(ApiConstants.Headers.CURRENCY) currency: Currency
+        @Header(Constants.Headers.CURRENCY) currency: Currency
     ): ProductPriceResponse
 
     @POST("/recipes/price")
     suspend fun getRecipePriceFromIngredients(
         @Body recipePriceRequest: RecipePriceRequest,
-        @Header(ApiConstants.Headers.CURRENCY) currency: Currency
+        @Header(Constants.Headers.CURRENCY) currency: Currency
     ): RecipePriceResponse?
 
     @GET("/userData/diaryItems")

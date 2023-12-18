@@ -2,8 +2,11 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_summary.presentation
 
 import androidx.lifecycle.viewModelScope
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.Constants
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.CustomDateUtils
+import com.gmail.bogumilmecel2.fitnessappv2.destinations.WeightDialogScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.use_case.SummaryUseCases
+import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.model.WeightEntry
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -18,8 +21,10 @@ class SummaryViewModel @Inject constructor(
     state = SummaryState(),
     navArguments = Unit
 ) {
+
+    private var latestWeightEntry: WeightEntry? = null
+
     override fun configureOnStart() {
-        checkIfShouldAskForWeightDialogs()
         getLatestLogEntry()
         getCaloriesSum()
         initWeightData()
@@ -29,39 +34,8 @@ class SummaryViewModel @Inject constructor(
 
     override fun onEvent(event: SummaryEvent) {
         when (event) {
-            is SummaryEvent.DismissedWeightPickerDialog -> {
-                _state.update {
-                    it.copy(
-                        weightPickerDialogVisible = false
-                    )
-                }
-            }
-
-            is SummaryEvent.SavedWeightPickerValue -> {
-                if (!_state.value.isWeightPickerLoading) {
-                    _state.update {
-                        it.copy(
-                            isWeightPickerLoading = true
-                        )
-                    }
-                    saveNewWeightEntry(value = _state.value.weightPickerCurrentValue)
-                }
-            }
-
             is SummaryEvent.ClickedAddWeightEntryButton -> {
-                _state.update {
-                    it.copy(
-                        weightPickerDialogVisible = true
-                    )
-                }
-            }
-
-            is SummaryEvent.WeightPickerValueChanged -> {
-                _state.update {
-                    it.copy(
-                        weightPickerCurrentValue = event.value
-                    )
-                }
+                navigateToWeightPicker()
             }
 
             is SummaryEvent.ClickedDeclineInWeightDialogsQuestion -> {
@@ -106,12 +80,16 @@ class SummaryViewModel @Inject constructor(
         viewModelScope.launch {
             summaryUseCases.checkIfShouldShowWeightPickerUseCase().handle(
                 showSnackbar = false
-            ) {
-                _state.update {
-                    it.copy(weightPickerDialogVisible = true)
-                }
-            }
+            ) { navigateToWeightPicker() }
         }
+    }
+
+    private fun navigateToWeightPicker() {
+        navigateTo(
+            destination = WeightDialogScreenDestination(
+                startingValue = latestWeightEntry?.value ?: Constants.WEIGHT_PICKER_DEFAULT_VALUE
+            )
+        )
     }
 
     private fun checkIfShouldAskForWeightDialogs() {
@@ -131,35 +109,11 @@ class SummaryViewModel @Inject constructor(
         }
     }
 
-    private fun saveNewWeightEntry(value: Double) {
-        viewModelScope.launch {
-            summaryUseCases.addWeightEntryUseCase(value = value).handle(
-                finally = {
-                    _state.update {
-                        it.copy(
-                            isWeightPickerLoading = false,
-                            weightPickerDialogVisible = false
-                        )
-                    }
-                }
-            ) {
-                _state.update { state ->
-                    state.copy(latestWeightEntry = it.latestWeightEntry,)
-                }
-                assignWeightProgress()
-            }
-        }
-    }
-
     private fun initWeightData() {
         viewModelScope.launch(Dispatchers.IO) {
-            val latestWeightEntry = cachedValuesProvider.getLatestWeightEntry()
-            _state.update {
-                it.copy(
-                    latestWeightEntry = latestWeightEntry,
-                    weightPickerCurrentValue = latestWeightEntry?.value ?: 80.0
-                )
-            }
+            latestWeightEntry = cachedValuesProvider.getLatestWeightEntry()
+            checkIfShouldAskForWeightDialogs()
+            _state.update { it.copy(latestWeightEntry = latestWeightEntry) }
         }
     }
 
