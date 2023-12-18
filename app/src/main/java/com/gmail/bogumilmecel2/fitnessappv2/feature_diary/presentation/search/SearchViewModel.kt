@@ -16,6 +16,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductRe
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.SearchDiaryUseCases
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_product.NewProductEntryData
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.presentation.ProductEntryData
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.recipe.RecipeEntryData
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator.navigate
@@ -115,20 +116,34 @@ class SearchViewModel @Inject constructor(
             }
 
             is SearchEvent.ClickedNewProduct -> {
-                // TODO: Handle new recipe
-                if (entryData is SearchEntryData.DiaryArguments) {
-                    _state.update {
-                        it.copy(noProductFoundVisible = false)
-                    }
-                    navigateTo(
-                        NewProductScreenDestination(
-                            mealName = entryData.mealName,
-                            barcode = barcode,
-                            dateTransferObject = entryData.dateTransferObject
-                        )
-                    )
-                    barcode = null
+                _state.update {
+                    it.copy(noProductFoundVisible = false)
                 }
+                when(entryData) {
+                    is SearchEntryData.DiaryArguments -> {
+                        navigateTo(
+                            NewProductScreenDestination(
+                                entryData = NewProductEntryData.SearchArguments(
+                                    mealName = entryData.mealName,
+                                    dateTransferObject = entryData.dateTransferObject
+                                ),
+                                barcode = barcode,
+                            )
+                        )
+                    }
+
+                    is SearchEntryData.NewRecipeArguments -> {
+                        navigateTo(
+                            NewProductScreenDestination(
+                                entryData = NewProductEntryData.NewRecipeArguments(
+                                    recipeName = entryData.recipeName
+                                ),
+                                barcode = barcode,
+                            )
+                        )
+                    }
+                }
+                barcode = null
             }
 
             is SearchEvent.ClickedScanButton -> {
@@ -147,7 +162,6 @@ class SearchViewModel @Inject constructor(
             }
 
             is SearchEvent.ClickedCreateNewRecipe -> {
-                // TODO: Handle new recipe
                 if (entryData is SearchEntryData.DiaryArguments) {
                     navigateTo(
                         NewRecipeScreenDestination(
