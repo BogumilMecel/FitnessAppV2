@@ -28,8 +28,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.components.DefaultCardBackground
 import com.gmail.bogumilmecel2.fitnessappv2.components.defaultRoundedCornerShapeValue
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductPrice
-import com.gmail.bogumilmecel2.ui.components.base.CustomText
-import com.gmail.bogumilmecel2.ui.components.base.FitnessAppTextStyle
 import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
 import com.gmail.bogumilmecel2.ui.components.base.WidthSpacer
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
@@ -52,9 +50,9 @@ fun PriceSection(
                 .fillMaxWidth()
         ) {
             Box(modifier = Modifier.fillMaxWidth()) {
-                CustomText(
+                Text(
                     text = stringResource(id = R.string.prices),
-                    fitnessAppTextStyle = FitnessAppTextStyle.HeaderSmall,
+                    style = FitnessAppTheme.typography.HeaderSmall,
                     textAlign = TextAlign.Center,
                     modifier = Modifier
                         .padding(16.dp)

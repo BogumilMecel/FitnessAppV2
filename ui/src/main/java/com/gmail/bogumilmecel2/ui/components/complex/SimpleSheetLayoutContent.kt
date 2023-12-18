@@ -70,7 +70,7 @@ fun SimpleSheetLayoutContent(
                 onClick = it.onClick,
                 modifier = Modifier
                     .fillMaxWidth(),
-                buttonStyle = ButtonStyle.OutlinedPrimaryButton
+                buttonStyle = ButtonStyle.OutlinedPrimary
             )
 
             HeightSpacer(8.dp)

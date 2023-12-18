@@ -340,7 +340,7 @@ fun RecipeScreen(
                 modifier = Modifier.padding(horizontal = 15.dp),
                 leftContent = LeftContent.Icon(IconVector.Edit),
                 text = stringResource(id = R.string.recipe_edit),
-                buttonStyle = ButtonStyle.ButtonSecondary
+                buttonStyle = ButtonStyle.Secondary
             ) {
 
             }

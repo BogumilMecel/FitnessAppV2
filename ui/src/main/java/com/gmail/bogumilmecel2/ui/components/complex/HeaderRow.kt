@@ -5,13 +5,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.gmail.bogumilmecel2.ui.components.base.CustomIconButton
-import com.gmail.bogumilmecel2.ui.components.base.CustomText
-import com.gmail.bogumilmecel2.ui.components.base.FitnessAppTextStyle
 import com.gmail.bogumilmecel2.ui.components.base.IconButtonParams
 import com.gmail.bogumilmecel2.ui.components.base.IconVector
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
@@ -57,15 +56,16 @@ fun HeaderRow(
                 )
         ) {
             middlePrimaryText?.let {
-                CustomText(
+                Text(
                     text = middlePrimaryText,
-                    fitnessAppTextStyle = FitnessAppTextStyle.HeaderLarge
+                    style = FitnessAppTheme.typography.HeaderLarge
                 )
             }
             middleSecondaryText?.let {
-                CustomText(
+                Text(
                     text = middleSecondaryText,
-                    fitnessAppTextStyle = FitnessAppTextStyle.ParagraphSecondaryMedium
+                    style = FitnessAppTheme.typography.ParagraphMedium,
+                    color = FitnessAppTheme.colors.ContentSecondary
                 )
             }
         }
