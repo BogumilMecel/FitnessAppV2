@@ -39,14 +39,13 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.Dropd
 import com.gmail.bogumilmecel2.fitnessappv2.components.DefaultCardBackground
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_recipe.components.RecipePriceSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.presentation.components.ProductNutritionSection
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.componens.SearchProductItem
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.componens.SearchItem
 import com.gmail.bogumilmecel2.ui.components.base.ButtonStyle
 import com.gmail.bogumilmecel2.ui.components.base.CustomBasicTextField
 import com.gmail.bogumilmecel2.ui.components.base.CustomButton
 import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
 import com.gmail.bogumilmecel2.ui.components.base.IconButtonParams
 import com.gmail.bogumilmecel2.ui.components.base.IconVector
-import com.gmail.bogumilmecel2.ui.components.base.LeftContent
 import com.gmail.bogumilmecel2.ui.components.base.WidthSpacer
 import com.gmail.bogumilmecel2.ui.components.complex.HeaderRow
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
@@ -232,7 +231,7 @@ fun RecipeScreen(
 
                     CustomButton(
                         modifier = Modifier.fillMaxWidth(),
-                        leftContent = LeftContent.Icon(IconVector.Save),
+                        leftIcon = IconVector.Save,
                         text = stringResource(
                             id = R.string.recipe_save_to,
                             state.entryData.mealName
@@ -320,7 +319,7 @@ fun RecipeScreen(
                         val ingredients = state.entryData.recipe.ingredients
 
                         ingredients.forEach { ingredient ->
-                            SearchProductItem(
+                            SearchItem(
                                 weight = ingredient.weight,
                                 unit = stringResource(id = ingredient.measurementUnit.getStringRes()),
                                 name = ingredient.productName,
@@ -338,7 +337,7 @@ fun RecipeScreen(
 
             CustomButton(
                 modifier = Modifier.padding(horizontal = 15.dp),
-                leftContent = LeftContent.Icon(IconVector.Edit),
+                leftIcon = IconVector.Edit,
                 text = stringResource(id = R.string.recipe_edit),
                 buttonStyle = ButtonStyle.Secondary
             ) {

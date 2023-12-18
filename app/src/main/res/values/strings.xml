@@ -58,7 +58,7 @@
     <string name="tomorrow">Tomorrow</string>
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
-    <string name="scan">Scan barcode</string>
+    <string name="scan_barcode">Scan barcode</string>
     <string name="filter">Filter recipes</string>
     <string name="product_name">Product name</string>
     <string name="nutrition_values">Nutrition values</string>
@@ -101,6 +101,15 @@
 
 
     <string name="add">Add</string>
+
+    <string name="search_everything">Everything</string>
+    <string name="search_my_products">My products</string>
+    <string name="search_my_recipes">My recipes</string>
+    <string name="search_for_products">Search for products</string>
+    <string name="search_for_recipes">Search for recipes</string>
+    <string name="search">Search</string>
+    <string name="search_browse_recipes">Browse recipes</string>
+    <string name="search_quick_add">Quick add</string>
 
     <!--    summary-->
     <string name="days">%s days in a row</string>

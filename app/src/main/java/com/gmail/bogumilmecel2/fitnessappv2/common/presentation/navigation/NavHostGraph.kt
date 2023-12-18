@@ -29,7 +29,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.destinations.SearchScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.SplashScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.SummaryScreenDestination
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
-import com.gmail.bogumilmecel2.ui.theme.LocalColor.DarkGreyElevation1
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.ramcosta.composedestinations.DestinationsNavHost
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -44,7 +43,10 @@ fun NavHostGraph(
     val currentDestination = navController.currentBackStackEntryAsState().value?.destination?.route
 
     val systemUiController = rememberSystemUiController()
-    systemUiController.setSystemBarsColor(color = if (currentDestination == SearchScreenDestination.route) DarkGreyElevation1 else FitnessAppTheme.colors.Background)
+    systemUiController.setSystemBarsColor(
+        color = if (currentDestination == SearchScreenDestination.route) FitnessAppTheme.colors.BackgroundSecondary
+        else FitnessAppTheme.colors.Background
+    )
 
     val scaffoldState = rememberScaffoldState()
 

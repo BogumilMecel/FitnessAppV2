@@ -30,7 +30,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.PieCh
 import com.gmail.bogumilmecel2.fitnessappv2.components.DefaultCardBackground
 import com.gmail.bogumilmecel2.ui.components.base.CustomButton
 import com.gmail.bogumilmecel2.ui.components.base.IconVector
-import com.gmail.bogumilmecel2.ui.components.base.LeftContent
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 import com.gmail.bogumilmecel2.ui.theme.LocalColor.BlueViolet3
 import com.gmail.bogumilmecel2.ui.theme.LocalColor.LightGreen3
@@ -170,7 +169,7 @@ fun AccountScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 10.dp),
-            leftContent = LeftContent.Icon(IconVector.Logout),
+            leftIcon = IconVector.Logout,
             text = stringResource(id = R.string.log_out),
         ) {
             viewModel.onEvent(AccountEvent.ClickedLogOutButtonClicked)

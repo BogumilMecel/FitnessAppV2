@@ -9,44 +9,29 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
-import com.gmail.bogumilmecel2.ui.theme.LocalColor.DarkGreyElevation6
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun SearchProductItem(
-    weight: Int,
-    unit: String,
-    name: String,
-    calories: Int,
-    onItemClick: (() -> Unit)? = null,
-    onItemLongClick: (() -> Unit)? = null,
-    background: Color = DarkGreyElevation6
-) {
-
+fun SearchItem(searchItemParams: SearchItemParams) = with(searchItemParams){
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(background)
+            .background(color = FitnessAppTheme.colors.BackgroundLight)
             .combinedClickable(
-                onClick = onItemClick ?: {},
-                onLongClick = onItemLongClick ?: {}
+                onClick = onItemClick,
+                onLongClick = onItemLongClick
             )
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(
-                    vertical = 10.dp,
-                    horizontal = 15.dp
-                ),
+                .padding(vertical = 10.dp, horizontal = 16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -54,23 +39,29 @@ fun SearchProductItem(
             Column {
                 Text(
                     text = name,
-                    style = MaterialTheme.typography.body1
+                    style = FitnessAppTheme.typography.ParagraphLarge
                 )
+
                 Text(
-                    text = "${weight}${unit}",
-                    style = MaterialTheme.typography.body2.copy(
-                        color = FitnessAppTheme.colors.ContentSecondary
-                    )
+                    text = textBelowName,
+                    style = FitnessAppTheme.typography.ParagraphMedium,
+                    color = FitnessAppTheme.colors.ContentSecondary
                 )
             }
 
             Text(
-                text = "$calories kcal",
-                style = MaterialTheme.typography.body2.copy(
-                    color = FitnessAppTheme.colors.ContentSecondary
-                )
+                text = endText,
+                style = FitnessAppTheme.typography.ParagraphMedium,
+                color = FitnessAppTheme.colors.ContentSecondary
             )
-
         }
     }
 }
+
+data class SearchItemParams(
+    val name: String,
+    val textBelowName: String,
+    val endText: String,
+    val onItemClick: () -> Unit,
+    val onItemLongClick: () -> Unit
+)

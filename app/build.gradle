@@ -129,10 +129,6 @@ dependencies {
     // Ui tests
     androidTestImplementation "org.mockito:mockito-core:4.0.0"
 
-    //compose view pager
-    implementation "com.google.accompanist:accompanist-pager:0.20.0"
-    implementation "com.google.accompanist:accompanist-pager-indicators:0.20.0"
-
     //gson and retrofit
     implementation 'com.google.code.gson:gson:2.10'
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
