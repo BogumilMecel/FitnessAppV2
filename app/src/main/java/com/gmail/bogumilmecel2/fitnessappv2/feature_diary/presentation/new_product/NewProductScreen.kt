@@ -5,19 +5,14 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Save
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.R
@@ -28,7 +23,10 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_produ
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_product.components.NutritionSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_product.components.TextFieldSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.shared.ScannerSection
+import com.gmail.bogumilmecel2.ui.components.base.CustomIcon
+import com.gmail.bogumilmecel2.ui.components.base.IconVector
 import com.gmail.bogumilmecel2.ui.components.complex.HeaderRow
+import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 import com.ramcosta.composedestinations.annotation.Destination
 
 @Destination(navArgsDelegate = NewProductNavArguments::class)
@@ -56,10 +54,7 @@ fun NewProductScreen(viewModel: NewProductViewModel = hiltViewModel()) {
                         }
                     }
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Save,
-                        contentDescription = "Save"
-                    )
+                    CustomIcon(icon = IconVector.Save)
                 }
             }
         ) { paddingValues ->
@@ -111,11 +106,8 @@ fun NewProductScreen(viewModel: NewProductViewModel = hiltViewModel()) {
 
                 Text(
                     text = stringResource(id = R.string.nutrition_values),
-                    modifier = Modifier
-                        .padding(horizontal = 15.dp),
-                    style = MaterialTheme.typography.body1.copy(
-                        fontWeight = FontWeight.Normal
-                    )
+                    modifier = Modifier.padding(horizontal = 15.dp),
+                    style = FitnessAppTheme.typography.HeaderSmall
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
