@@ -4,7 +4,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductRe
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Ingredient
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.utils.Difficulty
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.utils.TimeRequired
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_recipe.util.SelectedNutritionType
 
 sealed interface NewRecipeEvent {
     data object ClickedDifficultyArrow : NewRecipeEvent
@@ -18,7 +17,7 @@ sealed interface NewRecipeEvent {
     data class SelectedTime(val time: TimeRequired) : NewRecipeEvent
     data class SelectedDifficulty(val difficulty: Difficulty) : NewRecipeEvent
     data class EnteredName(val value: String) : NewRecipeEvent
-    data class ChangedSelectedNutritionType(val value: SelectedNutritionType) : NewRecipeEvent
+    data class CheckedNutritionType(val checked: Boolean) : NewRecipeEvent
     data class ReceivedProductResult(val productResult: ProductResult) : NewRecipeEvent
     data object ClickedIngredientsListArrow : NewRecipeEvent
     data object ClickedSaveRecipe : NewRecipeEvent

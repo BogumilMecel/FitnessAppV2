@@ -5,6 +5,7 @@ object TestTags {
     const val REGISTER_SCREEN = "register_screen"
     const val LOGIN_SCREEN = "login_screen"
     const val RESET_PASSWORD_SCREEN = "reset_password_screen"
+    const val NEW_RECIPE_SCREEN = "new_recipe_screen"
 
     // COMPONENTS
     const val SNACKBAR = "snackbar"
