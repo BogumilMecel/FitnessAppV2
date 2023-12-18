@@ -26,7 +26,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.searc
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.SearchForProductsUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.repository.UserDataRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.use_cases.CalculateNutritionValues
-import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.use_cases.SaveIntroductionInformation
+import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.use_cases.SaveIntroductionInformationUseCase
 import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
 import dagger.Provides
@@ -115,7 +115,7 @@ object TestAppModule {
         userDataRepository: UserDataRepository,
         realResourceProvider: RealResourceProvider,
         calculateNutritionValues: CalculateNutritionValues
-    ): SaveIntroductionInformation = SaveIntroductionInformation(
+    ): SaveIntroductionInformationUseCase = SaveIntroductionInformationUseCase(
         userDataRepository = userDataRepository,
         realResourceProvider = realResourceProvider,
         calculateNutritionValues = calculateNutritionValues
