@@ -17,9 +17,8 @@ open class BaseRepository {
 
     suspend fun <T> handleExceptionWithResource(
         exception: Exception,
-        data: T? = null,
         shouldHandleException: Boolean
-    ): Resource.Error<T> {
+    ): Resource.ComplexError<T> {
         if (shouldHandleException) {
             exception.printStackTrace()
             if (exception is HttpException) {
@@ -29,13 +28,6 @@ open class BaseRepository {
             }
         }
 
-        return Resource.Error(
-            uiText = when (exception) {
-                is HttpException -> exception.response()?.errorBody()?.string() ?: exception.message ?: "unknown error"
-                else -> exception.message ?: "unknown error"
-            },
-            data = data,
-            httpCode = if (exception is HttpException) exception.code() else null
-        )
+        return Resource.ComplexError(exception = exception)
     }
 }
