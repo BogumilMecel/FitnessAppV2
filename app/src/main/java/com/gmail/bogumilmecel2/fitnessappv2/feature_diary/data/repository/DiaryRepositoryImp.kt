@@ -1,4 +1,4 @@
-package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.data.repository.remote
+package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.data.repository
 
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.Currency
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.DiaryItem
@@ -204,38 +204,6 @@ class DiaryRepositoryImp(
     override suspend fun insertUserRecipesLocally(userRecipes: List<Recipe>): Resource<Unit> {
         return handleRequest {
             userDiaryItemsDao.insertUserRecipes(userRecipes)
-        }
-    }
-
-    override suspend fun getLocalUserRecipes(
-        userId: String,
-        searchText: String?,
-        limit: Int,
-        skip: Int
-    ): Resource<List<Recipe>> {
-        return handleRequest {
-            userDiaryItemsDao.getUserRecipes(
-                userId = userId,
-                searchText = searchText,
-                limit = limit,
-                offset = skip
-            )
-        }
-    }
-
-    override suspend fun getLocalUserProducts(
-        userId: String,
-        searchText: String?,
-        limit: Int,
-        skip: Int
-    ): Resource<List<Product>> {
-        return handleRequest {
-            userDiaryItemsDao.getUserProducts(
-                userId = userId,
-                searchText = searchText,
-                limit = limit,
-                offset = skip
-            )
         }
     }
 

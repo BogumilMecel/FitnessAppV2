@@ -18,6 +18,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.use_case.Registe
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.use_case.ResetPasswordWithEmail
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.presentation.register.RegisterUseCases
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.OfflineDiaryRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CalculateSelectedServingPriceUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CalculateServingPrice
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.CalculateSkipUseCase
@@ -29,8 +30,9 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.Gener
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetDiaryHistoryUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetPriceUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetRecipePriceFromIngredientsUseCase
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetUserDiaryAndSaveItLocallyUseCase
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetUserDiaryEntriesExperimentalUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetUserDiaryAndSaveOfflineUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetUserProductsAndSaveOfflineUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.GetUserRecipesAndSaveOfflineUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.ShouldDisplayNextPageUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.CreateLongClickedDiaryItemParamsUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.DeleteDiaryEntryUseCase
@@ -54,14 +56,15 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.recip
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.recipe.GetRecipeUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.recipe.PostRecipeDiaryEntryUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.recipe.RecipeUseCases
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.GetLocalUserProductsUseCase
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.GetLocalUserRecipesUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.GetOfflineUserProductsUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.GetOfflineUserRecipesUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.SearchDiaryUseCases
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.SearchForProductWithBarcode
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.SearchForProductsUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.SearchForRecipes
 import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.repository.UserDataRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.use_cases.SaveIntroductionInformationUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_splash.domain.LoadingUseCases
 import com.gmail.bogumilmecel2.fitnessappv2.feature_splash.domain.repository.LoadingRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_splash.domain.use_cases.AuthenticateUserUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.use_case.CheckIfShouldAskForWeightDialogsUseCase
@@ -147,6 +150,7 @@ object ViewModelModule {
     @Provides
     fun provideDiarySearchUseCases(
         diaryRepository: DiaryRepository,
+        offlineDiaryRepository: OfflineDiaryRepository,
         searchForProductsUseCase: SearchForProductsUseCase,
         resourceProvider: ResourceProvider,
         createSearchItemParamsFromProductUseCase: CreateSearchItemParamsFromProductUseCase,
@@ -167,14 +171,14 @@ object ViewModelModule {
             getProductUseCase = getProductUseCase,
             getRecipeUseCase = getRecipeUseCase,
             shouldDisplayNextPageUseCase = ShouldDisplayNextPageUseCase(),
-            getLocalUserRecipesUseCase = GetLocalUserRecipesUseCase(
+            getOfflineUserRecipesUseCase = GetOfflineUserRecipesUseCase(
                 cachedValuesProvider = cachedValuesProvider,
-                diaryRepository = diaryRepository,
+                offlineDiaryRepository = offlineDiaryRepository,
                 calculateSkipUseCase = calculateSkipUseCase
             ),
-            getLocalUserProductsUseCase = GetLocalUserProductsUseCase(
+            getOfflineUserProductsUseCase = GetOfflineUserProductsUseCase(
                 cachedValuesProvider = cachedValuesProvider,
-                diaryRepository = diaryRepository,
+                diaryRepository = offlineDiaryRepository,
                 calculateSkipUseCase = calculateSkipUseCase
             ),
             generateNewRecipeSearchTitleUseCase = generateNewRecipeSearchTitleUseCase

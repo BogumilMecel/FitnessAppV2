@@ -18,11 +18,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.net.ConnectException
-import java.net.SocketTimeoutException
-import java.net.UnknownHostException
+import retrofit2.HttpException
 import javax.inject.Inject
-import javax.net.ssl.SSLHandshakeException
 
 abstract class BaseViewModel<STATE : Any, EVENT : Any, NAV_ARGUMENTS : Any>(
     state: STATE,
@@ -79,24 +76,11 @@ abstract class BaseViewModel<STATE : Any, EVENT : Any, NAV_ARGUMENTS : Any>(
     ) {
         when (this) {
             is Resource.ComplexError -> {
-                onError(exception)
-
-                when (exception) {
-                    is SocketTimeoutException,
-                    is ConnectException,
-                    is UnknownHostException,
-                    is SSLHandshakeException -> {
-                        viewModelScope.launch {
-                            checkConnectionStateUseCase()
-                        }
-                    }
-
-                    else -> {
-                        if (showSnackbar) {
-                            showSnackbarError(message = uiText)
-                        }
-                    }
+                if (exception is HttpException) {
+                    showSnackbarError(message = uiText)
                 }
+
+                onError(exception)
             }
 
             is Resource.Error -> {
