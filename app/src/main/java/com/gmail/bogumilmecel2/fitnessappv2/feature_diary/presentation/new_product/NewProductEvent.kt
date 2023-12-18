@@ -6,7 +6,6 @@ sealed interface NewProductEvent {
     object ClickedBackArrow:NewProductEvent
     object ClickedDropDownMenu:NewProductEvent
     object ClickedSaveButton:NewProductEvent
-    object ClosedScanner:NewProductEvent
     object ClickedScannerButton:NewProductEvent
     data class EnteredProductName(val value:String):NewProductEvent
     data class SelectedMeasurementUnit(val measurementUnit: MeasurementUnit):NewProductEvent
