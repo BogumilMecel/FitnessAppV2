@@ -16,7 +16,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.SaveToken
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.RealResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.feature_account.domain.use_case.DeleteToken
-import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.model.AuthenticationRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.model.LoginRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.model.RegisterRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.model.TokenResponse

@@ -13,7 +13,7 @@ class DefaultInterceptor(
         sharedPreferences.getString("token", null)?.let {
             request.addHeader("Authorization", "Bearer $it")
         }
-        request.addHeader(Headers.COUNTRY, Country.POLAND.shortName)
+        request.addHeader(ApiConstants.Headers.COUNTRY, Country.POLAND.shortName)
 
         val response = chain.proceed(request.build())
 
