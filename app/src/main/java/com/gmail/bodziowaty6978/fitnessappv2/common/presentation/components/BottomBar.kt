@@ -3,6 +3,7 @@ package com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components
 import androidx.compose.material.BottomNavigation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.Grey
@@ -24,9 +25,11 @@ fun BottomBar(navController: NavHostController) {
         screens.forEach { screen ->
             AddItem(
                 bottomBarScreen = screen,
-                currentDestination = currentDestination,
                 navController = navController,
-                screensNumber = screens.size
+                screensNumber = screens.size,
+                isSelected = currentDestination?.hierarchy?.any {
+                    it.route == screen.route
+                } == true
             )
         }
     }

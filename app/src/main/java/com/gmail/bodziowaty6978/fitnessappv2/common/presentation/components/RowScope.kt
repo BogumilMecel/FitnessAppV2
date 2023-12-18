@@ -13,17 +13,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavDestination
-import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.util.BottomBarScreen
 
 @Composable
 fun RowScope.AddItem(
     bottomBarScreen: BottomBarScreen,
-    currentDestination:NavDestination?,
     navController:NavHostController,
-    screensNumber: Int
+    screensNumber: Int,
+    isSelected: Boolean
 ) {
     Column(
         modifier = Modifier,
@@ -32,9 +30,7 @@ fun RowScope.AddItem(
         Divider(
             modifier = Modifier
                 .width(LocalConfiguration.current.screenWidthDp.dp/screensNumber),
-            color = if (currentDestination?.hierarchy?.any {
-                    it.route == bottomBarScreen.route
-                } == true) Color.White else Color.Transparent
+            color = if (isSelected) Color.White else Color.Transparent
         )
 
         this@AddItem.BottomNavigationItem(
@@ -44,13 +40,10 @@ fun RowScope.AddItem(
             icon = {
                 Icon(imageVector = bottomBarScreen.icon, contentDescription = bottomBarScreen.title)
             },
-            selected = currentDestination?.hierarchy?.any {
-                it.route == bottomBarScreen.route
-            } == true,
+            selected = isSelected,
             onClick = {
                 navController.navigate(bottomBarScreen.route)
             }
-
         )
     }
 }

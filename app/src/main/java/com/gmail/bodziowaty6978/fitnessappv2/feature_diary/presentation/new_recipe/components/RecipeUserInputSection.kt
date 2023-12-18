@@ -22,7 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.gmail.bodziowaty6978.fitnessappv2.R
-import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.CustomBasicTestField
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.CustomBasicTextField
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_recipe.NewRecipeEvent
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_recipe.NewRecipeState
 
@@ -41,7 +41,7 @@ fun RecipeUserInputSection(
 
         Spacer(modifier = Modifier.height(6.dp))
 
-        CustomBasicTestField(
+        CustomBasicTextField(
             modifier = Modifier.fillMaxWidth(),
             value = state.name,
             placeholder = stringResource(id = R.string.recipe_name),
@@ -144,7 +144,7 @@ fun RecipeUserInputSection(
 
                 Spacer(modifier = Modifier.height(6.dp))
 
-                CustomBasicTestField(
+                CustomBasicTextField(
                     value = state.servings, onValueChange = {
                         onEvent(NewRecipeEvent.EnteredServing(it))
                     }, modifier = Modifier.width(90.dp), singleLine = true

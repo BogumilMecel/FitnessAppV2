@@ -19,7 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.BackArrow
-import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.CustomBasicTestField
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.CustomBasicTextField
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_recipe.NewRecipeEvent
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_recipe.NewRecipeState
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search.componens.SearchProductItem
@@ -64,7 +64,7 @@ fun SearchForProductSection(
 
         Spacer(modifier = Modifier.height(6.dp))
 
-        CustomBasicTestField(
+        CustomBasicTextField(
             value = state.searchText,
             onValueChange = {
                 onEvent(NewRecipeEvent.EnteredSearchText(it))

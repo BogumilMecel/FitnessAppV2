@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.TextGrey
 
 @Composable
-fun CustomBasicTestField(
+fun CustomBasicTextField(
     modifier: Modifier = Modifier,
     elevation: Int = 5,
     value: String,
