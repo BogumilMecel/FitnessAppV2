@@ -22,7 +22,8 @@ fun CaloriesSumSection(
 
     Card(
         modifier = modifier,
-        shape = RoundedCornerShape(15)
+        shape = RoundedCornerShape(15),
+        elevation = 3.dp
     ) {
         Row(
             modifier = Modifier

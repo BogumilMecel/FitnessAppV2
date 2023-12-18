@@ -14,7 +14,7 @@ class CheckLatestLogEntry(
         return if (!DateUtils.isToday(logEntry.timestamp)){
             insertLogEntry(System.currentTimeMillis())
         }else{
-            Resource.Success(data = null)
+            Resource.Success(data = logEntry)
         }
     }
 }
