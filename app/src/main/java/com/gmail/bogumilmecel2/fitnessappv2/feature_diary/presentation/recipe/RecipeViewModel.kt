@@ -4,7 +4,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.multiplyBy
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.DateUtils
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.toValidInt
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.DiaryScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.RecipeScreenDestination
@@ -90,7 +89,6 @@ class RecipeViewModel @Inject constructor(
                     is RecipeEntryData.Adding -> {
                         postRecipeDiaryEntryUseCase(
                             date = RecipeScreenDestination.argsFrom(savedStateHandle).entryData.dateTransferObject.realDate,
-                            timestamp = DateUtils.getCurrentTimestamp(),
                             mealName = _state.value.entryData.mealName,
                             recipe = _state.value.entryData.recipe,
                             servingsString = _state.value.servings

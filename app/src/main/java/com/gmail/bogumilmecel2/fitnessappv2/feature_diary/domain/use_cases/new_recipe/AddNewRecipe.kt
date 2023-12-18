@@ -33,7 +33,6 @@ class AddNewRecipe(
                     timeRequired = time,
                     difficulty = difficulty,
                     servings = servingsValue,
-                    timestamp = System.currentTimeMillis(),
                     recipeName = recipeName,
                     isPublic = isRecipePublic
                 )
