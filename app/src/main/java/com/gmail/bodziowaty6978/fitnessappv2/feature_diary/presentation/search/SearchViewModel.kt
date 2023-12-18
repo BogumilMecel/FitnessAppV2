@@ -11,6 +11,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.destinations.NewRecipeScreenDestina
 import com.gmail.bodziowaty6978.fitnessappv2.destinations.ProductScreenDestination
 import com.gmail.bodziowaty6978.fitnessappv2.destinations.RecipeScreenDestination
 import com.gmail.bodziowaty6978.fitnessappv2.destinations.SearchScreenDestination
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.search.SearchDiaryUseCases
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator.navigate
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,6 +34,8 @@ class SearchViewModel @Inject constructor(
         )
     )
     val searchState: StateFlow<SearchState> = _searchState
+
+    private var productHistory = emptyList<Product>()
 
     fun onEvent(event: SearchEvent) {
         when (event) {
@@ -57,7 +60,7 @@ class SearchViewModel @Inject constructor(
 
             is SearchEvent.EnteredSearchText -> {
                 _searchState.update {
-                    val state = when (searchState.value.currentTabIndex) {
+                    when (searchState.value.currentTabIndex) {
                         0 -> it.copy(
                             productSearchBarText = event.text
                         )
@@ -66,8 +69,8 @@ class SearchViewModel @Inject constructor(
                             recipesSearchBarText = event.text
                         )
                     }
-                    state
                 }
+                clearItemsIfHistoryIsPresent()
             }
 
             is SearchEvent.ClickedProduct -> {
@@ -145,10 +148,32 @@ class SearchViewModel @Inject constructor(
     fun initializeHistory() {
         viewModelScope.launch(Dispatchers.IO) {
             searchDiaryUseCases.getDiaryHistory().handle { history ->
+                productHistory = history
                 _searchState.update {
                     it.copy(
-                        items = history
+                        productItems = productHistory
                     )
+                }
+            }
+        }
+    }
+
+    private fun clearItemsIfHistoryIsPresent() {
+        with(_searchState.value) {
+            when(currentTabIndex) {
+                0 -> {
+                    if (productHistory.isNotEmpty()) {
+                        _searchState.update {
+                            it.copy(
+                                productItems = productHistory.filter { product ->
+                                    product.name.contains(productSearchBarText)
+                                }
+                            )
+                        }
+                    }
+                }
+                else -> {
+
                 }
             }
         }
@@ -183,7 +208,7 @@ class SearchViewModel @Inject constructor(
             ) { products ->
                 _searchState.update {
                     it.copy(
-                        items = products
+                        productItems = products
                     )
                 }
             }

@@ -6,7 +6,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.R
 
 data class SearchState(
     val isLoading: Boolean = false,
-    val items: List<Product> = emptyList(),
+    val productItems: List<Product> = emptyList(),
     val productSearchBarText: String = "",
     val recipesSearchBarText: String = "",
     val searchBarPlaceholderText: String = "",

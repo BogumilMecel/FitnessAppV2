@@ -146,9 +146,9 @@ fun SearchProductSection(
                     Spacer(modifier = Modifier.height(32.dp))
 
                 }
-            } else if (state.items.isNotEmpty()) {
+            } else if (state.productItems.isNotEmpty()) {
 
-                val items = state.items
+                val items = state.productItems
 
                 LazyColumn(
                     modifier = Modifier
