@@ -14,10 +14,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
@@ -43,10 +41,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.BackArrow
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.ButtonWithIcon
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.CustomBasicTextField
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.DefaultCardBackground
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.DropdownArrow
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.HeightSpacer
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.TextGrey
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.ProductNutritionSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search.componens.SearchProductItem
@@ -90,7 +91,7 @@ fun RecipeScreen(
                     .padding(top = 10.dp)
             ) {
                 Text(
-                    text = "Spaghetti Bolognese With Tagiatelle Pasta",
+                    text = state.recipe.name,
                     style = MaterialTheme.typography.h3.copy(
                         textAlign = TextAlign.Center
                     ),
@@ -100,7 +101,7 @@ fun RecipeScreen(
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
-                    text = state.recipe.nutritionValues.calories.toString() + " kcal",
+                    text = stringResource(id = R.string.kcal_with_value, state.recipe.nutritionValues.calories),
                     style = MaterialTheme.typography.body2.copy(
                         color = TextGrey
                     )
@@ -126,22 +127,7 @@ fun RecipeScreen(
             }
         }
 
-
-        Spacer(
-            modifier = Modifier.height(10.dp)
-        )
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 15.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-
-        }
-
-        Spacer(modifier = Modifier.height(24.dp))
+        HeightSpacer()
 
         Row(
             modifier = Modifier
@@ -154,8 +140,11 @@ fun RecipeScreen(
                 modifier = Modifier.weight(1F),
                 content = {
                     Column(
-                        modifier = Modifier.padding(15.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
+                        modifier = Modifier
+                            .padding(15.dp)
+                            .fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
                     ) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically
@@ -168,7 +157,7 @@ fun RecipeScreen(
                             Spacer(modifier = Modifier.width(8.dp))
 
                             Text(
-                                text = " min",
+                                text = state.recipe.timeRequired.displayValue,
                                 style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Medium)
                             )
                         }
@@ -176,7 +165,7 @@ fun RecipeScreen(
                         Spacer(modifier = Modifier.height(4.dp))
 
                         Text(
-                            text = "Time to make",
+                            text = stringResource(id = R.string.recipe_time_required),
                             style = MaterialTheme.typography.body2.copy(color = TextGrey)
                         )
                     }
@@ -189,7 +178,9 @@ fun RecipeScreen(
                 modifier = Modifier.weight(1F),
                 content = {
                     Column(
-                        modifier = Modifier.padding(15.dp),
+                        modifier = Modifier
+                            .padding(15.dp)
+                            .fillMaxWidth(),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Row(
@@ -203,7 +194,7 @@ fun RecipeScreen(
                             Spacer(modifier = Modifier.width(8.dp))
 
                             Text(
-                                text = "${state.recipe.difficulty} / 5",
+                                text = "${state.recipe.difficulty.displayValue} / 5",
                                 style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Medium)
                             )
                         }
@@ -211,7 +202,7 @@ fun RecipeScreen(
                         Spacer(modifier = Modifier.height(4.dp))
 
                         Text(
-                            text = "Difficulty",
+                            text = stringResource(id = R.string.recipe_difficulty),
                             style = MaterialTheme.typography.body2.copy(color = TextGrey)
                         )
                     }
@@ -250,7 +241,7 @@ fun RecipeScreen(
                                 Spacer(modifier = Modifier.width(4.dp))
 
                                 Text(
-                                    text = "Portions",
+                                    text = stringResource(id = R.string.servings),
                                     style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Medium),
                                 )
                             }
@@ -259,7 +250,7 @@ fun RecipeScreen(
                             Spacer(modifier = Modifier.height(4.dp))
 
                             Text(
-                                text = "Recipe serves ${state.recipe.servings} people",
+                                text = stringResource(id = R.string.recipe_serves, state.recipe.servings),
                                 style = MaterialTheme.typography.body2.copy(color = TextGrey)
                             )
                         }
@@ -279,26 +270,12 @@ fun RecipeScreen(
 
                     Spacer(modifier = Modifier.height(12.dp))
 
-                    Button(
-                        onClick = { /*TODO*/ },
+                    ButtonWithIcon(
                         modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(20.dp)
+                        icon = Icons.Default.Save,
+                        text = stringResource(id = R.string.recipe_save_to, state.mealName)
                     ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Save,
-                                contentDescription = null
-                            )
 
-                            Spacer(modifier = Modifier.width(12.dp))
-
-                            Text(
-                                text = "Save to",
-                                style = MaterialTheme.typography.button
-                            )
-                        }
                     }
                 }
             }
@@ -337,7 +314,7 @@ fun RecipeScreen(
                     ) {
 
                         Text(
-                            text = "Ingredients",
+                            text = stringResource(id = R.string.recipe_ingredients),
                             style = MaterialTheme.typography.body1.copy(
                                 fontWeight = FontWeight.Medium
                             ),
@@ -379,32 +356,15 @@ fun RecipeScreen(
         if (state.isUserRecipeOwner) {
             Spacer(modifier = Modifier.height(12.dp))
 
-            Button(
-                onClick = { /*TODO*/ },
+            ButtonWithIcon(
                 modifier = Modifier.padding(horizontal = 15.dp),
-                shape = RoundedCornerShape(20.dp),
-                colors = ButtonDefaults.buttonColors(
+                icon = Icons.Default.Edit,
+                text = stringResource(id = R.string.recipe_edit),
+                buttonColors = ButtonDefaults.buttonColors(
                     backgroundColor = MaterialTheme.colors.secondaryVariant
                 )
             ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Edit,
-                        contentDescription = null
-                    )
 
-                    Spacer(modifier = Modifier.width(12.dp))
-
-                    Text(
-                        text = "Edit recipe",
-                        style = MaterialTheme.typography.button
-                    )
-                }
             }
         }
     }

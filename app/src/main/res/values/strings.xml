@@ -6,6 +6,8 @@
     <string name="cm">cm</string>
     <string name="kg">kg</string>
 
+    <string name="kcal_with_value">%s Kcal</string>
+
 <!--    Auth-->
     <string name="email_address">Email Address</string>
     <string name="password">Password</string>
@@ -129,8 +131,12 @@
     <string name="servings">Servings</string>
     <string name="empty_recipe_ingredients">Please make sure there are at least 2 ingredients in your recipe.</string>
     <string name="bad_recipe_name">Please make sure your recipe\'s name is at least 4 characters long</string>
-
+    <string name="recipe_time_required">Time to make</string>
+    <string name="recipe_difficulty">Difficulty</string>
+    <string name="recipe_serves">Recipe serves %s people</string>
     <string name="recipe_ingredients">Ingredients</string>
+    <string name="recipe_save_to">Save to %s</string>
+    <string name="recipe_edit">Edit recipe</string>
 
     <string name="new_recipe_public">Should recipe be public</string>
     <string name="new_recipe_public_des">Everybody will be able to see it and you will not be able to delete it</string>
