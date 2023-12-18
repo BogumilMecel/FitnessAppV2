@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 
@@ -69,7 +70,8 @@ private fun TopLevelLoader() {
                 onClick = { /* Block clicks on the background */ },
                 indication = null, // Disable ripple effect
                 interactionSource = interactionSource
-            ),
+            )
+            .testTag("loader"),
         contentAlignment = Alignment.Center
     ) {
         CircularProgressIndicator(

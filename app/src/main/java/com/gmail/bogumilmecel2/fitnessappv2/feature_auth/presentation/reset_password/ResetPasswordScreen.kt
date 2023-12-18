@@ -31,7 +31,10 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Composable
 @Destination
 fun ResetPasswordScreen(navigator: DestinationsNavigator) {
-    hiltViewModel<ResetPasswordViewModel>().ViewModelLayout(navigator = navigator) { viewModel, state ->
+    hiltViewModel<ResetPasswordViewModel>().ViewModelLayout(
+        navigator = navigator,
+        screenTestTag = TestTags.ResetPassword.RESET_PASSWORD_SCREEN
+    ) { viewModel, state ->
         Scaffold(
             topBar = {
                 Toolbar(

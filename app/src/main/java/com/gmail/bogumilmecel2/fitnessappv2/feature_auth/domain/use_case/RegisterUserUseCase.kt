@@ -7,7 +7,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.model.RegisterRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.repository.AuthRepository
 
-class RegisterUser(
+class RegisterUserUseCase(
     private val repository: AuthRepository,
     private val resourceProvider: ResourceProvider,
 ) {

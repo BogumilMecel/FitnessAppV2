@@ -10,7 +10,7 @@ internal class RegisterRegisterRequestTest{
 
     @Mock
     private lateinit var authRepository: AuthRepository
-    private lateinit var registerUser: RegisterUser
+    private lateinit var registerUserUseCase: RegisterUserUseCase
 
     private lateinit var closeable: AutoCloseable
 

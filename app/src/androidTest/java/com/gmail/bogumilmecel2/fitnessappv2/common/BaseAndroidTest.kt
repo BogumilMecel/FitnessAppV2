@@ -86,5 +86,7 @@ open class BaseAndroidTest {
         }
     }
 
+    fun getString(resId: Int) = composeRule.activity.getString(resId)
+
     private fun SemanticsNodeInteraction.assertHasText(text: String) = assert(hasText(text = text))
 }
