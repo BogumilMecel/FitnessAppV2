@@ -13,10 +13,10 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Re
 @Dao
 interface UserDiaryItemsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertUserProducts(userProducts: List<Product>)
+    fun insertProducts(products: List<Product>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertUserRecipes(userRecipes: List<Recipe>)
+    fun insertRecipes(recipes: List<Recipe>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertProductDiaryEntries(productDiaryEntries: List<ProductDiaryEntry>)
@@ -30,46 +30,47 @@ interface UserDiaryItemsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertRecipeDiaryEntry(recipeDiaryEntry: RecipeDiaryEntry)
 
-    @Query("SELECT * from recipe WHERE user_id = :userId AND (:searchText IS NULL OR name LIKE '%' || :searchText || '%') LIMIT :limit OFFSET :offset")
+    @Query("SELECT * from recipe WHERE (:userId IS NULL OR user_id = :userId) AND (:searchText IS NULL OR name LIKE '%' || :searchText || '%') ORDER BY utc_timestamp DESC LIMIT :limit OFFSET :offset")
     fun getUserRecipes(
         searchText: String?,
-        userId: String,
+        userId: String?,
         limit: Int,
         offset: Int
     ): List<Recipe>
 
-    @Query("SELECT * from product WHERE user_id = :userId AND (:searchText IS NULL OR name LIKE '%' || :searchText || '%') LIMIT :limit OFFSET :offset")
-    fun getUserProducts(
+    @Query("SELECT * from product WHERE (:userId IS NULL OR user_id = :userId) AND (:searchText IS NULL OR name LIKE '%' || :searchText || '%') ORDER BY utc_timestamp DESC LIMIT :limit OFFSET :offset")
+    fun getProducts(
         searchText: String?,
-        userId: String,
+        userId: String?,
         limit: Int,
         offset: Int
     ): List<Product>
 
-    @Query("SELECT * FROM productdiaryentry WHERE date = :date")
-    fun getProductDiaryEntries(date: String): List<ProductDiaryEntry>
-
-    @Query("SELECT * FROM productdiaryentry WHERE product_name LIKE '%' || :searchText || '%' GROUP BY product_id ORDER BY utc_timestamp DESC LIMIT :limit OFFSET :offset")
-    fun getProductDiaryEntriesForSearch(
-        searchText: String,
+    @Query("SELECT * FROM productdiaryentry WHERE (:searchText IS NULL OR product_name LIKE '%' || :searchText || '%')  GROUP BY  product_id ORDER BY utc_timestamp DESC LIMIT :limit OFFSET :offset")
+    fun getProductDiaryEntries(
+        searchText: String? = null,
         limit: Int,
-        offset: Int
+        offset: Int,
     ): List<ProductDiaryEntry>
 
-    @Query("SELECT * FROM recipediaryentry WHERE date = :date")
+    @Query("SELECT * FROM productdiaryentry ORDER BY utc_timestamp DESC LIMIT :limit")
+    fun getProductDiaryEntries(limit: Int): List<ProductDiaryEntry>
+
+    @Query("SELECT * FROM productdiaryentry WHERE date = :date ORDER BY utc_timestamp DESC")
+    fun getProductDiaryEntries(date: String): List<ProductDiaryEntry>
+
+    @Query("SELECT * FROM recipediaryentry WHERE (:searchText IS NULL OR recipe_name LIKE '%' || :searchText || '%') GROUP BY recipe_id ORDER BY utc_timestamp DESC LIMIT :limit OFFSET :offset")
+    fun getRecipeDiaryEntries(
+        searchText: String? = null,
+        limit: Int,
+        offset: Int,
+    ): List<RecipeDiaryEntry>
+
+    @Query("SELECT * FROM recipediaryentry ORDER BY utc_timestamp DESC LIMIT :limit")
+    fun getRecipeDiaryEntries(limit: Int): List<RecipeDiaryEntry>
+
+    @Query("SELECT * FROM recipediaryentry WHERE date = :date ORDER BY utc_timestamp DESC")
     fun getRecipeDiaryEntries(date: String): List<RecipeDiaryEntry>
-
-    @Query("SELECT COUNT(*) FROM recipediaryentry")
-    fun getRecipeDiaryEntryCount(): Int
-
-    @Query("SELECT COUNT(*) FROM productdiaryentry")
-    fun getProductDiaryEntryCount(): Int
-
-    @Query("DELETE FROM product WHERE user_id = :userId")
-    fun deleteUserProducts(userId: String)
-
-    @Query("DELETE FROM recipe WHERE user_id = :userId")
-    fun deleteUserRecipes(userId: String)
 
     @Query("DELETE FROM productdiaryentry WHERE id = :productDiaryEntryId")
     fun deleteProductDiaryEntry(productDiaryEntryId: String)
