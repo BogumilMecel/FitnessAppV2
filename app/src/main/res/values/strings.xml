@@ -128,6 +128,12 @@
     <string name="carbohydrates">Carbohydrates</string>
     <string name="fat">Fat</string>
 
+<!--    Summary weight-->
+    <string name="weight">Weight</string>
+    <string name="kg">kg</string>
+    <string name="what_is_your_todays_weight">What is your today\'s weight?</string>
+
+
     <string name="sedentary">Sedentary</string>
     <string name="none">None</string>
     <string name="low">Low</string>
@@ -139,7 +145,6 @@
     <string name="age">Age</string>
     <string name="gender">Gender</string>
     <string name="current_weight">Current Weight</string>
-    <string name="kg">kg</string>
     <string name="desired_weight">Desired Weight</string>
     <string name="let_us_know_something_about_you">Let Us Know Something About You!</string>
     <string name="cm">cm</string>
@@ -151,8 +156,6 @@
     <string name="nutrition_values_in">Nutrition values in:</string>
     <string name="g">g</string>
     <string name="bar_code">Bar code</string>
-    <string name="weight">Weight</string>
-    
 
     <string name="an_error_has_occurred_during_adding_your_product">An error has occurred during adding your product</string>
     <string name="adding_new_meal">Adding new meal</string>
