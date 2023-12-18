@@ -47,7 +47,7 @@ fun BarcodeSection(
                     onEvent(NewProductEvent.EnteredBarcode(it))
                 },
                 modifier = Modifier
-                    .width((LocalConfiguration.current.screenWidthDp * 0.4).dp)
+                    .width((LocalConfiguration.current.screenWidthDp * 0.45).dp)
                     .testTag(stringResource(id = R.string.bar_code) + "TEXT_FIELD"),
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Number

@@ -13,4 +13,6 @@ val Context.datastoreNutrition by dataStore(Constants.DATASTORE_NUTRITION, Nutri
 
 @HiltAndroidApp
 class FitnessApp:Application() {
+
+
 }

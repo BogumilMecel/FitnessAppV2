@@ -11,10 +11,12 @@ import com.google.mlkit.vision.common.InputImage
 import java.util.concurrent.TimeUnit
 
 class BarcodeAnalyzer(
-    private val onBarcodeScanned: (List<Barcode>) -> Unit
+    private val onBarcodeScanned: (List<Barcode>) -> Unit,
+    private val onAnalyzerEnd:() -> Unit
 ): ImageAnalysis.Analyzer {
 
     private var lastAnalyzedTimeStamp = 0L
+    private var firstAnalyzedTimeStamp = 0L
 
     @SuppressLint("UnsafeOptInUsageError")
     override fun analyze(image: ImageProxy) {
@@ -31,12 +33,15 @@ class BarcodeAnalyzer(
                     .addOnSuccessListener { barcodes ->
                         if (barcodes.isNotEmpty()) {
                             onBarcodeScanned(barcodes)
+                            onAnalyzerEnd()
                         } else {
                             Log.d("TAG", "analyze: No barcode Scanned")
                         }
                     }
                     .addOnFailureListener { exception ->
                         Log.d("TAG", "BarcodeAnalyser: Something went wrong $exception")
+                        onAnalyzerEnd()
+                        onBarcodeScanned(emptyList())
                     }
                     .addOnCompleteListener {
                         image.close()
@@ -46,5 +51,9 @@ class BarcodeAnalyzer(
         } else {
             image.close()
         }
+    }
+
+    fun stopAnalyzer(){
+        onAnalyzerEnd()
     }
 }

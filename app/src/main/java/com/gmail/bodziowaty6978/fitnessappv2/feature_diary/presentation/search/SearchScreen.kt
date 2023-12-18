@@ -1,7 +1,6 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search
 
 import android.Manifest
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
@@ -18,6 +17,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.gmail.bodziowaty6978.fitnessappv2.R
@@ -30,7 +30,6 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search.c
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search.componens.SearchProductItem
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search.componens.SearchTopSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.shared.ScannerSection
-import com.gmail.bodziowaty6978.fitnessappv2.util.TAG
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.isGranted
@@ -42,7 +41,7 @@ fun SearchScreen(
     mealName: String,
     viewModel: SearchViewModel = hiltViewModel()
 ) {
-    val searchState = viewModel.searchState.collectAsState().value
+    val state = viewModel.searchState.collectAsState().value
 
     val cameraPermissionState = rememberPermissionState(
         permission = Manifest.permission.CAMERA
@@ -54,31 +53,35 @@ fun SearchScreen(
         viewModel.initializeHistory()
     }
 
-    val cameraPermissionErrorMessage = stringResource(id = R.string.camera_permission_is_required_to_scan_a_product_barcode)
+    val cameraPermissionErrorMessage =
+        stringResource(id = R.string.camera_permission_is_required_to_scan_a_product_barcode)
 
-    LaunchedEffect(key1 = cameraPermissionState){
-        if(cameraPermissionState.status is PermissionStatus.Denied&&searchState.hasPermissionDialogBeenShowed){
+    LaunchedEffect(key1 = cameraPermissionState) {
+        if (cameraPermissionState.status is PermissionStatus.Denied && state.hasPermissionDialogBeenShowed) {
             scaffoldState.snackbarHostState.showSnackbar(cameraPermissionErrorMessage)
         }
     }
 
-    LaunchedEffect(key1 = searchState){
-        viewModel.searchState.collect{
+    LaunchedEffect(key1 = state) {
+        viewModel.searchState.collect {
             it.errorMessage?.let { error ->
-                if (error!=searchState.lastErrorMessage){
+                if (error != state.lastErrorMessage) {
                     scaffoldState.snackbarHostState.showSnackbar(error)
                 }
             }
         }
     }
 
-    BackHandler() {
-        if(searchState.isScannerVisible){
-            viewModel.onEvent(SearchEvent.ClosedScanner(mealName))
+    BackHandler(
+        enabled = state.isScannerVisible
+    ) {
+        if (state.isScannerVisible) {
+            viewModel.onEvent(SearchEvent.ClosedScanner)
         }
     }
 
-    if (!searchState.isScannerVisible) {
+
+    if (!state.isScannerVisible) {
         Scaffold(
             scaffoldState = scaffoldState,
             floatingActionButton = {
@@ -130,7 +133,8 @@ fun SearchScreen(
                     .padding(it)
             ) {
                 SearchTopSection(
-                    searchBarText = searchState.searchBarText,
+                    modifier = Modifier,
+                    searchBarText = state.searchBarText,
                     mealName = mealName,
                     date = CurrentDate.dateModel(LocalContext.current).valueToDisplay
                         ?: CurrentDate.dateModel(LocalContext.current).date,
@@ -190,14 +194,14 @@ fun SearchScreen(
                     modifier = Modifier
                         .fillMaxSize()
                 ) {
-                    if (searchState.isLoading) {
+                    if (state.isLoading) {
                         Row(
                             modifier = Modifier
                                 .align(Alignment.Center)
                         ) {
                             CircularProgressIndicator()
                         }
-                    }else if(searchState.barcode!=null){
+                    } else if (state.barcode != null) {
                         Column(
                             modifier = Modifier
                                 .align(Alignment.Center)
@@ -206,16 +210,22 @@ fun SearchScreen(
                             Text(
                                 text = stringResource(id = R.string.there_is_no_product_with_provided_barcode_do_you_want_to_add_it),
                                 modifier = Modifier
-                                    .padding(horizontal = 40.dp),
-                                style = MaterialTheme.typography.h1
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 30.dp),
+                                style = MaterialTheme.typography.h1.copy(
+                                    textAlign = TextAlign.Center
+                                )
                             )
 
-                            Spacer(modifier = Modifier.height(4.dp))
+                            Spacer(modifier = Modifier.height(16.dp))
 
                             Button(
                                 onClick = {
                                     viewModel.onEvent(SearchEvent.ClickedNewProduct)
-                                }
+                                },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 60.dp)
                             ) {
                                 Text(
                                     text = stringResource(id = R.string.add),
@@ -224,16 +234,17 @@ fun SearchScreen(
 
                             }
 
-                        }
-                    }else if (searchState.items.isNotEmpty()) {
+                            Spacer(modifier = Modifier.height(32.dp))
 
-                        val items = searchState.items
+                        }
+                    } else if (state.items.isNotEmpty()) {
+
+                        val items = state.items
 
                         LazyColumn(
                             modifier = Modifier
                                 .fillMaxWidth()
                         ) {
-                            Log.e(TAG,searchState.items.toString())
                             items(items.size) { itemPosition ->
                                 SearchProductItem(product = items[itemPosition].product) {
                                     viewModel.onEvent(
@@ -251,10 +262,10 @@ fun SearchScreen(
         }
     } else {
         ScannerSection(
-            onCodeScanned = {
-                if(it.displayValue!=null){
-                    viewModel.onEvent(SearchEvent.ScannedBarcode(it.displayValue!!))
-                }
+            onBarcodeScanned = { scannedBarcode ->
+                scannedBarcode?.let { barcode ->
+                    viewModel.onEvent(SearchEvent.ScannedBarcode(barcode))
+                } ?: viewModel.onEvent(SearchEvent.ClosedScanner)
             }
         )
     }

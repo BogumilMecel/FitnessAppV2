@@ -170,7 +170,8 @@ class NewProductViewModel @Inject constructor(
             is NewProductEvent.EnteredBarcode -> {
                 _state.update {
                     it.copy(
-                        barcode = event.barcode.replace(".","").replace(",","")
+                        barcode = event.barcode.replace(".","").replace(",",""),
+                        isScannerVisible = false
                     )
                 }
             }
@@ -178,7 +179,6 @@ class NewProductViewModel @Inject constructor(
                 _state.update {
                     it.copy(
                         isScannerVisible = true,
-                        isLoading = false
                     )
                 }
             }

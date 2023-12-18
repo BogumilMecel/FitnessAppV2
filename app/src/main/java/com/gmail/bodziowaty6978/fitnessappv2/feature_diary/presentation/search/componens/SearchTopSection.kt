@@ -18,13 +18,14 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search.S
 
 @Composable
 fun SearchTopSection(
+    modifier: Modifier,
     searchBarText:String,
     mealName: String,
     date: String,
     onEvent: (SearchEvent) -> Unit
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
     ) {
         Row(

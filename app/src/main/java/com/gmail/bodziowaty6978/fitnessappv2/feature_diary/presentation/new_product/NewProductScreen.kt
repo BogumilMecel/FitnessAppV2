@@ -16,11 +16,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.BackArrow
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.BackHandler
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.diary.components.HorizontalProgressIndicator
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_product.components.BarcodeSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_product.components.ContainerWeightSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_product.components.NutritionSection
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_product.components.TextFieldSection
+import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.shared.ScannerSection
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
@@ -28,7 +30,6 @@ fun NewProductScreen(
     mealName: String,
     viewModel: NewProductViewModel = hiltViewModel()
 ) {
-
     val state = viewModel.state.collectAsState().value
     val scaffoldState = rememberScaffoldState()
 
@@ -42,6 +43,15 @@ fun NewProductScreen(
         }
     }
 
+    BackHandler(
+        enabled = state.isScannerVisible
+    ) {
+        if(state.isScannerVisible){
+            viewModel.onEvent(NewProductEvent.ClosedScanner)
+        }
+    }
+
+    if(!state.isScannerVisible){
         Scaffold(
             scaffoldState = scaffoldState,
             floatingActionButton = {
@@ -124,4 +134,15 @@ fun NewProductScreen(
                 )
             }
         }
+    }else{
+        ScannerSection(
+            onBarcodeScanned = { scannedBarcode ->
+                scannedBarcode?.let { barcode ->
+                    viewModel.onEvent(NewProductEvent.EnteredBarcode(barcode))
+                } ?: viewModel.onEvent(NewProductEvent.ClosedScanner)
+            }
+        )
+    }
+
+
 }
