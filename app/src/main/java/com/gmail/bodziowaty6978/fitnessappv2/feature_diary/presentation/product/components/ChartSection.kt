@@ -37,6 +37,7 @@ fun ChartSection(
         factory = { context ->
 
         PieChart(context).apply {
+            setBackgroundColor(backgroundColor)
             setUsePercentValues(true)
             description.isEnabled = false
             dragDecelerationFrictionCoef = 0.95f

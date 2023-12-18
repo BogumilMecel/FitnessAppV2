@@ -52,7 +52,8 @@ fun ContainerWeightSection(
                     .testTag(stringResource(id = R.string.container_weight) + "TEXT_FIELD"),
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Number
-                )
+                ),
+                singleLine = true
             )
 
             Spacer(
@@ -98,7 +99,7 @@ fun ContainerWeightSection(
                                 onEvent(NewProductEvent.ClickedDropDownMenuItem(index))
                             },
                             modifier = Modifier
-                                .testTag(item+"DROPDOWN_MENU_ITEM")
+                                .testTag(item + "DROPDOWN_MENU_ITEM")
                         ) {
                             Text(
                                 text = item,

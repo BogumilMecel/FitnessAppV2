@@ -169,6 +169,7 @@ fun SearchScreen(
                         },
                         modifier = Modifier
                             .weight(1F)
+                            .testTag(stringResource(id = R.string.scan))
                     )
 
                     SearchButton(

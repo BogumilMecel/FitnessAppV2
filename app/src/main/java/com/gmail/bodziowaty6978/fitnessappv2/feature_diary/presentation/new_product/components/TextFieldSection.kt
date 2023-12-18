@@ -40,7 +40,8 @@ fun TextFieldSection(
                 onTextEntered(it)
             },
             modifier = modifier,
-            keyboardOptions = textFieldOptions
+            keyboardOptions = textFieldOptions,
+            singleLine = true
         )
 
     }

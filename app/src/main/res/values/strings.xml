@@ -233,5 +233,6 @@
     <string name="WEIGHT_TEXT_FIELD">WEIGHT TEXT FIELD</string>
     <string name="SEARCH_BUTTON">SEARCH BUTTON</string>
     <string name="WEIGHT_BUTTON">WEIGHT BUTTON</string>
+    <string name="scanner">SCANNER</string>
 
 </resources>

@@ -21,8 +21,8 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_prod
 
 @Composable
 fun BarcodeSection(
-    barcode:String,
-    onEvent:(NewProductEvent) -> Unit
+    barcode: String,
+    onEvent: (NewProductEvent) -> Unit
 ) {
 
     Row(
@@ -47,16 +47,17 @@ fun BarcodeSection(
                     onEvent(NewProductEvent.EnteredBarcode(it))
                 },
                 modifier = Modifier
-                    .width((LocalConfiguration.current.screenWidthDp * 0.45).dp)
+                    .width((LocalConfiguration.current.screenWidthDp * 0.4).dp)
                     .testTag(stringResource(id = R.string.bar_code) + "TEXT_FIELD"),
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Number
-                )
+                ),
+                singleLine = true
             )
 
             IconButton(
                 onClick = {
-                 onEvent(NewProductEvent.ClickedScannerButton)
+                    onEvent(NewProductEvent.ClickedScannerButton)
                 }
             ) {
                 Icon(
@@ -67,11 +68,6 @@ fun BarcodeSection(
 
             }
         }
-
-
-
-
-
 
 
     }
