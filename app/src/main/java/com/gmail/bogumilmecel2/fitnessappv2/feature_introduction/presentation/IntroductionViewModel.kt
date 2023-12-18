@@ -1,6 +1,7 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.presentation
 
 import androidx.lifecycle.viewModelScope
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.CachedValuesProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.SummaryScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.model.ActivityLevel
@@ -21,6 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 class IntroductionViewModel @Inject constructor(
     private val saveIntroductionInformationUseCase: SaveIntroductionInformationUseCase,
+    private val cachedValuesProvider: CachedValuesProvider
 ) : BaseViewModel<IntroductionState, IntroductionEvent, Unit>(
     state = IntroductionState(),
     navArguments = Unit

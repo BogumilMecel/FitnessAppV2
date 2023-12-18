@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavOptions
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.navigation.NavigationAction
-import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.CachedValuesProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvider
 import com.ramcosta.composedestinations.spec.Direction
 import kotlinx.coroutines.channels.Channel
@@ -27,9 +26,6 @@ abstract class BaseViewModel<STATE : Any, EVENT : Any, NAV_ARGUMENTS : Any>(
     val navigationDestination: Channel<NavigationAction> = Channel()
 
     var loaderVisible by mutableStateOf(false)
-
-    @Inject
-    lateinit var cachedValuesProvider: CachedValuesProvider
 
     @Inject
     lateinit var resourceProvider: ResourceProvider

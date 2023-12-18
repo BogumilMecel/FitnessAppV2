@@ -6,7 +6,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvi
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.repository.TokenRepository
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.CalculateNutritionValuesPercentages
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.CheckIfWeightIsValidUseCase
-import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.GetToken
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.GetTokenUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.GetUserCurrencyUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.SaveNutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.feature_account.domain.use_case.AccountUseCases
@@ -62,6 +62,8 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.searc
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.search.SearchForRecipes
 import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.repository.UserDataRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.use_cases.SaveIntroductionInformationUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.feature_splash.domain.repository.LoadingRepository
+import com.gmail.bogumilmecel2.fitnessappv2.feature_splash.domain.use_cases.AuthenticateUserUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.use_case.CheckIfShouldAskForWeightDialogsUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.use_case.CheckIfShouldShowWeightPickerUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.use_case.GetCaloriesSum
@@ -89,20 +91,6 @@ object ViewModelModule {
         diaryRepository = diaryRepository,
         resourceProvider = resourceProvider
     )
-
-    @ViewModelScoped
-    @Provides
-    fun provideGetUserDiaryEntriesExperimentalUseCase(
-        diaryRepository: DiaryRepository
-    ): GetUserDiaryEntriesExperimentalUseCase =
-        GetUserDiaryEntriesExperimentalUseCase(diaryRepository)
-
-    @ViewModelScoped
-    @Provides
-    fun provideGetUserDiaryAndSaveItLocallyUseCase(
-        diaryRepository: DiaryRepository
-    ): GetUserDiaryAndSaveItLocallyUseCase =
-        GetUserDiaryAndSaveItLocallyUseCase(diaryRepository)
 
     @ViewModelScoped
     @Provides
@@ -259,7 +247,7 @@ object ViewModelModule {
 
     @ViewModelScoped
     @Provides
-    fun provideGetTokenUseCase(tokenRepository: TokenRepository): GetToken = GetToken(
+    fun provideGetTokenUseCase(tokenRepository: TokenRepository): GetTokenUseCase = GetTokenUseCase(
         tokenRepository = tokenRepository
     )
 
@@ -326,5 +314,20 @@ object ViewModelModule {
     ): ResetPasswordWithEmail = ResetPasswordWithEmail(
         repository = authRepository,
         resourceProvider = resourceProvider
+    )
+
+    @ViewModelScoped
+    @Provides
+    fun provideAuthenticateUserUseCase(
+        cachedValuesProvider: CachedValuesProvider,
+        loadingRepository: LoadingRepository,
+        tokenRepository: TokenRepository,
+        diaryRepository: DiaryRepository,
+    ): AuthenticateUserUseCase = AuthenticateUserUseCase(
+        cachedValuesProvider = cachedValuesProvider,
+        loadingRepository = loadingRepository,
+        tokenRepository = tokenRepository,
+        getUserDiaryAndSaveItLocallyUseCase = GetUserDiaryAndSaveItLocallyUseCase(diaryRepository),
+        getUserDiaryEntriesExperimentalUseCase = GetUserDiaryEntriesExperimentalUseCase(diaryRepository)
     )
 }
