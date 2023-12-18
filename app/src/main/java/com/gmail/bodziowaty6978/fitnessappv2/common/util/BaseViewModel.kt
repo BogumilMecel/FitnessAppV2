@@ -32,12 +32,14 @@ open class BaseViewModel @Inject constructor() : ViewModel() {
     inline fun <T> Resource<T>.handle(
         showSnackbar: Boolean = true,
         finally: () -> Unit = {},
+        onError: (String) -> Unit = {},
         block: (T) -> Unit
     ) {
         if (this is Resource.Error) {
             if (showSnackbar) {
                 showSnackbarError(message = this.uiText)
             }
+            onError(this.uiText)
         } else if (this is Resource.Success) {
             block(this.data)
         }

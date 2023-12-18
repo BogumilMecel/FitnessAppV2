@@ -1,10 +1,11 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.gmail.bodziowaty6978.fitnessappv2.R
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
-import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
+import com.gmail.bodziowaty6978.fitnessappv2.common.util.extensions.TAG
 import com.gmail.bodziowaty6978.fitnessappv2.destinations.NewProductScreenDestination
 import com.gmail.bodziowaty6978.fitnessappv2.destinations.NewRecipeScreenDestination
 import com.gmail.bodziowaty6978.fitnessappv2.destinations.ProductScreenDestination
@@ -79,12 +80,12 @@ class SearchViewModel @Inject constructor(
             }
 
             is SearchEvent.ClickedNewProduct -> {
-                    navigateTo(
-                        NewProductScreenDestination(
-                            mealName = _searchState.value.mealName,
-                            barcode = _searchState.value.barcode
-                        )
+                navigateTo(
+                    NewProductScreenDestination(
+                        mealName = _searchState.value.mealName,
+                        barcode = _searchState.value.barcode
                     )
+                )
             }
 
             is SearchEvent.ClickedScanButton -> {
@@ -143,58 +144,58 @@ class SearchViewModel @Inject constructor(
 
     fun initializeHistory() {
         viewModelScope.launch(Dispatchers.IO) {
-            val history = searchDiaryUseCases.getDiaryHistory()
-            _searchState.update {
-                it.copy(
-                    items = history.data ?: emptyList()
-                )
+            searchDiaryUseCases.getDiaryHistory().handle { history ->
+                _searchState.update {
+                    it.copy(
+                        items = history
+                    )
+                }
             }
         }
     }
 
     private fun searchForRecipes() {
-        _searchState.update {
-            it.copy(
-                isLoading = true,
-                barcode = null
-            )
-        }
-
+        showOrHideLoader()
         viewModelScope.launch {
-            val result =
-                searchDiaryUseCases.searchForRecipes(_searchState.value.recipesSearchBarText)
-            if (result is Resource.Error) {
-                showSnackbarError(result.uiText)
-            } else {
+            searchDiaryUseCases.searchForRecipes(_searchState.value.recipesSearchBarText)
+                .handle(
+                    finally = {
+                        showOrHideLoader(isLoadingVisible = false)
+                    }
+                ) { recipes ->
+                    Log.e(TAG, recipes.toString())
+                    _searchState.update {
+                        it.copy(
+                            recipes = recipes
+                        )
+                    }
+                }
+        }
+    }
+
+    private fun searchForProducts() {
+        showOrHideLoader()
+        viewModelScope.launch(Dispatchers.IO) {
+            searchDiaryUseCases.searchForProducts(_searchState.value.productSearchBarText).handle(
+                finally = {
+                    showOrHideLoader(isLoadingVisible = false)
+                }
+            ) { products ->
                 _searchState.update {
                     it.copy(
-                        recipes = result.data ?: emptyList()
+                        items = products
                     )
                 }
             }
         }
     }
 
-    private fun searchForProducts() {
+    private fun showOrHideLoader(isLoadingVisible: Boolean = true) {
         _searchState.update {
             it.copy(
-                isLoading = true,
+                isLoading = isLoadingVisible,
                 barcode = null
             )
-        }
-        viewModelScope.launch(Dispatchers.IO) {
-            val result =
-                searchDiaryUseCases.searchForProducts(_searchState.value.productSearchBarText)
-            if (result is Resource.Error) {
-                showSnackbarError(result.uiText)
-            } else {
-                _searchState.update {
-                    it.copy(
-                        items = result.data ?: emptyList(),
-                        isLoading = false
-                    )
-                }
-            }
         }
     }
 
@@ -206,20 +207,21 @@ class SearchViewModel @Inject constructor(
             )
         }
         viewModelScope.launch(Dispatchers.IO) {
-            val resource = searchDiaryUseCases.searchForProductWithBarcode(barcode)
-            if (resource is Resource.Error) {
-                if (resource.uiText == resourceProvider.getString(R.string.there_is_no_product_with_provided_barcode_do_you_want_to_add_it)) {
-                    _searchState.update {
-                        it.copy(
-                            barcode = barcode,
-                            isLoading = false
-                        )
+            searchDiaryUseCases.searchForProductWithBarcode(barcode).handle(
+                onError = { errorMessage ->
+                    if (errorMessage == resourceProvider.getString(R.string.there_is_no_product_with_provided_barcode_do_you_want_to_add_it)) {
+                        _searchState.update {
+                            it.copy(
+                                barcode = barcode,
+                                isLoading = false
+                            )
+                        }
+                    } else {
+                        showSnackbarError(errorMessage)
                     }
-                } else {
-                    showSnackbarError(resource.uiText)
                 }
-            } else {
-                resource.data?.let { product ->
+            ) { product ->
+                product?.let {
                     navigate(
                         ProductScreenDestination(
                             product = product,

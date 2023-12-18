@@ -1,10 +1,15 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search.componens
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -13,33 +18,32 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.DefaultCardBackground
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.HeightSpacer
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.TextGrey
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun RecipeSection(
     onClick: () -> Unit,
     recipe: Recipe,
 ) {
-    Card(
+    DefaultCardBackground(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
-        shape = RoundedCornerShape(15),
-        elevation = 6.dp,
-        onClick = {
-            onClick()
-        }
+            .clickable {
+                onClick()
+            }
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(vertical = 16.dp, horizontal = 8.dp)
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-            ){
+            ) {
                 recipe.imageUrl?.let { url ->
                     Image(
                         painter = rememberAsyncImagePainter(url),
@@ -47,10 +51,10 @@ fun RecipeSection(
                         modifier = Modifier
                             .fillMaxWidth()
                     )
+
+                    HeightSpacer()
                 }
             }
-
-            Spacer(modifier = Modifier.height(24.dp))
 
             Text(
                 text = recipe.name,
@@ -63,11 +67,12 @@ fun RecipeSection(
                 )
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            HeightSpacer(height = 8.dp)
 
             Row(
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .padding(horizontal = 5.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 Text(
@@ -80,14 +85,12 @@ fun RecipeSection(
                 Spacer(modifier = Modifier.width(4.dp))
 
                 Text(
-                    text = "${recipe.timeRequired.displayValue} min",
+                    text = recipe.timeRequired.displayValue,
                     style = MaterialTheme.typography.body2.copy(
                         color = TextGrey
                     )
                 )
             }
-
-            Spacer(modifier = Modifier.height(24.dp))
         }
     }
 }

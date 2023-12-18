@@ -2,10 +2,8 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search.
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -21,6 +19,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.gmail.bodziowaty6978.fitnessappv2.R
+import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.HeightSpacer
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.Beige1
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.search.SearchEvent
@@ -34,7 +33,7 @@ fun SearchRecipeSection(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        Spacer(modifier = Modifier.height(24.dp))
+        HeightSpacer()
 
         Row(
             modifier = Modifier
@@ -76,9 +75,12 @@ fun SearchRecipeSection(
             )
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
+        HeightSpacer()
 
-        LazyVerticalGrid(columns = GridCells.Fixed(2)) {
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+            modifier = Modifier.padding(horizontal = 10.dp)
+        ) {
             items(recipes.size) { position ->
                 RecipeSection(
                     onClick = {
