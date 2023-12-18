@@ -14,16 +14,10 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
-import org.junit.Before
 import org.junit.Test
-import kotlin.test.assertEquals
 import kotlin.test.assertIs
 
 class InsertProductDiaryEntryUseCaseTest: BaseMockkTest() {
-
-    companion object {
-        private const val WEIGHT_ERROR = "weight_error"
-    }
 
     private val diaryRepository = mockk<DiaryRepository>()
     private val calculateProductNutritionValuesUseCase = mockk<CalculateProductNutritionValuesUseCase>()
@@ -33,40 +27,29 @@ class InsertProductDiaryEntryUseCaseTest: BaseMockkTest() {
         calculateProductNutritionValuesUseCase = calculateProductNutritionValuesUseCase
     )
 
-    @Before
-    fun setUp() {
-        mockString(
-            resId = R.string.incorrect_weight_was_entered,
-            value = WEIGHT_ERROR
-        )
-    }
-
     @Test
     fun `Check if weight is not valid integer, resource error is returned`() = runTest {
-        val resource = callTestedMethod(weight = MockConstants.Diary.INVALID_WEIGHT_OR_SERVINGS)
-        assertIs<Resource.Error<Unit>>(resource)
-        checkErrorMessage(resource)
+        callTestedMethod(weight = MockConstants.Diary.INVALID_WEIGHT_OR_SERVINGS)
+            .assertIsError(resourceProvider.getString(R.string.incorrect_weight_was_entered))
     }
 
     @Test
     fun `Check if weight is 0, resource error is returned`() = runTest {
-        val resource = callTestedMethod(weight = MockConstants.Diary.ZERO_PRODUCT_DIARY_ENTRY_WEIGHT)
-        assertIs<Resource.Error<Unit>>(resource)
-        checkErrorMessage(resource)
+        callTestedMethod(weight = MockConstants.Diary.ZERO_PRODUCT_DIARY_ENTRY_WEIGHT)
+            .assertIsError(resourceProvider.getString(R.string.incorrect_weight_was_entered))
     }
 
     @Test
     fun `Check if weight is less than 0, resource error is returned`() = runTest {
-        val resource = callTestedMethod(weight = MockConstants.Diary.NEGATIVE_RECIPE_SERVINGS)
-        assertIs<Resource.Error<Unit>>(resource)
-        checkErrorMessage(resource)
+        callTestedMethod(weight = MockConstants.Diary.NEGATIVE_RECIPE_SERVINGS)
+            .assertIsError(resourceProvider.getString(R.string.incorrect_weight_was_entered))
     }
 
     @Test
     fun `Check if data is correct and repository returns resource error, resource error is returned`() = runTest {
         coEvery { calculateProductNutritionValuesUseCase(any(), any()) } returns NutritionValues()
         coEvery { diaryRepository.insertProductDiaryEntry(productDiaryEntryPostRequest = any()) } returns Resource.Error()
-        assertIs<Resource.Error<Unit>>(callTestedMethod())
+        callTestedMethod().assertIsError()
     }
 
     @Test
@@ -94,13 +77,6 @@ class InsertProductDiaryEntryUseCaseTest: BaseMockkTest() {
         coVerify(exactly = 1) { diaryRepository.insertProductDiaryEntry(productDiaryEntryPostRequest = expectedRequest) }
         coVerify(exactly = 1) { diaryRepository.cacheProduct(MockConstants.Diary.getSampleProduct()) }
         coVerify(exactly = 1) { diaryRepository.insertOfflineDiaryEntry(diaryItem = expectedProductDiaryEntry) }
-    }
-
-    private fun checkErrorMessage(resource: Resource.Error<Unit>) {
-        assertEquals(
-            expected = WEIGHT_ERROR,
-            actual = resource.uiText
-        )
     }
 
     private suspend fun callTestedMethod(

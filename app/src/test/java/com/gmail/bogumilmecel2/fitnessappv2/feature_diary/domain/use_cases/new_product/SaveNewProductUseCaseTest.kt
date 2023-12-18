@@ -1,11 +1,11 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_product
 
-import com.gmail.bogumilmecel2.fitnessappv2.common.BaseTest
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.MeasurementUnit
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.product.NutritionValuesIn
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
+import com.gmail.bogumilmecel2.fitnessappv2.util.MockResourceProvider
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
@@ -14,7 +14,7 @@ import org.mockito.Mockito
 import org.mockito.kotlin.any
 import kotlin.random.Random
 
-internal class SaveNewProductUseCaseTest: BaseTest() {
+internal class SaveNewProductUseCaseTest {
 
     @Mock
     private lateinit var mockDiaryRepository: DiaryRepository
@@ -31,7 +31,7 @@ internal class SaveNewProductUseCaseTest: BaseTest() {
         )
         saveNewProductUseCase = SaveNewProductUseCase(
             diaryRepository = mockDiaryRepository,
-            resourceProvider = resourceProvider
+            resourceProvider = MockResourceProvider()
         )
     }
 

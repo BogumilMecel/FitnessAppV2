@@ -14,7 +14,4 @@ class RealResourceProvider(private val context: Context): ResourceProvider {
     override fun getPluralString(@PluralsRes pluralResId: Int, quantity: Int): String {
         return context.resources.getQuantityString(pluralResId, quantity, quantity)
     }
-
-    override fun mockString(stringResId: Int, value: String) {
-    }
 }

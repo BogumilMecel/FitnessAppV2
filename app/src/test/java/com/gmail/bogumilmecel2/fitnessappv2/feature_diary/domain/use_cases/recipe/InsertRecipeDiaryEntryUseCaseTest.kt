@@ -15,16 +15,10 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
-import org.junit.Before
 import org.junit.Test
-import kotlin.test.assertEquals
 import kotlin.test.assertIs
 
 class PostRecipeDiaryEntryUseCaseTest : BaseMockkTest() {
-
-    companion object {
-        private const val SERVINGS_ERROR = "servings_error"
-    }
 
     private val diaryRepository = mockk<DiaryRepository>()
     private val calculateRecipeNutritionValuesForServingsUseCase =
@@ -35,33 +29,22 @@ class PostRecipeDiaryEntryUseCaseTest : BaseMockkTest() {
         calculateRecipeNutritionValuesForServingsUseCase = calculateRecipeNutritionValuesForServingsUseCase
     )
 
-    @Before
-    fun setUp() {
-        mockString(
-            resId = R.string.recipe_servings_error,
-            value = SERVINGS_ERROR
-        )
-    }
-
     @Test
     fun `Check if servings are not valid integer, resource error is returned`() = runTest {
-        val resource = callTestedMethod(servings = MockConstants.Diary.INVALID_WEIGHT_OR_SERVINGS)
-        assertIs<Resource.Error<Unit>>(resource)
-        checkErrorMessage(resource)
+        callTestedMethod(servings = MockConstants.Diary.INVALID_WEIGHT_OR_SERVINGS)
+            .assertIsError(resourceProvider.getString(R.string.recipe_servings_error))
     }
 
     @Test
     fun `Check if servings are 0, resource error is returned`() = runTest {
-        val resource = callTestedMethod(servings = MockConstants.Diary.ZERO_RECIPE_SERVINGS)
-        assertIs<Resource.Error<Unit>>(resource)
-        checkErrorMessage(resource)
+        callTestedMethod(servings = MockConstants.Diary.ZERO_RECIPE_SERVINGS)
+            .assertIsError(resourceProvider.getString(R.string.recipe_servings_error))
     }
 
     @Test
     fun `Check if servings are less than 0, resource error is returned`() = runTest {
-        val resource = callTestedMethod(servings = MockConstants.Diary.NEGATIVE_RECIPE_SERVINGS)
-        assertIs<Resource.Error<Unit>>(resource)
-        checkErrorMessage(resource)
+        callTestedMethod(servings = MockConstants.Diary.NEGATIVE_RECIPE_SERVINGS)
+            .assertIsError(resourceProvider.getString(R.string.recipe_servings_error))
     }
 
     @Test
@@ -98,17 +81,11 @@ class PostRecipeDiaryEntryUseCaseTest : BaseMockkTest() {
             } returns sampleNutritionValues
             coEvery { diaryRepository.insertRecipeDiaryEntry(recipeDiaryEntryRequest = expectedRequest) } returns Resource.Success(expectedRecipeDiaryEntry)
             coEvery { diaryRepository.insertOfflineDiaryEntry(expectedRecipeDiaryEntry) } returns Resource.Success(Unit)
+            coEvery { diaryRepository.cacheRecipe(recipe = any()) } returns Resource.Success(Unit)
             assertIs<Resource.Success<Unit>>(callTestedMethod())
             coVerify(exactly = 1) { diaryRepository.insertRecipeDiaryEntry(recipeDiaryEntryRequest = expectedRequest) }
             coVerify(exactly = 1) { diaryRepository.insertOfflineDiaryEntry(expectedRecipeDiaryEntry) }
         }
-
-    private fun checkErrorMessage(resource: Resource.Error<Unit>) {
-        assertEquals(
-            expected = SERVINGS_ERROR,
-            actual = resource.uiText
-        )
-    }
 
     private suspend fun callTestedMethod(
         recipeId: String = MockConstants.Diary.RECIPE_ID_1,
