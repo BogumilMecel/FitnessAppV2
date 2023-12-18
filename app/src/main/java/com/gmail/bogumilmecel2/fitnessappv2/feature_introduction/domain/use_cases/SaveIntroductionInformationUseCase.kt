@@ -39,7 +39,7 @@ class SaveIntroductionInformationUseCase(
         } else if (heightValue < 0 || heightValue > 250) {
             Resource.Error(uiText = resourceProvider.getString(R.string.introduction_height_error))
         } else if (weightValue < 0 || weightValue > 500) {
-            Resource.Error(uiText = resourceProvider.getString(R.string.please_make_sure_you_have_entered_your_age))
+            Resource.Error(uiText = resourceProvider.getString(R.string.please_make_sure_you_have_entered_your_weight))
         } else {
             val introductionResource = userDataRepository.saveUserInformation(
                 introductionRequest = IntroductionRequest(
