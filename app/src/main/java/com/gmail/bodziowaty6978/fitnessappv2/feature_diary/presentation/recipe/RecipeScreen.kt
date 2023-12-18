@@ -71,14 +71,6 @@ fun RecipeScreen(
         targetValue = if (state.isIngredientsListExpanded) 180f else 0f
     )
 
-//    LaunchedEffect(key1 = true) {
-//        viewModel.initializeRecipe(recipe)
-//    }
-
-    var fabHeight by remember {
-        mutableStateOf(0)
-    }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -433,7 +425,5 @@ fun RecipeScreen(
                 }
             }
         }
-
-        Spacer(modifier = Modifier.height((fabHeight - 48).dp))
     }
 }

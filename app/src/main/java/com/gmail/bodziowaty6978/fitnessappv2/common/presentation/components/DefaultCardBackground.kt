@@ -8,9 +8,9 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun DefaultCardBackground(
+    modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
     elevation: Int = 3,
-    modifier: Modifier = Modifier
 ) {
     Card(
         elevation = elevation.dp,

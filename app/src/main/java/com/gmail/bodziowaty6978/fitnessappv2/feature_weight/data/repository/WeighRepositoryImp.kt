@@ -10,7 +10,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_weight.domain.repository.We
 
 class WeighRepositoryImp(
     private val weightApi: WeightApi,
-    private val resourceProvider: ResourceProvider,
+    resourceProvider: ResourceProvider,
     private val customSharedPreferencesUtils: CustomSharedPreferencesUtils
 ) : WeightRepository, BaseRepository(resourceProvider) {
     override suspend fun getLatestWeightEntries(): Resource<List<WeightEntry>> {

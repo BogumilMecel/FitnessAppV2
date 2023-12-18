@@ -31,7 +31,7 @@ fun MealSectionNutritionItem(
         
         Spacer(modifier = Modifier.width(6.dp))
 
-        Column() {
+        Column {
             Text(
                 text = currentValue.toString(),
                 style = MaterialTheme.typography.body1

@@ -32,13 +32,11 @@ import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.components.Cust
 import com.gmail.bodziowaty6978.fitnessappv2.common.presentation.ui.theme.TextGrey
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.edit_nutrition_goals.components.MacroElementsSection
 import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Destination
 @Composable
 fun EditNutritionGoalsScreen(
-    viewModel: EditNutritionGoalsViewModel = hiltViewModel(),
-    navigator: DestinationsNavigator
+    viewModel: EditNutritionGoalsViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle().value
 

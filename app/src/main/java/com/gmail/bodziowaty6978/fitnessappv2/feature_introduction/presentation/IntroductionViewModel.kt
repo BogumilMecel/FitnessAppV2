@@ -25,7 +25,7 @@ class IntroductionViewModel @Inject constructor(
     private val saveIntroductionInformation: SaveIntroductionInformation,
 ) : BaseViewModel() {
 
-    private val _questionState = mutableStateOf<Map<IntroductionExpectedQuestionAnswer, Question>>(
+    private val _questionState = mutableStateOf(
         mapOf(
             IntroductionExpectedQuestionAnswer.Gender to Question(
                 title = resourceProvider.getString(R.string.what_is_your_gender),

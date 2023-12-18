@@ -54,11 +54,11 @@ fun LoginScreen(
 
             }
         }
-    ) {
-
+    ) { paddingValues ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(paddingValues.calculateTopPadding())
         ) {
             if (!isLoadingState) {
 

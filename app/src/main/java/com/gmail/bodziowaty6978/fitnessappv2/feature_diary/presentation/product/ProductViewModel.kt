@@ -9,7 +9,6 @@ import com.gmail.bodziowaty6978.fitnessappv2.common.util.BaseViewModel
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
 import com.gmail.bodziowaty6978.fitnessappv2.destinations.DiaryScreenDestination
 import com.gmail.bodziowaty6978.fitnessappv2.destinations.ProductScreenDestination
-import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.product.ProductUseCases
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.product.components.NutritionData
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,7 +26,9 @@ class ProductViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     private val _state = MutableStateFlow(ProductState(
-        product = ProductScreenDestination.argsFrom(savedStateHandle).product
+        product = ProductScreenDestination.argsFrom(savedStateHandle).product.also {
+            initializeProductData()
+        }
     ))
     val state: StateFlow<ProductState> = _state
 
@@ -147,12 +148,6 @@ class ProductViewModel @Inject constructor(
             }
         }
     }
-
-    fun initializeProduct(product: Product) = _state.update {
-        it.copy(
-            product = product
-        )
-    }.also { initializeProductData() }
 
     private fun initializeProductData() {
         _state.update {

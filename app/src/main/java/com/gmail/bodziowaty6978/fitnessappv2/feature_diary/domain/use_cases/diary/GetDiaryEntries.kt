@@ -1,7 +1,6 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.use_cases.diary
 
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.Resource
-import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.model.Meal
 import com.gmail.bodziowaty6978.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 import kotlinx.coroutines.Dispatchers
@@ -9,8 +8,7 @@ import kotlinx.coroutines.withContext
 
 class GetDiaryEntries(
     private val diaryRepository: DiaryRepository,
-    private val sortDiaryEntries: SortDiaryEntries,
-    private val resourceProvider: ResourceProvider
+    private val sortDiaryEntries: SortDiaryEntries
 ) {
     suspend operator fun invoke(
         timestamp: Long,

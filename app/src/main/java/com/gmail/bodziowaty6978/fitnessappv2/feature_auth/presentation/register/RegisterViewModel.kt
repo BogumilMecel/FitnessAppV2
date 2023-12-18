@@ -24,27 +24,27 @@ class RegisterViewModel @Inject constructor(
     resourceProvider: ResourceProvider
 ): BaseViewModel(){
 
-    private val _emailState = mutableStateOf<TextFieldState>(TextFieldState(
+    private val _emailState = mutableStateOf(TextFieldState(
         hint = resourceProvider.getString(R.string.email_address)
     ))
     val emailState: State<TextFieldState> = _emailState
 
-    private val _passwordState = mutableStateOf<TextFieldState>(TextFieldState(
+    private val _passwordState = mutableStateOf(TextFieldState(
         hint = resourceProvider.getString(R.string.password)
     ))
     val passwordState: State<TextFieldState> = _passwordState
 
-    private val _confirmPasswordState = mutableStateOf<TextFieldState>(TextFieldState(
+    private val _confirmPasswordState = mutableStateOf(TextFieldState(
         hint = resourceProvider.getString(R.string.confirm_your_password)
     ))
     val confirmPasswordState: State<TextFieldState> = _confirmPasswordState
 
-    private val _usernameState = mutableStateOf<TextFieldState>(TextFieldState(
+    private val _usernameState = mutableStateOf(TextFieldState(
         hint = resourceProvider.getString(R.string.username)
     ))
     val usernameState: State<TextFieldState> = _usernameState
 
-    private val _isLoading = mutableStateOf<Boolean>(false)
+    private val _isLoading = mutableStateOf(false)
     val isLoading: State<Boolean> = _isLoading
 
     fun onEvent(event: AuthEvent){

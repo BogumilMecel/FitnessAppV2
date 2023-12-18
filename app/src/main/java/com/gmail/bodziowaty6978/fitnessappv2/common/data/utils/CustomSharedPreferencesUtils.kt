@@ -9,7 +9,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.feature_weight.domain.model.WeightE
 import com.google.gson.Gson
 
 class CustomSharedPreferencesUtils(
-    private val context: Context,
+    context: Context,
     private val gson: Gson
 ) {
     companion object{
@@ -17,15 +17,6 @@ class CustomSharedPreferencesUtils(
     }
 
     private val sharedPreferences = context.getSharedPreferences("fitness_app", Context.MODE_PRIVATE)
-
-    fun updateLatestLogEntry(logEntry: LogEntry): Boolean {
-        return getUser()?.copy(
-            latestLogEntry = logEntry
-        )?.let {
-            saveItemToJson(it, USER_KEY)
-            true
-        } ?: false
-    }
 
     fun updateLatestWeightEntries(weightEntry: WeightEntry): Boolean{
         return getUser()?.let {
@@ -65,7 +56,7 @@ class CustomSharedPreferencesUtils(
     fun getWeightEntries() = getUser()?.weightEntries ?: emptyList()
     fun getLatestLogEntry() = getUser()?.latestLogEntry ?: LogEntry()
 
-    fun getUser(): User? {
+    private fun getUser(): User? {
         return getItemFromJson(USER_KEY, User::class.java)
     }
 

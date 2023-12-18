@@ -9,7 +9,7 @@ import com.gmail.bodziowaty6978.fitnessappv2.common.util.ResourceProvider
 
 class TokenRepositoryImp(
     private val sharedPreferences: SharedPreferences,
-    private val resourceProvider: ResourceProvider
+    resourceProvider: ResourceProvider
 ) : TokenRepository, BaseRepository(resourceProvider) {
     override fun getToken(): Resource<String> {
         val token = sharedPreferences.getString("token", null)
@@ -29,7 +29,7 @@ class TokenRepositoryImp(
 
     override fun deleteToken(): CustomResult {
         return try {
-            sharedPreferences.edit().remove("token")
+            sharedPreferences.edit().remove("token").apply()
             CustomResult.Success
         } catch (e: Exception) {
             handleExceptionWithCustomResult(exception = e)

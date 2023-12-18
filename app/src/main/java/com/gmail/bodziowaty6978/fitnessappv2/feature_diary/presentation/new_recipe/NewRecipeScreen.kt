@@ -3,6 +3,7 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_diary.presentation.new_rec
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -36,7 +37,7 @@ fun NewRecipeScreen(
 
     Scaffold(
         floatingActionButton = {
-            if(state.isRecipeSectionVisible) {
+            if (state.isRecipeSectionVisible) {
                 ExtendedFloatingActionButton(
                     onClick = { viewModel.onEvent(NewRecipeEvent.ClickedSaveRecipe) },
                     text = {
@@ -49,7 +50,7 @@ fun NewRecipeScreen(
                         Icon(imageVector = Icons.Default.Save, contentDescription = null)
                     }
                 )
-            } else if (state.isProductSectionVisible){
+            } else if (state.isProductSectionVisible) {
                 ExtendedFloatingActionButton(
                     onClick = { viewModel.onEvent(NewRecipeEvent.ClickedSaveProduct) },
                     text = {
@@ -64,53 +65,57 @@ fun NewRecipeScreen(
                 )
             }
         }
-    ) {
-        if (state.isSearchSectionVisible) {
-            SearchForProductSection(
-                onEvent = {
-                    viewModel.onEvent(it)
-                },
-                state = state
-            )
-        } else if (state.isRecipeSectionVisible) {
-            RecipeSection(
-                state = state,
-                onEvent = {
-                    viewModel.onEvent(it)
-                }
-            )
-        } else if (state.isProductSectionVisible) {
-            state.selectedProduct?.let { product ->
-                Column(
-                    modifier = Modifier
-                        .padding(horizontal = 15.dp)
-                ) {
-                    Box(modifier = Modifier.fillMaxWidth()) {
-                        BackArrow(
-                            modifier = Modifier
-                                .align(Alignment.CenterStart)
-                        ) {
-                            viewModel.onEvent(NewRecipeEvent.ClickedBackArrow)
+    ) { paddingValues ->
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .padding(paddingValues.calculateBottomPadding())) {
+            if (state.isSearchSectionVisible) {
+                SearchForProductSection(
+                    onEvent = {
+                        viewModel.onEvent(it)
+                    },
+                    state = state
+                )
+            } else if (state.isRecipeSectionVisible) {
+                RecipeSection(
+                    state = state,
+                    onEvent = {
+                        viewModel.onEvent(it)
+                    }
+                )
+            } else if (state.isProductSectionVisible) {
+                state.selectedProduct?.let { product ->
+                    Column(
+                        modifier = Modifier
+                            .padding(horizontal = 15.dp)
+                    ) {
+                        Box(modifier = Modifier.fillMaxWidth()) {
+                            BackArrow(
+                                modifier = Modifier
+                                    .align(Alignment.CenterStart)
+                            ) {
+                                viewModel.onEvent(NewRecipeEvent.ClickedBackArrow)
+                            }
+
+                            Text(
+                                text = stringResource(id = R.string.add_product),
+                                style = MaterialTheme.typography.h3,
+                                modifier = Modifier
+                                    .align(Alignment.Center)
+                            )
                         }
 
-                        Text(
-                            text = stringResource(id = R.string.add_product),
-                            style = MaterialTheme.typography.h3,
-                            modifier = Modifier
-                                .align(Alignment.Center)
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        ProductMainSection(
+                            product = product,
+                            currentWeight = state.productWeight,
+                            onWeightEntered = {
+                                viewModel.onEvent(NewRecipeEvent.EnteredProductWeight(it))
+                            },
+                            nutritionData = state.nutritionData
                         )
                     }
-
-                    Spacer(modifier = Modifier.height(10.dp))
-
-                    ProductMainSection(
-                        product = product,
-                        currentWeight = state.productWeight,
-                        onWeightEntered = {
-                            viewModel.onEvent(NewRecipeEvent.EnteredProductWeight(it))
-                        },
-                        nutritionData = state.nutritionData
-                    )
                 }
             }
         }

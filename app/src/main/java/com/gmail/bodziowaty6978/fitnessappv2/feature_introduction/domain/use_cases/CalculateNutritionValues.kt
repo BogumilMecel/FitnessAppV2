@@ -3,7 +3,7 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.domain.use_ca
 import com.gmail.bodziowaty6978.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bodziowaty6978.fitnessappv2.common.util.extensions.round
 
-class CalculateNutritionValues() {
+class CalculateNutritionValues {
 
 
     operator fun invoke(
