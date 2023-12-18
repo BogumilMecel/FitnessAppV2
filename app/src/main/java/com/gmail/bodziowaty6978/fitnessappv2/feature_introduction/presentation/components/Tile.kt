@@ -3,7 +3,10 @@ package com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.presentation.
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedButton
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -15,7 +18,6 @@ fun Tile(
     isSelected:Boolean,
     onItemClick:() -> Unit
 ) {
-
     OutlinedButton(
         onClick = {
             onItemClick()

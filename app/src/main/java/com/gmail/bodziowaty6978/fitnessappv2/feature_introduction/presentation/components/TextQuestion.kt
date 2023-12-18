@@ -1,6 +1,10 @@
 package com.gmail.bodziowaty6978.fitnessappv2.feature_introduction.presentation.components
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -18,7 +22,6 @@ fun TextQuestion(
     onTextEntered: (String) -> Unit,
     tag:String
 ) {
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -29,7 +32,7 @@ fun TextQuestion(
         DefaultTextField(
             value = text,
             onValueChange = {
-                onTextEntered(it.replace(",","."))
+                onTextEntered(it)
             },
             modifier = Modifier
                 .width(80.dp)

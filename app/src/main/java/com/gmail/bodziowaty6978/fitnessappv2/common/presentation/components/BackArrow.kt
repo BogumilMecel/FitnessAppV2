@@ -17,6 +17,7 @@ fun BackArrow(
 ) {
 
     IconButton(
+        modifier = modifier,
         onClick = {
             onBackArrowPressed()
         }
