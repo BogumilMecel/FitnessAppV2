@@ -182,9 +182,15 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun getOnlineDiaryHistory(latestEntryTimestampValue: Long): Resource<List<ProductDiaryHistoryItem>> {
+    override suspend fun getOnlineDiaryHistory(
+        page: Int,
+        searchText: String?
+    ): Resource<List<ProductDiaryHistoryItem>> {
         return handleRequest {
-            diaryApi.getProductDiaryHistory(latestEntryTimestampValue)
+            diaryApi.getProductDiaryHistory(
+                page = page,
+                searchText = searchText
+            )
         }
     }
 
@@ -209,6 +215,14 @@ class DiaryRepositoryImp(
     override suspend fun insertLocalHistoryItems(productDiaryHistoryItems: List<ProductDiaryHistoryItem>): Resource<Unit> {
         return handleRequest {
             userDiaryItemsDao.insertDiaryHistoryItems(productDiaryHistoryItems)
+        }
+    }
+
+    override suspend fun clearLocalData(): Resource<Unit> {
+        return handleRequest {
+            userDiaryItemsDao.deleteUserProducts()
+            userDiaryItemsDao.deleteDiaryHistory()
+            userDiaryItemsDao.deleteUserRecipes()
         }
     }
 }
