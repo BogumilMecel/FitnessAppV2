@@ -25,11 +25,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.data.singleton.CurrentDate
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.Currency
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.LightRed
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.presentation.components.PriceSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.presentation.components.ProductMainSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.presentation.components.SubmitNewPriceDialog
 import com.gmail.bogumilmecel2.ui.components.complex.HeaderRow
+import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 import com.ramcosta.composedestinations.annotation.Destination
 
 @Destination(
@@ -62,7 +62,7 @@ fun ProductScreen(
                         contentDescription = "Add"
                     )
                 },
-                backgroundColor = LightRed,
+                backgroundColor = FitnessAppTheme.colors.Error,
                 modifier = Modifier
                     .testTag(stringResource(id = R.string.create_product))
             )

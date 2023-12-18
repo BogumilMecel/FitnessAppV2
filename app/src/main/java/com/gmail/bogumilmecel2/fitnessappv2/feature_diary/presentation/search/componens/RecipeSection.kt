@@ -19,9 +19,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.gmail.bogumilmecel2.fitnessappv2.components.DefaultCardBackground
-import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.TextGrey
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Recipe
+import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
+import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 
 @Composable
 fun RecipeSection(
@@ -78,7 +78,7 @@ fun RecipeSection(
                 Text(
                     text = "${recipe.nutritionValues.calories} kcal",
                     style = MaterialTheme.typography.body2.copy(
-                        color = TextGrey
+                        color = FitnessAppTheme.colors.ContentSecondary
                     )
                 )
 
@@ -87,7 +87,7 @@ fun RecipeSection(
                 Text(
                     text = recipe.timeRequired.displayValue,
                     style = MaterialTheme.typography.body2.copy(
-                        color = TextGrey
+                        color = FitnessAppTheme.colors.ContentSecondary
                     )
                 )
             }

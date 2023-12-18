@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
-import com.gmail.bogumilmecel2.ui.theme.FitnessAppColors
+import com.gmail.bogumilmecel2.ui.theme.FitnessAppColor
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 
 @Composable
@@ -45,30 +45,32 @@ fun FitnessAppTextStyle.getTextStyle(): TextStyle {
         FitnessAppTextStyle.TextFieldPlaceholder -> FitnessAppTheme.typography.ParagraphMedium
 
         is FitnessAppTextStyle.Error -> FitnessAppTheme.typography.ParagraphSmall
+        is FitnessAppTextStyle.ImportantTextMedium -> FitnessAppTheme.typography.ImportantTextMedium
     }
 }
 
 sealed class FitnessAppTextStyle(
-    val color: FitnessAppColors = FitnessAppColors.ContentWhite,
+    val color: FitnessAppColor = FitnessAppColor.ContentWhite,
     val upperCase: Boolean = false,
     val capitalize: Boolean = true
 ) {
     object ButtonOnPrimary : FitnessAppTextStyle(
         upperCase = true,
-        color = FitnessAppColors.Black
+        color = FitnessAppColor.Black
     )
 
     object ButtonOnSurface : FitnessAppTextStyle(
         upperCase = true,
-        color = FitnessAppColors.Primary
+        color = FitnessAppColor.Primary
     )
 
-    object CardTitle : FitnessAppTextStyle(color = FitnessAppColors.ContentWhite)
-    object ParagraphSecondary : FitnessAppTextStyle(color = FitnessAppColors.ContentSecondary)
+    object CardTitle : FitnessAppTextStyle()
+    object ParagraphSecondary : FitnessAppTextStyle(color = FitnessAppColor.ContentSecondary)
+    object ImportantTextMedium : FitnessAppTextStyle()
     object ParagraphMedium : FitnessAppTextStyle()
     object ParagraphLarge : FitnessAppTextStyle()
     object HeaderLarge : FitnessAppTextStyle()
-    object TextFieldPlaceholder : FitnessAppTextStyle(color = FitnessAppColors.TextGreyPlaceholder)
+    object TextFieldPlaceholder : FitnessAppTextStyle(color = FitnessAppColor.TextGreyPlaceholder)
     object InputDescription : FitnessAppTextStyle()
-    object Error : FitnessAppTextStyle(color = FitnessAppColors.Error)
+    object Error : FitnessAppTextStyle(color = FitnessAppColor.Error)
 }

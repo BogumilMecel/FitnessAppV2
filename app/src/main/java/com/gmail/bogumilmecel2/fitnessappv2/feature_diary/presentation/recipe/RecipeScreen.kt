@@ -39,17 +39,17 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.CustomButton
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.DropdownArrow
-import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
-import com.gmail.bogumilmecel2.ui.components.base.WidthSpacer
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.TextGrey
 import com.gmail.bogumilmecel2.fitnessappv2.components.CustomBasicTextField
 import com.gmail.bogumilmecel2.fitnessappv2.components.DefaultCardBackground
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_recipe.components.RecipePriceSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.presentation.components.ProductNutritionSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.componens.SearchProductItem
 import com.gmail.bogumilmecel2.ui.components.base.CustomIconStyle
+import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
 import com.gmail.bogumilmecel2.ui.components.base.IconParams
+import com.gmail.bogumilmecel2.ui.components.base.WidthSpacer
 import com.gmail.bogumilmecel2.ui.components.complex.HeaderRow
+import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 import com.ramcosta.composedestinations.annotation.Destination
 
 @Destination(
@@ -127,7 +127,7 @@ fun RecipeScreen(
 
                         Text(
                             text = stringResource(id = R.string.recipe_time_required),
-                            style = MaterialTheme.typography.body2.copy(color = TextGrey)
+                            style = MaterialTheme.typography.body2.copy(color = FitnessAppTheme.colors.ContentSecondary)
                         )
                     }
                 }
@@ -164,7 +164,7 @@ fun RecipeScreen(
 
                         Text(
                             text = stringResource(id = R.string.recipe_difficulty),
-                            style = MaterialTheme.typography.body2.copy(color = TextGrey)
+                            style = MaterialTheme.typography.body2.copy(color = FitnessAppTheme.colors.ContentSecondary)
                         )
                     }
                 }
@@ -213,7 +213,7 @@ fun RecipeScreen(
                                     id = R.string.recipe_serves,
                                     state.recipe.servings
                                 ),
-                                style = MaterialTheme.typography.body2.copy(color = TextGrey)
+                                style = MaterialTheme.typography.body2.copy(color = FitnessAppTheme.colors.ContentSecondary)
                             )
                         }
 

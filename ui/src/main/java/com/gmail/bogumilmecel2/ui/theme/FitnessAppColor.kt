@@ -3,15 +3,17 @@ package com.gmail.bogumilmecel2.ui.theme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
-data class FitnessAppColor(
+data class FitnessAppColors(
     val Black: Color = Color.Black,
     val White: Color = Color.White,
-    val Primary: Color = LocalColors.OrangeYellow3,
-    val ContentPrimary: Color = LocalColors.ContentPrimary,
-    val ContentSecondary: Color = LocalColors.ContentSecondary
+    val Primary: Color = LocalColor.OrangeYellow1,
+    val Background: Color = LocalColor.DarkGrey,
+    val ContentPrimary: Color = LocalColor.ContentPrimary,
+    val ContentSecondary: Color = LocalColor.ContentSecondary,
+    val Error: Color = LocalColor.RedError
 )
 
-object LocalColors {
+object LocalColor {
     val DeepBlueElevation = Color(0xff212f5f)
     val Blue = Color(0xFF655fb1)
     val ButtonBlue = Color(0xff505cf3)
@@ -48,7 +50,7 @@ object LocalColors {
     val RedError = Color(0xFFe57373)
 }
 
-enum class FitnessAppColors {
+enum class FitnessAppColor {
     Black,
     White,
     Primary,
@@ -65,9 +67,9 @@ enum class FitnessAppColors {
     operator fun invoke() = when (this) {
         Black -> Color.Black
         White -> Color.White
-        Error -> LocalColors.RedError
-        ContentWhite -> LocalColors.ContentPrimary
-        ContentSecondary -> LocalColors.ContentSecondary
+        Error -> LocalColor.RedError
+        ContentWhite -> LocalColor.ContentPrimary
+        ContentSecondary -> LocalColor.ContentSecondary
         else -> Color.White
     }
 }

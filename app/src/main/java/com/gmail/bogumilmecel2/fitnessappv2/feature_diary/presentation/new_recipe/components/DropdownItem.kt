@@ -12,7 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.DarkGreyElevation9
+import com.gmail.bogumilmecel2.ui.theme.LocalColor.DarkGreyElevation9
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable

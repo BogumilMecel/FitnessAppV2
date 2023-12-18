@@ -13,11 +13,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.DiaryItem
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.DarkGreyElevation9
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.TextGrey
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.round
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntry
+import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
+import com.gmail.bogumilmecel2.ui.theme.LocalColor.DarkGreyElevation9
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -67,7 +67,7 @@ fun DiaryEntryItem(
                     Text(
                         text = "(${diaryItem.getDisplayValue()})",
                         style = MaterialTheme.typography.body2,
-                        color = TextGrey,
+                        color = FitnessAppTheme.colors.ContentSecondary,
                         modifier = Modifier
                             .padding(start = 3.dp)
                     )
@@ -88,27 +88,27 @@ fun DiaryEntryItem(
                     Text(
                         text = "Kcal:" + diaryItem.nutritionValues.calories.toString(),
                         style = MaterialTheme.typography.body2,
-                        color = TextGrey,
+                        color = FitnessAppTheme.colors.ContentSecondary,
                     )
 
                     Text(
                         text = "Carb:" + diaryItem.nutritionValues.carbohydrates.round(2)
                             .toString(),
                         style = MaterialTheme.typography.body2,
-                        color = TextGrey
+                        color = FitnessAppTheme.colors.ContentSecondary
                     )
 
                     Text(
                         text = "Prot:" + diaryItem.nutritionValues.protein.round(2)
                             .toString(),
                         style = MaterialTheme.typography.body2,
-                        color = TextGrey
+                        color = FitnessAppTheme.colors.ContentSecondary
                     )
 
                     Text(
                         text = "Fat:" + diaryItem.nutritionValues.fat.round(2).toString(),
                         style = MaterialTheme.typography.body2,
-                        color = TextGrey
+                        color = FitnessAppTheme.colors.ContentSecondary
                     )
 
                 }

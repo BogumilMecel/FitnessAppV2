@@ -6,7 +6,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Card
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -20,8 +19,9 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.DarkGreyElevation9
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.TextGreyPlaceholder
+import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
+import com.gmail.bogumilmecel2.ui.theme.LocalColor.DarkGreyElevation9
+import com.gmail.bogumilmecel2.ui.theme.LocalColor.TextGreyPlaceholder
 
 @Composable
 fun CustomBasicTextField(
@@ -31,7 +31,7 @@ fun CustomBasicTextField(
     singleLine: Boolean = false,
     placeholder: String? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    textStyle: TextStyle = MaterialTheme.typography.body1,
+    textStyle: TextStyle = FitnessAppTheme.typography.ParagraphLarge,
     textPadding: Dp = 12.dp
 ) {
     var isFocused by remember { mutableStateOf(false) }
@@ -53,7 +53,9 @@ fun CustomBasicTextField(
                 .onFocusChanged {
                     isFocused = it.isFocused
                 },
-            textStyle = textStyle,
+            textStyle = textStyle.copy(
+                color = FitnessAppTheme.colors.ContentPrimary
+            ),
             cursorBrush = SolidColor(Color.White),
             singleLine = singleLine,
             keyboardOptions = keyboardOptions,

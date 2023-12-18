@@ -22,11 +22,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.data.singleton.CurrentDate
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.BackHandler
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.DarkGreyElevation1
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.componens.SearchProductSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.componens.SearchRecipeSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.componens.SearchTopSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.shared.ScannerSection
+import com.gmail.bogumilmecel2.ui.theme.LocalColor.DarkGreyElevation1
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState

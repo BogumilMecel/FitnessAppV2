@@ -10,8 +10,8 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.DarkGreyElevation3
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.DarkGreyElevation6
+import com.gmail.bogumilmecel2.ui.theme.LocalColor.DarkGreyElevation3
+import com.gmail.bogumilmecel2.ui.theme.LocalColor.DarkGreyElevation6
 
 @Composable
 fun PriceRow(

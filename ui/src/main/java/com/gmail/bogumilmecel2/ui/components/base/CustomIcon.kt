@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import com.gmail.bogumilmecel2.ui.theme.FitnessAppColors
+import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 
 @Composable
 fun CustomIcon(
@@ -26,7 +26,7 @@ fun CustomIcon(
             .clip(CircleShape)
             .then(other = onClick?.let { onClick -> Modifier.clickable(onClick = onClick,) } ?: Modifier)
             .padding(12.dp),
-        tint = FitnessAppColors.ContentWhite()
+        tint = FitnessAppTheme.colors.ContentPrimary
     )
 }
 

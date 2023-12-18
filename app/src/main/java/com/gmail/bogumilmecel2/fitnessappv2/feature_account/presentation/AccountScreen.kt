@@ -28,12 +28,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.BackHandler
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.CustomButton
-import com.gmail.bogumilmecel2.fitnessappv2.components.DefaultCardBackground
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.PieChartWithMiddleText
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.BlueViolet3
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.LightGreen3
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.OrangeYellow3
-import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.ui.theme.TextGrey
+import com.gmail.bogumilmecel2.fitnessappv2.components.DefaultCardBackground
+import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
+import com.gmail.bogumilmecel2.ui.theme.LocalColor.BlueViolet3
+import com.gmail.bogumilmecel2.ui.theme.LocalColor.LightGreen3
+import com.gmail.bogumilmecel2.ui.theme.LocalColor.OrangeYellow3
 import com.ramcosta.composedestinations.annotation.Destination
 
 @Destination
@@ -112,7 +112,7 @@ fun AccountScreen(
                         Text(
                             text = stringResource(id = R.string.carbohydrates),
                             style = MaterialTheme.typography.body2.copy(
-                                color = TextGrey
+                                color = FitnessAppTheme.colors.ContentSecondary
                             )
                         )
 
@@ -128,7 +128,7 @@ fun AccountScreen(
                         Text(
                             text = stringResource(id = R.string.protein),
                             style = MaterialTheme.typography.body2.copy(
-                                color = TextGrey
+                                color = FitnessAppTheme.colors.ContentSecondary
                             )
                         )
 
@@ -144,7 +144,7 @@ fun AccountScreen(
                         Text(
                             text = stringResource(id = R.string.fat),
                             style = MaterialTheme.typography.body2.copy(
-                                color = TextGrey
+                                color = FitnessAppTheme.colors.ContentSecondary
                             )
                         )
 
