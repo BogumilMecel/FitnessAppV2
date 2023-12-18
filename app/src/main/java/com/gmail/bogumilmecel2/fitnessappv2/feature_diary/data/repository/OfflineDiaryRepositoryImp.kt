@@ -32,19 +32,21 @@ class OfflineDiaryRepositoryImp(
         }
     }
 
-    override suspend fun getRecipes(
-        userId: String?,
-        searchText: String?,
-        limit: Int,
-        skip: Int?
-    ): Resource<List<Recipe>> {
+    override suspend fun getProduct(productId: String): Resource<Product?> {
         return handleRequest {
-            userDiaryItemsDao.getUserRecipes(
-                userId = userId,
-                searchText = searchText,
-                limit = limit,
-                offset = skip ?: 0
-            )
+            productQueries.getProduct(productId).executeAsOneOrNull()?.toProduct()
+        }
+    }
+
+    override suspend fun insertProducts(products: List<Product>): Resource<Unit> {
+        return handleRequest {
+            userDiaryItemsDao.insertProducts(products)
+        }
+    }
+
+    override suspend fun insertProduct(product: Product): Resource<Unit> {
+        return handleRequest {
+            userDiaryItemsDao.insertProduct(product)
         }
     }
 
@@ -74,6 +76,70 @@ class OfflineDiaryRepositoryImp(
         }
     }
 
+    override suspend fun insertProductDiaryEntries(productDiaryEntries: List<ProductDiaryEntry>): Resource<Unit> {
+        return handleRequest {
+            userDiaryItemsDao.insertProductDiaryEntries(productDiaryEntries)
+        }
+    }
+
+    override suspend fun insertProductDiaryEntry(productDiaryEntry: ProductDiaryEntry): Resource<Unit> {
+        return handleRequest {
+            userDiaryItemsDao.insertProductDiaryEntry(productDiaryEntry)
+        }
+    }
+
+    override suspend fun deleteProductDiaryEntries(
+        date: String,
+        productDiaryEntriesIds: List<String>
+    ): Resource<Unit> {
+        return handleRequest {
+            userDiaryItemsDao.deleteProductDiaryEntries(
+                date = date,
+                diaryEntriesIds = productDiaryEntriesIds
+            )
+        }
+    }
+
+    override suspend fun deleteProductDiaryEntry(productDiaryEntryId: String): Resource<Unit> {
+        return handleRequest {
+            userDiaryItemsDao.deleteProductDiaryEntry(productDiaryEntryId)
+        }
+    }
+
+    override suspend fun getRecipes(
+        userId: String?,
+        searchText: String?,
+        limit: Int,
+        skip: Int?
+    ): Resource<List<Recipe>> {
+        return handleRequest {
+            userDiaryItemsDao.getUserRecipes(
+                userId = userId,
+                searchText = searchText,
+                limit = limit,
+                offset = skip ?: 0
+            )
+        }
+    }
+
+    override suspend fun getRecipe(recipeId: String): Resource<Recipe?> {
+        return handleRequest {
+            userDiaryItemsDao.getRecipe(recipeId).firstOrNull()
+        }
+    }
+
+    override suspend fun insertRecipes(recipes: List<Recipe>): Resource<Unit> {
+        return handleRequest {
+            userDiaryItemsDao.insertRecipes(recipes)
+        }
+    }
+
+    override suspend fun insertRecipe(recipe: Recipe): Resource<Unit> {
+        return handleRequest {
+            userDiaryItemsDao.insertRecipe(recipe)
+        }
+    }
+
     override suspend fun getRecipeDiaryEntries(
         searchText: String?,
         limit: Int,
@@ -100,87 +166,15 @@ class OfflineDiaryRepositoryImp(
         }
     }
 
-    override suspend fun insertProducts(products: List<Product>): Resource<Unit> {
-        return handleRequest {
-            userDiaryItemsDao.insertProducts(products)
-        }
-    }
-
-    override suspend fun insertRecipes(recipes: List<Recipe>): Resource<Unit> {
-        return handleRequest {
-            userDiaryItemsDao.insertRecipes(recipes)
-        }
-    }
-
-    override suspend fun insertProductDiaryEntries(productDiaryEntries: List<ProductDiaryEntry>): Resource<Unit> {
-        return handleRequest {
-            userDiaryItemsDao.insertProductDiaryEntries(productDiaryEntries)
-        }
-    }
-
     override suspend fun insertRecipeDiaryEntries(recipeDiaryEntries: List<RecipeDiaryEntry>): Resource<Unit> {
         return handleRequest {
             userDiaryItemsDao.insertRecipeDiaryEntries(recipeDiaryEntries)
         }
     }
 
-    override suspend fun getProduct(productId: String): Resource<Product?> {
-        return handleRequest {
-            productQueries.getProduct(productId).executeAsOneOrNull()?.toProduct()
-        }
-    }
-
-    override suspend fun getRecipe(recipeId: String): Resource<Recipe?> {
-        return handleRequest {
-            userDiaryItemsDao.getRecipe(recipeId).firstOrNull()
-        }
-    }
-
-    override suspend fun insertRecipe(recipe: Recipe): Resource<Unit> {
-        return handleRequest {
-            userDiaryItemsDao.insertRecipe(recipe)
-        }
-    }
-
-    override suspend fun insertProduct(product: Product): Resource<Unit> {
-        return handleRequest {
-            userDiaryItemsDao.insertProduct(product)
-        }
-    }
-
-    override suspend fun insertProductDiaryEntry(productDiaryEntry: ProductDiaryEntry): Resource<Unit> {
-        return handleRequest {
-            userDiaryItemsDao.insertProductDiaryEntry(productDiaryEntry)
-        }
-    }
-
     override suspend fun insertRecipeDiaryEntry(recipeDiaryEntry: RecipeDiaryEntry): Resource<Unit> {
         return handleRequest {
             userDiaryItemsDao.insertRecipeDiaryEntry(recipeDiaryEntry)
-        }
-    }
-
-    override suspend fun deleteProductDiaryEntry(productDiaryEntryId: String): Resource<Unit> {
-        return handleRequest {
-            userDiaryItemsDao.deleteProductDiaryEntry(productDiaryEntryId)
-        }
-    }
-
-    override suspend fun deleteRecipeDiaryEntry(recipeDiaryEntryId: String): Resource<Unit> {
-        return handleRequest {
-            userDiaryItemsDao.deleteRecipeDiaryEntry(recipeDiaryEntryId)
-        }
-    }
-
-    override suspend fun deleteProductDiaryEntries(
-        date: String,
-        productDiaryEntriesIds: List<String>
-    ): Resource<Unit> {
-        return handleRequest {
-            userDiaryItemsDao.deleteProductDiaryEntries(
-                date = date,
-                diaryEntriesIds = productDiaryEntriesIds
-            )
         }
     }
 
@@ -193,6 +187,12 @@ class OfflineDiaryRepositoryImp(
                 date = date,
                 diaryEntriesIds = recipeDiaryEntriesIds
             )
+        }
+    }
+
+    override suspend fun deleteRecipeDiaryEntry(recipeDiaryEntryId: String): Resource<Unit> {
+        return handleRequest {
+            userDiaryItemsDao.deleteRecipeDiaryEntry(recipeDiaryEntryId)
         }
     }
 
