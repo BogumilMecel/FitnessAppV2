@@ -20,7 +20,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.BackHandler
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.componens.SearchEverythingSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.componens.SearchProductSection
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.componens.SearchRecipeSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.search.componens.SearchTopSection
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.shared.ScannerSection
 import com.gmail.bogumilmecel2.ui.components.base.CustomIcon
@@ -91,10 +90,7 @@ fun SearchScreen(
                     .fillMaxSize()
             ) {
                 SearchTopSection(
-                    searchBarText = when (state.selectedTabIndex) {
-                        0 -> state.productSearchBarText
-                        else -> state.recipesSearchBarText
-                    },
+                    searchBarText = state.searchBarText,
                     mealName = stringResource(id = state.mealName.getDisplayValue()),
                     date = state.date,
                     onEvent = { searchEvent ->
@@ -110,8 +106,12 @@ fun SearchScreen(
                     when (pagerScope) {
                         SearchTab.EVERYTHING.ordinal -> {
                             SearchEverythingSection(
+                                state = state.everythingState,
                                 onScanBarcodeClicked = {
                                     viewModel.onEvent(SearchEvent.ClickedScanButton)
+                                },
+                                onBarcodeAddProductClicked = {
+
                                 }
                             )
                         }
@@ -126,12 +126,14 @@ fun SearchScreen(
                             state = state
                         )
 
-                        SearchTab.RECIPES.ordinal -> SearchRecipeSection(
-                            recipes = state.recipes,
-                            onEvent = {
-                                viewModel.onEvent(it)
-                            }
-                        )
+                        SearchTab.RECIPES.ordinal -> {
+//                            SearchRecipeSection(
+//                                recipes = state.myR,
+//                                onEvent = {
+//                                    viewModel.onEvent(it)
+//                                }
+//                            )
+                        }
                     }
                 }
             }

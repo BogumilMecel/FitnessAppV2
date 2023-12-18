@@ -58,15 +58,9 @@ class SearchViewModel @Inject constructor(
 
             is SearchEvent.EnteredSearchText -> {
                 _state.update {
-                    when (_state.value.selectedTabIndex) {
-                        0 -> it.copy(
-                            productSearchBarText = event.text
-                        )
-
-                        else -> it.copy(
-                            recipesSearchBarText = event.text
-                        )
-                    }
+                    it.copy(
+                        searchBarText = event.text
+                    )
                 }
                 clearItemsIfHistoryIsPresent()
             }
@@ -87,7 +81,7 @@ class SearchViewModel @Inject constructor(
                 navigateTo(
                     NewProductScreenDestination(
                         mealName = _state.value.mealName,
-                        barcode = _state.value.barcode,
+                        barcode = _state.value.everythingState.barcode,
                         dateTransferObject = dateTransferObject
                     )
                 )
@@ -97,7 +91,9 @@ class SearchViewModel @Inject constructor(
                 _state.update {
                     it.copy(
                         isScannerVisible = true,
-                        barcode = null
+                        everythingState = _state.value.everythingState.copy(
+                            barcode = null
+                        )
                     )
                 }
             }
@@ -184,17 +180,17 @@ class SearchViewModel @Inject constructor(
     private fun searchForRecipes() {
         showOrHideLoader()
         viewModelScope.launch {
-            searchDiaryUseCases.searchForRecipes(_state.value.recipesSearchBarText)
+            searchDiaryUseCases.searchForRecipes(_state.value.searchBarText)
                 .handle(
                     finally = {
                         showOrHideLoader(isLoadingVisible = false)
                     }
                 ) { recipes ->
-                    _state.update {
-                        it.copy(
-                            recipes = recipes
-                        )
-                    }
+//                    _state.update {
+//                        it.copy(
+//                            recipes = recipes
+//                        )
+//                    }
                 }
         }
     }
@@ -202,27 +198,27 @@ class SearchViewModel @Inject constructor(
     private fun searchForProducts() {
         showOrHideLoader()
         viewModelScope.launch(Dispatchers.IO) {
-            searchDiaryUseCases.searchForProductsUseCase(_state.value.productSearchBarText).handle(
+            searchDiaryUseCases.searchForProductsUseCase(_state.value.searchBarText).handle(
                 finally = {
                     showOrHideLoader(isLoadingVisible = false)
                 }
             ) { products ->
-                _state.update {
-                    it.copy(
-                        productItems = products
-                    )
-                }
+//                _state.update {
+//                    it.copy(
+//                        productItems = products
+//                    )
+//                }
             }
         }
     }
 
     private fun showOrHideLoader(isLoadingVisible: Boolean = true) {
-        _state.update {
-            it.copy(
-                isLoading = isLoadingVisible,
-                barcode = null
-            )
-        }
+//        _state.update {
+//            it.copy(
+//                isLoading = isLoadingVisible,
+//                barcode = null
+//            )
+//        }
     }
 
     private fun onBarcodeScanned(barcode: String) {
@@ -236,12 +232,12 @@ class SearchViewModel @Inject constructor(
             searchDiaryUseCases.searchForProductWithBarcode(barcode).handle(
                 onError = { errorMessage ->
                     if (errorMessage == resourceProvider.getString(R.string.there_is_no_product_with_provided_barcode_do_you_want_to_add_it)) {
-                        _state.update {
-                            it.copy(
-                                barcode = barcode,
-                                isLoading = false
-                            )
-                        }
+//                        _state.update {
+//                            it.copy(
+//                                barcode = barcode,
+//                                isLoading = false
+//                            )
+//                        }
                     } else {
                         showSnackbarError(errorMessage)
                     }
