@@ -2,15 +2,20 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.diary
 
 import androidx.lifecycle.viewModelScope
 import com.gmail.bogumilmecel2.fitnessappv2.common.data.singleton.CurrentDate
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.DiaryItem
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
+import com.gmail.bogumilmecel2.fitnessappv2.destinations.ProductScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.SearchScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.MealName
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.CalculateNutritionValuesFromDiaryEntriesUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.CalculateNutritionValuesFromNutritionValuesUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.CreateLongClickedDiaryItemParamsUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.DeleteDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.GetDiaryEntries
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.diary.UpdateDiaryEntriesListAfterDelete
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.presentation.ProductEntryData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -43,7 +48,7 @@ class DiaryViewModel @Inject constructor(
             }
 
             is DiaryEvent.ClickedDiaryEntry -> {
-
+                startEditingDiaryItem(event.diaryItem)
             }
 
             is DiaryEvent.LongClickedDiaryEntry -> {
@@ -93,7 +98,10 @@ class DiaryViewModel @Inject constructor(
             }
 
             is DiaryEvent.ClickedEditInDialog -> {
-
+                _state.value.longClickedDiaryItemParams?.let {
+                    hideDiaryEntryDialog()
+                    startEditingDiaryItem(it.longClickedDiaryItem)
+                }
             }
 
             is DiaryEvent.BackPressed -> {
@@ -144,6 +152,29 @@ class DiaryViewModel @Inject constructor(
                     nutritionValues = _state.value.mealNutritionValues.values.toList()
                 )
             )
+        }
+    }
+
+    private fun startEditingDiaryItem(diaryItem: DiaryItem) {
+        with(diaryItem) {
+            when(this) {
+                is ProductDiaryEntry -> {
+                    navigateTo(
+                        destination = ProductScreenDestination(
+                            mealName = mealName,
+                            product = product,
+                            entryData = ProductEntryData.Editing(
+                                weight = weight.toString(),
+                                productDiaryEntryId = id
+                            )
+                        )
+                    )
+                }
+                is RecipeDiaryEntry -> {
+
+                }
+                else -> {}
+            }
         }
     }
 

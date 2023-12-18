@@ -7,6 +7,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.destinations.NewProductScreenDestina
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.ProductScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.product.NutritionValuesIn
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.new_product.SaveNewProduct
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.presentation.ProductEntryData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -129,7 +130,8 @@ class NewProductViewModel @Inject constructor(
                             navigateWithPopUp(
                                 destination = ProductScreenDestination(
                                     mealName = _state.value.mealName,
-                                    product = product
+                                    product = product,
+                                    entryData = ProductEntryData.Adding,
                                 )
                             )
                         }

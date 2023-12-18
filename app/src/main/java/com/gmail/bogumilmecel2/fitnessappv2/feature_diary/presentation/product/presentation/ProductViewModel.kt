@@ -25,10 +25,15 @@ class ProductViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     private val _state = MutableStateFlow(
-        ProductState(
-            product = ProductScreenDestination.argsFrom(savedStateHandle).product,
-            mealName = ProductScreenDestination.argsFrom(savedStateHandle).mealName
-        )
+        with(ProductScreenDestination.argsFrom(savedStateHandle)) {
+            ProductState(
+                mealName = mealName,
+                product = product,
+                weight = if (this.entryData is ProductEntryData.Editing) this.entryData.weight else "",
+                entryData = entryData
+            )
+        }
+
     )
     val state: StateFlow<ProductState> = _state
 
@@ -64,15 +69,22 @@ class ProductViewModel @Inject constructor(
             is ProductEvent.ClickedAddProduct -> {
                 viewModelScope.launch(Dispatchers.IO) {
                     with(_state.value) {
-                        productUseCases.addDiaryEntry(
-                            product = product,
-                            mealName = mealName,
-                            weight = weight.toIntOrNull(),
-                            dateModel = CurrentDate.dateModel(resourceProvider = resourceProvider)
-                        ).handle {
-                            navigateWithPopUp(
-                                destination = DiaryScreenDestination
-                            )
+                        when(entryData) {
+                            is ProductEntryData.Adding -> {
+                                productUseCases.addDiaryEntry(
+                                    product = product,
+                                    mealName = mealName,
+                                    weight = weight.toIntOrNull(),
+                                    dateModel = CurrentDate.dateModel(resourceProvider = resourceProvider)
+                                ).handle {
+                                    navigateWithPopUp(
+                                        destination = DiaryScreenDestination
+                                    )
+                                }
+                            }
+                            is ProductEntryData.Editing -> {
+                                // TODO: editing
+                            }
                         }
                     }
                 }
@@ -160,7 +172,7 @@ class ProductViewModel @Inject constructor(
         }
     }
 
-    private fun getProductPrice(){
+    private fun getProductPrice() {
         viewModelScope.launch {
             productUseCases.getPriceUseCase(productId = _state.value.product.id).handle { price ->
                 _state.update {
