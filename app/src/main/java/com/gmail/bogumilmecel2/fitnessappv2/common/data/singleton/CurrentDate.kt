@@ -5,7 +5,7 @@ import android.text.format.DateUtils
 import androidx.compose.runtime.mutableStateOf
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.DateModel
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.ResourceProvider
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.resourceProvider
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.RealResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.formatToAppDateModel
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.formatToString
 import java.util.Date
@@ -23,7 +23,7 @@ object CurrentDate {
             date.value.formatToAppDateModel(resourceProvider)
         } else if (context != null) {
             date.value.formatToAppDateModel(
-                resourceProvider(context)
+                RealResourceProvider(context)
             )
         } else {
             DateModel(

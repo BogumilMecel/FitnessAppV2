@@ -13,7 +13,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.navigation.Navigator
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.repository.TokenRepository
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.*
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.DefaultInterceptor
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.resourceProvider
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.RealResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.feature_account.domain.use_case.DeleteToken
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.data.api.AuthApi
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.data.repository.AuthRepositoryImp
@@ -71,7 +71,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideResourceProvider(app: Application): ResourceProvider = resourceProvider(app)
+    fun provideResourceProvider(app: Application): ResourceProvider = RealResourceProvider(app)
 
     @Provides
     @Singleton
