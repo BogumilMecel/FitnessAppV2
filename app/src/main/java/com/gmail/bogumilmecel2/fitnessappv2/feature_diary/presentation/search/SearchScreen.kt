@@ -10,10 +10,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExtendedFloatingActionButton
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.ExtendedFloatingActionButton
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -86,7 +86,7 @@ fun SearchScreen(
                     onClick = {
                         viewModel.onEvent(SearchEvent.ClickedSearch)
                     },
-                    containerColor = FitnessAppTheme.colors.Primary,
+                    backgroundColor = FitnessAppTheme.colors.Primary,
                     modifier = Modifier.testTag(stringResource(id = R.string.SEARCH_BUTTON)),
                     text = {
                         Text(
