@@ -141,7 +141,8 @@ class SearchViewModel @Inject constructor(
                 currentTabIndex = event.index
                 _state.update {
                     it.copy(
-                        selectedTabIndex = event.index
+                        selectedTabIndex = event.index,
+                        searchButtonVisible = event.index == SearchTab.EVERYTHING.ordinal
                     )
                 }
             }
