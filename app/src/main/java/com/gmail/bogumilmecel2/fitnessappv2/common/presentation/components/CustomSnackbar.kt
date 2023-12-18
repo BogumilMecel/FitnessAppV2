@@ -16,7 +16,7 @@ fun CustomSnackbar(
 ) {
     SnackbarHost(hostState = snackbarHostState, snackbar = { snackbarData ->
         Snackbar(
-            modifier = Modifier.testTag(TestTags.General.SNACKBAR),
+            modifier = Modifier.testTag(TestTags.SNACKBAR),
             snackbarData = snackbarData,
             backgroundColor = FitnessAppTheme.colors.White,
             contentColor = FitnessAppTheme.colors.Black,

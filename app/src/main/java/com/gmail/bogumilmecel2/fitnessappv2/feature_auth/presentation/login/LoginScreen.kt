@@ -36,7 +36,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 fun LoginScreen(navigator: DestinationsNavigator) {
     hiltViewModel<LoginViewModel>().ViewModelLayout(
         navigator = navigator,
-        screenTestTag = TestTags.Login.LOGIN_SCREEN
+        screenTestTag = TestTags.LOGIN_SCREEN
     ) { viewModel, state ->
         Box(modifier = Modifier.fillMaxSize()) {
             HeaderRow(middlePrimaryText = stringResource(id = R.string.login))
@@ -55,7 +55,7 @@ fun LoginScreen(navigator: DestinationsNavigator) {
                         .fillMaxWidth()
                         .padding(horizontal = 10.dp),
                     leadingIcon = IconVector.Email,
-                    testTag = TestTags.General.EMAIL
+                    testTag = TestTags.EMAIL
                 )
 
                 HeightSpacer(16.dp)
@@ -76,7 +76,7 @@ fun LoginScreen(navigator: DestinationsNavigator) {
                         .fillMaxWidth()
                         .padding(horizontal = 10.dp),
                     leadingIcon = IconVector.Password,
-                    testTag = TestTags.General.PASSWORD
+                    testTag = TestTags.PASSWORD
                 )
 
                 HeightSpacer(32.dp)
@@ -88,7 +88,7 @@ fun LoginScreen(navigator: DestinationsNavigator) {
                     modifier = Modifier
                         .padding(horizontal = 10.dp)
                         .fillMaxWidth()
-                        .testTag(TestTags.General.PRIMARY_BUTTON),
+                        .testTag(TestTags.PRIMARY_BUTTON),
                     leftIcon = IconVector.Login,
                     text = stringResource(id = R.string.sign_in)
                 )
@@ -99,7 +99,7 @@ fun LoginScreen(navigator: DestinationsNavigator) {
                     text = stringResource(id = R.string.forgot_password),
                     style = MaterialTheme.typography.body2,
                     modifier = Modifier
-                        .testTag(TestTags.Login.FORGOT_PASSWORD)
+                        .testTag(TestTags.FORGOT_PASSWORD)
                         .clip(defaultRoundedCornerShape())
                         .clickable { viewModel.onEvent(LoginEvent.ForgotButtonClicked) }
                         .padding(
@@ -121,7 +121,7 @@ fun LoginScreen(navigator: DestinationsNavigator) {
                         vertical = 8.dp
                     )
                     .align(Alignment.BottomCenter)
-                    .testTag(TestTags.Login.REGISTER_BUTTON)
+                    .testTag(TestTags.REGISTER_BUTTON)
             )
         }
     }

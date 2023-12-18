@@ -38,7 +38,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 fun RegisterScreen(navigator: DestinationsNavigator) {
     hiltViewModel<RegisterViewModel>().ViewModelLayout(
         navigator = navigator,
-        screenTestTag = TestTags.RegisterScreen.REGISTER_SCREEN
+        screenTestTag = TestTags.REGISTER_SCREEN
     ) { viewModel, state ->
         Scaffold(
             topBar = {
@@ -74,7 +74,7 @@ fun RegisterScreen(navigator: DestinationsNavigator) {
                             .fillMaxWidth()
                             .padding(horizontal = 20.dp),
                         leadingIcon = IconVector.Email,
-                        testTag = TestTags.General.EMAIL
+                        testTag = TestTags.EMAIL
                     )
 
                     Spacer(modifier = Modifier.height(15.dp))
@@ -91,7 +91,7 @@ fun RegisterScreen(navigator: DestinationsNavigator) {
                             .fillMaxWidth()
                             .padding(horizontal = 20.dp),
                         leadingIcon = IconVector.Account,
-                        testTag = TestTags.RegisterScreen.USERNAME
+                        testTag = TestTags.USERNAME
                     )
 
                     Spacer(modifier = Modifier.height(15.dp))
@@ -112,7 +112,7 @@ fun RegisterScreen(navigator: DestinationsNavigator) {
                             .fillMaxWidth()
                             .padding(horizontal = 20.dp),
                         leadingIcon = IconVector.Password,
-                        testTag = TestTags.General.PASSWORD
+                        testTag = TestTags.PASSWORD
                     )
 
                     Spacer(modifier = Modifier.height(15.dp))
@@ -133,7 +133,7 @@ fun RegisterScreen(navigator: DestinationsNavigator) {
                             .fillMaxWidth()
                             .padding(horizontal = 20.dp),
                         leadingIcon = IconVector.Password,
-                        testTag = TestTags.RegisterScreen.CONFIRM_PASSWORD
+                        testTag = TestTags.CONFIRM_PASSWORD
                     )
 
                     Spacer(modifier = Modifier.height(40.dp))
@@ -150,7 +150,7 @@ fun RegisterScreen(navigator: DestinationsNavigator) {
                                 bottom = 100.dp
                             )
                             .fillMaxWidth()
-                            .testTag(TestTags.General.PRIMARY_BUTTON),
+                            .testTag(TestTags.PRIMARY_BUTTON),
                         text = stringResource(id = R.string.sign_up)
                     )
                 }
