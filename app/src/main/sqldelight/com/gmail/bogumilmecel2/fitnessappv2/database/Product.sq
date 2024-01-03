@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS SqlProduct (
     barcode TEXT,
     username TEXT NOT NULL,
     user_id TEXT NOT NULL,
-    date_created TEXT AS LocalDateTime NOT NULL
+    creation_date_time TEXT AS LocalDateTime NOT NULL
 );
 
 -- Get products
@@ -22,14 +22,14 @@ getProducts:
 SELECT * FROM SqlProduct
 WHERE (:userId IS NULL OR user_id = :userId)
   AND (:searchText IS NULL OR name LIKE '%' || :searchText || '%')
-ORDER BY date_created DESC LIMIT :limit OFFSET :offset;
+ORDER BY creation_date_time DESC LIMIT :limit OFFSET :offset;
 
 -- Insert product
 insertProduct:
 INSERT OR REPLACE INTO SqlProduct VALUES (
   :id, :name, :containerWeight, :nutritionValuesIn,
   :measurementUnit, :nutritionValues, :barcode, :username,
-  :userId, :dateCreated
+  :userId, :creationDateTime
 );
 
 -- Get product by ID

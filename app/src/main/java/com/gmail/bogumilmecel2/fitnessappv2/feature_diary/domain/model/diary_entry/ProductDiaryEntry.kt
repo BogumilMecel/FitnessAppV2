@@ -8,61 +8,99 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.database.SqlProductDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.DiaryEntryType
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.MealName
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ProductDiaryEntry(
+data class ProductDiaryEntryDto(
     @SerialName("id")
-    override val id: String = "",
+    val id: String? = null,
 
     @SerialName("nutrition_values")
-    override val nutritionValues: NutritionValues = NutritionValues(),
-
-    @SerialName("utc_timestamp")
-    override val utcTimestamp: Long = 0,
-
-    @SerialName("user_id")
-    override val userId: String = "",
+    val nutritionValues: NutritionValues? = null,
 
     @SerialName("date")
-    override val date: String = "",
+    val date: LocalDate? = null,
+
+    @SerialName("user_id")
+    val userId: String? = null,
 
     @SerialName("meal_name")
-    override val mealName: MealName = MealName.BREAKFAST,
+    val mealName: MealName? = null,
 
     @SerialName("product_measurement_unit")
-    val productMeasurementUnit: MeasurementUnit = MeasurementUnit.GRAMS,
-
-    @SerialName("edited_utc_timestamp")
-    val editedUtcTimestamp: Long = 0,
+    val productMeasurementUnit: MeasurementUnit? = null,
 
     @SerialName("product_name")
-    val productName: String = "",
+    val productName: String? = null,
 
     @SerialName("product_id")
-    val productId: String = "",
+    val productId: String? = null,
 
     @SerialName("weight")
-    val weight: Int = 0,
+    val weight: Int? = null,
 
     @SerialName("deleted")
-    val deleted: Boolean = false
+    val deleted: Boolean = false,
+
+    @SerialName("creation_date")
+    val creationDateTime: LocalDateTime? = null,
+
+    @SerialName("change_date")
+    val changeDateTime: LocalDateTime? = null
+)
+
+@Serializable
+data class ProductDiaryEntry(
+    override val id: String,
+    override val nutritionValues: NutritionValues,
+    override val date: LocalDate,
+    override val userId: String,
+    override val mealName: MealName,
+    override val creationDateTime: LocalDateTime,
+    override val changeDateTime: LocalDateTime,
+    val productMeasurementUnit: MeasurementUnit,
+    val productName: String,
+    val productId: String,
+    val weight: Int,
+    val deleted: Boolean,
 ) : DiaryItem {
     @Composable
-    override fun getDisplayValue() = "${this.weight} ${stringResource(id = this.productMeasurementUnit.getStringRes())}"
+    override fun getDisplayValue() = "$weight ${stringResource(id = productMeasurementUnit.getStringRes())}"
+
     override fun getDiaryEntryType() = DiaryEntryType.PRODUCT
+}
+
+fun ProductDiaryEntryDto.toProductDiaryEntry() = try {
+    ProductDiaryEntry(
+        id = id!!,
+        nutritionValues = nutritionValues!!,
+        date = date!!,
+        userId = userId!!,
+        mealName = mealName!!,
+        productMeasurementUnit = productMeasurementUnit!!,
+        productName = productName!!,
+        productId = productId!!,
+        weight = weight!!,
+        deleted = deleted,
+        creationDateTime = creationDateTime!!,
+        changeDateTime = changeDateTime!!
+    )
+} catch (e: Exception) {
+    null
 }
 
 fun SqlProductDiaryEntry.toProductDiaryEntry() = ProductDiaryEntry(
     id = id,
     nutritionValues = nutrition_values,
-    utcTimestamp = utc_timestamp,
+    creationDateTime = creation_date_time,
     userId = user_id,
     date = date,
     mealName = meal_name,
     productMeasurementUnit = product_measurement_unit,
-    editedUtcTimestamp = edited_utc_timestamp,
+    changeDateTime = change_date_time,
     productName = product_name,
     productId = product_id,
     weight = weight,

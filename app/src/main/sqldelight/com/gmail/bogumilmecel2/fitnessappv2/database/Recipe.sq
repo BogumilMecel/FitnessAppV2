@@ -5,12 +5,13 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.ut
 import kotlin.Boolean;
 import kotlin.Int;
 import kotlin.collections.List;
+import kotlinx.datetime.LocalDateTime;
 
 CREATE TABLE IF NOT EXISTS SqlRecipe (
     id TEXT PRIMARY KEY NOT NULL,
     name TEXT NOT NULL,
     ingredients TEXT AS List<Ingredient> NOT NULL,
-    utc_timestamp INTEGER NOT NULL,
+    creation_date_time TEXT AS LocalDateTime NOT NULL,
     image_url TEXT,
     nutrition_values TEXT AS NutritionValues NOT NULL,
     time_required TEXT AS TimeRequired NOT NULL,
@@ -25,12 +26,12 @@ getUserRecipes:
 SELECT * FROM SqlRecipe
 WHERE (:userId IS NULL OR user_id = :userId)
   AND (:searchText IS NULL OR name LIKE '%' || :searchText || '%')
-ORDER BY utc_timestamp DESC LIMIT :limit OFFSET :offset;
+ORDER BY creation_date_time DESC LIMIT :limit OFFSET :offset;
 
 -- Insert recipe
 insertRecipe:
 INSERT OR REPLACE INTO SqlRecipe VALUES (
-  :id, :name, :ingredients, :utcTimestamp, :imageUrl,
+  :id, :name, :ingredients, :creationDateTime, :imageUrl,
   :nutritionValues, :timeRequired, :difficulty, :servings,
   :isPublic, :username, :userId
 );

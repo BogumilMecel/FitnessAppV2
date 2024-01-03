@@ -8,43 +8,60 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.database.SqlRecipeDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.DiaryEntryType
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.MealName
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class RecipeDiaryEntry(
+data class RecipeDiaryEntryDto(
     @SerialName("id")
-    override val id: String = "",
+    val id: String? = null,
 
     @SerialName("nutrition_values")
-    override val nutritionValues: NutritionValues = NutritionValues(),
-
-    @SerialName("utc_timestamp")
-    override val utcTimestamp: Long = 0,
-
-    @SerialName("user_id")
-    override val userId: String = "",
+    val nutritionValues: NutritionValues? = null,
 
     @SerialName("date")
-    override val date: String = "",
+    val date: LocalDate? = null,
+
+    @SerialName("user_id")
+    val userId: String? = null,
 
     @SerialName("meal_name")
-    override val mealName: MealName = MealName.BREAKFAST,
-
-    @SerialName("edited_utc_timestamp")
-    val editedUtcTimestamp: Long = 0,
+    val mealName: MealName? = null,
 
     @SerialName("recipe_name")
-    val recipeName: String = "",
+    val recipeName: String? = null,
 
     @SerialName("recipe_id")
-    val recipeId: String = "",
+    val recipeId: String? = null,
 
     @SerialName("servings")
-    val servings: Int = 0,
+    val servings: Int? = null,
 
     @SerialName("deleted")
-    val deleted: Boolean = false
+    val deleted: Boolean = false,
+
+    @SerialName("creation_date")
+    val creationDateTime: LocalDateTime? = null,
+
+    @SerialName("change_date")
+    val changeDateTime: LocalDateTime? = null
+)
+
+@Serializable
+data class RecipeDiaryEntry(
+    override val id: String,
+    override val nutritionValues: NutritionValues,
+    override val date: LocalDate,
+    override val userId: String,
+    override val mealName: MealName,
+    override val creationDateTime: LocalDateTime,
+    override val changeDateTime: LocalDateTime,
+    val recipeName: String,
+    val recipeId: String,
+    val servings: Int,
+    val deleted: Boolean,
 ) : DiaryItem {
     @Composable
     override fun getDisplayValue() = pluralStringResource(
@@ -56,14 +73,32 @@ data class RecipeDiaryEntry(
     override fun getDiaryEntryType() = DiaryEntryType.RECIPE
 }
 
-fun SqlRecipeDiaryEntry.toRecipeDiaryEntry() = RecipeDiaryEntry(
+fun RecipeDiaryEntryDto.toRecipeDiaryEntry() = try {
+    RecipeDiaryEntry(
+        id = id!!,
+        nutritionValues = nutritionValues!!,
+        date = date!!,
+        userId = userId!!,
+        mealName = mealName!!,
+        creationDateTime = creationDateTime!!,
+        changeDateTime = changeDateTime!!,
+        recipeName = recipeName!!,
+        recipeId = recipeId!!,
+        servings = servings!!,
+        deleted = deleted
+    )
+} catch (e: Exception) {
+    null
+}
+
+fun SqlRecipeDiaryEntry.toRecipeDiaryEntry() = RecipeDiaryEntryDto(
     id = id,
     nutritionValues = nutrition_values,
-    utcTimestamp = utc_timestamp,
+    creationDateTime = creation_date_time,
+    changeDateTime = change_date_time,
     userId = user_id,
     date = date,
     mealName = meal_name,
-    editedUtcTimestamp = edited_utc_timestamp,
     recipeName = recipe_name,
     recipeId = recipe_id,
     servings = servings,

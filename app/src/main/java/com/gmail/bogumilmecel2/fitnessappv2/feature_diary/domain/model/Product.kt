@@ -4,45 +4,73 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.MeasurementUnit
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.database.SqlProduct
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.product.NutritionValuesIn
-import com.google.gson.annotations.SerializedName
-import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Product(
-    @SerializedName("id")
-    val id: String = "",
+data class ProductDto(
+    @SerialName("id")
+    val id: String? = null,
 
-    @SerializedName("name")
-    val name: String = "",
+    @SerialName("name")
+    val name: String? = null,
 
-    @SerializedName("container_weight")
+    @SerialName("container_weight")
     val containerWeight: Int? = null,
 
-    @SerializedName("nutrition_values_in")
-    val nutritionValuesIn: NutritionValuesIn = NutritionValuesIn.HUNDRED_GRAMS,
+    @SerialName("nutrition_values_in")
+    val nutritionValuesIn: NutritionValuesIn? = null,
 
-    @SerializedName("measurement_unit")
-    val measurementUnit: MeasurementUnit = MeasurementUnit.GRAMS,
+    @SerialName("measurement_unit")
+    val measurementUnit: MeasurementUnit? = null,
 
-    @SerializedName("nutrition_values")
-    val nutritionValues: NutritionValues = NutritionValues(),
+    @SerialName("nutrition_values")
+    val nutritionValues: NutritionValues? = null,
 
-    @SerializedName("barcode")
-    val barcode: String? = "",
+    @SerialName("barcode")
+    val barcode: String? = null,
 
-    @SerializedName("username")
-    val username: String = "",
+    @SerialName("username")
+    val username: String? = null,
 
-    @SerializedName("user_id")
-    val userId: String = "",
+    @SerialName("user_id")
+    val userId: String? = null,
 
-    @SerializedName("date_created")
-    val dateCreated: LocalDateTime = Clock.System.now().toLocalDateTime(TimeZone.UTC)
+    @SerialName("creation_date")
+    val creationDateTime: LocalDateTime? = null
 )
+
+@Serializable
+data class Product(
+    val id: String,
+    val name: String,
+    val containerWeight: Int?,
+    val nutritionValuesIn: NutritionValuesIn,
+    val measurementUnit: MeasurementUnit,
+    val nutritionValues: NutritionValues,
+    val barcode: String?,
+    val username: String,
+    val userId: String,
+    val creationDateTime: LocalDateTime
+)
+
+fun ProductDto.toProduct() = try {
+    Product(
+        id = id!!,
+        name = name!!,
+        containerWeight = containerWeight!!,
+        nutritionValuesIn = nutritionValuesIn!!,
+        measurementUnit = measurementUnit!!,
+        nutritionValues = nutritionValues!!,
+        barcode = barcode!!,
+        username = username!!,
+        userId = userId!!,
+        creationDateTime = creationDateTime!!
+    )
+} catch (e: Exception) {
+    null
+}
 
 fun SqlProduct.toProduct() = Product(
     id = id,
@@ -54,5 +82,5 @@ fun SqlProduct.toProduct() = Product(
     barcode = barcode,
     username = username,
     userId = user_id,
-    dateCreated = date_created
+    creationDateTime = creation_date_time
 )
