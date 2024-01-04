@@ -3,19 +3,23 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.data.repository
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseRepository
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.NullPrimaryKeyException
 import com.gmail.bogumilmecel2.fitnessappv2.database.ProductDiaryEntryQueries
 import com.gmail.bogumilmecel2.fitnessappv2.database.ProductQueries
 import com.gmail.bogumilmecel2.fitnessappv2.database.RecipeDiaryEntryQueries
 import com.gmail.bogumilmecel2.fitnessappv2.database.RecipeQueries
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.mapNutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.toProductDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntry
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.mapNutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.toRecipe
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.toRecipeDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.toProduct
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.OfflineDiaryRepository
+import kotlinx.datetime.LocalDate
 
 class OfflineDiaryRepositoryImp(
     private val productQueries: ProductQueries,
@@ -54,7 +58,7 @@ class OfflineDiaryRepositoryImp(
     override suspend fun insertProduct(product: Product): Resource<Unit> = with(product) {
         return handleRequest {
             productQueries.insertProduct(
-                id = id,
+                id = id ?: throw NullPrimaryKeyException(),
                 name = name,
                 containerWeight = containerWeight,
                 nutritionValuesIn = nutritionValuesIn,
@@ -63,7 +67,7 @@ class OfflineDiaryRepositoryImp(
                 barcode = barcode,
                 username = username,
                 userId = userId,
-                dateCreated = dateCreated
+                creationDateTime = creationDateTime
             )
         }
     }
@@ -88,7 +92,7 @@ class OfflineDiaryRepositoryImp(
         }
     }
 
-    override suspend fun getProductDiaryEntries(date: String): Resource<List<ProductDiaryEntry>> {
+    override suspend fun getProductDiaryEntries(date: LocalDate): Resource<List<ProductDiaryEntry>> {
         return handleRequest {
             productDiaryEntryQueries.getProductDiaryEntriesByDate(date).executeAsList().map { it.toProductDiaryEntry() }
         }
@@ -103,14 +107,14 @@ class OfflineDiaryRepositoryImp(
     override suspend fun insertProductDiaryEntry(productDiaryEntry: ProductDiaryEntry): Resource<Unit> = with(productDiaryEntry) {
         return handleRequest {
             productDiaryEntryQueries.insertProductDiaryEntry(
-                id = id,
+                id = id ?: throw NullPrimaryKeyException(),
                 nutritionValues = nutritionValues,
-                utcTimestamp = utcTimestamp,
+                creationDateTime = creationDateTime,
                 userId = userId,
                 date = date,
                 mealName = mealName,
                 productMeasurementUnit = productMeasurementUnit,
-                editedUtcTimestamp = editedUtcTimestamp,
+                changeDateTime = changeDateTime,
                 productName = productName,
                 productId = productId,
                 weight = weight,
@@ -119,15 +123,9 @@ class OfflineDiaryRepositoryImp(
         }
     }
 
-    override suspend fun deleteProductDiaryEntries(
-        date: String,
-        productDiaryEntriesIds: List<String>
-    ): Resource<Unit> {
+    override suspend fun deleteProductDiaryEntries(date: LocalDate): Resource<Unit> {
         return handleRequest {
-            productDiaryEntryQueries.deleteProductDiaryEntries(
-                date = date,
-                diaryEntriesIds = productDiaryEntriesIds
-            )
+            productDiaryEntryQueries.deleteProductDiaryEntries(date = date)
         }
     }
 
@@ -168,10 +166,10 @@ class OfflineDiaryRepositoryImp(
     override suspend fun insertRecipe(recipe: Recipe): Resource<Unit> = with(recipe) {
         return handleRequest {
             recipeQueries.insertRecipe(
-                id = id,
+                id = id ?: throw NullPrimaryKeyException(),
                 name = name,
                 ingredients = ingredients,
-                utcTimestamp = utcTimestamp,
+                creationDateTime = creationDateTime,
                 imageUrl = imageUrl,
                 nutritionValues = nutritionValues,
                 timeRequired = timeRequired,
@@ -204,7 +202,7 @@ class OfflineDiaryRepositoryImp(
         }
     }
 
-    override suspend fun getRecipeDiaryEntries(date: String): Resource<List<RecipeDiaryEntry>> {
+    override suspend fun getRecipeDiaryEntries(date: LocalDate): Resource<List<RecipeDiaryEntry>> {
         return handleRequest {
             recipeDiaryEntryQueries.getRecipeDiaryEntriesByDate(date).executeAsList().map { it.toRecipeDiaryEntry() }
         }
@@ -219,31 +217,24 @@ class OfflineDiaryRepositoryImp(
     override suspend fun insertRecipeDiaryEntry(recipeDiaryEntry: RecipeDiaryEntry): Resource<Unit> = with(recipeDiaryEntry) {
         return handleRequest {
             recipeDiaryEntryQueries.insertRecipeDiaryEntry(
-                id = id,
+                id = id ?: throw NullPrimaryKeyException(),
                 nutritionValues = nutritionValues,
-                utcTimestamp = utcTimestamp,
+                creationDateTime = creationDateTime,
                 userId = userId,
                 date = date,
                 mealName = mealName,
-                editedUtcTimestamp = editedUtcTimestamp,
+                changeDateTime = changeDateTime,
                 recipeName = recipeName,
                 recipeId = recipeId,
                 servings = servings,
                 deleted = deleted
-
             )
         }
     }
 
-    override suspend fun deleteRecipeDiaryEntries(
-        date: String,
-        recipeDiaryEntriesIds: List<String>
-    ): Resource<Unit> {
+    override suspend fun deleteRecipeDiaryEntries(date: LocalDate): Resource<Unit> {
         return handleRequest {
-            recipeDiaryEntryQueries.deleteRecipeDiaryEntries(
-                date = date,
-                diaryEntriesIds = recipeDiaryEntriesIds
-            )
+            recipeDiaryEntryQueries.deleteRecipeDiaryEntries(date = date)
         }
     }
 
@@ -253,11 +244,11 @@ class OfflineDiaryRepositoryImp(
         }
     }
 
-    override suspend fun getDiaryEntriesNutritionValues(date: String): Resource<List<NutritionValues>> {
+    override suspend fun getDiaryEntriesNutritionValues(date: LocalDate): Resource<List<NutritionValues>> {
         return handleRequest {
             buildList {
-                addAll(productDiaryEntryQueries.getProductDiaryEntriesNutritionValues(date).executeAsList())
-                addAll(recipeDiaryEntryQueries.getRecipeDiaryEntriesNutritionValues(date).executeAsList())
+                addAll(productDiaryEntryQueries.getProductDiaryEntriesNutritionValues(date).executeAsList().mapNutritionValues())
+                addAll(recipeDiaryEntryQueries.getRecipeDiaryEntriesNutritionValues(date).executeAsList().mapNutritionValues())
             }
         }
     }

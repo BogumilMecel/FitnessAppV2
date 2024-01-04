@@ -1,21 +1,19 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.recipe
 
-import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.DateTransferObject
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.MealName
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntry
+import kotlinx.datetime.LocalDate
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-data class RecipeNavArguments(
-    val entryData: RecipeEntryData,
-)
+data class RecipeNavArguments(val entryData: RecipeEntryData)
 
 @Serializable
 sealed class RecipeEntryData(
     open val recipe: Recipe,
     open val mealName: MealName,
-    open val dateTransferObject: DateTransferObject
+    open val date: LocalDate
 ) {
     @Serializable
     data class Adding(
@@ -24,11 +22,11 @@ sealed class RecipeEntryData(
         @SerialName("recipe_data")
         override val recipe: Recipe,
         @SerialName("current_date")
-        override val dateTransferObject: DateTransferObject
+        override val date: LocalDate
     ) : RecipeEntryData(
         mealName = mealName,
         recipe = recipe,
-        dateTransferObject = dateTransferObject
+        date = date
     )
 
     @Serializable
@@ -37,15 +35,12 @@ sealed class RecipeEntryData(
         override val recipe: Recipe,
         @SerialName("meal_name")
         override val mealName: MealName,
-        val date: String,
-        val displayedDate: String,
-        val recipeDiaryEntry: RecipeDiaryEntry
+        @SerialName("current_date")
+        override val date: LocalDate,
+        val recipeDiaryEntry: RecipeDiaryEntry,
     ) : RecipeEntryData(
         mealName = mealName,
         recipe = recipe,
-        dateTransferObject = DateTransferObject(
-            displayedDate = displayedDate,
-            realDate = date
-        )
+        date = date
     )
 }

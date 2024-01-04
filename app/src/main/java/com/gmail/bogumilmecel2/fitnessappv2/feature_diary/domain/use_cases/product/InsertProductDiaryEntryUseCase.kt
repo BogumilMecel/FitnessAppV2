@@ -6,9 +6,10 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.toValidInt
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.MealName
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntryPostRequest
+import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.OfflineDiaryRepository
+import kotlinx.datetime.LocalDate
 
 class InsertProductDiaryEntryUseCase(
     private val diaryRepository: DiaryRepository,
@@ -20,14 +21,14 @@ class InsertProductDiaryEntryUseCase(
     suspend operator fun invoke(
         product: Product,
         mealName: MealName,
-        date: String,
+        date: LocalDate,
         weightStringValue: String,
     ): Resource<Unit> {
         val weight = weightStringValue.toValidInt() ?: return getWeightErrorResource()
         if (weight <= 0) return getWeightErrorResource()
 
         val insertedProductDiaryEntry = diaryRepository.insertProductDiaryEntry(
-            productDiaryEntryPostRequest = ProductDiaryEntryPostRequest(
+            productDiaryEntry = ProductDiaryEntry(
                 productId = product.id,
                 weight = weight,
                 mealName = mealName,
@@ -41,7 +42,7 @@ class InsertProductDiaryEntryUseCase(
 
         offlineDiaryRepository.insertProduct(product = product)
 
-        return offlineDiaryRepository.insertProductDiaryEntry(insertedProductDiaryEntry)
+        return offlineDiaryRepository.insertProductDiaryEntry(productDiaryEntry = insertedProductDiaryEntry)
     }
 
     private fun getWeightErrorResource() =

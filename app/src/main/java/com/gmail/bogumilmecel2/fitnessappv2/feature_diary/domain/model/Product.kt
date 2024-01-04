@@ -9,7 +9,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ProductDto(
+data class Product(
     @SerialName("id")
     val id: String? = null,
 
@@ -40,37 +40,6 @@ data class ProductDto(
     @SerialName("creation_date")
     val creationDateTime: LocalDateTime? = null
 )
-
-@Serializable
-data class Product(
-    val id: String,
-    val name: String,
-    val containerWeight: Int?,
-    val nutritionValuesIn: NutritionValuesIn,
-    val measurementUnit: MeasurementUnit,
-    val nutritionValues: NutritionValues,
-    val barcode: String?,
-    val username: String,
-    val userId: String,
-    val creationDateTime: LocalDateTime
-)
-
-fun ProductDto.toProduct() = try {
-    Product(
-        id = id!!,
-        name = name!!,
-        containerWeight = containerWeight!!,
-        nutritionValuesIn = nutritionValuesIn!!,
-        measurementUnit = measurementUnit!!,
-        nutritionValues = nutritionValues!!,
-        barcode = barcode!!,
-        username = username!!,
-        userId = userId!!,
-        creationDateTime = creationDateTime!!
-    )
-} catch (e: Exception) {
-    null
-}
 
 fun SqlProduct.toProduct() = Product(
     id = id,

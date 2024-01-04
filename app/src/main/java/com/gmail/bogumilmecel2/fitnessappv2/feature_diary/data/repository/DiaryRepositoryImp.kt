@@ -10,34 +10,31 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductPrice
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.RecipePriceResponse
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntryPostRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.product.NewPriceRequest
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.product.NewProductRequest
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.NewRecipeRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntry
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.RecipePriceRequest
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 
 class DiaryRepositoryImp(private val diaryApi: DiaryApi) : DiaryRepository, BaseRepository() {
 
-    override suspend fun getDiaryEntries(date: String): Resource<DiaryEntriesResponse> {
+    override suspend fun getDiaryEntries(date: LocalDate): Resource<DiaryEntriesResponse> {
         return handleRequest {
             diaryApi.getDiaryEntries(date = date)
         }
     }
 
-    override suspend fun getProductDiaryEntries(latestTimestamp: Long?): Resource<List<ProductDiaryEntry>> {
+    override suspend fun getProductDiaryEntries(latestDateTime: LocalDateTime?): Resource<List<ProductDiaryEntry>> {
         return handleRequest {
-            diaryApi.getUserProductDiaryEntries(latestTimestamp)
+            diaryApi.getUserProductDiaryEntries(latestDateTime)
         }
     }
 
-    override suspend fun getRecipeDiaryEntries(latestTimestamp: Long?): Resource<List<RecipeDiaryEntry>> {
+    override suspend fun getRecipeDiaryEntries(latestDateTime: LocalDateTime?): Resource<List<RecipeDiaryEntry>> {
         return handleRequest {
-            diaryApi.getUserRecipeDiaryEntries(latestTimestamp)
+            diaryApi.getUserRecipeDiaryEntries(latestDateTime)
         }
     }
 
@@ -65,21 +62,21 @@ class DiaryRepositoryImp(private val diaryApi: DiaryApi) : DiaryRepository, Base
         }
     }
 
-    override suspend fun insertProductDiaryEntry(productDiaryEntryPostRequest: ProductDiaryEntryPostRequest): Resource<ProductDiaryEntry> {
+    override suspend fun insertProductDiaryEntry(productDiaryEntry: ProductDiaryEntry): Resource<ProductDiaryEntry> {
         return handleRequest {
-            diaryApi.insertProductDiaryEntry(productDiaryEntryPostRequest = productDiaryEntryPostRequest)
+            diaryApi.insertProductDiaryEntry(productDiaryEntry = productDiaryEntry)
         }
     }
 
-    override suspend fun insertRecipeDiaryEntry(recipeDiaryEntryRequest: RecipeDiaryEntryRequest): Resource<RecipeDiaryEntry> {
+    override suspend fun insertRecipeDiaryEntry(recipeDiaryEntry: RecipeDiaryEntry): Resource<RecipeDiaryEntry> {
         return handleRequest {
-            diaryApi.insertRecipeDiaryEntry(recipeDiaryEntryRequest = recipeDiaryEntryRequest)
+            diaryApi.insertRecipeDiaryEntry(recipeDiaryEntry = recipeDiaryEntry)
         }
     }
 
-    override suspend fun saveNewProduct(newProductRequest: NewProductRequest): Resource<Product> {
+    override suspend fun saveNewProduct(product: Product): Resource<Product> {
         return handleRequest {
-            diaryApi.insertProduct(newProductRequest = newProductRequest)
+            diaryApi.insertProduct(product = product)
         }
     }
 
@@ -147,9 +144,9 @@ class DiaryRepositoryImp(private val diaryApi: DiaryApi) : DiaryRepository, Base
         }
     }
 
-    override suspend fun addNewRecipe(newRecipeRequest: NewRecipeRequest): Resource<Recipe> {
+    override suspend fun addNewRecipe(recipe: Recipe): Resource<Recipe> {
         return handleRequest {
-            diaryApi.addNewRecipe(newRecipeRequest = newRecipeRequest)
+            diaryApi.addNewRecipe(recipe = recipe)
         }
     }
 
@@ -159,15 +156,15 @@ class DiaryRepositoryImp(private val diaryApi: DiaryApi) : DiaryRepository, Base
         }
     }
 
-    override suspend fun getUserProducts(latestDate: LocalDateTime?): Resource<List<Product>> {
+    override suspend fun getUserProducts(latestDateTime: LocalDateTime?): Resource<List<Product>> {
         return handleRequest {
-            diaryApi.getUserProducts(latestDate)
+            diaryApi.getUserProducts(latestDateTime)
         }
     }
 
-    override suspend fun getUserRecipes(latestTimestamp: Long?): Resource<List<Recipe>> {
+    override suspend fun getUserRecipes(latestDateTime: LocalDateTime?): Resource<List<Recipe>> {
         return handleRequest {
-            diaryApi.getUserRecipes(latestTimestamp)
+            diaryApi.getUserRecipes(latestDateTime)
         }
     }
 }

@@ -9,7 +9,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class RecipeDto(
+data class Recipe(
     @SerialName("id")
     val id: String? = null,
 
@@ -47,40 +47,6 @@ data class RecipeDto(
     val creationDateTime: LocalDateTime? = null
 )
 
-@Serializable
-data class Recipe(
-    val id: String,
-    val name: String,
-    val ingredients: List<Ingredient>,
-    val imageUrl: String?,
-    val nutritionValues: NutritionValues,
-    val timeRequired: TimeRequired,
-    val difficulty: Difficulty,
-    val servings: Int,
-    val isPublic: Boolean,
-    val username: String,
-    val userId: String,
-    val creationDateTime: LocalDateTime
-)
-
-fun RecipeDto.toRecipe() = try {
-    Recipe(
-        id = id!!,
-        name = name!!,
-        ingredients = ingredients!!,
-        imageUrl = imageUrl,
-        nutritionValues = nutritionValues!!,
-        timeRequired = timeRequired!!,
-        difficulty = difficulty!!,
-        servings = servings!!,
-        isPublic = isPublic,
-        username = username!!,
-        userId = userId!!,
-        creationDateTime = creationDateTime!!
-    )
-} catch (e: Exception) {
-    null
-}
 
 fun SqlRecipe.toRecipe() = Recipe(
     id = id,

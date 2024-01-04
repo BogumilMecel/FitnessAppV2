@@ -11,8 +11,9 @@ import com.gmail.bogumilmecel2.fitnessappv2.FitnessAppDatabase
 import com.gmail.bogumilmecel2.fitnessappv2.common.data.connectivity.ConnectivityObserverService
 import com.gmail.bogumilmecel2.fitnessappv2.common.data.navigation.repository.TokenRepositoryImp
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.connectivity.ConnectivityObserver
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.DateAdapter
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.DateTimeAdapter
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.CachedValuesProvider
-import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.DateHolder
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.repository.TokenRepository
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.CalculateNutritionValuesPercentages
@@ -22,7 +23,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.util.BarcodeScanner
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.DefaultInterceptor
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.RealBarcodeScanner
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.RealCachedValuesProvider
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.RealDateHolder
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.RealResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.data.api.AuthApi
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.data.repository.AuthRepositoryImp
@@ -86,11 +86,21 @@ object AppModule {
 
     @Singleton
     @Provides
+    fun provideDateTimeAdapter(): DateTimeAdapter = DateTimeAdapter()
+
+    @Singleton
+    @Provides
+    fun provideDateAdapter(): DateAdapter = DateAdapter()
+
+    @Singleton
+    @Provides
     fun provideFitnessAppDatabase(
         gson: Gson,
         @ApplicationContext context: Context,
         nutritionValuesAdapter: NutritionValuesAdapter,
-        longToIntAdapter: LongToIntAdapter
+        longToIntAdapter: LongToIntAdapter,
+        dateTimeAdapter: DateTimeAdapter,
+        dateAdapter: DateAdapter
     ): FitnessAppDatabase =
         FitnessAppDatabase(
             driver = AndroidSqliteDriver(
@@ -100,20 +110,26 @@ object AppModule {
             ),
             SqlProductAdapter = ProductAdapter(
                 longToIntAdapter = longToIntAdapter,
-                nutritionValuesAdapter = nutritionValuesAdapter
+                nutritionValuesAdapter = nutritionValuesAdapter,
+                dateTimeAdapter = dateTimeAdapter
             )(),
             SqlRecipeDiaryEntryAdapter = RecipeDiaryEntryAdapter(
                 nutritionValuesAdapter = nutritionValuesAdapter,
-                longToIntAdapter = longToIntAdapter
+                longToIntAdapter = longToIntAdapter,
+                dateTimeAdapter = dateTimeAdapter,
+                dateAdapter = dateAdapter
             )(),
             SqlProductDiaryEntryAdapter = ProductDiaryEntryAdapter(
                 nutritionValuesAdapter = nutritionValuesAdapter,
-                longToIntAdapter = longToIntAdapter
+                longToIntAdapter = longToIntAdapter,
+                dateTimeAdapter = dateTimeAdapter,
+                dateAdapter = dateAdapter
             )(),
             SqlRecipeAdapter = RecipeAdapter(
                 gson = gson,
                 nutritionValuesAdapter = nutritionValuesAdapter,
-                longToIntAdapter = longToIntAdapter
+                longToIntAdapter = longToIntAdapter,
+                dateTimeAdapter = dateTimeAdapter
             )()
         )
 
@@ -171,10 +187,6 @@ object AppModule {
         context = context,
         loadingApi = loadingApi
     )
-
-    @Singleton
-    @Provides
-    fun provideDateProvider(): DateHolder = RealDateHolder()
 
     @Singleton
     @Provides

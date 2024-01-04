@@ -3,7 +3,13 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.diary.co
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -19,6 +25,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Re
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 import com.gmail.bogumilmecel2.ui.theme.LocalColor.BackgroundQuaternary
 
+// TODO: Refactor it so it uses params
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DiaryEntryItem(
@@ -57,8 +64,8 @@ fun DiaryEntryItem(
                 ) {
                     Text(
                         text = when (diaryItem) {
-                            is ProductDiaryEntry -> diaryItem.productName
-                            is RecipeDiaryEntry -> diaryItem.recipeName
+                            is ProductDiaryEntry -> diaryItem.productName.orEmpty()
+                            is RecipeDiaryEntry -> diaryItem.recipeName.orEmpty()
                             else -> ""
                         },
                         style = MaterialTheme.typography.body1
@@ -73,43 +80,45 @@ fun DiaryEntryItem(
                     )
                 }
 
-                Divider(
-                    modifier = Modifier
-                        .height(4.dp),
-                    color = Color.Transparent
-                )
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 15.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = "Kcal:" + diaryItem.nutritionValues.calories.toString(),
-                        style = MaterialTheme.typography.body2,
-                        color = FitnessAppTheme.colors.ContentSecondary,
+                diaryItem.nutritionValues?.let { nutritionValues ->
+                    Divider(
+                        modifier = Modifier
+                            .height(4.dp),
+                        color = Color.Transparent
                     )
 
-                    Text(
-                        text = "Carb:" + diaryItem.nutritionValues.carbohydrates.round(2)
-                            .toString(),
-                        style = MaterialTheme.typography.body2,
-                        color = FitnessAppTheme.colors.ContentSecondary
-                    )
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 15.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = "Kcal:" + nutritionValues.calories.toString(),
+                            style = MaterialTheme.typography.body2,
+                            color = FitnessAppTheme.colors.ContentSecondary,
+                        )
 
-                    Text(
-                        text = "Prot:" + diaryItem.nutritionValues.protein.round(2)
-                            .toString(),
-                        style = MaterialTheme.typography.body2,
-                        color = FitnessAppTheme.colors.ContentSecondary
-                    )
+                        Text(
+                            text = "Carb:" + nutritionValues.carbohydrates.round(2)
+                                .toString(),
+                            style = MaterialTheme.typography.body2,
+                            color = FitnessAppTheme.colors.ContentSecondary
+                        )
 
-                    Text(
-                        text = "Fat:" + diaryItem.nutritionValues.fat.round(2).toString(),
-                        style = MaterialTheme.typography.body2,
-                        color = FitnessAppTheme.colors.ContentSecondary
-                    )
+                        Text(
+                            text = "Prot:" + nutritionValues.protein.round(2)
+                                .toString(),
+                            style = MaterialTheme.typography.body2,
+                            color = FitnessAppTheme.colors.ContentSecondary
+                        )
+
+                        Text(
+                            text = "Fat:" + nutritionValues.fat.round(2).toString(),
+                            style = MaterialTheme.typography.body2,
+                            color = FitnessAppTheme.colors.ContentSecondary
+                        )
+                    }
                 }
             }
         }

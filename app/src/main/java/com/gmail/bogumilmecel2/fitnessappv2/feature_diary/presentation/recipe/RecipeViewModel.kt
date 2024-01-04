@@ -2,9 +2,12 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.recipe
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.github.tehras.charts.piechart.PieChartData
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.multiplyBy
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.getDisplayDate
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.let2
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.toValidInt
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.DiaryScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.RecipeScreenDestination
@@ -32,39 +35,47 @@ class RecipeViewModel @Inject constructor(
             _state.update {
                 it.copy(
                     servings = if (navArguments.entryData is RecipeEntryData.Editing) navArguments.entryData.recipeDiaryEntry.servings.toString() else "",
-                    date = navArguments.entryData.dateTransferObject.displayedDate,
-                    difficultyText = resourceProvider.getString(
-                        stringResId = R.string.recipe_difficulty_out_of_5,
-                        difficulty.displayValue
-                    ),
-                    recipeName = name,
-                    recipeCaloriesText = resourceProvider.getString(
-                        stringResId = R.string.kcal_with_value,
-                        nutritionValues.calories
-                    ),
-                    timeRequiredText = timeRequired.displayValue,
-                    servingsText = resourceProvider.getString(
-                        stringResId = R.string.recipe_serves,
-                        servings
-                    ),
+                    date = navArguments.entryData.date.getDisplayDate(resourceProvider),
+                    difficultyText = difficulty?.let {
+                        resourceProvider.getString(
+                            stringResId = R.string.recipe_difficulty_out_of_5,
+                            difficulty.displayValue
+                        )
+                    }.orEmpty(),
+                    recipeName = name.orEmpty(),
+                    recipeCaloriesText = nutritionValues?.calories?.let { calories ->
+                        resourceProvider.getString(
+                            stringResId = R.string.kcal_with_value,
+                            calories
+                        )
+                    }.orEmpty(),
+                    timeRequiredText = timeRequired?.displayValue.orEmpty(),
+                    servingsText = servings?.let {
+                        resourceProvider.getString(
+                            stringResId = R.string.recipe_serves,
+                            servings
+                        )
+                    }.orEmpty(),
                     saveButtonText = resourceProvider.getString(
                         stringResId = R.string.recipe_save_to,
                         resourceProvider.getString(navArguments.entryData.mealName.getDisplayValue())
                     ),
                     nutritionData = NutritionData(
-                        pieChartData = recipeUseCases.createPieChartDataUseCase(
-                            nutritionValues = nutritionValues
-                        ).also {
-                            assignNutritionValues()
-                        }
+                        pieChartData = nutritionValues?.let {
+                            recipeUseCases.createPieChartDataUseCase(
+                                nutritionValues = nutritionValues
+                            ).also {
+                                assignNutritionValues()
+                            }
+                        } ?: PieChartData(slices = emptyList())
                     ),
-                    ingredientsParams = ingredients.map { ingredient ->
+                    ingredientsParams = ingredients?.map { ingredient ->
                         recipeUseCases.createSearchItemParamsFromIngredientUseCase(
                             ingredient = ingredient,
                             onClick = {},
                             onLongClick = {}
                         )
-                    }
+                    }.orEmpty()
                 )
             }
         }
@@ -119,7 +130,7 @@ class RecipeViewModel @Inject constructor(
 
                     is RecipeEntryData.Adding -> {
                         recipeUseCases.postRecipeDiaryEntryUseCase(
-                            date = navArguments.entryData.dateTransferObject.realDate,
+                            date = navArguments.entryData.date,
                             mealName = navArguments.entryData.mealName,
                             recipe = navArguments.entryData.recipe,
                             servingsString = _state.value.servings
@@ -149,18 +160,22 @@ class RecipeViewModel @Inject constructor(
 
     private fun assignNutritionValues() {
         val recipe = navArguments.entryData.recipe
-        val recipeServings = if (recipe.servings == 0) 1.0 else recipe.servings.toDouble()
-        recipe.nutritionValues.multiplyBy(
-            number = _state.value.servings.toDoubleOrNull()?.let { portions ->
-                portions / recipeServings
-            } ?: (1.0 / recipeServings)
-        ).let { calculatedNutritionValues ->
-            _state.update {
-                it.copy(
-                    nutritionData = _state.value.nutritionData.copy(
-                        nutritionValues = calculatedNutritionValues
-                    )
-                )
+        with(recipe) {
+            let2(servings, nutritionValues) { servings, nutritionValues ->
+                val recipeServings = if (servings == 0) 1.0 else servings.toDouble()
+                nutritionValues.multiplyBy(
+                    number = _state.value.servings.toDoubleOrNull()?.let { portions ->
+                        portions / recipeServings
+                    } ?: (1.0 / recipeServings)
+                ).let { calculatedNutritionValues ->
+                    _state.update {
+                        it.copy(
+                            nutritionData = _state.value.nutritionData.copy(
+                                nutritionValues = calculatedNutritionValues
+                            )
+                        )
+                    }
+                }
             }
         }
     }
@@ -168,7 +183,7 @@ class RecipeViewModel @Inject constructor(
     private fun fetchRecipePrice() {
         viewModelScope.launch {
             recipeUseCases.getRecipePriceFromIngredientsUseCase(
-                ingredients = navArguments.entryData.recipe.ingredients
+                ingredients = navArguments.entryData.recipe.ingredients.orEmpty()
             ).handle(showSnackbar = false) { response ->
                 _state.update {
                     it.copy(
@@ -188,14 +203,16 @@ class RecipeViewModel @Inject constructor(
     private fun updateServingPrice() = with(_state.value) {
         servings.toValidInt()?.let { servings ->
             recipePrice?.let { recipePrice ->
-                _state.update {
-                    it.copy(
-                        servingPrice = recipeUseCases.calculateSelectedServingPriceUseCase(
-                            recipeServings = navArguments.entryData.recipe.servings,
-                            selectedServings = servings,
-                            totalPrice = recipePrice.totalPrice
-                        ),
-                    )
+                navArguments.entryData.recipe.servings?.let { recipeServings ->
+                    _state.update {
+                        it.copy(
+                            servingPrice = recipeUseCases.calculateSelectedServingPriceUseCase(
+                                recipeServings = recipeServings,
+                                selectedServings = servings,
+                                totalPrice = recipePrice.totalPrice
+                            ),
+                        )
+                    }
                 }
             }
         }

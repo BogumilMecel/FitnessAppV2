@@ -18,7 +18,7 @@ class GetProductDiaryAndSaveOfflineUseCase(
         ).data ?: return Resource.Error()
 
         val userProductDiaryEntries = diaryRepository.getProductDiaryEntries(
-            latestTimestamp = latestOfflineProductDiaryEntry.firstOrNull()?.utcTimestamp
+            latestDateTime = latestOfflineProductDiaryEntry.firstOrNull()?.changeDateTime
         ).data ?: return Resource.Error()
 
         return offlineDiaryRepository.insertProductDiaryEntries(userProductDiaryEntries)

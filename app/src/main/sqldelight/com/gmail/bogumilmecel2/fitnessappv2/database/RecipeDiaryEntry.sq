@@ -6,16 +6,16 @@ import kotlinx.datetime.LocalDate;
 import kotlinx.datetime.LocalDateTime;
 
 CREATE TABLE IF NOT EXISTS SqlRecipeDiaryEntry (
-    id TEXT PRIMARY KEY NOT NULL,
-    nutrition_values TEXT AS NutritionValues NOT NULL,
-    user_id TEXT NOT NULL,
-    date TEXT AS LocalDate NOT NULL,
-    meal_name TEXT AS MealName NOT NULL,
-    creation_date_time TEXT AS LocalDateTime NOT NULL,
-    change_date_time TEXT AS LocalDateTime NOT NULL,
-    recipe_name TEXT NOT NULL,
-    recipe_id TEXT NOT NULL,
-    servings INTEGER AS Int NOT NULL,
+    id TEXT PRIMARY KEY,
+    nutrition_values TEXT AS NutritionValues,
+    user_id TEXT,
+    date TEXT AS LocalDate,
+    meal_name TEXT AS MealName,
+    creation_date_time TEXT AS LocalDateTime,
+    change_date_time TEXT AS LocalDateTime,
+    recipe_name TEXT,
+    recipe_id TEXT,
+    servings INTEGER AS Int,
     deleted INTEGER AS Boolean NOT NULL
 );
 

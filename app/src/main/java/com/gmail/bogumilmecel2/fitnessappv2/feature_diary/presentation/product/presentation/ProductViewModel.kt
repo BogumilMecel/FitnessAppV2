@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseResultViewModel
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.getDisplayDate
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.toValidInt
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.DiaryScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.ProductScreenDestination
@@ -34,8 +35,10 @@ class ProductViewModel @Inject constructor(
                 _state.update {
                     it.copy(
                         weight = entryData.productDiaryEntry.weight.toString(),
-                        headerSecondaryText = entryData.displayedDate,
-                        headerPrimaryText = resourceProvider.getString(stringResId = entryData.mealName.getDisplayValue())
+                        headerSecondaryText = entryData.productDiaryEntry.date?.getDisplayDate(resourceProvider).orEmpty(),
+                        headerPrimaryText = entryData.productDiaryEntry.mealName?.let { mealName ->
+                            resourceProvider.getString(stringResId = mealName.getDisplayValue())
+                        }.orEmpty()
                     )
                 }
             }
@@ -43,7 +46,7 @@ class ProductViewModel @Inject constructor(
             is ProductEntryData.Adding -> {
                 _state.update {
                     it.copy(
-                        headerSecondaryText = entryData.dateTransferObject.displayedDate,
+                        headerSecondaryText = entryData.date.getDisplayDate(resourceProvider),
                         headerPrimaryText = resourceProvider.getString(stringResId = entryData.mealName.getDisplayValue())
                     )
                 }
@@ -61,13 +64,15 @@ class ProductViewModel @Inject constructor(
             }
         }
 
-        _state.update {
-            it.copy(
-                nutritionData = NutritionData(
-                    nutritionValues = entryData.product.nutritionValues,
-                    pieChartData = productUseCases.createPieChartDataUseCase(nutritionValues = entryData.product.nutritionValues)
+        entryData.product.nutritionValues?.let { nutritionValues ->
+            _state.update {
+                it.copy(
+                    nutritionData = NutritionData(
+                        nutritionValues = nutritionValues,
+                        pieChartData = productUseCases.createPieChartDataUseCase(nutritionValues = nutritionValues)
+                    )
                 )
-            )
+            }
         }
 
         getProductPrice()
@@ -79,15 +84,17 @@ class ProductViewModel @Inject constructor(
                 viewModelScope.launch(Dispatchers.Default) {
                     weight = event.value
                     weight.toValidInt()?.let { newWeight ->
-                        _state.update {
-                            it.copy(
-                                nutritionData = it.nutritionData.copy(
-                                    nutritionValues = productUseCases.calculateProductNutritionValuesUseCase(
-                                        weight = newWeight,
-                                        product = entryData.product
+                        productUseCases.calculateProductNutritionValuesUseCase(
+                            weight = newWeight,
+                            product = entryData.product
+                        )?.let { nutritionValues ->
+                            _state.update {
+                                it.copy(
+                                    nutritionData = it.nutritionData.copy(
+                                        nutritionValues = nutritionValues
                                     )
                                 )
-                            )
+                            }
                         }
                     }
                     _state.update {
@@ -107,7 +114,7 @@ class ProductViewModel @Inject constructor(
                                     product = entryData.product,
                                     mealName = entryData.mealName,
                                     weightStringValue = weight,
-                                    date = entryData.dateTransferObject.realDate
+                                    date = entryData.date
                                 ).handle {
                                     navigateWithPopUp(
                                         destination = DiaryScreenDestination
@@ -153,19 +160,21 @@ class ProductViewModel @Inject constructor(
                     }
 
                     with(_state.value) {
-                        productUseCases.submitNewPriceUseCase(
-                            paidHowMuch = priceValue,
-                            paidForWeight = priceForValue,
-                            productId = entryData.product.id
-                        ).handle { newPrice ->
-                            _state.update {
-                                it.copy(
-                                    productPrice = newPrice,
-                                    priceForValue = "",
-                                    priceValue = ""
-                                )
+                        entryData.product.id?.let { productId ->
+                            productUseCases.submitNewPriceUseCase(
+                                paidHowMuch = priceValue,
+                                paidForWeight = priceForValue,
+                                productId = productId
+                            ).handle { newPrice ->
+                                _state.update {
+                                    it.copy(
+                                        productPrice = newPrice,
+                                        priceForValue = "",
+                                        priceValue = ""
+                                    )
+                                }
+                                showSnackbarError(resourceProvider.getString(R.string.successfully_submitted_new_price))
                             }
-                            showSnackbarError(resourceProvider.getString(R.string.successfully_submitted_new_price))
                         }
                     }
                 }
@@ -211,14 +220,16 @@ class ProductViewModel @Inject constructor(
 
     private fun getProductPrice() {
         viewModelScope.launch {
-            productUseCases.getPriceUseCase(productId = entryData.product.id)
-                .handle { price ->
-                    _state.update {
-                        it.copy(
-                            productPrice = price
-                        )
+            entryData.product.id?.let { productId ->
+                productUseCases.getPriceUseCase(productId = productId)
+                    .handle { price ->
+                        _state.update {
+                            it.copy(
+                                productPrice = price
+                            )
+                        }
                     }
-                }
+            }
         }
     }
 }

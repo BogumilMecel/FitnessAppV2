@@ -6,6 +6,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BarcodeScanner
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseResultViewModel
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Constants
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.getDisplayDate
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.getHttpCode
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.NewProductScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.NewRecipeScreenDestination
@@ -57,7 +58,7 @@ class SearchViewModel @Inject constructor(
                     _state.update {
                         it.copy(
                             headerPrimaryText = resourceProvider.getString(stringResId = mealName.getDisplayValue()),
-                            headerSecondaryText = dateTransferObject.displayedDate,
+                            headerSecondaryText = date.getDisplayDate(resourceProvider),
                         )
                     }
                 }
@@ -125,7 +126,7 @@ class SearchViewModel @Inject constructor(
                             NewProductScreenDestination(
                                 entryData = NewProductEntryData.SearchArguments(
                                     mealName = entryData.mealName,
-                                    dateTransferObject = entryData.dateTransferObject
+                                    date = entryData.date
                                 ),
                                 barcode = barcode,
                             )
@@ -166,7 +167,7 @@ class SearchViewModel @Inject constructor(
                     navigateTo(
                         NewRecipeScreenDestination(
                             mealName = entryData.mealName,
-                            dateTransferObject = entryData.dateTransferObject
+                            date = entryData.date
                         )
                     )
                 }
@@ -189,7 +190,7 @@ class SearchViewModel @Inject constructor(
                             entryData = RecipeEntryData.Adding(
                                 recipe = event.recipe,
                                 mealName = entryData.mealName,
-                                dateTransferObject = entryData.dateTransferObject
+                                date = entryData.date
                             )
                         )
                     )
@@ -336,7 +337,11 @@ class SearchViewModel @Inject constructor(
                 everythingSearchItems = diaryHistory.map { item ->
                     searchDiaryUseCases.createSearchItemParamsFromProductDiaryEntryUseCase(
                         productDiaryEntry = item,
-                        onClick = { getProduct(productId = item.productId) },
+                        onClick = {
+                            item.productId?.let {
+                                getProduct(productId = item.productId)
+                            }
+                        },
                         onLongClick = {}
                     )
                 }
@@ -443,7 +448,7 @@ class SearchViewModel @Inject constructor(
                         ProductEntryData.Adding(
                             product = product,
                             mealName = entryData.mealName,
-                            dateTransferObject = entryData.dateTransferObject
+                            date = entryData.date
                         )
                     }
 

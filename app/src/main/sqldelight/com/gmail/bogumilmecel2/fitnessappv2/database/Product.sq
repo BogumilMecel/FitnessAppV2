@@ -5,16 +5,16 @@ import kotlin.Int;
 import kotlinx.datetime.LocalDateTime;
 
 CREATE TABLE IF NOT EXISTS SqlProduct (
-    id TEXT PRIMARY KEY NOT NULL,
-    name TEXT NOT NULL,
+    id TEXT PRIMARY KEY,
+    name TEXT,
     container_weight INTEGER AS Int,
-    nutrition_values_in TEXT AS NutritionValuesIn NOT NULL,
-    measurement_unit TEXT AS MeasurementUnit NOT NULL,
-    nutrition_values TEXT AS NutritionValues NOT NULL,
+    nutrition_values_in TEXT AS NutritionValuesIn,
+    measurement_unit TEXT AS MeasurementUnit,
+    nutrition_values TEXT AS NutritionValues,
     barcode TEXT,
-    username TEXT NOT NULL,
-    user_id TEXT NOT NULL,
-    creation_date_time TEXT AS LocalDateTime NOT NULL
+    username TEXT,
+    user_id TEXT,
+    creation_date_time TEXT AS LocalDateTime
 );
 
 -- Get products

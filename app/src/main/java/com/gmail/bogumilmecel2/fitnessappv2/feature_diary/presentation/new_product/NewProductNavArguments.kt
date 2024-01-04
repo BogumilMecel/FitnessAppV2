@@ -1,7 +1,7 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_product
 
-import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.DateTransferObject
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.MealName
+import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
 
 data class NewProductNavArguments(
@@ -14,7 +14,7 @@ sealed interface NewProductEntryData {
     @Serializable
     data class SearchArguments(
         val mealName: MealName,
-        val dateTransferObject: DateTransferObject
+        val date: LocalDate
     ) : NewProductEntryData
 
     @Serializable

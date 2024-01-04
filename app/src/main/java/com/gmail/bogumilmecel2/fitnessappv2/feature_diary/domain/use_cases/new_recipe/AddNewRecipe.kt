@@ -4,7 +4,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Ingredient
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.NewRecipeRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.utils.Difficulty
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.utils.TimeRequired
@@ -18,7 +17,7 @@ class AddNewRecipe(
         ingredients: List<Ingredient>,
         difficulty: Difficulty,
         time: TimeRequired,
-        servings: String,
+        servings: Int,
         recipeName: String,
         isRecipePublic: Boolean
     ): Resource<Recipe> {
@@ -27,17 +26,16 @@ class AddNewRecipe(
         } else if (recipeName.length < 4) {
             Resource.Error(resourceProvider.getString(R.string.bad_recipe_name))
         } else {
-            servings.toIntOrNull()?.let { servingsValue ->
-                val newRecipeRequest = NewRecipeRequest(
+            return diaryRepository.addNewRecipe(
+                recipe = Recipe(
                     ingredients = ingredients,
                     timeRequired = time,
                     difficulty = difficulty,
-                    servings = servingsValue,
-                    recipeName = recipeName,
+                    servings = servings,
+                    name = recipeName,
                     isPublic = isRecipePublic
                 )
-                diaryRepository.addNewRecipe(newRecipeRequest = newRecipeRequest)
-            } ?: Resource.Error(resourceProvider.getString(R.string.empty_fields_error))
+            )
         }
     }
 }

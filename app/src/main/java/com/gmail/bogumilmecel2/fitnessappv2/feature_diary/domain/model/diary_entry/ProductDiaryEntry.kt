@@ -5,6 +5,8 @@ import androidx.compose.ui.res.stringResource
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.DiaryItem
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.MeasurementUnit
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.let2
+import com.gmail.bogumilmecel2.fitnessappv2.database.GetProductDiaryEntriesNutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.database.SqlProductDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.DiaryEntryType
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.MealName
@@ -14,21 +16,21 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ProductDiaryEntryDto(
+data class ProductDiaryEntry(
     @SerialName("id")
-    val id: String? = null,
+    override val id: String? = null,
 
     @SerialName("nutrition_values")
-    val nutritionValues: NutritionValues? = null,
+    override val nutritionValues: NutritionValues? = null,
 
     @SerialName("date")
-    val date: LocalDate? = null,
+    override val date: LocalDate? = null,
 
     @SerialName("user_id")
-    val userId: String? = null,
+    override val userId: String? = null,
 
     @SerialName("meal_name")
-    val mealName: MealName? = null,
+    override val mealName: MealName? = null,
 
     @SerialName("product_measurement_unit")
     val productMeasurementUnit: MeasurementUnit? = null,
@@ -46,50 +48,17 @@ data class ProductDiaryEntryDto(
     val deleted: Boolean = false,
 
     @SerialName("creation_date")
-    val creationDateTime: LocalDateTime? = null,
+    override val creationDateTime: LocalDateTime? = null,
 
     @SerialName("change_date")
-    val changeDateTime: LocalDateTime? = null
-)
-
-@Serializable
-data class ProductDiaryEntry(
-    override val id: String,
-    override val nutritionValues: NutritionValues,
-    override val date: LocalDate,
-    override val userId: String,
-    override val mealName: MealName,
-    override val creationDateTime: LocalDateTime,
-    override val changeDateTime: LocalDateTime,
-    val productMeasurementUnit: MeasurementUnit,
-    val productName: String,
-    val productId: String,
-    val weight: Int,
-    val deleted: Boolean,
+    override val changeDateTime: LocalDateTime? = null
 ) : DiaryItem {
     @Composable
-    override fun getDisplayValue() = "$weight ${stringResource(id = productMeasurementUnit.getStringRes())}"
+    override fun getDisplayValue() = let2(weight, productMeasurementUnit) { weight, productMeasurementUnit ->
+        "$weight ${stringResource(id = productMeasurementUnit.getStringRes())}"
+    }
 
     override fun getDiaryEntryType() = DiaryEntryType.PRODUCT
-}
-
-fun ProductDiaryEntryDto.toProductDiaryEntry() = try {
-    ProductDiaryEntry(
-        id = id!!,
-        nutritionValues = nutritionValues!!,
-        date = date!!,
-        userId = userId!!,
-        mealName = mealName!!,
-        productMeasurementUnit = productMeasurementUnit!!,
-        productName = productName!!,
-        productId = productId!!,
-        weight = weight!!,
-        deleted = deleted,
-        creationDateTime = creationDateTime!!,
-        changeDateTime = changeDateTime!!
-    )
-} catch (e: Exception) {
-    null
 }
 
 fun SqlProductDiaryEntry.toProductDiaryEntry() = ProductDiaryEntry(
@@ -106,3 +75,11 @@ fun SqlProductDiaryEntry.toProductDiaryEntry() = ProductDiaryEntry(
     weight = weight,
     deleted = deleted
 )
+
+fun List<GetProductDiaryEntriesNutritionValues>.mapNutritionValues() = buildList {
+    this@mapNutritionValues.forEach { query ->
+        query.nutrition_values?.let { nutritionValues ->
+            add(nutritionValues)
+        }
+    }
+}

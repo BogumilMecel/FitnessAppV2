@@ -18,7 +18,7 @@ class GetRecipeDiaryAndSaveOfflineUseCase(
         ).data ?: return Resource.Error()
 
         val userRecipeDiaryEntries = diaryRepository.getRecipeDiaryEntries(
-            latestTimestamp = latestOfflineRecipeDiaryEntry.firstOrNull()?.utcTimestamp
+            latestDateTime = latestOfflineRecipeDiaryEntry.firstOrNull()?.changeDateTime
         ).data ?: return Resource.Error()
 
         return offlineDiaryRepository.insertRecipeDiaryEntries(userRecipeDiaryEntries)

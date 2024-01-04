@@ -198,7 +198,7 @@ class NewRecipeViewModel @Inject constructor(
                 newRecipeUseCases.addNewRecipe(
                     ingredients = this@NewRecipeViewModel.ingredients,
                     time = selectedTime,
-                    servings = servings,
+                    servings = servings.toValidInt() ?: return@launch,
                     difficulty = selectedDifficulty,
                     recipeName = name,
                     isRecipePublic = isRecipePublic
@@ -208,7 +208,7 @@ class NewRecipeViewModel @Inject constructor(
                             entryData = RecipeEntryData.Adding(
                                 recipe = it,
                                 mealName = navArguments.mealName,
-                                dateTransferObject = navArguments.dateTransferObject
+                                date = navArguments.date
                             )
                         )
                     )
@@ -220,15 +220,16 @@ class NewRecipeViewModel @Inject constructor(
     private fun addProductToRecipe(productResult: ProductResult) {
         viewModelScope.launch(Dispatchers.Default) {
             with(productResult) {
+                // TODO: Handle nulls
                 val newIngredient = Ingredient(
                     weight = weight,
-                    productName = product.name,
-                    measurementUnit = product.measurementUnit,
+                    productName = product.name ?: return@launch,
+                    measurementUnit = product.measurementUnit ?: return@launch,
                     nutritionValues = calculateProductNutritionValuesUseCase(
                         product = product,
                         weight = weight
-                    ),
-                    productId = product.id
+                    ) ?: return@launch,
+                    productId = product.id ?: return@launch
                 )
 
                 ingredients.removeIf { it.productId == newIngredient.productId }

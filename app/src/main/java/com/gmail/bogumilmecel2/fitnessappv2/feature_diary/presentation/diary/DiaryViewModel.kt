@@ -1,10 +1,14 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.diary
 
 import androidx.lifecycle.viewModelScope
-import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.DateTransferObject
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.DiaryItem
-import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.DateHolder
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.mapNutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.BaseViewModel
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.CustomDateUtils
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.getDisplayDate
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.let3
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.minusDays
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.plusDays
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.ProductScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.RecipeScreenDestination
 import com.gmail.bogumilmecel2.fitnessappv2.destinations.SearchScreenDestination
@@ -20,17 +24,17 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
 class DiaryViewModel @Inject constructor(
-    private val diaryUseCases: DiaryUseCases,
-    private val dateHolder: DateHolder,
+    private val diaryUseCases: DiaryUseCases
 ) : BaseViewModel<DiaryState, DiaryEvent, Unit>(
     state = DiaryState(),
     navArguments = Unit
 ) {
-
+    private var currentDate: LocalDate = CustomDateUtils.getCurrentDate()
     private var diaryEntries = mutableListOf<DiaryItem>()
 
     override fun configureOnStart() {
@@ -46,10 +50,7 @@ class DiaryViewModel @Inject constructor(
                     SearchScreenDestination(
                         entryData = SearchEntryData.DiaryArguments(
                             mealName = event.mealName,
-                            dateTransferObject = DateTransferObject(
-                                displayedDate = _state.value.displayedDate,
-                                realDate = dateHolder.getLocalDateString()
-                            )
+                            date = currentDate
                         )
                     )
                 )
@@ -97,12 +98,12 @@ class DiaryViewModel @Inject constructor(
             }
 
             is DiaryEvent.ClickedCalendarArrowBackwards -> {
-                dateHolder.deductDay()
+                currentDate.minusDays(1)
                 handleDateArrowClick()
             }
 
             is DiaryEvent.ClickedCalendarArrowForward -> {
-                dateHolder.addDay()
+                currentDate.plusDays(1)
                 handleDateArrowClick()
             }
         }
@@ -115,16 +116,14 @@ class DiaryViewModel @Inject constructor(
 
     private fun getDate() {
         _state.update {
-            it.copy(
-                displayedDate = dateHolder.getDateString(resourceProvider)
-            )
+            it.copy(displayedDate = currentDate.getDisplayDate(resourceProvider))
         }
     }
 
     private fun groupDiaryEntries() {
         val groupedDiaryEntries = diaryEntries
             .toList()
-            .sortedByDescending { it.utcTimestamp }
+            .sortedByDescending { it.creationDateTime }
             .groupBy { it.mealName }
 
         _state.update { state ->
@@ -137,7 +136,7 @@ class DiaryViewModel @Inject constructor(
                                 Meal(
                                     diaryEntries = mealDiaryEntries,
                                     nutritionValues = diaryUseCases.sumNutritionValuesUseCase(
-                                        nutritionValues = mealDiaryEntries.map { it.nutritionValues }
+                                        nutritionValues = mealDiaryEntries.mapNutritionValues()
                                     )
                                 )
                             } ?: Meal.createEmpty()
@@ -171,47 +170,51 @@ class DiaryViewModel @Inject constructor(
         _state.update { state ->
             state.copy(
                 currentTotalNutritionValues = diaryUseCases.sumNutritionValuesUseCase(
-                    nutritionValues = diaryEntries.map { it.nutritionValues }
+                    nutritionValues = diaryEntries.mapNutritionValues()
                 )
             )
         }
     }
 
-    private fun getRecipeAndNavigateToEditScreen(diaryEntry: RecipeDiaryEntry) {
-        viewModelScope.launch(Dispatchers.IO) {
-            diaryUseCases.getRecipeUseCase(diaryEntry.recipeId).handle { recipe ->
-                if (recipe != null) {
-                    navigateTo(
-                        destination = RecipeScreenDestination(
-                            entryData = RecipeEntryData.Editing(
-                                displayedDate = _state.value.displayedDate,
-                                recipe = recipe,
-                                date = diaryEntry.date,
-                                mealName = diaryEntry.mealName,
-                                recipeDiaryEntry = diaryEntry
+    private fun getRecipeAndNavigateToEditScreen(diaryEntry: RecipeDiaryEntry) = with(diaryEntry) {
+        let3(
+            p1 = recipeId,
+            p2 = mealName,
+            p3 = date
+        ) { recipeId, mealName, date ->
+            viewModelScope.launch(Dispatchers.IO) {
+                diaryUseCases.getRecipeUseCase(recipeId).handle { recipe ->
+                    if (recipe != null) {
+                        navigateTo(
+                            destination = RecipeScreenDestination(
+                                entryData = RecipeEntryData.Editing(
+                                    recipe = recipe,
+                                    recipeDiaryEntry = diaryEntry,
+                                    mealName = mealName,
+                                    date = date
+                                )
                             )
                         )
-                    )
+                    }
                 }
             }
         }
     }
 
     private fun getProductAndNavigateToEditScreen(diaryEntry: ProductDiaryEntry) {
-        viewModelScope.launch(Dispatchers.IO) {
-            diaryUseCases.getProductUseCase(diaryEntry.productId).handle { product ->
-                if (product != null) {
-                    navigateTo(
-                        ProductScreenDestination(
-                            entryData = ProductEntryData.Editing(
-                                mealName = diaryEntry.mealName,
-                                product = product,
-                                productDiaryEntry = diaryEntry,
-                                date = diaryEntry.date,
-                                displayedDate = _state.value.displayedDate,
+        diaryEntry.productId?.let {
+            viewModelScope.launch(Dispatchers.IO) {
+                diaryUseCases.getProductUseCase(diaryEntry.productId).handle { product ->
+                    if (product != null) {
+                        navigateTo(
+                            ProductScreenDestination(
+                                entryData = ProductEntryData.Editing(
+                                    product = product,
+                                    productDiaryEntry = diaryEntry,
+                                )
                             )
                         )
-                    )
+                    }
                 }
             }
         }
@@ -235,9 +238,7 @@ class DiaryViewModel @Inject constructor(
 
     private fun getDiaryEntries(withOnlineDiaryEntries: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
-            diaryEntries = diaryUseCases.getOfflineDiaryEntriesUseCase(
-                date = dateHolder.getLocalDateString()
-            ).toMutableList()
+            diaryEntries = diaryUseCases.getOfflineDiaryEntriesUseCase(date = currentDate).toMutableList()
 
             groupDiaryEntries()
             recalculateTotalNutritionValues()
@@ -250,7 +251,7 @@ class DiaryViewModel @Inject constructor(
 
     private fun getOnlineDiaryEntries() {
         viewModelScope.launch(Dispatchers.IO) {
-            diaryUseCases.getOnlineDiaryEntriesUseCase(date = dateHolder.getLocalDateString())
+            diaryUseCases.getOnlineDiaryEntriesUseCase(date = currentDate)
                 .handle(
                     showSnackbar = false
                 ) { getDiaryEntries(withOnlineDiaryEntries = false) }

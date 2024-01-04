@@ -5,6 +5,7 @@ import androidx.compose.ui.res.pluralStringResource
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.DiaryItem
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
+import com.gmail.bogumilmecel2.fitnessappv2.database.GetRecipeDiaryEntriesNutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.database.SqlRecipeDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.DiaryEntryType
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.MealName
@@ -14,21 +15,27 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class RecipeDiaryEntryDto(
+data class RecipeDiaryEntry(
     @SerialName("id")
-    val id: String? = null,
+    override val id: String? = null,
 
     @SerialName("nutrition_values")
-    val nutritionValues: NutritionValues? = null,
+    override val nutritionValues: NutritionValues? = null,
 
     @SerialName("date")
-    val date: LocalDate? = null,
+    override val date: LocalDate? = null,
 
     @SerialName("user_id")
-    val userId: String? = null,
+    override val userId: String? = null,
 
     @SerialName("meal_name")
-    val mealName: MealName? = null,
+    override val mealName: MealName? = null,
+
+    @SerialName("creation_date")
+    override val creationDateTime: LocalDateTime? = null,
+
+    @SerialName("change_date")
+    override val changeDateTime: LocalDateTime? = null,
 
     @SerialName("recipe_name")
     val recipeName: String? = null,
@@ -41,57 +48,20 @@ data class RecipeDiaryEntryDto(
 
     @SerialName("deleted")
     val deleted: Boolean = false,
-
-    @SerialName("creation_date")
-    val creationDateTime: LocalDateTime? = null,
-
-    @SerialName("change_date")
-    val changeDateTime: LocalDateTime? = null
-)
-
-@Serializable
-data class RecipeDiaryEntry(
-    override val id: String,
-    override val nutritionValues: NutritionValues,
-    override val date: LocalDate,
-    override val userId: String,
-    override val mealName: MealName,
-    override val creationDateTime: LocalDateTime,
-    override val changeDateTime: LocalDateTime,
-    val recipeName: String,
-    val recipeId: String,
-    val servings: Int,
-    val deleted: Boolean,
 ) : DiaryItem {
     @Composable
-    override fun getDisplayValue() = pluralStringResource(
-        id = R.plurals.servings,
-        count = servings,
-        servings
-    )
+    override fun getDisplayValue() = servings?.let {
+        pluralStringResource(
+            id = R.plurals.servings,
+            count = servings,
+            servings
+        )
+    }
 
     override fun getDiaryEntryType() = DiaryEntryType.RECIPE
 }
 
-fun RecipeDiaryEntryDto.toRecipeDiaryEntry() = try {
-    RecipeDiaryEntry(
-        id = id!!,
-        nutritionValues = nutritionValues!!,
-        date = date!!,
-        userId = userId!!,
-        mealName = mealName!!,
-        creationDateTime = creationDateTime!!,
-        changeDateTime = changeDateTime!!,
-        recipeName = recipeName!!,
-        recipeId = recipeId!!,
-        servings = servings!!,
-        deleted = deleted
-    )
-} catch (e: Exception) {
-    null
-}
-
-fun SqlRecipeDiaryEntry.toRecipeDiaryEntry() = RecipeDiaryEntryDto(
+fun SqlRecipeDiaryEntry.toRecipeDiaryEntry() = RecipeDiaryEntry(
     id = id,
     nutritionValues = nutrition_values,
     creationDateTime = creation_date_time,
@@ -104,3 +74,11 @@ fun SqlRecipeDiaryEntry.toRecipeDiaryEntry() = RecipeDiaryEntryDto(
     servings = servings,
     deleted = deleted
 )
+
+fun List<GetRecipeDiaryEntriesNutritionValues>.mapNutritionValues() = buildList {
+    this@mapNutritionValues.forEach { query ->
+        query.nutrition_values?.let { nutritionValues ->
+            add(nutritionValues)
+        }
+    }
+}

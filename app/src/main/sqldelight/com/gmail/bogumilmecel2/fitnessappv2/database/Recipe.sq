@@ -8,18 +8,18 @@ import kotlin.collections.List;
 import kotlinx.datetime.LocalDateTime;
 
 CREATE TABLE IF NOT EXISTS SqlRecipe (
-    id TEXT PRIMARY KEY NOT NULL,
-    name TEXT NOT NULL,
-    ingredients TEXT AS List<Ingredient> NOT NULL,
-    creation_date_time TEXT AS LocalDateTime NOT NULL,
+    id TEXT PRIMARY KEY,
+    name TEXT,
+    ingredients TEXT AS List<Ingredient>,
+    creation_date_time TEXT AS LocalDateTime,
     image_url TEXT,
-    nutrition_values TEXT AS NutritionValues NOT NULL,
-    time_required TEXT AS TimeRequired NOT NULL,
-    difficulty TEXT AS Difficulty NOT NULL,
-    servings INTEGER AS Int NOT NULL,
+    nutrition_values TEXT AS NutritionValues,
+    time_required TEXT AS TimeRequired,
+    difficulty TEXT AS Difficulty,
+    servings INTEGER AS Int,
     is_public INTEGER AS Boolean NOT NULL,
-    username TEXT NOT NULL,
-    user_id TEXT NOT NULL
+    username TEXT,
+    user_id TEXT
 );
 
 getUserRecipes:

@@ -10,11 +10,13 @@ class CreateSearchItemParamsFromProductUseCase(private val resourceProvider: Res
         product: Product,
         onClick: () -> Unit,
         onLongClick: () -> Unit
-    ): SearchItemParams {
+    ): SearchItemParams = with(product) {
         return SearchItemParams(
-            name = product.name,
+            name = name.orEmpty(),
             textBelowName = resourceProvider.getString(R.string.measurement_unit_gram_with_value, "100"),
-            endText = resourceProvider.getString(R.string.kcal_with_value, product.nutritionValues.calories),
+            endText = nutritionValues?.calories?.let {
+                resourceProvider.getString(R.string.kcal_with_value, it)
+            }.orEmpty(),
             onItemClick = onClick,
             onItemLongClick = onLongClick
         )

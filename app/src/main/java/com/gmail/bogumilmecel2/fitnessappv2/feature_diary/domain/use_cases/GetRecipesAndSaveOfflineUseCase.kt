@@ -19,7 +19,7 @@ class GetRecipesAndSaveOfflineUseCase(
         ).data ?: return Resource.Error()
 
         val userRecipes = diaryRepository.getUserRecipes(
-            latestTimestamp = latestOfflineRecipe.firstOrNull()?.utcTimestamp
+            latestDateTime = latestOfflineRecipe.firstOrNull()?.creationDateTime
         ).data ?: return Resource.Error()
 
         return offlineDiaryRepository.insertRecipes(userRecipes)

@@ -12,26 +12,30 @@ class DeleteDiaryEntryUseCase(
     private val diaryRepository: DiaryRepository,
     private val offlineDiaryRepository: OfflineDiaryRepository
 ) {
-    suspend operator fun invoke(diaryItem: DiaryItem): Resource<Unit> {
-        val onlineDeleteDiaryEntryRequest = diaryRepository.deleteDiaryEntry(
-            deleteDiaryEntryRequest = DeleteDiaryEntryRequest(
-                diaryEntryId = diaryItem.id,
-                diaryEntryType = diaryItem.getDiaryEntryType()
-            ),
-        )
+    suspend operator fun invoke(diaryItem: DiaryItem): Resource<Unit> = with(diaryItem) {
+        id?.let { id ->
+            val onlineDeleteDiaryEntryRequest = diaryRepository.deleteDiaryEntry(
+                deleteDiaryEntryRequest = DeleteDiaryEntryRequest(
+                    diaryEntryId = id,
+                    diaryEntryType = diaryItem.getDiaryEntryType()
+                ),
+            )
 
-        return when(onlineDeleteDiaryEntryRequest) {
-            is Resource.Error -> {
-                Resource.Error()
-            }
+            return when(onlineDeleteDiaryEntryRequest) {
+                is Resource.Error -> {
+                    Resource.Error()
+                }
 
-            is Resource.Success -> {
-                when(diaryItem) {
-                    is ProductDiaryEntry -> offlineDiaryRepository.deleteProductDiaryEntry(diaryItem.id)
-                    is RecipeDiaryEntry -> offlineDiaryRepository.deleteRecipeDiaryEntry(diaryItem.id)
-                    else -> Resource.Error()
+                is Resource.Success -> {
+                    when(diaryItem) {
+                        is ProductDiaryEntry -> offlineDiaryRepository.deleteProductDiaryEntry(id)
+                        is RecipeDiaryEntry -> offlineDiaryRepository.deleteRecipeDiaryEntry(id)
+                        else -> Resource.Error()
+                    }
                 }
             }
         }
+
+        return Resource.Error()
     }
 }

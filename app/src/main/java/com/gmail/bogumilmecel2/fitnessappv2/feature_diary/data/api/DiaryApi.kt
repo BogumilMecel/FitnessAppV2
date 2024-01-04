@@ -11,14 +11,11 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductPr
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.ProductPriceResponse
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.RecipePriceResponse
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntryPostRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.product.NewPriceRequest
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.product.NewProductRequest
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.NewRecipeRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntry
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.RecipePriceRequest
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -32,28 +29,20 @@ import retrofit2.http.Query
 interface DiaryApi {
 
     @GET("/diaryEntries")
-    suspend fun getDiaryEntries(
-        @Query("date") date: String
-    ): DiaryEntriesResponse
+    suspend fun getDiaryEntries(@Query("date") date: LocalDate): DiaryEntriesResponse
 
     @POST("/diaryEntries/product")
-    suspend fun insertProductDiaryEntry(
-        @Body productDiaryEntryPostRequest: ProductDiaryEntryPostRequest
-    ): ProductDiaryEntry
+    suspend fun insertProductDiaryEntry(@Body productDiaryEntry: ProductDiaryEntry): ProductDiaryEntry
 
     @POST("/diaryEntries/recipe")
-    suspend fun insertRecipeDiaryEntry(
-        @Body recipeDiaryEntryRequest: RecipeDiaryEntryRequest
-    ): RecipeDiaryEntry
+    suspend fun insertRecipeDiaryEntry(@Body recipeDiaryEntry: RecipeDiaryEntry): RecipeDiaryEntry
 
     @HTTP(
         method = "DELETE",
         path = "/diaryEntries",
         hasBody = true
     )
-    suspend fun deleteDiaryEntry(
-        @Body deleteDiaryEntryRequest: DeleteDiaryEntryRequest
-    )
+    suspend fun deleteDiaryEntry(@Body deleteDiaryEntryRequest: DeleteDiaryEntryRequest)
 
     @GET("/products/{$SEARCH_TEXT}")
     suspend fun searchForProducts(
@@ -62,39 +51,25 @@ interface DiaryApi {
     ): List<Product>
 
     @GET("/diaryEntries/{barcode}")
-    suspend fun searchForProductWithBarcode(
-        @Path("barcode") barcode: String
-    ): Product?
+    suspend fun searchForProductWithBarcode(@Path("barcode") barcode: String): Product?
 
     @GET("/recipes/{searchText}")
-    suspend fun searchForRecipes(
-        @Path("searchText") searchText: String
-    ): List<Recipe>
+    suspend fun searchForRecipes(@Path("searchText") searchText: String): List<Recipe>
 
     @PUT("/diaryEntries/product")
-    suspend fun editProductDiaryEntry(
-        @Body productDiaryEntry: ProductDiaryEntry
-    ): ProductDiaryEntry
+    suspend fun editProductDiaryEntry(@Body productDiaryEntry: ProductDiaryEntry): ProductDiaryEntry
 
     @PUT("/diaryEntries/recipe")
-    suspend fun editRecipeDiaryEntry(
-        @Body recipeDiaryEntry: RecipeDiaryEntry
-    ): RecipeDiaryEntry
+    suspend fun editRecipeDiaryEntry(@Body recipeDiaryEntry: RecipeDiaryEntry): RecipeDiaryEntry
 
     @POST("/products")
-    suspend fun insertProduct(
-        @Body newProductRequest: NewProductRequest
-    ): Product
+    suspend fun insertProduct(@Body product: Product): Product
 
     @GET("/products/product/{productId}")
-    suspend fun getProduct(
-        @Path("productId") productId: String
-    ): Product?
+    suspend fun getProduct(@Path("productId") productId: String): Product?
 
     @GET("/recipes/recipe/{recipeId}")
-    suspend fun getRecipe(
-        @Path("recipeId") recipeId: String
-    ) : Recipe?
+    suspend fun getRecipe(@Path("recipeId") recipeId: String) : Recipe?
 
     @POST("/products/{productId}/price")
     suspend fun addNewPriceForProduct(
@@ -104,9 +79,7 @@ interface DiaryApi {
     ): ProductPrice
 
     @POST("/recipes")
-    suspend fun addNewRecipe(
-        @Body newRecipeRequest: NewRecipeRequest
-    ): Recipe
+    suspend fun addNewRecipe(@Body recipe: Recipe): Recipe
 
     @GET("/products/{productId}/price")
     suspend fun getProductPrice(
@@ -121,14 +94,14 @@ interface DiaryApi {
     ): RecipePriceResponse?
 
     @GET("/userData/products")
-    suspend fun getUserProducts(@Query(Constants.Query.LATEST_TIMESTAMP) latestDate: LocalDateTime?): List<Product>
+    suspend fun getUserProducts(@Query(Constants.Query.LATEST_DATE_TIME) latestDateTime: LocalDateTime?): List<Product>
 
     @GET("/userData/recipes")
-    suspend fun getUserRecipes(@Query(Constants.Query.LATEST_TIMESTAMP) latestTimestamp: Long?): List<Recipe>
+    suspend fun getUserRecipes(@Query(Constants.Query.LATEST_DATE_TIME) latestDateTime: LocalDateTime?): List<Recipe>
 
     @GET("/userData/product_diary")
-    suspend fun getUserProductDiaryEntries(@Query(Constants.Query.LATEST_TIMESTAMP) latestTimestamp: Long?): List<ProductDiaryEntry>
+    suspend fun getUserProductDiaryEntries(@Query(Constants.Query.LATEST_DATE_TIME) latestDateTime: LocalDateTime?): List<ProductDiaryEntry>
 
     @GET("/userData/recipe_diary")
-    suspend fun getUserRecipeDiaryEntries(@Query(Constants.Query.LATEST_TIMESTAMP) latestTimestamp: Long?): List<RecipeDiaryEntry>
+    suspend fun getUserRecipeDiaryEntries(@Query(Constants.Query.LATEST_DATE_TIME) latestDateTime: LocalDateTime?): List<RecipeDiaryEntry>
 }

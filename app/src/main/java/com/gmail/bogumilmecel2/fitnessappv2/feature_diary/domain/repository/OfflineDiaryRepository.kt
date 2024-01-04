@@ -6,6 +6,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntry
+import kotlinx.datetime.LocalDate
 
 interface OfflineDiaryRepository {
     suspend fun getProducts(
@@ -29,16 +30,13 @@ interface OfflineDiaryRepository {
 
     suspend fun getProductDiaryEntries(limit: Long): Resource<List<ProductDiaryEntry>>
 
-    suspend fun getProductDiaryEntries(date: String): Resource<List<ProductDiaryEntry>>
+    suspend fun getProductDiaryEntries(date: LocalDate): Resource<List<ProductDiaryEntry>>
 
     suspend fun insertProductDiaryEntries(productDiaryEntries: List<ProductDiaryEntry>): Resource<Unit>
 
     suspend fun insertProductDiaryEntry(productDiaryEntry: ProductDiaryEntry): Resource<Unit>
 
-    suspend fun deleteProductDiaryEntries(
-        date: String,
-        productDiaryEntriesIds: List<String>,
-    ): Resource<Unit>
+    suspend fun deleteProductDiaryEntries(date: LocalDate): Resource<Unit>
 
     suspend fun deleteProductDiaryEntry(productDiaryEntryId: String): Resource<Unit>
 
@@ -63,18 +61,15 @@ interface OfflineDiaryRepository {
 
     suspend fun getRecipeDiaryEntries(limit: Long): Resource<List<RecipeDiaryEntry>>
 
-    suspend fun getRecipeDiaryEntries(date: String): Resource<List<RecipeDiaryEntry>>
+    suspend fun getRecipeDiaryEntries(date: LocalDate): Resource<List<RecipeDiaryEntry>>
 
     suspend fun insertRecipeDiaryEntries(recipeDiaryEntries: List<RecipeDiaryEntry>): Resource<Unit>
 
     suspend fun insertRecipeDiaryEntry(recipeDiaryEntry: RecipeDiaryEntry): Resource<Unit>
 
-    suspend fun deleteRecipeDiaryEntries(
-        date: String,
-        recipeDiaryEntriesIds: List<String>
-    ): Resource<Unit>
+    suspend fun deleteRecipeDiaryEntries(date: LocalDate): Resource<Unit>
 
     suspend fun deleteRecipeDiaryEntry(recipeDiaryEntryId: String): Resource<Unit>
 
-    suspend fun getDiaryEntriesNutritionValues(date: String): Resource<List<NutritionValues>>
+    suspend fun getDiaryEntriesNutritionValues(date: LocalDate): Resource<List<NutritionValues>>
 }

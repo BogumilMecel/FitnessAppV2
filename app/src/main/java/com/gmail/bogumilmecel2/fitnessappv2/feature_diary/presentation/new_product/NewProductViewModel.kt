@@ -138,7 +138,7 @@ class NewProductViewModel @Inject constructor(
                                             entryData = ProductEntryData.Adding(
                                                 mealName = entryData.mealName,
                                                 product = product,
-                                                dateTransferObject = entryData.dateTransferObject
+                                                date = entryData.date
                                             ),
                                         ),
                                         popUpTo = DiaryScreenDestination.route

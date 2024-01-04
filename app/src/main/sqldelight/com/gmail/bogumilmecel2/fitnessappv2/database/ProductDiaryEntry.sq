@@ -7,17 +7,17 @@ import kotlinx.datetime.LocalDate;
 import kotlinx.datetime.LocalDateTime;
 
 CREATE TABLE IF NOT EXISTS SqlProductDiaryEntry (
-    id TEXT PRIMARY KEY NOT NULL,
-    nutrition_values TEXT AS NutritionValues NOT NULL,
-    creation_date_time TEXT AS LocalDateTime NOT NULL,
-    change_date_time TEXT AS LocalDateTime NOT NULL,
-    user_id TEXT NOT NULL,
-    date TEXT AS LocalDate NOT NULL,
-    meal_name TEXT AS MealName NOT NULL,
-    product_measurement_unit TEXT AS MeasurementUnit NOT NULL,
-    product_name TEXT NOT NULL,
-    product_id TEXT NOT NULL,
-    weight INTEGER AS Int NOT NULL,
+    id TEXT PRIMARY KEY,
+    nutrition_values TEXT AS NutritionValues,
+    creation_date_time TEXT AS LocalDateTime,
+    change_date_time TEXT AS LocalDateTime,
+    user_id TEXT,
+    date TEXT AS LocalDate,
+    meal_name TEXT AS MealName,
+    product_measurement_unit TEXT AS MeasurementUnit,
+    product_name TEXT,
+    product_id TEXT,
+    weight INTEGER AS Int,
     deleted INTEGER AS Boolean NOT NULL
 );
 
