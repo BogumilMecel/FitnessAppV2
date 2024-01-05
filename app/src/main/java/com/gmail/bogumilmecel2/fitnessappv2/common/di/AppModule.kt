@@ -213,7 +213,7 @@ object AppModule {
     ): Retrofit {
         val retrofitBuilder = Retrofit.Builder()
             .client(httpClient)
-            .baseUrl("http://192.168.1.157:8080/products/")
+            .baseUrl("http://192.168.0.216:8080/")
             .addConverterFactory(GsonConverterFactory.create())
         return retrofitBuilder.build()
     }
