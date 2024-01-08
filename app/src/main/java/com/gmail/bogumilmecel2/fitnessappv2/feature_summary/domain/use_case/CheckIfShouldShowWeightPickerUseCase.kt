@@ -7,7 +7,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 class CheckIfShouldShowWeightPickerUseCase(private val cachedValuesProvider: CachedValuesProvider) {
     suspend operator fun invoke(): Resource<Unit> {
         val lastTimeWeightDialogsShown = cachedValuesProvider.getLocalLastTimeShowedWeightPicker()
-        val currentDate = CustomDateUtils.getCurrentDateString()
+        val currentDate = CustomDateUtils.getDate()
 
         if (lastTimeWeightDialogsShown == currentDate) return Resource.Error()
 
@@ -15,7 +15,7 @@ class CheckIfShouldShowWeightPickerUseCase(private val cachedValuesProvider: Cac
 
         if (user.askForWeightDaily != true) return Resource.Error()
 
-        if (user.latestWeightEntry?.date == CustomDateUtils.getCurrentDateString()) return Resource.Error()
+        if (user.latestWeightEntry?.date == CustomDateUtils.getDate()) return Resource.Error()
 
         cachedValuesProvider.setLocalLastTimeShowedWeightPicker(date = currentDate)
 

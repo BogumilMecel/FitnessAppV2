@@ -15,7 +15,7 @@ class HandleWeightDialogsQuestionUseCase(
             cachedValuesProvider.updateLocalWeightDialogsQuestion(
                 weightDialogsQuestion = WeightDialogsQuestion(
                     askedCount = weightDialogsQuestion?.askedCount?.plus(1) ?: 1,
-                    lastTimeAsked = CustomDateUtils.getCurrentDateString()
+                    lastTimeAsked = CustomDateUtils.getDate()
                 )
             )
             return Resource.Error()

@@ -34,7 +34,7 @@ class DiaryViewModel @Inject constructor(
     state = DiaryState(),
     navArguments = Unit
 ) {
-    private var currentDate: LocalDate = CustomDateUtils.getCurrentDate()
+    private var currentDate: LocalDate = CustomDateUtils.getDate()
     private var diaryEntries = mutableListOf<DiaryItem>()
 
     override fun configureOnStart() {

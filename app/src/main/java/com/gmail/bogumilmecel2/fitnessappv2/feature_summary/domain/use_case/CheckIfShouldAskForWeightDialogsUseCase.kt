@@ -6,7 +6,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 
 class CheckIfShouldAskForWeightDialogsUseCase {
     suspend operator fun invoke(cachedValuesProvider: CachedValuesProvider): Resource<Unit> {
-        val currentDate = CustomDateUtils.getCurrentDateString()
+        val currentDate = CustomDateUtils.getDate()
         val user = cachedValuesProvider.getUser() ?: return Resource.Error()
 
         if (user.askForWeightDaily != null) return Resource.Error()

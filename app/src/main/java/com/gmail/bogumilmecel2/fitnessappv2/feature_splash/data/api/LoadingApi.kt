@@ -6,7 +6,7 @@ import retrofit2.http.POST
 
 interface LoadingApi {
     @POST("/authentication/authenticate")
-    suspend fun authenticate(): User?
+    suspend fun authenticate(): User
 
     @GET("/")
     suspend fun isReachable()

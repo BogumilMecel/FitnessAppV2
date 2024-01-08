@@ -7,6 +7,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.UserInformation
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.model.User
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.model.WeightDialogsQuestion
 import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.model.WeightEntry
+import kotlinx.datetime.LocalDate
 
 interface CachedValuesProvider {
     suspend fun getWantedNutritionValues(): NutritionValues
@@ -25,8 +26,8 @@ interface CachedValuesProvider {
     suspend fun updateAskForWeightDaily(accepted: Boolean)
     suspend fun updateLocalWeightDialogsQuestion(weightDialogsQuestion: WeightDialogsQuestion)
     suspend fun getLocalWeightDialogsQuestion(): WeightDialogsQuestion?
-    suspend fun getLocalLastTimeShowedWeightPicker(): String?
-    suspend fun setLocalLastTimeShowedWeightPicker(date: String)
+    suspend fun getLocalLastTimeShowedWeightPicker(): LocalDate?
+    suspend fun setLocalLastTimeShowedWeightPicker(date: LocalDate)
     suspend fun updateUserInformation(userInformation: UserInformation)
     suspend fun setOfflineMode(offlineMode: OfflineMode)
     suspend fun getOfflineMode(): OfflineMode

@@ -10,6 +10,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.model.User
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.model.WeightDialogsQuestion
 import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.model.WeightEntry
 import com.google.gson.Gson
+import kotlinx.datetime.LocalDate
 
 class RealCachedValuesProvider(
     private val gson: Gson,
@@ -91,10 +92,10 @@ class RealCachedValuesProvider(
 
     override suspend fun getLocalLastTimeShowedWeightPicker() = getItemFromJson(
         key = WEIGHT_PICKER,
-        clazz = String::class.java
+        clazz = LocalDate::class.java
     )
 
-    override suspend fun setLocalLastTimeShowedWeightPicker(date: String) {
+    override suspend fun setLocalLastTimeShowedWeightPicker(date: LocalDate) {
         saveItemToJson(
             item = date,
             key = WEIGHT_PICKER

@@ -11,7 +11,7 @@ import kotlinx.datetime.plus
 fun LocalDate.minusDays(days: Int) = this.minus(DatePeriod(days = days))
 fun LocalDate.plusDays(days: Int) = this.plus(DatePeriod(days = days))
 fun LocalDate.getDisplayDate(resourceProvider: ResourceProvider): String {
-    val currentDate = CustomDateUtils.getCurrentDate()
+    val currentDate = CustomDateUtils.getDate()
 
     if (this == currentDate) return resourceProvider.getString(R.string.today)
     if (this == currentDate.minusDays(1)) return resourceProvider.getString(R.string.yesterday)

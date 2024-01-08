@@ -19,7 +19,7 @@ class TrainingViewModel @Inject constructor(
     navArguments = Unit
 ) {
 
-    private var currentDate = CustomDateUtils.getCurrentDate()
+    private var currentDate = CustomDateUtils.getDate()
 
     override fun configureOnStart() {
         assignCurrentDate()

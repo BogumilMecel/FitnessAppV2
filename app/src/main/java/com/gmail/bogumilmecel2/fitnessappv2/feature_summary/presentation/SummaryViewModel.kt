@@ -155,7 +155,7 @@ class SummaryViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             _state.update {
                 it.copy(
-                    caloriesSum = summaryUseCases.getCaloriesSum(date = CustomDateUtils.getCurrentDate())
+                    caloriesSum = summaryUseCases.getCaloriesSum(date = CustomDateUtils.getDate())
                 )
             }
         }

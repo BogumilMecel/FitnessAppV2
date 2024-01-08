@@ -4,7 +4,7 @@ plugins {
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
     id "kotlin-parcelize"
-    id 'kotlinx-serialization'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.9.21'
     id 'com.google.devtools.ksp' version '1.9.0-1.0.13'
     id("de.mannodermaus.android-junit5") version "1.9.3.0"
     id("app.cash.sqldelight") version "2.0.1"
@@ -155,7 +155,8 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5"
 
     //serialization
-    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1"
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2"
+    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0")
 
     implementation 'org.jetbrains.kotlin:kotlin-reflect:1.9.21'
 

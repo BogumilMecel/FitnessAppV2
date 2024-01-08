@@ -4,7 +4,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.CachedValuesP
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.CheckIfWeightIsValidUseCase
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.CustomDateUtils
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
-import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.model.NewWeightEntryRequest
+import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.model.WeightEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.repository.WeightRepository
 
 class AddWeightEntryUseCase(
@@ -17,10 +17,10 @@ class AddWeightEntryUseCase(
         if (!checkIfWeightIsValidUseCase(value)) return Resource.Error()
 
         val resource = weightRepository.addWeightEntry(
-            newWeightEntryRequest = NewWeightEntryRequest(
+            weightEntry = WeightEntry(
                 value = value,
-            ),
-            timezone = CustomDateUtils.getCurrentTimezoneId()
+                date = CustomDateUtils.getDate()
+            )
         )
 
         return when(resource) {

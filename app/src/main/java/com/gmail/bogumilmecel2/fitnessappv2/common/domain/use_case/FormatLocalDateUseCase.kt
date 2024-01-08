@@ -10,13 +10,13 @@ import kotlinx.datetime.plus
 
 class FormatLocalDateUseCase(private val resourceProvider: ResourceProvider) {
     operator fun invoke(localDate: LocalDate) = when (localDate) {
-        CustomDateUtils.getCurrentDate() -> resourceProvider.getString(stringResId = R.string.today)
-        CustomDateUtils.getCurrentDate().minus(
+        CustomDateUtils.getDate() -> resourceProvider.getString(stringResId = R.string.today)
+        CustomDateUtils.getDate().minus(
             value = 1,
             unit = DateTimeUnit.DAY
         ) -> resourceProvider.getString(stringResId = R.string.yesterday)
 
-        CustomDateUtils.getCurrentDate().plus(
+        CustomDateUtils.getDate().plus(
             value = 1,
             unit = DateTimeUnit.DAY
         ) -> resourceProvider.getString(stringResId = R.string.tomorrow)
