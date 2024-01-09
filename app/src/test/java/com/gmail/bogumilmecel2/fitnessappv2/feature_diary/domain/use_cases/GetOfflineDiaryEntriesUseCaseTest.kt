@@ -43,7 +43,7 @@ internal class GetOfflineDiaryEntriesUseCaseTest: BaseTest() {
                 addAll(recipeDiaryEntries)
             }
 
-            getOfflineDiaryEntriesUseCase(date = CustomDateUtils.getCurrentDateString()).forEach {
+            getOfflineDiaryEntriesUseCase(date = CustomDateUtils.getDate()).forEach {
                 assertTrue { diaryItems.contains(it) }
             }
         }

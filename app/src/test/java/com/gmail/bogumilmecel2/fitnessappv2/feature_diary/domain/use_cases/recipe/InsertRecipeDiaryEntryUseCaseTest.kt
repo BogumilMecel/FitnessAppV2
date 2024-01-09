@@ -8,7 +8,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.MealName
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntry
-import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.RecipeDiaryEntryRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.OfflineDiaryRepository
 import io.mockk.coEvery
@@ -16,6 +15,7 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
+import kotlinx.datetime.LocalDate
 import org.junit.Test
 import kotlin.test.assertIs
 
@@ -54,7 +54,7 @@ class InsertRecipeDiaryEntryUseCaseTest : BaseTest() {
     fun `Check if data is correct and repository returns resource error, resource error is returned`() =
         runTest {
             coEvery { calculateRecipeNutritionValuesForServingsUseCase(any(), any()) } returns NutritionValues()
-            coEvery { diaryRepository.insertRecipeDiaryEntry(recipeDiaryEntryRequest = any()) } returns Resource.Error()
+            coEvery { diaryRepository.insertRecipeDiaryEntry(recipeDiaryEntry = any()) } returns Resource.Error()
             assertIs<Resource.Error<Unit>>(callTestedMethod())
         }
 
@@ -62,17 +62,10 @@ class InsertRecipeDiaryEntryUseCaseTest : BaseTest() {
     fun `Check if data is correct and repository returns resource success, resource success is returned`() =
         runTest {
             val sampleNutritionValues = MockConstants.Diary.getSampleNutritionValues()
-            val expectedRequest = RecipeDiaryEntryRequest(
-                recipeId = MockConstants.Diary.RECIPE_ID_1,
-                servings = MockConstants.Diary.CORRECT_RECIPE_SERVINGS_2.toValidIntOrThrow(),
-                date = MockConstants.MOCK_DATE_2021,
-                mealName = MealName.BREAKFAST,
-                nutritionValues = sampleNutritionValues
-            )
             val expectedRecipeDiaryEntry = RecipeDiaryEntry(
                 recipeId = MockConstants.Diary.RECIPE_ID_1,
                 servings = MockConstants.Diary.CORRECT_RECIPE_SERVINGS_2.toValidIntOrThrow(),
-                date = MockConstants.MOCK_DATE_2021,
+                date = MockConstants.getDate2021(),
                 mealName = MealName.BREAKFAST,
                 nutritionValues = sampleNutritionValues
             )
@@ -82,18 +75,18 @@ class InsertRecipeDiaryEntryUseCaseTest : BaseTest() {
                     any()
                 )
             } returns sampleNutritionValues
-            coEvery { diaryRepository.insertRecipeDiaryEntry(recipeDiaryEntryRequest = expectedRequest) } returns Resource.Success(expectedRecipeDiaryEntry)
+            coEvery { diaryRepository.insertRecipeDiaryEntry(recipeDiaryEntry = expectedRecipeDiaryEntry) } returns Resource.Success(expectedRecipeDiaryEntry)
             coEvery { offlineDiaryRepository.insertRecipeDiaryEntry(expectedRecipeDiaryEntry) } returns Resource.Success(Unit)
             coEvery { offlineDiaryRepository.insertRecipe(recipe = any()) } returns Resource.Success(Unit)
             assertIs<Resource.Success<Unit>>(callTestedMethod())
-            coVerify(exactly = 1) { diaryRepository.insertRecipeDiaryEntry(recipeDiaryEntryRequest = expectedRequest) }
+            coVerify(exactly = 1) { diaryRepository.insertRecipeDiaryEntry(recipeDiaryEntry = expectedRecipeDiaryEntry) }
             coVerify(exactly = 1) { offlineDiaryRepository.insertRecipeDiaryEntry(expectedRecipeDiaryEntry) }
         }
 
     private suspend fun callTestedMethod(
         recipeId: String = MockConstants.Diary.RECIPE_ID_1,
         servings: String = MockConstants.Diary.CORRECT_RECIPE_SERVINGS_2,
-        date: String = MockConstants.MOCK_DATE_2021
+        date: LocalDate = MockConstants.getDate2021()
     ) = postRecipeDiaryEntryUseCase(
         recipe = Recipe(id = recipeId),
         servingsString = servings,

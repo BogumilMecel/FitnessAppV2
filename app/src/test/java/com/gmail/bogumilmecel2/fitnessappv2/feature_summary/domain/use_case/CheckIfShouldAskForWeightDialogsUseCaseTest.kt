@@ -1,10 +1,12 @@
 package com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.use_case
 
 import com.gmail.bogumilmecel2.fitnessappv2.common.BaseTest
+import com.gmail.bogumilmecel2.fitnessappv2.common.MockConstants
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.model.User
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.model.WeightDialogsQuestion
 import io.mockk.coEvery
 import kotlinx.coroutines.test.runTest
+import kotlinx.datetime.LocalDate
 import org.junit.Test
 
 class CheckIfShouldAskForWeightDialogsUseCaseTest : BaseTest() {
@@ -28,8 +30,8 @@ class CheckIfShouldAskForWeightDialogsUseCaseTest : BaseTest() {
     @Test
     fun `check if user has already seen weight dialogs, resource error is returned`() =
         runTest {
-            mockData(weightDialogsQuestion = mockWeightDialogs(lastTimeAsked = mockedDate))
-            mockDateString(mockedDate)
+            mockData(weightDialogsQuestion = mockWeightDialogs(lastTimeAsked = MockConstants.getDate2021()))
+            mockDate(MockConstants.getDate2021())
             callTestedMethod().assertIsError()
         }
 
@@ -44,7 +46,7 @@ class CheckIfShouldAskForWeightDialogsUseCaseTest : BaseTest() {
     fun `check if everything is correct, resource success is returned`() =
         runTest {
             mockData()
-            mockDateString(value = mockedDate)
+            mockDate(date = MockConstants.getDate2021())
             callTestedMethod().assertIsSuccess()
         }
 
@@ -60,7 +62,7 @@ class CheckIfShouldAskForWeightDialogsUseCaseTest : BaseTest() {
         checkIfShouldAskForWeightDialogsUseCase(cachedValuesProvider)
 
     private fun mockWeightDialogs(
-        lastTimeAsked: String = mockedDate2,
+        lastTimeAsked: LocalDate = MockConstants.getDate2022(),
         askedCount: Int = 3
     ) = WeightDialogsQuestion(
         lastTimeAsked = lastTimeAsked,

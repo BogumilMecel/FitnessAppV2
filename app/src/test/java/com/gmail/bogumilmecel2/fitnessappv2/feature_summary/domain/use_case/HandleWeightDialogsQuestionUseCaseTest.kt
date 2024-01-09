@@ -28,7 +28,7 @@ class HandleWeightDialogsQuestionUseCaseTest : BaseTest() {
     fun `Check if accepted is null last time asked is updated and resource error is returned`() =
         runTest {
             val weightDialogsQuestion = WeightDialogsQuestion(
-                lastTimeAsked = MockConstants.MOCK_DATE_2021,
+                lastTimeAsked = MockConstants.getDate2021(),
                 askedCount = 1
             )
             mockData(savedWeightDialogsQuestion = weightDialogsQuestion)
@@ -37,7 +37,7 @@ class HandleWeightDialogsQuestionUseCaseTest : BaseTest() {
             coVerify(exactly = 1) {
                 cachedValuesProvider.updateLocalWeightDialogsQuestion(
                     weightDialogsQuestion = weightDialogsQuestion.copy(
-                        lastTimeAsked = mockedDate,
+                        lastTimeAsked = MockConstants.getDate2021(),
                         askedCount = weightDialogsQuestion.askedCount.plus(1)
                     )
                 )
@@ -55,7 +55,7 @@ class HandleWeightDialogsQuestionUseCaseTest : BaseTest() {
         responseResource: Resource<Unit> = Resource.Success(Unit),
         savedWeightDialogsQuestion: WeightDialogsQuestion? = null
     ) {
-        mockDateString(mockedDate)
+        mockDate()
         coEvery {
             cachedValuesProvider.getLocalWeightDialogsQuestion()
         } returns savedWeightDialogsQuestion

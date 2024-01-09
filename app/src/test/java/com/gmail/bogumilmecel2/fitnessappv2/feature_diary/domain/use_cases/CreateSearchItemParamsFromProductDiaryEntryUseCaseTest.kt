@@ -67,6 +67,7 @@ class CreateSearchItemParamsFromProductDiaryEntryUseCaseTest: BaseTest() {
         val weightText = when(productDiaryEntry.productMeasurementUnit) {
             MeasurementUnit.MILLILITERS -> "$weight${MockConstants.Diary.MILLILITERS}"
             MeasurementUnit.GRAMS -> "$weight${MockConstants.Diary.GRAMS}"
+            else -> throw Exception()
         }
 
         assertEquals(
@@ -78,7 +79,7 @@ class CreateSearchItemParamsFromProductDiaryEntryUseCaseTest: BaseTest() {
             expected = SearchItemParams(
                 name = productName,
                 textBelowName = weightText,
-                endText = "${productDiaryEntry.nutritionValues.calories} $KCAL",
+                endText = "${productDiaryEntry.nutritionValues!!.calories} $KCAL",
                 onItemClick = onClick,
                 onItemLongClick = onLongClick
             )

@@ -4,17 +4,22 @@ import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.MeasurementUnit
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvider
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.toLocalDateTime
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 import io.mockk.every
+import kotlinx.datetime.toLocalDate
+import kotlinx.datetime.toLocalDateTime
 
 object MockConstants {
-    const val MOCK_DATE_2021 = "2021-12-12"
-    const val MOCK_DATE_TIME = "2023-12-02T00:00:00.000"
-    const val TIMESTAMP = 123456789L
+    private const val DATE_2021 = "2021-12-12"
+    private const val DATE_2022 = "2022-12-12"
+    private const val DATE_TIME = "2023-12-02T00:00:00.000"
     const val USER_ID = "user_id"
     const val CORRECT_PAGE = 1
+
+    fun getDateTime() = DATE_TIME.toLocalDateTime()
+    fun getDate2021() = DATE_2021.toLocalDate()
+    fun getDate2022() = DATE_2022.toLocalDate()
 
     object Auth {
         const val CORRECT_EMAIL = "email@email.com"
@@ -59,13 +64,13 @@ object MockConstants {
             name = PRODUCT_NAME_1,
             nutritionValues = getSampleNutritionValues(),
             userId = USER_ID,
-            dateCreated = MOCK_DATE_TIME.toLocalDateTime()
+            creationDateTime = DATE_TIME.toLocalDateTime()
         )
 
         fun getSampleRecipe() = Recipe(
             id = RECIPE_ID_1,
             name = RECIPE_NAME_1,
-            utcTimestamp = TIMESTAMP,
+            creationDateTime = DATE_TIME.toLocalDateTime(),
             nutritionValues = getSampleNutritionValues(),
             userId = USER_ID
         )

@@ -5,27 +5,24 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.CachedValuesP
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.CustomDateUtils
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
-import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.toValidInt
 import com.gmail.bogumilmecel2.fitnessappv2.util.MockResourceProvider
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.spyk
+import kotlinx.datetime.LocalDate
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 
 open class BaseTest {
 
-    val mockedDate = "2023-12-12"
-    val mockedDate2 = "2022-12-12"
-
     val resourceProvider: ResourceProvider = spyk<MockResourceProvider>()
     val cachedValuesProvider = mockk<CachedValuesProvider>()
 
-    fun mockDateString(value: String) {
+    fun mockDate(date: LocalDate = MockConstants.getDate2021()) {
         mockkObject(CustomDateUtils)
-        every { CustomDateUtils.getCurrentDateString() } returns value
+        every { CustomDateUtils.getDate() } returns date
     }
 
     fun mockUserId(userId: String = MockConstants.USER_ID) {
@@ -36,7 +33,13 @@ open class BaseTest {
         coEvery { cachedValuesProvider.getOfflineMode() } returns if (online) OfflineMode.Online else OfflineMode.Offline
     }
 
-    fun String.toValidIntOrThrow() = this.toValidInt() ?: throw Exception()
+    fun String.toValidIntOrThrow() = this.replace(
+        oldValue = ",",
+        newValue = ""
+    ).replace(
+        oldValue = ".",
+        newValue = ""
+    ).toIntOrNull() ?: throw Exception()
 
     fun <T> Resource<T>.assertIsError(text: String? = null) {
         assertIs<Resource.Error<T>>(this)

@@ -3,6 +3,7 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases
 import com.gmail.bogumilmecel2.fitnessappv2.common.BaseTest
 import com.gmail.bogumilmecel2.fitnessappv2.common.MockConstants
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.plusDays
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Recipe
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.OfflineDiaryRepository
@@ -68,17 +69,17 @@ class GetRecipesAndSaveOfflineUseCaseTest : BaseTest() {
                 userId = MockConstants.USER_ID
             )
         } returns getOfflineRecipesResource
-        coEvery { diaryRepository.getUserRecipes(latestTimestamp = MockConstants.TIMESTAMP) } returns getOnlineRecipesResource
+        coEvery { diaryRepository.getUserRecipes(latestDateTime = MockConstants.getDateTime()) } returns getOnlineRecipesResource
         getOnlineRecipesResource.data?.let {
             coEvery { offlineDiaryRepository.insertRecipes(it) } returns insertingResource
         }
     }
 
-    private fun createOfflineRecipesList() = listOf(Recipe(utcTimestamp = MockConstants.TIMESTAMP))
+    private fun createOfflineRecipesList() = listOf(Recipe(creationDateTime = MockConstants.getDateTime()))
 
     private fun createOnlineRecipesList() = buildList {
         repeat(4) {
-            add(Recipe(utcTimestamp = MockConstants.TIMESTAMP * it))
+            add(Recipe(creationDateTime = MockConstants.getDateTime().plusDays(it)))
         }
     }
 

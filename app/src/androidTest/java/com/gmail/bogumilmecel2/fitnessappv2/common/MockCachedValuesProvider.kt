@@ -8,6 +8,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.CachedValuesP
 import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.model.User
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.model.WeightDialogsQuestion
 import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.model.WeightEntry
+import kotlinx.datetime.LocalDate
 
 class MockCachedValuesProvider : CachedValuesProvider {
     override suspend fun getWantedNutritionValues() = NutritionValues()
@@ -27,7 +28,7 @@ class MockCachedValuesProvider : CachedValuesProvider {
     override suspend fun updateLocalWeightDialogsQuestion(weightDialogsQuestion: WeightDialogsQuestion) {}
     override suspend fun getLocalWeightDialogsQuestion(): WeightDialogsQuestion? = null
     override suspend fun getLocalLastTimeShowedWeightPicker() = null
-    override suspend fun setLocalLastTimeShowedWeightPicker(date: String) {}
+    override suspend fun setLocalLastTimeShowedWeightPicker(date: LocalDate) {}
     override suspend fun updateUserInformation(userInformation: UserInformation) {}
     override suspend fun setOfflineMode(offlineMode: OfflineMode) {}
     override suspend fun getOfflineMode(): OfflineMode = OfflineMode.Online

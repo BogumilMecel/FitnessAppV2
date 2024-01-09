@@ -3,6 +3,7 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases
 import com.gmail.bogumilmecel2.fitnessappv2.common.BaseTest
 import com.gmail.bogumilmecel2.fitnessappv2.common.MockConstants
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.Resource
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.plusDays
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.diary_entry.ProductDiaryEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.DiaryRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.repository.OfflineDiaryRepository
@@ -63,18 +64,18 @@ class GetProductDiaryAndSaveOfflineUseCaseTest : BaseTest() {
         mockUserId()
         mockOfflineMode(online = online)
         coEvery { offlineDiaryRepository.getProductDiaryEntries(limit = 1) } returns getOfflineProductDiaryEntriesResource
-        coEvery { diaryRepository.getProductDiaryEntries(latestTimestamp = MockConstants.TIMESTAMP) } returns getOnlineProductDiaryEntriesResource
+        coEvery { diaryRepository.getProductDiaryEntries(latestDateTime = MockConstants.getDateTime()) } returns getOnlineProductDiaryEntriesResource
         getOnlineProductDiaryEntriesResource.data?.let {
             coEvery { offlineDiaryRepository.insertProductDiaryEntries(it) } returns insertingResource
         }
     }
 
     private fun createOfflineProductDiaryEntriesList() =
-        listOf(ProductDiaryEntry(utcTimestamp = MockConstants.TIMESTAMP))
+        listOf(ProductDiaryEntry(creationDateTime = MockConstants.getDateTime()))
 
     private fun createOnlineProductDiaryEntriesList() = buildList {
         repeat(4) {
-            add(ProductDiaryEntry(utcTimestamp = MockConstants.TIMESTAMP * it))
+            add(ProductDiaryEntry(creationDateTime = MockConstants.getDateTime().plusDays(it)))
         }
     }
 

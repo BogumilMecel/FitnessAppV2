@@ -19,7 +19,7 @@ class CalculateSkipUseCaseTest {
 
     private fun testMethod(
         page: Int,
-        expectedValue: Int
+        expectedValue: Long
     ) {
         assertEquals(
             expected = expectedValue,

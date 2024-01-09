@@ -7,7 +7,7 @@ import kotlinx.datetime.plus
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 
-fun LocalDateTime.addDays(
+fun LocalDateTime.plusDays(
     days: Int,
     timeZone: TimeZone = TimeZone.UTC
 ) = this
