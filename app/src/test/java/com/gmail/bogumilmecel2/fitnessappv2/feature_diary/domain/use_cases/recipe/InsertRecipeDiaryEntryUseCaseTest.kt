@@ -61,7 +61,7 @@ class InsertRecipeDiaryEntryUseCaseTest : BaseTest() {
     @Test
     fun `Check if data is correct and repository returns resource success, resource success is returned`() =
         runTest {
-            val sampleNutritionValues = MockConstants.Diary.getSampleNutritionValues()
+            val sampleNutritionValues = MockConstants.Diary.getNutritionValues()
             val expectedRecipeDiaryEntry = RecipeDiaryEntry(
                 recipeId = MockConstants.Diary.RECIPE_ID_1,
                 servings = MockConstants.Diary.CORRECT_RECIPE_SERVINGS_2.toValidIntOrThrow(),

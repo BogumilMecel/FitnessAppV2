@@ -3,19 +3,50 @@ package com.gmail.bogumilmecel2.fitnessappv2.common
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.MeasurementUnit
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
+import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.UserInformation
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvider
+import com.gmail.bogumilmecel2.fitnessappv2.feature_auth.domain.model.User
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.recipe.Recipe
+import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.model.ActivityLevel
+import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.model.DesiredWeight
+import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.model.Gender
+import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.model.TrainingFrequency
+import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.model.TypeOfWork
 import io.mockk.every
 import kotlinx.datetime.toLocalDate
 import kotlinx.datetime.toLocalDateTime
 
+@Suppress("unused", "MemberVisibilityCanBePrivate")
 object MockConstants {
     private const val DATE_2021 = "2021-12-12"
     private const val DATE_2022 = "2022-12-12"
     private const val DATE_TIME = "2023-12-02T00:00:00.000"
     const val USER_ID = "user_id"
+    const val EMAIL = "user@email.com"
+    const val USERNAME = "username"
     const val CORRECT_PAGE = 1
+
+    fun getUser() = User(
+        id = USER_ID,
+        email = EMAIL,
+        username = USERNAME,
+        nutritionValues = Diary.getNutritionValues(),
+        userInformation = UserInformation(
+            activityLevel = ActivityLevel.HIGH,
+            typeOfWork = TypeOfWork.PHYSICAL,
+            trainingFrequency = TrainingFrequency.HIGH,
+            gender = Gender.MALE,
+            height = 180,
+            currentWeight = 80.0,
+            desiredWeight = DesiredWeight.GAIN,
+            age = 18
+        ),
+        logStreak = null,
+        latestWeightEntry = null,
+        weightProgress = null,
+        askForWeightDaily = null
+    )
 
     fun getDateTime() = DATE_TIME.toLocalDateTime()
     fun getDate2021() = DATE_2021.toLocalDate()
@@ -62,7 +93,7 @@ object MockConstants {
         fun getSampleProduct() = Product(
             id = PRODUCT_ID_11,
             name = PRODUCT_NAME_1,
-            nutritionValues = getSampleNutritionValues(),
+            nutritionValues = getNutritionValues(),
             userId = USER_ID,
             creationDateTime = DATE_TIME.toLocalDateTime()
         )
@@ -71,11 +102,11 @@ object MockConstants {
             id = RECIPE_ID_1,
             name = RECIPE_NAME_1,
             creationDateTime = DATE_TIME.toLocalDateTime(),
-            nutritionValues = getSampleNutritionValues(),
+            nutritionValues = getNutritionValues(),
             userId = USER_ID
         )
 
-        fun getSampleNutritionValues() = NutritionValues(calories = 255, carbohydrates = 31.0, protein = 17.0, fat = 7.0)
+        fun getNutritionValues() = NutritionValues(calories = 255, carbohydrates = 31.0, protein = 17.0, fat = 7.0)
 
         fun mockMeasurementUnitWithValueString(
             resourceProvider: ResourceProvider,
