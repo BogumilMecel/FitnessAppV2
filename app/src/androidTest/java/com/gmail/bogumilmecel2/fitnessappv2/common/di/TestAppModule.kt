@@ -48,8 +48,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.reposito
 import com.gmail.bogumilmecel2.fitnessappv2.feature_splash.domain.repository.LoadingRepository
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.model.WeightDialogsRequest
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.domain.use_case.SaveAskForWeightDailyUseCase
-import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.model.NewWeightEntryRequest
-import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.model.NewWeightEntryResponse
+import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.model.WeightEntry
 import com.gmail.bogumilmecel2.fitnessappv2.feature_weight.domain.repository.WeightRepository
 import com.google.gson.Gson
 import dagger.Module
@@ -63,6 +62,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import javax.inject.Singleton
 
+@Suppress("unused")
 @Module
 @TestInstallIn(
     components = [SingletonComponent::class],
@@ -358,10 +358,7 @@ object TestAppModule {
     @Singleton
     @Provides
     fun provideWeightRepository(): WeightRepository = object : WeightRepository {
-        override suspend fun addWeightEntry(
-            newWeightEntryRequest: NewWeightEntryRequest,
-            timezone: String
-        ): Resource<NewWeightEntryResponse> {
+        override suspend fun addWeightEntry(weightEntry: WeightEntry): Resource<User> {
             TODO("Not yet implemented")
         }
 

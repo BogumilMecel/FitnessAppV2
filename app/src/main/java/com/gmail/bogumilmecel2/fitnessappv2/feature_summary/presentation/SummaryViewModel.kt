@@ -60,6 +60,7 @@ class SummaryViewModel @Inject constructor(
     fun initWeightData() {
         viewModelScope.launch(Dispatchers.IO) {
             latestWeightEntry = cachedValuesProvider.getLatestWeightEntry()
+            assignWeightProgress()
             checkIfShouldAskForWeightDialogs()
             _state.update { it.copy(latestWeightEntry = latestWeightEntry) }
         }
