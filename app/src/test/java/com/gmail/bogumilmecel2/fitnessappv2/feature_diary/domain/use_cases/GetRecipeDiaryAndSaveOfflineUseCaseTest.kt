@@ -71,7 +71,7 @@ class GetRecipeDiaryAndSaveOfflineUseCaseTest : BaseTest() {
     }
 
     private fun createOfflineRecipeDiaryEntriesList() =
-        listOf(RecipeDiaryEntry(creationDateTime = MockConstants.getDateTime()))
+        listOf(RecipeDiaryEntry(changeDateTime = MockConstants.getDateTime()))
 
     private fun createOnlineRecipeDiaryEntriesList() = buildList {
         repeat(4) {

@@ -71,11 +71,11 @@ class GetProductDiaryAndSaveOfflineUseCaseTest : BaseTest() {
     }
 
     private fun createOfflineProductDiaryEntriesList() =
-        listOf(ProductDiaryEntry(creationDateTime = MockConstants.getDateTime()))
+        listOf(ProductDiaryEntry(changeDateTime = MockConstants.getDateTime()))
 
     private fun createOnlineProductDiaryEntriesList() = buildList {
         repeat(4) {
-            add(ProductDiaryEntry(creationDateTime = MockConstants.getDateTime().plusDays(it)))
+            add(ProductDiaryEntry(changeDateTime = MockConstants.getDateTime().plusDays(it)))
         }
     }
 

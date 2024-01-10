@@ -3,6 +3,7 @@ package com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.use_cases.prod
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.NutritionValues
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.Product
 import org.junit.Test
+import kotlin.test.assertEquals
 
 internal class CalculateProductNutritionValuesUseCaseUseCaseTest {
 
@@ -40,10 +41,12 @@ internal class CalculateProductNutritionValuesUseCaseUseCaseTest {
                 )
             )
         )
-        assert(newValues!!.calories == 32)
-        assert(newValues.carbohydrates == 4.9)
-        assert(newValues.protein == 1.5)
-        assert(newValues.fat == 0.3)
+        with(newValues!!) {
+            assertEquals(expected = 32, actual = calories)
+            assertEquals(expected = 4.93, actual = carbohydrates)
+            assertEquals(expected = 1.53, actual = protein)
+            assertEquals(expected = 0.34, actual = fat)
+        }
     }
 
     @Test
