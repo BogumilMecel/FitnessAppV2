@@ -13,12 +13,14 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.ViewModelLayout
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.new_product.components.BarcodeSection
@@ -32,12 +34,13 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Destination(navArgsDelegate = NewProductNavArguments::class)
 @Composable
 fun NewProductScreen(navigator: DestinationsNavigator) {
-    hiltViewModel<NewProductViewModel>().ViewModelLayout(navigator = navigator) { viewModel, state ->
+    hiltViewModel<NewProductViewModel>().ViewModelLayout(navigator = navigator) {
+        val state by __state.collectAsStateWithLifecycle()
         Scaffold(
             floatingActionButton = {
                 FloatingActionButton(
                     onClick = {
-                        viewModel.onEvent(NewProductEvent.ClickedSaveButton)
+                        onEvent(NewProductEvent.ClickedSaveButton)
                     }
                 ) {
                     Icon(
@@ -55,7 +58,7 @@ fun NewProductScreen(navigator: DestinationsNavigator) {
                 HeaderRow(
                     middlePrimaryText = stringResource(id = R.string.create_product),
                     onBackPressed = {
-                        viewModel.onEvent(NewProductEvent.ClickedBackArrow)
+                        onEvent(NewProductEvent.ClickedBackArrow)
                     }
                 )
 
@@ -65,7 +68,7 @@ fun NewProductScreen(navigator: DestinationsNavigator) {
                     name = stringResource(id = R.string.product_name),
                     textFieldValue = state.productName,
                     onTextEntered = {
-                        viewModel.onEvent(NewProductEvent.EnteredProductName(it))
+                        onEvent(NewProductEvent.EnteredProductName(it))
                     },
                     modifier = Modifier
                         .weight(0.4F)
@@ -78,7 +81,7 @@ fun NewProductScreen(navigator: DestinationsNavigator) {
                 ContainerWeightSection(
                     state = state,
                     onEvent = {
-                        viewModel.onEvent(it)
+                        onEvent(it)
                     }
                 )
 
@@ -86,9 +89,7 @@ fun NewProductScreen(navigator: DestinationsNavigator) {
 
                 BarcodeSection(
                     barcode = state.barcode,
-                    onEvent = {
-                        viewModel.onEvent(it)
-                    }
+                    onEvent = { onEvent(it) }
                 )
 
                 Spacer(modifier = Modifier.height(36.dp))
@@ -105,9 +106,7 @@ fun NewProductScreen(navigator: DestinationsNavigator) {
                 Spacer(modifier = Modifier.height(8.dp))
 
                 NutritionSection(
-                    onEvent = {
-                        viewModel.onEvent(it)
-                    },
+                    onEvent = { onEvent(it) },
                     state = state
                 )
             }

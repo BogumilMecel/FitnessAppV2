@@ -24,6 +24,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.ViewModelLayout
 import com.gmail.bogumilmecel2.fitnessappv2.feature_introduction.domain.model.QuestionName
@@ -43,7 +44,8 @@ import kotlinx.coroutines.flow.collectLatest
 @Destination
 @Composable
 fun IntroductionScreen(navigator: DestinationsNavigator) {
-    hiltViewModel<IntroductionViewModel>().ViewModelLayout(navigator = navigator) { viewModel, state ->
+    hiltViewModel<IntroductionViewModel>().ViewModelLayout(navigator = navigator) {
+        val state by __state.collectAsStateWithLifecycle()
         val questionSize = QuestionName.entries.size
 
         val pagerState = rememberPagerState(
@@ -67,7 +69,7 @@ fun IntroductionScreen(navigator: DestinationsNavigator) {
         }
 
         LaunchedEffect(key1 = true) {
-            (viewModel as IntroductionViewModel).introductionUiEvent.collectLatest {
+            (this@ViewModelLayout as IntroductionViewModel).introductionUiEvent.collectLatest {
                 when (it) {
                     is IntroductionUiEvent.MoveBackward -> {
                         if (pagerState.currentPage != 0) {
@@ -81,7 +83,7 @@ fun IntroductionScreen(navigator: DestinationsNavigator) {
                             pagerState.animateScrollToPage(pagerState.currentPage + 1)
                             keyboardController?.hide()
                         } else {
-                            viewModel.onEvent(IntroductionEvent.FinishIntroduction)
+                            onEvent(IntroductionEvent.FinishIntroduction)
                         }
                     }
                 }
@@ -109,7 +111,7 @@ fun IntroductionScreen(navigator: DestinationsNavigator) {
                                 TextQuestion(
                                     text = answer,
                                     onTextEntered = {
-                                        viewModel.onEvent(
+                                        onEvent(
                                             IntroductionEvent.EnteredAnswer(
                                                 questionName = currentItem,
                                                 newValue = it
@@ -128,7 +130,7 @@ fun IntroductionScreen(navigator: DestinationsNavigator) {
                                     questionName = currentItem,
                                     currentItem = selectedTile,
                                     onItemClick = { clickedTile ->
-                                        viewModel.onEvent(
+                                        onEvent(
                                             IntroductionEvent.ClickedTile(
                                                 tile = clickedTile
                                             )
@@ -148,7 +150,7 @@ fun IntroductionScreen(navigator: DestinationsNavigator) {
                         .testTag(stringResource(id = R.string.BACK)),
                     text = stringResource(id = R.string.back),
                     onClick = {
-                        viewModel.onEvent(IntroductionEvent.ClickedArrowBackwards)
+                        onEvent(IntroductionEvent.ClickedArrowBackwards)
                     },
                     buttonColors = ButtonDefaults.buttonColors(
                         backgroundColor = MaterialTheme.colors.secondary
@@ -164,7 +166,7 @@ fun IntroductionScreen(navigator: DestinationsNavigator) {
                     id = if (pagerState.currentPage == questionSize - 1) R.string.finish else R.string.next
                 ),
                 onClick = {
-                    viewModel.onEvent(IntroductionEvent.ClickedArrowForward)
+                    onEvent(IntroductionEvent.ClickedArrowForward)
                 }
             )
         }

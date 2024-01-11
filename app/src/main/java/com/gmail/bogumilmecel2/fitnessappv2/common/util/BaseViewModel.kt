@@ -27,7 +27,7 @@ abstract class BaseViewModel<STATE : Any, EVENT : Any, NAV_ARGUMENTS : Any>(
 ) : ViewModel() {
 
     protected val _state = MutableStateFlow(state)
-    val state: StateFlow<STATE> = _state
+    val __state: StateFlow<STATE> = _state
 
     val navigationDestination: Channel<NavigationAction> = Channel()
 

@@ -12,9 +12,11 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.BackHandler
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.ViewModelLayout
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.domain.model.MealName
@@ -29,11 +31,9 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Destination
 @Composable
 fun DiaryScreen(navigator: DestinationsNavigator) {
-    hiltViewModel<DiaryViewModel>().ViewModelLayout(navigator = navigator) { viewModel, state ->
-
-        BackHandler {
-            viewModel.onEvent(DiaryEvent.BackPressed)
-        }
+    hiltViewModel<DiaryViewModel>().ViewModelLayout(navigator = navigator) {
+        val state by __state.collectAsStateWithLifecycle()
+        BackHandler { onEvent(DiaryEvent.BackPressed) }
 
         Scaffold(
             bottomBar = {
@@ -53,15 +53,9 @@ fun DiaryScreen(navigator: DestinationsNavigator) {
                 state.longClickedDiaryItemParams?.let {
                     ProductItemDialog(
                         title = it.dialogTitle,
-                        onDeleteButtonClicked = {
-                            viewModel.onEvent(DiaryEvent.ClickedDeleteInDialog)
-                        },
-                        onEditButtonClicked = {
-                            viewModel.onEvent(DiaryEvent.ClickedEditInDialog)
-                        },
-                        onDismissRequest = {
-                            viewModel.onEvent(DiaryEvent.DismissedDialog)
-                        }
+                        onDeleteButtonClicked = { onEvent(DiaryEvent.ClickedDeleteInDialog) },
+                        onEditButtonClicked = { onEvent(DiaryEvent.ClickedEditInDialog) },
+                        onDismissRequest = { onEvent(DiaryEvent.DismissedDialog) }
                     )
                 }
 
@@ -80,12 +74,8 @@ fun DiaryScreen(navigator: DestinationsNavigator) {
                                 vertical = 2.dp
                             ),
                         date = state.displayedDate,
-                        onArrowForwardClicked = {
-                            viewModel.onEvent(event = DiaryEvent.ClickedCalendarArrowForward)
-                        },
-                        onArrowBackwardsClicked = {
-                            viewModel.onEvent(event = DiaryEvent.ClickedCalendarArrowBackwards)
-                        },
+                        onArrowForwardClicked = { onEvent(event = DiaryEvent.ClickedCalendarArrowForward) },
+                        onArrowBackwardsClicked = { onEvent(event = DiaryEvent.ClickedCalendarArrowBackwards) },
                     )
 
                     LazyColumn {
@@ -95,7 +85,7 @@ fun DiaryScreen(navigator: DestinationsNavigator) {
                                 diaryEntries = state.diaryEntries[mealName]?.diaryEntries,
                                 nutritionValues = state.diaryEntries[mealName]?.nutritionValues,
                                 wantedNutritionValues = state.wantedTotalNutritionValues,
-                                onEvent = { event -> viewModel.onEvent(event) }
+                                onEvent = { event -> onEvent(event) }
                             )
                         }
                     }

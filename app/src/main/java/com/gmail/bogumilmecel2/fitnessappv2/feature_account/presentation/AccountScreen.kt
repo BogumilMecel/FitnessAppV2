@@ -12,11 +12,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.BackHandler
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.PieChartWithMiddleText
@@ -37,11 +39,9 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Destination
 @Composable
 fun AccountScreen(navigator: DestinationsNavigator) {
-    hiltViewModel<AccountViewModel>().ViewModelLayout(navigator = navigator) { viewModel, state ->
-
-        BackHandler {
-            viewModel.onEvent(AccountEvent.BackPressed)
-        }
+    hiltViewModel<AccountViewModel>().ViewModelLayout(navigator = navigator) {
+        val state by __state.collectAsStateWithLifecycle()
+        BackHandler { onEvent(AccountEvent.BackPressed) }
 
         Column(modifier = Modifier.fillMaxSize()) {
             Spacer(modifier = Modifier.height(10.dp))
@@ -72,9 +72,7 @@ fun AccountScreen(navigator: DestinationsNavigator) {
                         CustomIconButton(
                             params = IconButtonParams(
                                 iconVector = IconVector.Edit,
-                                onClick = {
-                                    viewModel.onEvent(AccountEvent.ClickedEditNutritionGoals)
-                                }
+                                onClick = { onEvent(AccountEvent.ClickedEditNutritionGoals) }
                             )
                         )
                     }
@@ -157,9 +155,7 @@ fun AccountScreen(navigator: DestinationsNavigator) {
                     topText = stringResource(id = R.string.account_ask_for_weight_daily),
                     bottomText = stringResource(id = R.string.account_daily_weight_description),
                     checked = state.askForWeightDaily,
-                    onCheckedChange = {
-                        viewModel.onEvent(AccountEvent.AskForWeightDailyClicked(it))
-                    }
+                    onCheckedChange = { onEvent(AccountEvent.AskForWeightDailyClicked(it)) }
                 )
             }
 
@@ -171,9 +167,7 @@ fun AccountScreen(navigator: DestinationsNavigator) {
                     .padding(horizontal = 10.dp),
                 leftIcon = IconVector.Logout,
                 text = stringResource(id = R.string.log_out),
-            ) {
-                viewModel.onEvent(AccountEvent.ClickedLogOutButtonClicked)
-            }
+            ) { onEvent(AccountEvent.ClickedLogOutButtonClicked) }
         }
     }
 }

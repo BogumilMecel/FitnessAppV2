@@ -5,7 +5,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.ui.components.base.Loader
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.result.ResultBackNavigator
@@ -15,7 +14,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 inline fun <STATE : Any, EVENT : Any, NAV_ARGUMENTS : Any> BaseViewModel<STATE, EVENT, NAV_ARGUMENTS>.ViewModelLayout(
     navigator: DestinationsNavigator,
     screenTestTag: String? = null,
-    content: @Composable (BaseViewModel<STATE, EVENT, NAV_ARGUMENTS>, STATE) -> Unit = { _, _ -> }
+    content: @Composable BaseViewModel<STATE, EVENT, NAV_ARGUMENTS>.() -> Unit = { }
 ) {
     Box(
         modifier = screenTestTag?.let { tag ->
@@ -48,10 +47,7 @@ inline fun <STATE : Any, EVENT : Any, NAV_ARGUMENTS : Any> BaseViewModel<STATE, 
             }
         )
 
-        content(
-            this@ViewModelLayout,
-            this@ViewModelLayout.state.collectAsStateWithLifecycle().value
-        )
+        content(this@ViewModelLayout)
         Loader(visible = loaderVisible)
     }
 }
@@ -60,7 +56,7 @@ inline fun <STATE : Any, EVENT : Any, NAV_ARGUMENTS : Any> BaseViewModel<STATE, 
 inline fun <STATE : Any, EVENT : Any, NAV_ARGUMENTS : Any, RESULT_BACK : Any> BaseResultViewModel<STATE, EVENT, NAV_ARGUMENTS, RESULT_BACK>.ViewModelLayout(
     navigator: DestinationsNavigator,
     resultBackNavigator: ResultBackNavigator<RESULT_BACK>,
-    content: @Composable (BaseViewModel<STATE, EVENT, NAV_ARGUMENTS>, STATE) -> Unit = { _, _ -> }
+    content: @Composable BaseViewModel<STATE, EVENT, NAV_ARGUMENTS>.() -> Unit = { }
 ) {
     LaunchedEffect(
         key1 = true,

@@ -19,6 +19,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,6 +29,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.Currency
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.ViewModelLayout
@@ -60,7 +62,8 @@ fun ProductScreen(
     hiltViewModel<ProductViewModel>().ViewModelLayout(
         navigator = navigator,
         resultBackNavigator = resultBackNavigator
-    ) { viewModel, state ->
+    ) {
+        val state by __state.collectAsStateWithLifecycle()
         Scaffold(
             floatingActionButton = {
                 ExtendedFloatingActionButton(
@@ -71,11 +74,7 @@ fun ProductScreen(
                             style = MaterialTheme.typography.button
                         )
                     },
-                    onClick = {
-                        viewModel.onEvent(
-                            ProductEvent.ClickedAddProduct
-                        )
-                    },
+                    onClick = { onEvent(ProductEvent.ClickedAddProduct) },
                     icon = {
                         Icon(
                             imageVector = Icons.Default.Add,
@@ -95,9 +94,7 @@ fun ProductScreen(
                     forValue = state.priceForValue,
                     currency = Currency.PLN,
                     measurementUnit = state.productMeasurementUnit,
-                    onEvent = {
-                        viewModel.onEvent(it)
-                    }
+                    onEvent = { onEvent(it) }
                 )
             }
 
@@ -109,9 +106,7 @@ fun ProductScreen(
                 HeaderRow(
                     middlePrimaryText = state.headerPrimaryText,
                     middleSecondaryText = state.headerSecondaryText,
-                    onBackPressed = {
-                        viewModel.onEvent(ProductEvent.ClickedBackArrow)
-                    }
+                    onBackPressed = { onEvent(ProductEvent.ClickedBackArrow) }
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
@@ -120,9 +115,7 @@ fun ProductScreen(
                     modifier = Modifier.padding(horizontal = 15.dp),
                     productName = state.productName,
                     currentWeight = state.weight,
-                    onWeightEntered = {
-                        viewModel.onEvent(ProductEvent.EnteredWeight(it))
-                    },
+                    onWeightEntered = { onEvent(ProductEvent.EnteredWeight(it)) },
                     nutritionData = state.nutritionData
                 )
 
@@ -149,7 +142,7 @@ fun ProductScreen(
                                 CustomIconButton(
                                     params = IconButtonParams(
                                         iconVector = IconVector.Info,
-                                        onClick = { viewModel.onEvent(ProductEvent.ClickedInfoPriceButton) }
+                                        onClick = { onEvent(ProductEvent.ClickedInfoPriceButton) }
                                     ),
                                     modifier = Modifier.align(Alignment.CenterEnd)
                                 )
@@ -240,7 +233,7 @@ fun ProductScreen(
                                                 topEnd = 0.dp
                                             )
                                         )
-                                        .clickable { viewModel.onEvent(ProductEvent.ClickedSubmitNewPrice) }
+                                        .clickable { onEvent(ProductEvent.ClickedSubmitNewPrice) }
                                         .padding(16.dp),
                                     horizontalArrangement = Arrangement.Center,
                                     verticalAlignment = Alignment.CenterVertically

@@ -10,6 +10,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -19,6 +20,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.TestTags
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.ViewModelLayout
@@ -37,7 +39,8 @@ fun LoginScreen(navigator: DestinationsNavigator) {
     hiltViewModel<LoginViewModel>().ViewModelLayout(
         navigator = navigator,
         screenTestTag = TestTags.LOGIN_SCREEN
-    ) { viewModel, state ->
+    ) {
+        val state by __state.collectAsStateWithLifecycle()
         Box(modifier = Modifier.fillMaxSize()) {
             HeaderRow(middlePrimaryText = stringResource(id = R.string.login))
 
@@ -45,9 +48,7 @@ fun LoginScreen(navigator: DestinationsNavigator) {
                 CustomBasicTextField(
                     value = state.email,
                     placeholder = stringResource(id = R.string.email_address),
-                    onValueChange = {
-                        viewModel.onEvent(LoginEvent.EnteredEmail(email = it))
-                    },
+                    onValueChange = { onEvent(LoginEvent.EnteredEmail(email = it)) },
                     keyboardOptions = KeyboardOptions().copy(
                         keyboardType = KeyboardType.Email
                     ),
@@ -63,11 +64,7 @@ fun LoginScreen(navigator: DestinationsNavigator) {
                 CustomBasicTextField(
                     value = state.password,
                     placeholder = stringResource(id = R.string.password),
-                    onValueChange = {
-                        viewModel.onEvent(
-                            LoginEvent.EnteredPassword(password = it)
-                        )
-                    },
+                    onValueChange = { onEvent(LoginEvent.EnteredPassword(password = it)) },
                     keyboardOptions = KeyboardOptions().copy(
                         keyboardType = KeyboardType.Password,
                     ),
@@ -82,9 +79,7 @@ fun LoginScreen(navigator: DestinationsNavigator) {
                 HeightSpacer(32.dp)
 
                 CustomButton(
-                    onClick = {
-                        viewModel.onEvent(LoginEvent.LoginButtonClicked)
-                    },
+                    onClick = { onEvent(LoginEvent.LoginButtonClicked) },
                     modifier = Modifier
                         .padding(horizontal = 10.dp)
                         .fillMaxWidth()
@@ -101,7 +96,7 @@ fun LoginScreen(navigator: DestinationsNavigator) {
                     modifier = Modifier
                         .testTag(TestTags.FORGOT_PASSWORD)
                         .clip(defaultRoundedCornerShape())
-                        .clickable { viewModel.onEvent(LoginEvent.ForgotButtonClicked) }
+                        .clickable { onEvent(LoginEvent.ForgotButtonClicked) }
                         .padding(
                             horizontal = 16.dp,
                             vertical = 8.dp
@@ -115,7 +110,7 @@ fun LoginScreen(navigator: DestinationsNavigator) {
                 modifier = Modifier
                     .padding(bottom = 50.dp)
                     .clip(defaultRoundedCornerShape())
-                    .clickable { viewModel.onEvent(LoginEvent.RegisterLoginButtonClicked) }
+                    .clickable { onEvent(LoginEvent.RegisterLoginButtonClicked) }
                     .padding(
                         horizontal = 16.dp,
                         vertical = 8.dp

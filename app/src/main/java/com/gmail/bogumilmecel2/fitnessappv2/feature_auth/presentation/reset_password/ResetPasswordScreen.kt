@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -16,6 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.TestTags
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.ViewModelLayout
@@ -33,7 +35,8 @@ fun ResetPasswordScreen(navigator: DestinationsNavigator) {
     hiltViewModel<ResetPasswordViewModel>().ViewModelLayout(
         navigator = navigator,
         screenTestTag = TestTags.RESET_PASSWORD_SCREEN
-    ) { viewModel, state ->
+    ) {
+        val state by __state.collectAsStateWithLifecycle()
         Box(modifier = Modifier.fillMaxSize()) {
             HeaderRow(middlePrimaryText = stringResource(id = R.string.reset_your_password))
 
@@ -41,9 +44,7 @@ fun ResetPasswordScreen(navigator: DestinationsNavigator) {
                 CustomBasicTextField(
                     value = state.email,
                     placeholder = stringResource(id = R.string.email_address),
-                    onValueChange = {
-                        viewModel.onEvent(AuthEvent.EnteredEmail(email = it))
-                    },
+                    onValueChange = { onEvent(AuthEvent.EnteredEmail(email = it)) },
                     keyboardOptions = KeyboardOptions().copy(
                         keyboardType = KeyboardType.Email
                     ),
@@ -57,9 +58,7 @@ fun ResetPasswordScreen(navigator: DestinationsNavigator) {
                 Spacer(modifier = Modifier.height(40.dp))
 
                 CustomButton(
-                    onClick = {
-                        viewModel.onEvent(AuthEvent.AuthButtonClicked)
-                    },
+                    onClick = { onEvent(AuthEvent.AuthButtonClicked) },
                     modifier = Modifier
                         .padding(horizontal = 20.dp)
                         .fillMaxWidth()

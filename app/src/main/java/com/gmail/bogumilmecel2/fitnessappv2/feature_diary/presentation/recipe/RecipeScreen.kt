@@ -31,6 +31,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.DropdownArrow
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.ViewModelLayout
@@ -53,7 +54,8 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Destination(navArgsDelegate = RecipeNavArguments::class)
 @Composable
 fun RecipeScreen(navigator: DestinationsNavigator) {
-    hiltViewModel<RecipeViewModel>().ViewModelLayout(navigator = navigator) { viewModel, state ->
+    hiltViewModel<RecipeViewModel>().ViewModelLayout(navigator = navigator) {
+        val state = __state.collectAsStateWithLifecycle().value
         val scrollState = rememberScrollState()
 
         Column(
@@ -64,18 +66,14 @@ fun RecipeScreen(navigator: DestinationsNavigator) {
             HeaderRow(
                 middlePrimaryText = state.recipeName,
                 middleSecondaryText = state.recipeCaloriesText,
-                onBackPressed = {
-                    viewModel.onEvent(RecipeEvent.ClickedBackArrow)
-                },
+                onBackPressed = { onEvent(RecipeEvent.ClickedBackArrow) },
                 endIconButtonParams = IconButtonParams(
                     iconVector = if (!state.isFavorite) {
                         IconVector.Heart
                     } else {
                         IconVector.HeartFilled
                     },
-                    onClick = {
-                        viewModel.onEvent(RecipeEvent.ClickedFavorite)
-                    }
+                    onClick = { onEvent(RecipeEvent.ClickedFavorite) }
                 )
             )
 
@@ -207,9 +205,7 @@ fun RecipeScreen(navigator: DestinationsNavigator) {
 
                             CustomBasicTextField(
                                 value = state.servings,
-                                onValueChange = {
-                                    viewModel.onEvent(RecipeEvent.EnteredServings(it))
-                                },
+                                onValueChange = { onEvent(RecipeEvent.EnteredServings(it)) },
                                 keyboardOptions = KeyboardOptions.Default.copy(
                                     keyboardType = KeyboardType.Number
                                 ),
@@ -223,9 +219,7 @@ fun RecipeScreen(navigator: DestinationsNavigator) {
                             modifier = Modifier.fillMaxWidth(),
                             leftIcon = IconVector.Save,
                             text = state.saveButtonText
-                        ) {
-                            viewModel.onEvent(RecipeEvent.ClickedSaveRecipeDiaryEntry)
-                        }
+                        ) { onEvent(RecipeEvent.ClickedSaveRecipeDiaryEntry) }
                     }
                 }
             )
@@ -287,9 +281,7 @@ fun RecipeScreen(navigator: DestinationsNavigator) {
                             DropdownArrow(
                                 isArrowPointedDownwards = state.isIngredientsListExpanded,
                                 modifier = Modifier.align(Alignment.CenterEnd),
-                                onArrowClicked = {
-                                    viewModel.onEvent(RecipeEvent.ClickedExpandIngredientsList)
-                                }
+                                onArrowClicked = { onEvent(RecipeEvent.ClickedExpandIngredientsList) }
                             )
                         }
 

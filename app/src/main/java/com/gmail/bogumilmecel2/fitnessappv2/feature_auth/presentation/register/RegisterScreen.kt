@@ -12,6 +12,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,6 +22,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.TestTags
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.ViewModelLayout
@@ -38,7 +40,8 @@ fun RegisterScreen(navigator: DestinationsNavigator) {
     hiltViewModel<RegisterViewModel>().ViewModelLayout(
         navigator = navigator,
         screenTestTag = TestTags.REGISTER_SCREEN
-    ) { viewModel, state ->
+    ) {
+        val state by __state.collectAsStateWithLifecycle()
         Box(modifier = Modifier.fillMaxSize()) {
             HeaderRow(middlePrimaryText = stringResource(id = R.string.register))
 
@@ -46,11 +49,7 @@ fun RegisterScreen(navigator: DestinationsNavigator) {
                 CustomBasicTextField(
                     value = state.email,
                     placeholder = stringResource(id = R.string.email_address),
-                    onValueChange = {
-                        viewModel.onEvent(
-                            AuthEvent.EnteredEmail(email = it)
-                        )
-                    },
+                    onValueChange = { onEvent(AuthEvent.EnteredEmail(email = it)) },
                     keyboardOptions = KeyboardOptions().copy(
                         keyboardType = KeyboardType.Email
                     ),
@@ -67,11 +66,7 @@ fun RegisterScreen(navigator: DestinationsNavigator) {
                 CustomBasicTextField(
                     value = state.username,
                     placeholder = stringResource(id = R.string.username),
-                    onValueChange = {
-                        viewModel.onEvent(
-                            AuthEvent.EnteredUsername(username = it)
-                        )
-                    },
+                    onValueChange = { onEvent(AuthEvent.EnteredUsername(username = it)) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 20.dp),
@@ -85,11 +80,7 @@ fun RegisterScreen(navigator: DestinationsNavigator) {
                 CustomBasicTextField(
                     value = state.password,
                     placeholder = stringResource(id = R.string.password),
-                    onValueChange = {
-                        viewModel.onEvent(
-                            AuthEvent.EnteredPassword(password = it)
-                        )
-                    },
+                    onValueChange = { onEvent(AuthEvent.EnteredPassword(password = it)) },
                     keyboardOptions = KeyboardOptions().copy(
                         keyboardType = KeyboardType.Password,
                     ),
@@ -107,11 +98,7 @@ fun RegisterScreen(navigator: DestinationsNavigator) {
                 CustomBasicTextField(
                     value = state.confirmPassword,
                     placeholder = stringResource(id = R.string.confirm_your_password),
-                    onValueChange = {
-                        viewModel.onEvent(
-                            AuthEvent.EnteredConfirmPassword(confirmPassword = it)
-                        )
-                    },
+                    onValueChange = { onEvent(AuthEvent.EnteredConfirmPassword(confirmPassword = it)) },
                     keyboardOptions = KeyboardOptions().copy(
                         keyboardType = KeyboardType.Password,
                     ),
@@ -127,9 +114,7 @@ fun RegisterScreen(navigator: DestinationsNavigator) {
                 Spacer(modifier = Modifier.height(40.dp))
 
                 CustomButton(
-                    onClick = {
-                        viewModel.onEvent(AuthEvent.AuthButtonClicked)
-                    },
+                    onClick = { onEvent(AuthEvent.AuthButtonClicked) },
                     modifier = Modifier
                         .padding(
                             top = 20.dp,
@@ -149,9 +134,7 @@ fun RegisterScreen(navigator: DestinationsNavigator) {
                 color = Color.LightGray,
                 modifier = Modifier
                     .padding(bottom = 50.dp)
-                    .clickable {
-                        viewModel.onEvent(AuthEvent.RegisterLoginButtonClicked)
-                    }
+                    .clickable { onEvent(AuthEvent.RegisterLoginButtonClicked) }
                     .align(Alignment.BottomCenter)
                     .padding(10.dp)
                     .testTag(TestTags.LOGIN_BUTTON)

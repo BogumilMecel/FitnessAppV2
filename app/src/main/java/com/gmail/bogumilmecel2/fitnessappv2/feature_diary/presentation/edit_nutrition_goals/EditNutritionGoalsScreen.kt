@@ -15,6 +15,7 @@ import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -22,6 +23,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.ViewModelLayout
 import com.gmail.bogumilmecel2.fitnessappv2.components.DefaultCardBackground
@@ -35,13 +37,12 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Destination
 @Composable
 fun EditNutritionGoalsScreen(navigator: DestinationsNavigator) {
-    hiltViewModel<EditNutritionGoalsViewModel>().ViewModelLayout(navigator = navigator) { viewModel, state ->
+    hiltViewModel<EditNutritionGoalsViewModel>().ViewModelLayout(navigator = navigator) {
+        val state by __state.collectAsStateWithLifecycle()
         Column(modifier = Modifier.fillMaxSize()) {
             HeaderRow(
                 middlePrimaryText = stringResource(id = R.string.nutrition_goals),
-                onBackPressed = {
-                    viewModel.onEvent(EditNutritionGoalsEvent.BackArrowPressed)
-                }
+                onBackPressed = { onEvent(EditNutritionGoalsEvent.BackArrowPressed) }
             )
 
             Spacer(modifier = Modifier.height(6.dp))
@@ -68,9 +69,7 @@ fun EditNutritionGoalsScreen(navigator: DestinationsNavigator) {
                     ) {
                         CustomBasicTextField(
                             value = state.calories,
-                            onValueChange = {
-                                viewModel.onEvent(EditNutritionGoalsEvent.EnteredCalories(it))
-                            },
+                            onValueChange = { onEvent(EditNutritionGoalsEvent.EnteredCalories(it)) },
                             modifier = Modifier.width(80.dp),
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                             singleLine = true,
@@ -94,17 +93,13 @@ fun EditNutritionGoalsScreen(navigator: DestinationsNavigator) {
             MacroElementsSection(
                 modifier = Modifier.padding(horizontal = 10.dp),
                 state = state,
-                onEvent = {
-                    viewModel.onEvent(it)
-                }
+                onEvent = { onEvent(it) }
             )
 
             Spacer(modifier = Modifier.height(12.dp))
 
             Button(
-                onClick = {
-                    viewModel.onEvent(EditNutritionGoalsEvent.SaveButtonClicked)
-                },
+                onClick = { onEvent(EditNutritionGoalsEvent.SaveButtonClicked) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 10.dp),

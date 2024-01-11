@@ -36,6 +36,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.DropdownArrow
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.PieChartWithMiddleText
@@ -74,12 +75,13 @@ fun NewRecipeScreen(
     hiltViewModel<NewRecipeViewModel>().ViewModelLayout(
         navigator = navigator,
         screenTestTag = TestTags.NEW_RECIPE_SCREEN
-    ) { viewModel, state ->
+    ) {
+        val state = __state.collectAsStateWithLifecycle().value
         val scrollState = rememberScrollState()
 
         resultRecipient.onNavResult { result ->
             if (result is NavResult.Value) {
-                viewModel.onEvent(NewRecipeEvent.ReceivedProductResult(result.value))
+                onEvent(NewRecipeEvent.ReceivedProductResult(result.value))
             }
         }
 
@@ -96,23 +98,15 @@ fun NewRecipeScreen(
                             state.longClickedIngredient.weight
                         )
                     })",
-                    onDeleteButtonClicked = {
-                        viewModel.onEvent(NewRecipeEvent.ClickedDeleteInIngredientDialog)
-                    },
-                    onEditButtonClicked = {
-
-                    },
-                    onDismissRequest = {
-                        viewModel.onEvent(NewRecipeEvent.DismissedDeleteIngredientDialog)
-                    }
+                    onDeleteButtonClicked = { onEvent(NewRecipeEvent.ClickedDeleteInIngredientDialog) },
+                    onEditButtonClicked = { },
+                    onDismissRequest = { onEvent(NewRecipeEvent.DismissedDeleteIngredientDialog) }
                 )
             }
 
             HeaderRow(
                 middlePrimaryText = stringResource(id = R.string.add_recipe),
-                onBackPressed = {
-                    viewModel.onEvent(NewRecipeEvent.ClickedBackArrow)
-                }
+                onBackPressed = { onEvent(NewRecipeEvent.ClickedBackArrow) }
             )
 
             HeightSpacer(height = 10.dp)
@@ -131,7 +125,7 @@ fun NewRecipeScreen(
                     modifier = Modifier.fillMaxWidth(),
                     value = state.name,
                     placeholder = stringResource(id = R.string.recipe_name),
-                    onValueChange = { viewModel.onEvent(NewRecipeEvent.EnteredName(it)) }
+                    onValueChange = { onEvent(NewRecipeEvent.EnteredName(it)) }
                 )
 
                 HeightSpacer()
@@ -164,13 +158,11 @@ fun NewRecipeScreen(
                         HeightSpacer(height = 6.dp)
 
                         DropdownItem(
-                            onArrowClick = { viewModel.onEvent(NewRecipeEvent.ClickedDifficultyArrow) },
+                            onArrowClick = { onEvent(NewRecipeEvent.ClickedDifficultyArrow) },
                             selectedItem = state.selectedDifficulty.displayValue,
                             isDropdownExpanded = state.isDifficultyExpanded,
                             dropdownItems = state.difficulties.map { it.displayValue },
-                            onItemSelected = {
-                                viewModel.onEvent(NewRecipeEvent.SelectedDifficulty(state.difficulties[it]))
-                            }
+                            onItemSelected = { onEvent(NewRecipeEvent.SelectedDifficulty(state.difficulties[it])) }
                         )
                     }
 
@@ -198,11 +190,11 @@ fun NewRecipeScreen(
                         HeightSpacer(height = 6.dp)
 
                         DropdownItem(
-                            onArrowClick = { viewModel.onEvent(NewRecipeEvent.ClickedTimeArrow) },
+                            onArrowClick = { onEvent(NewRecipeEvent.ClickedTimeArrow) },
                             selectedItem = state.selectedTime.getDisplayValueWithoutMin(),
                             isDropdownExpanded = state.isTimeExpanded,
                             dropdownItems = state.times.map { it.displayValue },
-                            onItemSelected = { viewModel.onEvent(NewRecipeEvent.SelectedTime(state.times[it])) }
+                            onItemSelected = { onEvent(NewRecipeEvent.SelectedTime(state.times[it])) }
                         )
                     }
 
@@ -225,7 +217,7 @@ fun NewRecipeScreen(
 
                         CustomBasicTextField(
                             value = state.servings,
-                            onValueChange = { viewModel.onEvent(NewRecipeEvent.EnteredServing(it)) },
+                            onValueChange = { onEvent(NewRecipeEvent.EnteredServing(it)) },
                             modifier = Modifier
                                 .width(96.dp)
                                 .height(48.dp),
@@ -242,7 +234,7 @@ fun NewRecipeScreen(
                         topText = stringResource(id = R.string.new_recipe_public),
                         bottomText = stringResource(id = R.string.new_recipe_public_des),
                         checked = state.isRecipePublic,
-                        onCheckedChange = { viewModel.onEvent(NewRecipeEvent.SwitchedPublic(it)) }
+                        onCheckedChange = { onEvent(NewRecipeEvent.SwitchedPublic(it)) }
                     )
                 }
 
@@ -252,7 +244,7 @@ fun NewRecipeScreen(
                     modifier = Modifier.fillMaxWidth(),
                     leftIcon = IconVector.Save,
                     text = stringResource(id = R.string.new_recipe_save)
-                ) { viewModel.onEvent(NewRecipeEvent.ClickedSaveRecipe) }
+                ) { onEvent(NewRecipeEvent.ClickedSaveRecipe) }
             }
 
             HeightSpacer()
@@ -290,7 +282,7 @@ fun NewRecipeScreen(
                         if (state.ingredientsItemsParams.isNotEmpty()) {
                             DropdownArrow(
                                 isArrowPointedDownwards = state.isIngredientsListExpanded,
-                                onArrowClicked = { viewModel.onEvent(NewRecipeEvent.ClickedIngredientsListArrow) }
+                                onArrowClicked = { onEvent(NewRecipeEvent.ClickedIngredientsListArrow) }
                             )
                         }
                     }
@@ -310,7 +302,7 @@ fun NewRecipeScreen(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable { viewModel.onEvent(NewRecipeEvent.ClickedAddNewIngredient) }
+                            .clickable { onEvent(NewRecipeEvent.ClickedAddNewIngredient) }
                             .padding(15.dp),
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
@@ -363,7 +355,7 @@ fun NewRecipeScreen(
                                 )
                                 Switch(
                                     checked = state.selectedNutritionType is SelectedNutritionType.Recipe,
-                                    onCheckedChange = { viewModel.onEvent(NewRecipeEvent.CheckedNutritionType(it)) },
+                                    onCheckedChange = { onEvent(NewRecipeEvent.CheckedNutritionType(it)) },
                                     colors = SwitchDefaults.colors(
                                         uncheckedThumbColor = LocalColor.Quaternary,
                                         uncheckedTrackColor = LocalColor.LightGreen3

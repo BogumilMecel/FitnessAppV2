@@ -6,12 +6,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.ViewModelLayout
 import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.diary.components.CalendarSection
@@ -25,7 +27,8 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Destination
 @Composable
 fun TrainingScreen(navigator: DestinationsNavigator) {
-    hiltViewModel<TrainingViewModel>().ViewModelLayout(navigator = navigator) { viewModel, state ->
+    hiltViewModel<TrainingViewModel>().ViewModelLayout(navigator = navigator) {
+        val state by __state.collectAsStateWithLifecycle()
         Column {
             CalendarSection(
                 modifier = Modifier
@@ -36,10 +39,10 @@ fun TrainingScreen(navigator: DestinationsNavigator) {
                     ),
                 date = state.currentDate,
                 onArrowForwardClicked = {
-                    viewModel.onEvent(event = TrainingEvent.ClickedCalendarArrowForward)
+                    onEvent(event = TrainingEvent.ClickedCalendarArrowForward)
                 },
                 onArrowBackwardsClicked = {
-                    viewModel.onEvent(event = TrainingEvent.ClickedCalendarArrowBackwards)
+                    onEvent(event = TrainingEvent.ClickedCalendarArrowBackwards)
                 },
             )
 
@@ -54,7 +57,7 @@ fun TrainingScreen(navigator: DestinationsNavigator) {
                 TextWithTopIcon(
                     modifier = Modifier
                         .clip(FitnessAppTheme.shapes.Medium)
-                        .clickable { viewModel.onEvent(TrainingEvent.ClickedAddButton) }
+                        .clickable { onEvent(TrainingEvent.ClickedAddButton) }
                         .padding(12.dp),
                     iconModifier = Modifier.size(32.dp),
                     icon = IconVector.Add,

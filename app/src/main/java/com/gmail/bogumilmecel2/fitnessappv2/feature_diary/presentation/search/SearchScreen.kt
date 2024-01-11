@@ -16,11 +16,13 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gmail.bogumilmecel2.fitnessappv2.R
 import com.gmail.bogumilmecel2.fitnessappv2.common.presentation.components.BackHandler
 import com.gmail.bogumilmecel2.fitnessappv2.common.util.ViewModelLayout
@@ -54,7 +56,8 @@ fun SearchScreen(
     hiltViewModel<SearchViewModel>().ViewModelLayout(
         navigator = navigator,
         resultBackNavigator = resultBackNavigator
-    ) { viewModel, state ->
+    ) {
+        val state by __state.collectAsStateWithLifecycle()
         val pagerState = rememberPagerState(initialPage = SearchTab.EVERYTHING.ordinal) {
             SearchTab.entries.size
         }
@@ -67,9 +70,7 @@ fun SearchScreen(
         }
 
         resultRecipient.onNavResult { result ->
-            if (result is NavResult.Value) {
-                viewModel.onEvent(SearchEvent.ReceivedProductResult(result.value))
-            }
+            if (result is NavResult.Value) { onEvent(SearchEvent.ReceivedProductResult(result.value)) }
         }
 
         LaunchedEffect(
@@ -87,7 +88,7 @@ fun SearchScreen(
             enabled = state.selectedTabIndex != SearchTab.EVERYTHING.ordinal
         ) {
             if (state.selectedTabIndex != SearchTab.EVERYTHING.ordinal) {
-                viewModel.onEvent(SearchEvent.SelectedTab(SearchTab.EVERYTHING.ordinal))
+                onEvent(SearchEvent.SelectedTab(SearchTab.EVERYTHING.ordinal))
             }
         }
 
@@ -97,19 +98,13 @@ fun SearchScreen(
                 secondaryText = stringResource(id = R.string.search_add_it_now),
                 primaryButtonParams = ButtonParams(
                     text = stringResource(id = R.string.add),
-                    onClick = {
-                        viewModel.onEvent(SearchEvent.ClickedNewProduct)
-                    }
+                    onClick = { onEvent(SearchEvent.ClickedNewProduct) }
                 ),
                 secondaryButtonParams = ButtonParams(
                     text = stringResource(id = R.string.cancel),
-                    onClick = {
-                        viewModel.onEvent(SearchEvent.DismissedNoProductFoundDialog)
-                    }
+                    onClick = { onEvent(SearchEvent.DismissedNoProductFoundDialog) }
                 ),
-                onDismissRequest = {
-                    viewModel.onEvent(SearchEvent.DismissedNoProductFoundDialog)
-                }
+                onDismissRequest = { onEvent(SearchEvent.DismissedNoProductFoundDialog) }
             )
         }
 
@@ -121,7 +116,7 @@ fun SearchScreen(
                     exit = fadeOut()
                 ) {
                     ExtendedFloatingActionButton(
-                        onClick = { viewModel.onEvent(SearchEvent.ClickedSearch) },
+                        onClick = { onEvent(SearchEvent.ClickedSearch) },
                         backgroundColor = FitnessAppTheme.colors.Primary,
                         modifier = Modifier.testTag(stringResource(id = R.string.SEARCH_BUTTON)),
                         text = {
@@ -156,9 +151,7 @@ fun SearchScreen(
                     HeaderRow(
                         middlePrimaryText = state.headerPrimaryText,
                         middleSecondaryText = state.headerSecondaryText,
-                        onBackPressed = {
-                            viewModel.onEvent(SearchEvent.ClickedBackArrow)
-                        }
+                        onBackPressed = { onEvent(SearchEvent.ClickedBackArrow) }
                     )
 
                     HeightSpacer(8.dp)
@@ -174,9 +167,7 @@ fun SearchScreen(
                             .testTag(stringResource(id = R.string.SEARCH_TEXT_FIELD))
                             .padding(horizontal = 16.dp),
                         singleLine = true,
-                        onValueChange = {
-                            viewModel.onEvent(SearchEvent.EnteredSearchText(it))
-                        }
+                        onValueChange = { onEvent(SearchEvent.EnteredSearchText(it)) }
                     )
 
                     HeightSpacer(8.dp)
@@ -192,9 +183,7 @@ fun SearchScreen(
                             add(stringResource(id = SearchTab.PRODUCTS.textResId))
                         },
                         backgroundColor = backgroundColor,
-                        onTabSelected = {
-                            viewModel.onEvent(SearchEvent.SelectedTab(it))
-                        }
+                        onTabSelected = { onEvent(SearchEvent.SelectedTab(it)) }
                     )
                 }
 
@@ -207,9 +196,9 @@ fun SearchScreen(
                     SearchSection(
                         modifier = Modifier,
                         contentColor = currentTab.getTabColor(),
-                        buttonParams = currentTab.getButtonParams(onEvent = { viewModel.onEvent(it) }),
+                        buttonParams = currentTab.getButtonParams(onEvent = { onEvent(it) }),
                         searchItems = currentTab.getItems(state = state),
-                        onListEndReached = { viewModel.onEvent(SearchEvent.ReachedListEnd) }
+                        onListEndReached = { onEvent(SearchEvent.ReachedListEnd) }
                     )
                 }
             }
