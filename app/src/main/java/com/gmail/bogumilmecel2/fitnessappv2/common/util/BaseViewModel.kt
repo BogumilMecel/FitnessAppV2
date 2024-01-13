@@ -127,11 +127,119 @@ abstract class BaseViewModel<STATE : Any, EVENT : Any, NAV_ARGUMENTS : Any>(
     }
 }
 
+abstract class BaseViewModel2<EVENT : Any, NAV_ARGUMENTS : Any>(val navArguments: NAV_ARGUMENTS) : ViewModel() {
+
+    val navigationDestination: Channel<NavigationAction> = Channel()
+
+    var loaderVisible by mutableStateOf(false)
+
+    @Inject
+    lateinit var resourceProvider: ResourceProvider
+
+    @Inject
+    lateinit var cachedValuesProvider: CachedValuesProvider
+
+    @Inject
+    lateinit var connectivityObserver: ConnectivityObserver
+
+    @Inject
+    lateinit var checkConnectionStateUseCase: CheckConnectionStateUseCase
+
+    protected fun showSnackbarError(message: String) {
+        viewModelScope.launch {
+            ErrorUtils.showSnackbarWithMessage(message = message)
+        }
+    }
+
+    abstract fun onEvent(event: EVENT)
+
+    open fun configureOnStart() {}
+
+    fun observeNetworkConnection() {
+        viewModelScope.launch {
+            connectivityObserver.observe().collectLatest {
+                val offlineMode = cachedValuesProvider.getOfflineMode()
+                if ((it == ConnectionState.Available && offlineMode.isOffline())
+                    || (it == ConnectionState.Unavailable && offlineMode.isOnline())
+                ) {
+                    checkConnectionStateUseCase()
+                }
+            }
+        }
+    }
+
+    protected inline fun <T> Resource<T>.handle(
+        showSnackbar: Boolean = true,
+        finally: () -> Unit = {},
+        onError: (Exception) -> Unit = {},
+        block: (T) -> Unit
+    ) {
+        when (this) {
+            is Resource.ComplexError -> {
+                if (exception is HttpException) {
+                    showSnackbarError(message = uiText)
+                }
+
+                onError(exception)
+            }
+
+            is Resource.Error -> {
+                if (showSnackbar) {
+                    showSnackbarError(message = uiText)
+                }
+            }
+
+            is Resource.Success -> {
+                block(this.data)
+            }
+        }
+        finally()
+    }
+
+    protected fun navigateWithPopUp(destination: Direction, popUpTo: String = "") {
+        navigateTo(
+            destination = destination,
+            navOptions = NavOptions.Builder().setPopUpTo(
+                route = popUpTo,
+                inclusive = true
+            ).build()
+        )
+    }
+
+    protected fun navigateTo(
+        destination: Direction,
+        navOptions: NavOptions = NavOptions.Builder().build()
+    ) = viewModelScope.launch {
+        navigationDestination.send(
+            NavigationAction(
+                direction = destination,
+                navOptions = navOptions
+            )
+        )
+    }
+
+    protected fun navigateUp() {
+        navigateTo(
+            destination = object : Direction {
+                override val route: String = "navigate_up"
+            }
+        )
+    }
+}
+
 abstract class BaseResultViewModel<STATE : Any, EVENT : Any, NAV_ARGUMENTS : Any, RESULT_BACK : Any>(
     state: STATE,
     navArguments: NAV_ARGUMENTS
 ) : BaseViewModel<STATE, EVENT, NAV_ARGUMENTS>(
     state = state,
+    navArguments = navArguments
+) {
+    val resultBack: Channel<RESULT_BACK> = Channel()
+}
+
+abstract class BaseResultViewModel2<EVENT : Any, NAV_ARGUMENTS : Any, RESULT_BACK : Any>(
+    navArguments: NAV_ARGUMENTS
+) : BaseViewModel2<EVENT, NAV_ARGUMENTS>(
     navArguments = navArguments
 ) {
     val resultBack: Channel<RESULT_BACK> = Channel()
