@@ -2,18 +2,20 @@ package com.gmail.bogumilmecel2.ui.components.base
 
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.Login
+import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.Login
-import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Password
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.Search
@@ -110,7 +112,7 @@ sealed class IconVector(
         contentDescriptionId = R.string.favorite_filled
     )
     data object Back: IconVector(
-        imageVector = Icons.Default.ArrowBack,
+        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
         contentDescriptionId = R.string.back
     )
     data object Search: IconVector(
@@ -126,7 +128,7 @@ sealed class IconVector(
         contentDescriptionId = R.string.add
     )
     data object Logout: IconVector(
-        imageVector = Icons.Default.Logout,
+        imageVector = Icons.AutoMirrored.Filled.Logout,
         contentDescriptionId = R.string.log_out
     )
     data object Save: IconVector(
@@ -146,7 +148,7 @@ sealed class IconVector(
         contentDescriptionId = R.string.password
     )
     data object Login: IconVector(
-        imageVector = Icons.Default.Login,
+        imageVector = Icons.AutoMirrored.Filled.Login,
         contentDescriptionId = R.string.login
     )
     data object Account: IconVector(
@@ -164,5 +166,13 @@ sealed class IconVector(
     data object Copy: IconVector(
         imageVector = Icons.Default.ContentCopy,
         contentDescriptionId = R.string.copy
+    )
+    data object Warning: IconVector(
+        imageVector = Icons.Default.Error,
+        contentDescriptionId = R.string.error
+    )
+    data object Clear: IconVector(
+        imageVector = Icons.Default.Clear,
+        contentDescriptionId = R.string.clear
     )
 }

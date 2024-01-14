@@ -18,5 +18,7 @@
     <string name="info">Info icon</string>
     <string name="arrow_down">Arrow down icon</string>
     <string name="copy">Copy icon</string>
+    <string name="error">Error icon</string>
+    <string name="clear">Clear icon</string>
 <!--    Icon description ↑ ↑ ↑-->
 </resources>

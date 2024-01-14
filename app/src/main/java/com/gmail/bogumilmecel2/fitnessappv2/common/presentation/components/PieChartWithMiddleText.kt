@@ -43,7 +43,7 @@ fun PieChartWithMiddleText(
         ) {
             Text(
                 text = middleText,
-                style = FitnessAppTheme.typography.ImportantTextMedium,
+                style = FitnessAppTheme.typography.LabelMedium,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.align(Alignment.Center)
             )

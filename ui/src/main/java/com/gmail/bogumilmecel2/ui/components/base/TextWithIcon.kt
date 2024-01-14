@@ -25,7 +25,7 @@ fun TextWithTopIcon(
 
         Text(
             text = text,
-            style = FitnessAppTheme.typography.ImportantTextMedium,
+            style = FitnessAppTheme.typography.LabelMedium,
             maxLines = 1,
         )
     }
