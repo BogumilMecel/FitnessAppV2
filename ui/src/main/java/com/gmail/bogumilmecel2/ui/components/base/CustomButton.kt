@@ -105,7 +105,7 @@ private fun ButtonContent(
         leftIcon?.let { content ->
             CustomIcon(
                 icon = content,
-                iconColor = contentColor,
+                tint = contentColor,
             )
 
             WidthSpacer(8.dp)

@@ -17,7 +17,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.components.DefaultCardBackground
 import com.gmail.bogumilmecel2.fitnessappv2.feature_summary.presentation.SummaryEvent
 import com.gmail.bogumilmecel2.ui.components.base.CustomIconButton
 import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
-import com.gmail.bogumilmecel2.ui.components.base.IconButtonParams
 import com.gmail.bogumilmecel2.ui.components.base.IconVector
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 
@@ -65,12 +64,8 @@ fun WeightSection(
                 HeightSpacer(24.dp)
 
                 CustomIconButton(
-                    params = IconButtonParams(
-                        iconVector = IconVector.Add,
-                        onClick = {
-                            onEvent(SummaryEvent.ClickedAddWeightEntryButton)
-                        }
-                    ),
+                    icon = IconVector.Add,
+                    onClick = { onEvent(SummaryEvent.ClickedAddWeightEntryButton) }
                 )
 
                 HeightSpacer(16.dp)

@@ -128,7 +128,7 @@ fun SearchScreen(
                         icon = {
                             CustomIcon(
                                 icon = IconVector.Search,
-                                iconColor = FitnessAppTheme.colors.Black
+                                tint = FitnessAppTheme.colors.Black
                             )
                         }
                     )

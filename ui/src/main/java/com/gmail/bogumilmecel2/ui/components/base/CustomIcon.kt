@@ -33,21 +33,21 @@ import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 fun CustomIcon(
     modifier: Modifier = Modifier,
     icon: Icon,
-    iconColor: Color = FitnessAppTheme.colors.Primary
+    tint: Color = FitnessAppTheme.colors.Primary
 ) {
     when(icon) {
         is IconPainter -> {
             CustomIcon(
-                iconPainter = icon,
-                iconColor = iconColor,
+                painter = icon,
+                tint = tint,
                 modifier = modifier
             )
         }
 
         is IconVector -> {
             CustomIcon(
-                iconVector = icon,
-                iconColor = iconColor,
+                vector = icon,
+                tint = tint,
                 modifier = modifier
             )
         }
@@ -57,28 +57,28 @@ fun CustomIcon(
 @Composable
 private fun CustomIcon(
     modifier: Modifier = Modifier,
-    iconVector: IconVector,
-    iconColor: Color = FitnessAppTheme.colors.Primary
-) = with(iconVector) {
+    vector: IconVector,
+    tint: Color = FitnessAppTheme.colors.Primary
+) = with(vector) {
     Icon(
         modifier = modifier,
         imageVector = imageVector,
-        contentDescription = stringResource(id = iconVector.contentDescriptionId),
-        tint = iconColor
+        contentDescription = stringResource(id = vector.contentDescriptionId),
+        tint = tint
     )
 }
 
 @Composable
 private fun CustomIcon(
     modifier: Modifier = Modifier,
-    iconPainter: IconPainter,
-    iconColor: Color = FitnessAppTheme.colors.Primary
-) = with(iconPainter) {
+    painter: IconPainter,
+    tint: Color = FitnessAppTheme.colors.Primary
+) = with(painter) {
     Icon(
         modifier = modifier,
         painter = imagePainter,
         contentDescription = stringResource(id = contentDescriptionId),
-        tint = iconColor
+        tint = tint
     )
 }
 

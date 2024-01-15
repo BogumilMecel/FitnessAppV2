@@ -42,7 +42,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.feature_diary.presentation.product.p
 import com.gmail.bogumilmecel2.ui.components.base.CustomIcon
 import com.gmail.bogumilmecel2.ui.components.base.CustomIconButton
 import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
-import com.gmail.bogumilmecel2.ui.components.base.IconButtonParams
 import com.gmail.bogumilmecel2.ui.components.base.IconVector
 import com.gmail.bogumilmecel2.ui.components.base.WidthDivider
 import com.gmail.bogumilmecel2.ui.components.base.WidthSpacer
@@ -140,10 +139,8 @@ fun ProductScreen(
                                 )
 
                                 CustomIconButton(
-                                    params = IconButtonParams(
-                                        iconVector = IconVector.Info,
-                                        onClick = { onEvent(ProductEvent.ClickedInfoPriceButton) }
-                                    ),
+                                    icon = IconVector.Info,
+                                    onClick = { onEvent(ProductEvent.ClickedInfoPriceButton) },
                                     modifier = Modifier.align(Alignment.CenterEnd)
                                 )
                             }

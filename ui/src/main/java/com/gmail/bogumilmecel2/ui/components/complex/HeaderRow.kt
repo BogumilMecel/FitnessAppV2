@@ -31,13 +31,9 @@ fun HeaderRow(
     ) {
         onBackPressed?.let {
             CustomIconButton(
-                params = IconButtonParams(
-                    iconVector = IconVector.Back,
-                    onClick = {
-                        onBackPressed()
-                    },
-                ),
-                iconColor = FitnessAppTheme.colors.ContentPrimary
+                icon = IconVector.Back,
+                onClick = onBackPressed,
+                tint = FitnessAppTheme.colors.ContentPrimary
             )
         }
 
@@ -72,7 +68,9 @@ fun HeaderRow(
 
         endIconButtonParams?.let {
             CustomIconButton(
-                params = endIconButtonParams
+                icon = endIconButtonParams.iconVector,
+                onClick = endIconButtonParams.onClick,
+                enabled = endIconButtonParams.enabled,
             )
         }
     }

@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text2.BasicTextField2
+import androidx.compose.foundation.text2.input.TextFieldLineLimits
 import androidx.compose.foundation.text2.input.TextFieldState
 import androidx.compose.foundation.text2.input.clearText
 import androidx.compose.material.Text
@@ -43,8 +44,10 @@ fun CustomTextField(
     modifier: Modifier = Modifier,
     state: TextFieldState,
     enabled: Boolean = true,
+    maxLines: Int = 1,
     label: String? = null,
-    errorMessage: String? = null
+    errorMessage: String? = null,
+    endContent: (@Composable () -> Unit)? = null
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val focused by interactionSource.collectIsFocusedAsState()
@@ -67,6 +70,7 @@ fun CustomTextField(
         textStyle = textStyle.copy(color = FitnessAppTheme.colors.ContentPrimary),
         cursorBrush = SolidColor(FitnessAppTheme.colors.ContentPrimary),
         enabled = enabled,
+        lineLimits = TextFieldLineLimits.MultiLine(maxHeightInLines = maxLines, minHeightInLines = 1),
         decorator = { decorator ->
             val backgroundColor = FitnessAppTheme.colors.BackgroundPrimary
             val borderColor = when {
@@ -105,7 +109,7 @@ fun CustomTextField(
                             Box(
                                 modifier = Modifier.weight(1f),
                                 propagateMinConstraints = true,
-                                contentAlignment = Alignment.TopCenter
+                                contentAlignment = if (maxLines == 1) Alignment.Center else Alignment.TopCenter
                             ) {
                                 this@Row.AnimatedVisibility(
                                     visible = hintVisible,
@@ -121,7 +125,10 @@ fun CustomTextField(
                                         overflow = TextOverflow.Ellipsis
                                     )
                                 }
-                                Row(modifier = Modifier.fillMaxWidth()) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    verticalAlignment = if (maxLines == 1) Alignment.CenterVertically else Alignment.Top
+                                ) {
                                     Box(modifier = Modifier.weight(1f)) {
                                         decorator()
                                     }
@@ -137,9 +144,11 @@ fun CustomTextField(
                                                 .padding(start = 12.dp)
                                                 .size(24.dp)
                                                 .clickable { state.clearText() },
-                                            iconColor = FitnessAppTheme.colors.ContentPrimary
+                                            tint = FitnessAppTheme.colors.ContentPrimary
                                         )
                                     }
+
+                                    endContent?.invoke()
                                 }
                             }
                         }
@@ -189,7 +198,7 @@ fun CustomTextField(
                         CustomIcon(
                             icon = IconVector.Warning,
                             modifier = Modifier.size(16.dp),
-                            iconColor = FitnessAppTheme.colors.Error
+                            tint = FitnessAppTheme.colors.Error
                         )
                     }
 

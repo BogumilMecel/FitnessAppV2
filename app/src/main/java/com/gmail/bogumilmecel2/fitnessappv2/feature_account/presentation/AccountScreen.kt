@@ -26,7 +26,6 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.util.ViewModelLayout
 import com.gmail.bogumilmecel2.fitnessappv2.components.DefaultCardBackground
 import com.gmail.bogumilmecel2.ui.components.base.CustomButton
 import com.gmail.bogumilmecel2.ui.components.base.CustomIconButton
-import com.gmail.bogumilmecel2.ui.components.base.IconButtonParams
 import com.gmail.bogumilmecel2.ui.components.base.IconVector
 import com.gmail.bogumilmecel2.ui.components.base.listing.ListingSwitch
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
@@ -70,10 +69,8 @@ fun AccountScreen(navigator: DestinationsNavigator) {
                         )
 
                         CustomIconButton(
-                            params = IconButtonParams(
-                                iconVector = IconVector.Edit,
-                                onClick = { onEvent(AccountEvent.ClickedEditNutritionGoals) }
-                            )
+                            icon = IconVector.Edit,
+                            onClick = { onEvent(AccountEvent.ClickedEditNutritionGoals) }
                         )
                     }
 

@@ -46,7 +46,7 @@ fun HorizontalButtonWithIcon(
         ) {
             CustomIcon(
                 icon = icon,
-                iconColor = contentColor,
+                tint = contentColor,
             )
 
             HeightSpacer(4.dp)
