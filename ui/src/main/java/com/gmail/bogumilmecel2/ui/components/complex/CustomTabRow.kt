@@ -31,7 +31,7 @@ import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
 fun CustomTabRow(
     modifier: Modifier = Modifier,
     selectedTabIndex: Int,
-    tabs: List<Tab>,
+    tabs: List<CustomTab>,
     onTabSelected: (Int) -> Unit
 ) {
     Row(
@@ -39,7 +39,7 @@ fun CustomTabRow(
             .heightIn(min = 40.dp)
             .fillMaxWidth()
             .background(
-                color = FitnessAppTheme.colors.BackgroundQuaternary,
+                color = FitnessAppTheme.colors.BackgroundTertiary,
                 shape = RoundedCornerShape(12.dp)
             )
             .padding(4.dp)
@@ -67,7 +67,7 @@ fun CustomTabRow(
                     )
                     .background(
                         color = if (isThisTabActive) {
-                            FitnessAppTheme.colors.BackgroundSecondary
+                            FitnessAppTheme.colors.BackgroundPrimary
                         } else {
                             FitnessAppTheme.colors.Transparent
                         },
@@ -97,7 +97,7 @@ fun CustomTabRow(
     }
 }
 
-data class Tab(
+data class CustomTab(
     val title: String,
     val icon: Icon? = null,
 )

@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
@@ -55,14 +56,21 @@ fun CustomButton(
                 ButtonContent(
                     leftIcon = leftIcon,
                     text = text,
-                    contentColor = contentColor
+                    contentColor = contentColor,
+                    buttonStyle = buttonStyle
                 )
             }
         }
 
         ButtonType.Button -> {
             Button(
-                modifier = modifier,
+                modifier = modifier
+                    .heightIn(
+                        min = when (buttonStyle) {
+                            ButtonStyle.Primary -> 48.dp
+                            else -> 32.dp
+                        }
+                    ),
                 onClick = {
                     onClick()
                 },
@@ -70,7 +78,7 @@ fun CustomButton(
                     backgroundColor = backgroundColor,
                 ),
                 shape = shape,
-                elevation = when(buttonStyle) {
+                elevation = when (buttonStyle) {
                     is ButtonStyle.Transparent -> ButtonDefaults.elevation(
                         defaultElevation = 0.dp,
                         pressedElevation = 0.dp,
@@ -84,7 +92,8 @@ fun CustomButton(
                 ButtonContent(
                     leftIcon = leftIcon,
                     text = text,
-                    contentColor = contentColor
+                    contentColor = contentColor,
+                    buttonStyle = buttonStyle
                 )
             }
         }
@@ -95,7 +104,8 @@ fun CustomButton(
 private fun ButtonContent(
     leftIcon: Icon?,
     text: String?,
-    contentColor: Color
+    contentColor: Color,
+    buttonStyle: ButtonStyle
 ) {
     Row(
         modifier = Modifier.width(IntrinsicSize.Max),
@@ -114,7 +124,10 @@ private fun ButtonContent(
         text?.let {
             Text(
                 text = it.uppercase(),
-                style = FitnessAppTheme.typography.Button,
+                style = when (buttonStyle) {
+                    ButtonStyle.Primary -> FitnessAppTheme.typography.LabelLarge
+                    else -> FitnessAppTheme.typography.LabelMedium
+                },
                 color = contentColor,
                 maxLines = 1,
             )

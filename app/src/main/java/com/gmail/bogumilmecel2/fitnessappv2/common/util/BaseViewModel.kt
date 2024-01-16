@@ -127,7 +127,7 @@ abstract class BaseViewModel<STATE : Any, EVENT : Any, NAV_ARGUMENTS : Any>(
     }
 }
 
-abstract class BaseViewModel2<EVENT : Any, NAV_ARGUMENTS : Any>(val navArguments: NAV_ARGUMENTS) : ViewModel() {
+abstract class BaseViewModel2<EVENT : Any> : ViewModel() {
 
     val navigationDestination: Channel<NavigationAction> = Channel()
 
@@ -237,10 +237,6 @@ abstract class BaseResultViewModel<STATE : Any, EVENT : Any, NAV_ARGUMENTS : Any
     val resultBack: Channel<RESULT_BACK> = Channel()
 }
 
-abstract class BaseResultViewModel2<EVENT : Any, NAV_ARGUMENTS : Any, RESULT_BACK : Any>(
-    navArguments: NAV_ARGUMENTS
-) : BaseViewModel2<EVENT, NAV_ARGUMENTS>(
-    navArguments = navArguments
-) {
+abstract class BaseResultViewModel2<EVENT : Any, RESULT_BACK : Any> : BaseViewModel2<EVENT>() {
     val resultBack: Channel<RESULT_BACK> = Channel()
 }

@@ -241,7 +241,7 @@ fun ProductScreen(
 
                                     Text(
                                         text = stringResource(id = R.string.submit_new_price),
-                                        style = FitnessAppTheme.typography.Button,
+                                        style = FitnessAppTheme.typography.LabelMedium,
                                         color = FitnessAppTheme.colors.Primary
                                     )
                                 }

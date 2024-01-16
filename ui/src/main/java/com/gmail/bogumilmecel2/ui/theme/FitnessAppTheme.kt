@@ -68,7 +68,6 @@ fun FitnessAppTheme(
                     subtitle2 = ParagraphMedium,
                     body1 = ParagraphLarge,
                     body2 = ParagraphMedium,
-                    button = Button,
                     caption = ParagraphSmall,
                     overline = ParagraphSmall
                 )
