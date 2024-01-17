@@ -29,10 +29,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onPreInterceptKeyBeforeSoftKeyboard
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -49,6 +53,7 @@ fun CustomTextField(
     errorMessage: String? = null,
     endContent: (@Composable () -> Unit)? = null
 ) {
+    val focusManager = LocalFocusManager.current
     val interactionSource = remember { MutableInteractionSource() }
     val focused by interactionSource.collectIsFocusedAsState()
 
@@ -65,8 +70,8 @@ fun CustomTextField(
 
     BasicTextField2(
         state = state,
-        modifier = Modifier,
         interactionSource = interactionSource,
+        modifier = Modifier.onKeyboardDismiss { focusManager.clearFocus() },
         textStyle = textStyle.copy(color = FitnessAppTheme.colors.ContentPrimary),
         cursorBrush = SolidColor(FitnessAppTheme.colors.ContentPrimary),
         enabled = enabled,
@@ -220,3 +225,12 @@ fun CustomTextField(
         }
     )
 }
+
+fun Modifier.onKeyboardDismiss(handleOnBackPressed: () -> Unit): Modifier =
+    @OptIn(ExperimentalComposeUiApi::class)
+    this.onPreInterceptKeyBeforeSoftKeyboard {
+        if (it.key.keyCode == 17179869184) {
+            handleOnBackPressed.invoke()
+        }
+        true
+    }
