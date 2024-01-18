@@ -39,7 +39,7 @@ fun CustomTabRow(
             .heightIn(min = 40.dp)
             .fillMaxWidth()
             .background(
-                color = FitnessAppTheme.colors.BackgroundTertiary,
+                color = FitnessAppTheme.colors.BackgroundQuaternary,
                 shape = RoundedCornerShape(12.dp)
             )
             .padding(4.dp)

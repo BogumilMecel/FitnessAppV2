@@ -34,6 +34,7 @@ import com.gmail.bogumilmecel2.ui.components.base.CustomIcon
 import com.gmail.bogumilmecel2.ui.components.base.CustomTextField
 import com.gmail.bogumilmecel2.ui.components.base.HeightSpacer
 import com.gmail.bogumilmecel2.ui.components.base.IconVector
+import com.gmail.bogumilmecel2.ui.components.base.InputTransformations
 import com.gmail.bogumilmecel2.ui.components.base.VerticalDivider
 import com.gmail.bogumilmecel2.ui.components.base.WidthSpacer
 import com.gmail.bogumilmecel2.ui.components.complex.CustomTab
@@ -80,6 +81,7 @@ fun NewProductScreen(navigator: DestinationsNavigator) {
                 CustomTextField(
                     state = containerWeight,
                     label = stringResource(id = R.string.container_weight),
+                    inputTransformation = InputTransformations.DigitsOnlyTransformation,
                     endContent = {
                         Row(
                             modifier = Modifier
@@ -168,21 +170,25 @@ fun NewProductScreen(navigator: DestinationsNavigator) {
                 CustomTextField(
                     state = calories,
                     label = stringResource(id = R.string.calories),
+                    inputTransformation = InputTransformations.DigitsOnlyTransformation
                 )
 
                 CustomTextField(
                     state = carbohydrates,
                     label = stringResource(id = R.string.carbohydrates),
+                    inputTransformation = InputTransformations.DecimalTransformation()
                 )
 
                 CustomTextField(
                     state = protein,
                     label = stringResource(id = R.string.protein),
+                    inputTransformation = InputTransformations.DecimalTransformation()
                 )
 
                 CustomTextField(
                     state = fat,
                     label = stringResource(id = R.string.fat),
+                    inputTransformation = InputTransformations.DecimalTransformation()
                 )
 
                 HeightSpacer(16.dp)

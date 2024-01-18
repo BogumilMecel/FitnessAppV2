@@ -18,7 +18,11 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text2.BasicTextField2
+import androidx.compose.foundation.text2.input.InputTransformation
+import androidx.compose.foundation.text2.input.TextFieldBuffer
+import androidx.compose.foundation.text2.input.TextFieldCharSequence
 import androidx.compose.foundation.text2.input.TextFieldLineLimits
 import androidx.compose.foundation.text2.input.TextFieldState
 import androidx.compose.foundation.text2.input.clearText
@@ -37,10 +41,12 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onPreInterceptKeyBeforeSoftKeyboard
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.gmail.bogumilmecel2.ui.theme.FitnessAppTheme
+import com.gmail.bogumilmecel2.ui.utils.extensions.isDigitsOnly
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -50,6 +56,7 @@ fun CustomTextField(
     enabled: Boolean = true,
     maxLines: Int = 1,
     label: String? = null,
+    inputTransformation: InputTransformation? = null,
     errorMessage: String? = null,
     endContent: (@Composable () -> Unit)? = null
 ) {
@@ -75,7 +82,11 @@ fun CustomTextField(
         textStyle = textStyle.copy(color = FitnessAppTheme.colors.ContentPrimary),
         cursorBrush = SolidColor(FitnessAppTheme.colors.ContentPrimary),
         enabled = enabled,
-        lineLimits = TextFieldLineLimits.MultiLine(maxHeightInLines = maxLines, minHeightInLines = 1),
+        inputTransformation = inputTransformation,
+        lineLimits = TextFieldLineLimits.MultiLine(
+            maxHeightInLines = maxLines,
+            minHeightInLines = 1
+        ),
         decorator = { decorator ->
             val backgroundColor = FitnessAppTheme.colors.BackgroundPrimary
             val borderColor = when {
@@ -234,3 +245,42 @@ fun Modifier.onKeyboardDismiss(handleOnBackPressed: () -> Unit): Modifier =
         }
         true
     }
+
+@ExperimentalFoundationApi
+object InputTransformations {
+    object DigitsOnlyTransformation : InputTransformation {
+
+        override val keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+
+        override fun transformInput(
+            originalValue: TextFieldCharSequence,
+            valueWithChanges: TextFieldBuffer
+        ) {
+            val value = valueWithChanges.toString()
+
+            if (!value.isDigitsOnly() && value.isNotEmpty()) {
+                valueWithChanges.revertAllChanges()
+            }
+        }
+    }
+
+    data class DecimalTransformation(val decimalPartLength: Int = 2) : InputTransformation {
+
+        override val keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+
+        override fun transformInput(
+            originalValue: TextFieldCharSequence,
+            valueWithChanges: TextFieldBuffer
+        ) {
+            val value = valueWithChanges.toString()
+            if (value.isEmpty()) return
+
+            value.toDoubleOrNull()?.let {
+                val decimalPart = value.substringAfter('.', "")
+                if (decimalPart.length > decimalPartLength) {
+                    valueWithChanges.revertAllChanges()
+                }
+            } ?: valueWithChanges.revertAllChanges()
+        }
+    }
+}
