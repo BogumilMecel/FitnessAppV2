@@ -1,5 +1,6 @@
 package com.gmail.bogumilmecel2.fitnessappv2.common.util
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -12,6 +13,7 @@ import com.gmail.bogumilmecel2.fitnessappv2.common.domain.navigation.NavigationA
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.CachedValuesProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.provider.ResourceProvider
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.use_case.CheckConnectionStateUseCase
+import com.gmail.bogumilmecel2.fitnessappv2.common.util.extensions.TAG
 import com.ramcosta.composedestinations.spec.Direction
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -76,6 +78,7 @@ abstract class BaseViewModel<STATE : Any, EVENT : Any, NAV_ARGUMENTS : Any>(
     ) {
         when (this) {
             is Resource.ComplexError -> {
+                Log.e(TAG, this.exception.toString())
                 if (exception is HttpException) {
                     showSnackbarError(message = uiText)
                 }
