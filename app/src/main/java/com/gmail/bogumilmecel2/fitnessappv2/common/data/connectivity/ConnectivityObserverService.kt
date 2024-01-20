@@ -6,16 +6,12 @@ import android.net.Network
 import android.net.NetworkCapabilities
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.connectivity.ConnectivityObserver
 import com.gmail.bogumilmecel2.fitnessappv2.common.domain.model.ConnectionState
-import com.gmail.bogumilmecel2.fitnessappv2.feature_splash.data.api.LoadingApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 
-class ConnectivityObserverService(
-    private val loadingApi: LoadingApi,
-    context: Context,
-) : ConnectivityObserver {
+class ConnectivityObserverService(context: Context) : ConnectivityObserver {
 
     private val connectivityManager =
         context.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager?
@@ -46,7 +42,7 @@ class ConnectivityObserverService(
         }
     }.distinctUntilChanged()
 
-    override suspend fun isOnline() = hasActiveNetwork() && hasAccessToBackend()
+    override suspend fun isOnline() = hasActiveNetwork()
 
     private fun hasActiveNetwork(): Boolean {
         connectivityManager?.getNetworkCapabilities(connectivityManager.activeNetwork)?.run {
@@ -57,14 +53,5 @@ class ConnectivityObserverService(
         }
 
         return false
-    }
-
-    private suspend fun hasAccessToBackend(): Boolean {
-        return try {
-            loadingApi.isReachable()
-            true
-        } catch (e: Exception) {
-            false
-        }
     }
 }
