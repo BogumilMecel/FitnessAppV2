@@ -182,13 +182,8 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideConnectivityObserver(
-        @ApplicationContext context: Context,
-        loadingApi: LoadingApi
-    ): ConnectivityObserver = ConnectivityObserverService(
-        context = context,
-        loadingApi = loadingApi
-    )
+    fun provideConnectivityObserver(@ApplicationContext context: Context): ConnectivityObserver =
+        ConnectivityObserverService(context = context)
 
     @Singleton
     @Provides
