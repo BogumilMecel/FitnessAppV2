@@ -10,3 +10,7 @@ sealed class Resource<T>(open val data: T? = null) {
     data class ComplexError<T>(val exception: Exception) :
         Error<T>(uiText = exception.message ?: "unknown error")
 }
+
+fun <T> Resource.ComplexError<*>.copyType() = Resource.ComplexError<T>(
+    exception = exception,
+)
