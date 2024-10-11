@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">Fitness App</string>
 <!--    Icon descriptions ↓ ↓ ↓-->
     <string name="favorite">Favorite icon</string>
     <string name="favorite_filled">Filled favorite icon</string>

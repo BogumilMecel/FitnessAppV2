@@ -30,7 +30,7 @@ class LoadingViewModel @Inject constructor(
 
     private fun checkForOfflineMode() {
         viewModelScope.launch {
-            checkConnectionStateUseCase()
+//            checkConnectionStateUseCase()
             authenticateUser()
         }
     }
@@ -38,8 +38,7 @@ class LoadingViewModel @Inject constructor(
     private suspend fun authenticateUser() {
         when (val result = useCases.authenticateUserUseCase()) {
             is AuthenticateUserUseCase.Result.NavigateToIntroduction -> navigateWithPopUp(IntroductionScreenDestination)
-            is AuthenticateUserUseCase.Result.NavigateToLogin -> navigateWithPopUp(LoginScreenDestination)
-            is AuthenticateUserUseCase.Result.NavigateToMainScreen -> {
+            else -> {
 
                 viewModelScope.launch(Dispatchers.IO) {
                     val userProductsJob = async { useCases.getProductsAndSaveOfflineUseCase() }
@@ -49,13 +48,7 @@ class LoadingViewModel @Inject constructor(
 
                     awaitAll(userProductsJob, userRecipesJob, userProductDiaryEntriesJob, userRecipeDiaryEntriesJob)
                 }
-
-                when (result.bottomBarScreen) {
-                    BottomBarScreen.Summary -> navigateWithPopUp(SummaryScreenDestination)
-                    else -> {
-                        // TODO: Implement it when setting default starting screen is implemented
-                    }
-                }
+                navigateWithPopUp(SummaryScreenDestination)
             }
         }
     }

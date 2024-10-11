@@ -44,8 +44,8 @@ abstract class BaseViewModel<STATE : Any, EVENT : Any, NAV_ARGUMENTS : Any>(
     @Inject
     lateinit var connectivityObserver: ConnectivityObserver
 
-    @Inject
-    lateinit var checkConnectionStateUseCase: CheckConnectionStateUseCase
+//    @Inject
+//    lateinit var checkConnectionStateUseCase: CheckConnectionStateUseCase
 
     protected fun showSnackbarError(message: String) {
         viewModelScope.launch {
@@ -64,7 +64,7 @@ abstract class BaseViewModel<STATE : Any, EVENT : Any, NAV_ARGUMENTS : Any>(
                 if ((it == ConnectionState.Available && offlineMode.isOffline())
                     || (it == ConnectionState.Unavailable && offlineMode.isOnline())
                 ) {
-                    checkConnectionStateUseCase()
+//                    checkConnectionStateUseCase()
                 }
             }
         }
@@ -145,8 +145,8 @@ abstract class BaseViewModel2<EVENT : Any> : ViewModel() {
     @Inject
     lateinit var connectivityObserver: ConnectivityObserver
 
-    @Inject
-    lateinit var checkConnectionStateUseCase: CheckConnectionStateUseCase
+//    @Inject
+//    lateinit var checkConnectionStateUseCase: CheckConnectionStateUseCase
 
     protected fun showSnackbarError(message: String) {
         viewModelScope.launch {
@@ -165,7 +165,7 @@ abstract class BaseViewModel2<EVENT : Any> : ViewModel() {
                 if ((it == ConnectionState.Available && offlineMode.isOffline())
                     || (it == ConnectionState.Unavailable && offlineMode.isOnline())
                 ) {
-                    checkConnectionStateUseCase()
+//                    checkConnectionStateUseCase()
                 }
             }
         }

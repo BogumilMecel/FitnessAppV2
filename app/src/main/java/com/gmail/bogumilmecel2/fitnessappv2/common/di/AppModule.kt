@@ -210,7 +210,7 @@ object AppModule {
     ): Retrofit {
         val retrofitBuilder = Retrofit.Builder()
             .client(httpClient)
-            .baseUrl("http://192.168.0.216:8080/")
+            .baseUrl("http://192.168.0.243:8080/")
             .addConverterFactory(Json.asConverterFactory(contentType = "application/json".toMediaType()))
         return retrofitBuilder.build()
     }
